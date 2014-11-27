@@ -5,12 +5,14 @@ cmake_minimum_required(VERSION 2.8)
 #Setup CMake to run tests
 enable_testing()
 
-
-
 project (OASysGL)
 
 set (OASysGL_SHARED_SUFFIX "_shared")
+set (LIB_OASysGL_SHARED_NAME "${PROJECT_NAME}${OASysGL_SHARED_SUFFIX}")
+
 set (OASysGL_STATIC_SUFFIX "_static")
+set (LIB_OASysGL_STATIC_NAME "${PROJECT_NAME}${OASysGL_STATIC_SUFFIX}")
+
 
 set (OASysGL_VERSION_MAJOR 0)
 set (OASysGL_VERSION_MINOR 1)

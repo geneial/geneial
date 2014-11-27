@@ -19,8 +19,15 @@ file(GLOB_RECURSE TMPL *.hpp)
 message(STATUS "Building Source Files : ${SRC}")
 
 #Create a static library
-add_library( "${PROJECT_NAME}${OASysGL_STATIC_SUFFIX}" STATIC ${SRCS} ${HDRS} ${TMPL} )
+add_library( ${LIB_OASysGL_STATIC_NAME} STATIC ${SRCS} ${HDRS} ${TMPL} )
 
 
 #Also create a shared library
-add_library( "${PROJECT_NAME}${OASysGL_SHARED_SUFFIX}" SHARED ${SRCS} ${HDRS} ${TMPL} )
+add_library(  ${LIB_OASysGL_SHARED_NAME} SHARED ${SRCS} ${HDRS} ${TMPL} )
+
+
+install (TARGETS ${LIB_OASysGL_SHARED_NAME} DESTINATION bin)
+install (TARGETS ${LIB_OASysGL_STATIC_NAME} DESTINATION bin)
+install( DIRECTORY ./ 
+            DESTINATION include/${PROJECT_NAME}
+            FILES_MATCHING PATTERN "*.h" )
