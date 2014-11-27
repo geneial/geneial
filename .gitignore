@@ -11,4 +11,6 @@ CMakeFiles
 Makefile
 cmake_install.cmake
 install_manifest.txt
+
+#anything in the build directory
 build/

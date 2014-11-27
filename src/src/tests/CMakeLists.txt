@@ -20,7 +20,7 @@ foreach(testSrc ${TEST_SRC})
         add_executable(${testName} ${testSrc})
 		
 		#link with our genetic library
-		target_link_libraries(${testName} ${PROJECT_NAME})
+		target_link_libraries(${testName} "${PROJECT_NAME}${OASysGL_SHARED_SUFFIX}")
 		
         #link to Boost libraries AND your targets and dependencies
         target_link_libraries(${testName} ${Boost_LIBRARIES})
