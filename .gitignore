@@ -12,5 +12,12 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 
+#ignore temporary files
+*~
+
+#ignore eclipse project files
+.project
+.cproject
+
 #anything in the build directory
 build/

@@ -1,5 +1,6 @@
 <!---
 This file uses markdown syntax, adhere when fiddling!
+http://en.wikipedia.org/wiki/Markdown
 -->
 
 OASysGL - Elitism and RWTH: Yin and Yang
@@ -54,7 +55,7 @@ In the `build/`-directory execute
 now there are Eclipse .project and .cproject files found in your build/ directory.
 
 You can import them by `File`->`Import...`->`Existing Project in Workspace`, Select `Browse...` and choose your `build/` directory.
-You may also want to install the [Eclipse CMake Editor](http://en.wikipedia.org/wiki/Markdown) for editing any of the `CMakeList.txt` 
+You may also want to install the [Eclipse CMake Editor](http://www.cthing.com/CMakeEd.asp) for editing any of the `CMakeList.txt` 
 files more conveniently.
 
 
