@@ -69,15 +69,15 @@ void BasicChromosome::setValue(int position, double value){
 /**
  * Used to 'age' a chromosome. Increments the age of a chromosome by one
  */
-void BasicChromosome::incrementAge(){
+void BasicChromosome::doAge(){
 	this->age++;
 }
 
-void BasicChromosome::setAge(int age){
+void BasicChromosome::setAge(unsigned int age){
 	this->age = age;
 }
 
-int BasicChromosome::getAge(){
+unsigned int BasicChromosome::getAge(){
 	return this->age;
 }
 

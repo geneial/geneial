@@ -22,12 +22,16 @@ class Population : public printable {
 
 private:
 	std::vector<GeneticLibrary::Population::Chromosome::BasicChromosome> chromosomes;
+	unsigned int age;
 
 public:
 
 	Population();
 	virtual ~Population();
 	virtual void print(std::ostream& os) const;
+	unsigned int getAge();
+	void setAge(unsigned int age);
+	void doAge();
 
 	std::vector<GeneticLibrary::Population::Chromosome::BasicChromosome> getChromosomes();
 

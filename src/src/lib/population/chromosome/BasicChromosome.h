@@ -20,7 +20,7 @@ class BasicChromosome {
 private:
 	int fitness;
 	double values[defChromosomeSize];
-	int age;
+	unsigned int age;
 
 public:
 	BasicChromosome();
@@ -30,9 +30,9 @@ public:
 	void setFitness(int fit);
 	double getValue(int i);
 	void setValue(int postion, double value);
-	void incrementAge();
-	int getAge();
-	void setAge(int age);
+	void doAge();
+	unsigned int getAge();
+	void setAge(unsigned int age);
 };
 
 } /* namespace Chromosome */

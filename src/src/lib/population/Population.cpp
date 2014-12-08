@@ -19,6 +19,7 @@ namespace Population {
 Population::Population() {
 	//put one Chromosome into the population to create a starting point
 	chromosomes.push_back(GeneticLibrary::Population::Chromosome::BasicChromosome());
+	this->age = 0;
 }
 
 Population::~Population() {
@@ -42,6 +43,20 @@ std::vector<GeneticLibrary::Population::Chromosome::BasicChromosome> Population:
 	 */
 int Population::size(){
 	return this-> chromosomes.size();
+}
+
+unsigned int Population::getAge(){
+	return this->age;
+}
+
+void Population::setAge(unsigned int age){
+	this->age = age;
+}
+/**
+ * Inrements the age of the current population by 1
+ */
+void Population::doAge(){
+	this->age++;
 }
 
 } /* namespace Population */

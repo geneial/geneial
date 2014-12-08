@@ -23,7 +23,6 @@ public:
 	GeneticLibrary::Population::Chromosome::BasicChromosome selectBestChromosome(GeneticLibrary::Population::Population population);
 
 	GeneticLibrary::Population::Population replenishPopulation (GeneticLibrary::Population::Population population);
-
 };
 
 
