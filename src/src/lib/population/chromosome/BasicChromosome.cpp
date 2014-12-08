@@ -5,20 +5,59 @@
  *      Author: bewo
  */
 
-#include "BasicChromome.h"
+#include <population/chromosome/BasicChromosome.h>
+#include <iostream>
+#include "utility/random.h"
 
 namespace GeneticLibrary {
 namespace Population {
 namespace Chromosome {
 
-BasicChromome::BasicChromome() {
-	// TODO Auto-generated constructor stub
 
+BasicChromosome::BasicChromosome() {
+
+	double value;
+	//Creating One Chromosome
+	for (int i = 0; i <= chromosomeSize; i++){
+		 value = Utility::random::instance()->generateDouble(0,100);
+		 values[i] = value;
+	}
+	//Setting fitness-flag (0 = not jet calculated)
+	this->age = 0;
+	this->fitness = -1;
 }
-
-BasicChromome::~BasicChromome() {
+BasicChromosome::~BasicChromosome() {
 	// TODO Auto-generated destructor stub
 }
+
+int BasicChromosome::getFitness(){
+	return this->fitness;
+}
+
+void BasicChromosome::setFitness(int fit){
+	this->fitness = fit;
+}
+
+double BasicChromosome::getValue(int position){
+	return this->values[position];
+}
+
+void BasicChromosome::setValue(int position, double value){
+	this->values[position] = value;
+}
+
+void BasicChromosome::incrementAge(){
+	this->age++;
+}
+
+void BasicChromosome::setAge(int age){
+	this->age = age;
+}
+
+int BasicChromosome::getAge(){
+	return this->age;
+}
+
 
 } /* namespace Chromosome */
 } /* namespace Population */

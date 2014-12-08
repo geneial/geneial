@@ -7,15 +7,32 @@
 
 #ifndef BASICCHROMOME_H_
 #define BASICCHROMOME_H_
+#define chromosomeSize 50 //TODO Link ChromosomeSize to horizon
+
+
+#include <vector>
 
 namespace GeneticLibrary {
 namespace Population {
 namespace Chromosome {
 
-class BasicChromome {
+class BasicChromosome {
+private:
+	int fitness;
+	double values[chromosomeSize];
+	int age;
+
 public:
-	BasicChromome();
-	virtual ~BasicChromome();
+	BasicChromosome();
+	virtual ~BasicChromosome();
+
+	int getFitness();
+	void setFitness(int fit);
+	double getValue(int i);
+	void setValue(int postion, double value);
+	void incrementAge();
+	int getAge();
+	void setAge(int age);
 };
 
 } /* namespace Chromosome */

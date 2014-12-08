@@ -27,6 +27,7 @@ int random::generateInt(){
 int random::generateInt(const int min, const int max){
 	 return rand() % (max - min + 1) + min;
 }
+
 double random::generateDouble(const double min, const double max){
     double range = (max - min);
     double div = RAND_MAX / range;

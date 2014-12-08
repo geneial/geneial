@@ -9,6 +9,8 @@
 #define POPULATION_H_
 
 #include "utility/printable.h"
+#include "population/chromosome/BasicChromosome.h"
+#include <vector>
 
 using namespace GeneticLibrary::Utility;
 
@@ -17,10 +19,16 @@ namespace Population {
 
 
 class Population : public printable {
+
+private:
+	std::vector<GeneticLibrary::Population::Chromosome::BasicChromosome> chromosomes;
+
 public:
 	Population();
 	virtual ~Population();
 	virtual void print(std::ostream& os) const;
+	std::vector<GeneticLibrary::Population::Chromosome::BasicChromosome> getPopulation();
+	void Population::generatePopulation();
 };
 
 } /* namespace Population */
