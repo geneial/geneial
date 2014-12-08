@@ -27,8 +27,8 @@ public:
 	Population();
 	virtual ~Population();
 	virtual void print(std::ostream& os) const;
-	std::vector<GeneticLibrary::Population::Chromosome::BasicChromosome> getPopulation();
-	void Population::generatePopulation();
+	std::vector<GeneticLibrary::Population::Chromosome::BasicChromosome> getChromosomes();
+	int size();
 };
 
 } /* namespace Population */

@@ -22,7 +22,7 @@ BasicChromosome::BasicChromosome() {
 		 value = Utility::random::instance()->generateDouble(0,100);
 		 values[i] = value;
 	}
-	//Setting fitness-flag (0 = not jet calculated)
+	//Setting fitness-flag (-1 = not jet calculated)
 	this->age = 0;
 	this->fitness = -1;
 }

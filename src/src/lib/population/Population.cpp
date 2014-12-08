@@ -6,12 +6,15 @@
  */
 
 #include "Population.h"
+#include "Config.h"
+#include <vector>
 
 namespace GeneticLibrary {
 namespace Population {
 
 Population::Population() {
-	//TODO: call factory to generate Popuation here
+	//put one Chromosome into the population to create a starting point
+	chromosomes.push_back(GeneticLibrary::Population::Chromosome::BasicChromosome());
 }
 
 Population::~Population() {
@@ -21,12 +24,14 @@ void Population::print(std::ostream& os) const {
 	os << "Population: ";
 }
 
-std::vector<GeneticLibrary::Population::Chromosome::BasicChromosome> Population::getPopulation(){
+std::vector<GeneticLibrary::Population::Chromosome::BasicChromosome> Population::getChromosomes(){
 	return this->chromosomes;
 }
 
-void Population::generatePopulation(){
-//TODO: Call Factory to generate/ fill up Population here
+
+
+int Population::size(){
+	return this-> chromosomes.size();
 }
 
 } /* namespace Population */
