@@ -24,10 +24,13 @@ private:
 	std::vector<GeneticLibrary::Population::Chromosome::BasicChromosome> chromosomes;
 
 public:
+
 	Population();
 	virtual ~Population();
 	virtual void print(std::ostream& os) const;
+
 	std::vector<GeneticLibrary::Population::Chromosome::BasicChromosome> getChromosomes();
+
 	int size();
 };
 

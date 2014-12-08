@@ -3,5 +3,5 @@
 #define Tutorial_VERSION_MINOR 1
 
 //Some Default Values
-#define defPoplationSize 	100
+#define defPopulationSize 	100
 #define defChromosomeSize 	50

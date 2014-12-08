@@ -11,6 +11,12 @@
 namespace GeneticLibrary {
 namespace Manager {
 
+/**
+ * Adds new Chromosomes to the population until a limit is reached (defined in config)
+ * @param population the population wich should be replenished
+ * @return a population wich contains a predefined number of chromosomes
+ * @see config.h
+ */
 GeneticLibrary::Population::Population replenishPopulation (GeneticLibrary::Population::Population population){
 
 	//if there are less chromosomes than required fill up:
@@ -25,6 +31,12 @@ GeneticLibrary::Population::Population replenishPopulation (GeneticLibrary::Popu
 	return population;
 }
 
+
+/**
+ * Selects the best Chromosome based on the fitness of each Chromosome in 'population'
+ * @param population population containing at least one Chromosone
+ * @return Chromosome with the highest fitness value
+ */
 GeneticLibrary::Population::Chromosome::BasicChromosome Manager::selectBestChromosome(GeneticLibrary::Population::Population population){
 	GeneticLibrary::Population::Chromosome::BasicChromosome bestChromosome = population.getChromosomes().at(0);
 	for (int i = 0; i <= population.size(); i++){

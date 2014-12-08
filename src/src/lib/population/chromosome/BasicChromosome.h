@@ -7,9 +7,9 @@
 
 #ifndef BASICCHROMOME_H_
 #define BASICCHROMOME_H_
-#define chromosomeSize 50 //TODO Link ChromosomeSize to horizon
 
 
+#include "Config.h"
 #include <vector>
 
 namespace GeneticLibrary {
@@ -19,7 +19,7 @@ namespace Chromosome {
 class BasicChromosome {
 private:
 	int fitness;
-	double values[chromosomeSize];
+	double values[defChromosomeSize];
 	int age;
 
 public:
