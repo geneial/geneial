@@ -5,12 +5,16 @@
  *      Author: lukas
  */
 
+
 #ifndef SRC_LIB_ALGORITHM_MANAGER_H_
 #define SRC_LIB_ALGORITHM_MANAGER_H_
 
 namespace GeneticLibrary {
 namespace Manager {
 
+/**
+ * Manages the population and most of the processes which modify the chromosomes
+ */
 class Manager{
 private:
 

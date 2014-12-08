@@ -1,8 +1,8 @@
-/*
- * Manager.cpp
- *
+/**
+ *  Manager.cpp
  *  Created on: Dec 8, 2014
- *      Author: lukas
+ *  Manages the population and most of the processes which modify the chromosomes
+ *
  */
 
 #include "Manager.h"
@@ -17,10 +17,10 @@ namespace Manager {
  * @return a population wich contains a predefined number of chromosomes
  * @see config.h
  */
-GeneticLibrary::Population::Population replenishPopulation (GeneticLibrary::Population::Population population){
+GeneticLibrary::Population::Population Manager::replenishPopulation (GeneticLibrary::Population::Population population){
 
 	//if there are less chromosomes than required fill up:
-	while (population.size() < defPoplationSize){
+	while (population.size() < defPopulationSize){
 
 		//build new chromosome
 		GeneticLibrary::Population::Chromosome::BasicChromosome newChromosome = GeneticLibrary::Population::Chromosome::BasicChromosome::BasicChromosome();
