@@ -8,37 +8,39 @@
 #ifndef POPULATION_H_
 #define POPULATION_H_
 
-#include "utility/printable.h"
-#include "population/chromosome/BasicChromosome.h"
+#include <utility/printable.h>
+#include <core/population/chromosome/BaseChromosome.h>
 #include <vector>
+
+//TODO (bewo) chromosome_age is unsigned int but -1?
+#define POPULATION_AGE_INITIAL (0)
 
 using namespace GeneticLibrary::Utility;
 
 namespace GeneticLibrary {
 namespace Population {
 
-
+template <typename FITNESS_TYPE>
 class Population : public printable {
-
-private:
-	std::vector<GeneticLibrary::Population::Chromosome::BasicChromosome> chromosomes;
-	unsigned int age;
-
 public:
 
 	Population();
 	virtual ~Population();
 	virtual void print(std::ostream& os) const;
-	unsigned int getAge();
+	unsigned int getAge() const;
 	void setAge(unsigned int age);
 	void doAge();
+	std::vector<Chromosome::BaseChromosome<FITNESS_TYPE> > getChromosomes();
+	int size() const;
 
-	std::vector<GeneticLibrary::Population::Chromosome::BasicChromosome> getChromosomes();
-
-	int size();
+private:
+	std::vector<Chromosome::BaseChromosome<FITNESS_TYPE> > chromosomes;
+	unsigned int _age;
 };
 
 } /* namespace Population */
 } /* namespace GeneticLibrary */
+
+#include <core/population/Population.hpp>
 
 #endif /* POPULATION_H_ */

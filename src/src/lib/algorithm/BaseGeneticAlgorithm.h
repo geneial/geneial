@@ -8,6 +8,10 @@
 #ifndef BASEGENETICALGORITHM_H_
 #define BASEGENETICALGORITHM_H_
 
+
+
+#include <core/population/management/BaseManager.h>
+
 namespace GeneticLibrary {
 namespace Algorithm {
 

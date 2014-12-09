@@ -11,12 +11,10 @@ namespace GeneticLibrary {
 namespace Algorithm {
 
 BaseGeneticAlgorithm::BaseGeneticAlgorithm() {
-	// TODO Auto-generated constructor stub
 
 }
 
 BaseGeneticAlgorithm::~BaseGeneticAlgorithm() {
-	// TODO Auto-generated destructor stub
 }
 
 } /* namespace Algorithm */
