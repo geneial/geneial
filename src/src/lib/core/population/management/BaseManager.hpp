@@ -30,6 +30,20 @@ Population<FITNESS_TYPE> BaseManager<FITNESS_TYPE>::replenishPopulation (){
 }
 
 template <typename FITNESS_TYPE>
+unsigned int BaseManager<FITNESS_TYPE>::updateFitness(){
+	//Iterate backwards over container (since new chromosomes are inserted at the end)
+	typename Population<FITNESS_TYPE>::chromosome_container::reverse_iterator rit =
+			getPopulation().getChromosomes().rbegin();
+	unsigned int num = 0;
+	for (;rit != getPopulation().getChromosomes().rend()
+					&& !(*rit)->hasFitness(); ++rit) {
+		(*rit)->setFitness(_fitnessEvaluator->evaluate(*rit));
+		num++;
+	}
+	return num;
+}
+
+template <typename FITNESS_TYPE>
 Chromosome::BaseChromosome<FITNESS_TYPE> BaseManager<FITNESS_TYPE>::selectBestChromosome(Population<FITNESS_TYPE> population){
 	/*
 	 * TODO (bewo) use functors as argument for comparison and fitness class here

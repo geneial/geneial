@@ -13,6 +13,7 @@
 #include <core/population/Population.h>
 #include <core/population/PopulationSettings.h>
 #include <core/population/builder/BaseChromosomeFactory.h>
+#include <core/fitness/FitnessEvaluator.h>
 #include <assert.h>
 
 namespace GeneticLibrary {
@@ -30,19 +31,26 @@ private:
 
 	PopulationSettings *_populationSettings;
 
+	FitnessEvaluator<FITNESS_TYPE> *_fitnessEvaluator;
+
 public:
 	BaseManager<FITNESS_TYPE>(
 		PopulationSettings *populationSettings,
-		Chromosome::BaseChromosomeFactory<FITNESS_TYPE> *chromosomeFactory
+		Chromosome::BaseChromosomeFactory<FITNESS_TYPE> *chromosomeFactory,
+		FitnessEvaluator<FITNESS_TYPE> *fitnessEvaluator
 		):
 	_population(),
 	_chromosomeFactory(chromosomeFactory),
-	_populationSettings(populationSettings)
+	_populationSettings(populationSettings),
+	_fitnessEvaluator(fitnessEvaluator)
 	{
 		assert(_chromosomeFactory != NULL);
 		assert(_populationSettings != NULL);
+		assert(_fitnessEvaluator != NULL);
 	};
 
+
+	unsigned int updateFitness();
 
 
 	/**

@@ -28,11 +28,13 @@ public:
 	BaseGeneticAlgorithm(
 			PopulationSettings *populationSettings,
 			BaseChromosomeFactory<FITNESS_TYPE> *chromosomeFactory,
-			StoppingCriteria::BaseStoppingCriterion<FITNESS_TYPE> *stoppingCriterion
+			StoppingCriteria::BaseStoppingCriterion<FITNESS_TYPE> *stoppingCriterion,
+			FitnessEvaluator<FITNESS_TYPE> *fitnessEvaluator
 	):
 		_manager(
 			populationSettings,
-			chromosomeFactory
+			chromosomeFactory,
+			fitnessEvaluator
 			),
 		_stoppingCriterion(stoppingCriterion){};
 

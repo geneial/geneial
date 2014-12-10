@@ -79,6 +79,13 @@ VALUE_TYPE MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getSum() const{
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 void MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::print(std::ostream& os) const{
+	os << "Fitness: ";
+	if(this->hasFitness()){
+		os << *this->getFitness();
+	}else{
+		os << "N/A";
+	}
+	os << ", ";
 	os << "Values: " << std::endl;
 	std::ostream_iterator<VALUE_TYPE> out_it(os, "; ");
 	std::copy ( _container.begin(), _container.end(), out_it );

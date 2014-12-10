@@ -43,9 +43,12 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 
 		_manager.getPopulation().doAge();
 
+		//mime some pseudo selection for testing by erasing all
 		_manager.getPopulation().getChromosomes().clear();
 
 		_manager.replenishPopulation();
+
+		_manager.updateFitness();
 
 	}
 

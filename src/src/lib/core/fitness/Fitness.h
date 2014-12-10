@@ -18,6 +18,7 @@ private:
 	FITNESS_TYPE _value;
   public:
 	Fitness() {};
+	Fitness(FITNESS_TYPE value): _value(value) {};
 
 	virtual ~Fitness() {};
 

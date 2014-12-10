@@ -8,9 +8,7 @@
 #ifndef BASE_CHROMOSOME_H_
 #define BASE_CHROMOSOME_H_
 
-//TODO (bewo) chromosome_age is unsigned int but -1?
-#define CHROMOSOME_AGE_UNITIALIZED (-1)
-
+#define CHROMOSOME_AGE_UNITIALIZED (0)
 
 #include <iostream>
 #include <utility/random.h>
@@ -33,25 +31,26 @@ public:
 	/**
 	 * Creates a new Chromosome with random values and a fitness of -1
 	 */
-	BaseChromosome();
-	virtual ~BaseChromosome();
+	BaseChromosome() : _fitness(NULL), _age(CHROMOSOME_AGE_UNITIALIZED) {};
+	virtual ~BaseChromosome() {};
 
 
 	/**
 	 * Gets the fitness value of a Chromosome.
 	 * Does not calculate the fitness.
 	 */
-	Fitness<FITNESS_TYPE> getFitness() const;
+	Fitness<FITNESS_TYPE>* getFitness() const;
 	/**
 	 * Sets Fitness of a chromosome
 	 */
-	void setFitness(const Fitness<FITNESS_TYPE> fitness);
+	void setFitness(Fitness<FITNESS_TYPE> * const fitness);
 
 	/**
 	 * Used to 'age' a chromosome. Increments the age of a chromosome by one
 	 * Returns the new age of the chromosome
 	 */
 	chromosome_age doAge();
+
 	/**
 	 * Returns the age of a chromosome
 	 */
@@ -61,8 +60,12 @@ public:
 
 	virtual void print(std::ostream& os) const = 0;
 
+	const bool hasFitness() const{
+		return (_fitness != NULL);
+	};
+
 private:
-	Fitness<FITNESS_TYPE> _fitness;
+	Fitness<FITNESS_TYPE>* _fitness;
 	chromosome_age _age;
 };
 

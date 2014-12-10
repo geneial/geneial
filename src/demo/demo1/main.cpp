@@ -8,14 +8,40 @@
 
 #include <algorithm/BaseGeneticAlgorithm.h>
 #include <algorithm/criteria/MaxIterationCriterion.h>
+#include <core/fitness/Fitness.h>
+#include <core/fitness/FitnessEvaluator.h>
 #include <core/population/PopulationSettings.h>
 #include <core/population/builder/MultiValueBuilderSettings.h>
 #include <core/population/builder/MultiIntValueChromosomeFactory.h>
 #include <Config.h>
 
+#include <stdexcept>
+
+using namespace GeneticLibrary;
 using namespace GeneticLibrary::Algorithm;
 using namespace GeneticLibrary::Algorithm::StoppingCriteria;
 using namespace GeneticLibrary::Population;
+using namespace GeneticLibrary::Population::Chromosome;
+
+
+class DemoChromosomeEvaluator: public GeneticLibrary::FitnessEvaluator<double>{
+public:
+	DemoChromosomeEvaluator(){};
+	Fitness<double>* evaluate(const BaseChromosome<double> *chromosome) const{
+
+		const MultiValueChromosome<int,double> *mvc = dynamic_cast<const MultiValueChromosome<int,double> *>(chromosome);
+		if(mvc){
+
+			//Let the fitness be the sum of all values
+			return new Fitness<double>(mvc->getSum());
+
+		}else{
+			throw new std::runtime_error("Chromosome is not an Integer Multi Value Chromosome!");
+		}
+
+		return new Fitness<double>(1);
+	};
+};
 
 int main(int argc, char **argv) {
 
@@ -30,12 +56,15 @@ int main(int argc, char **argv) {
 
 	BaseChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 
+	DemoChromosomeEvaluator *evaluator = new DemoChromosomeEvaluator();
+
 	StoppingCriteria::BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(100);
 
 	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(
 			populationSettings,
 			chromosomeFactory,
-			stoppingCriterion
+			stoppingCriterion,
+			evaluator
 	);
 
 	algorithm.solve();

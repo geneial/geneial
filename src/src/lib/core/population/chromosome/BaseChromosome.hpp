@@ -12,30 +12,23 @@ namespace Population {
 namespace Chromosome {
 
 
-template <class FT> BaseChromosome<FT>::BaseChromosome(): _age(CHROMOSOME_AGE_UNITIALIZED) {
-
-}
-template <class FT> BaseChromosome<FT>::~BaseChromosome() {
-}
-
-template <class FT> Fitness<FT> BaseChromosome<FT>::getFitness() const{
+template <class FITNESS_TYPE> Fitness<FITNESS_TYPE>* BaseChromosome<FITNESS_TYPE>::getFitness() const{
 	return _fitness;
 }
 
-template <class FT> void BaseChromosome<FT>::setFitness(const Fitness<FT> fit){
+template <class FITNESS_TYPE> void BaseChromosome<FITNESS_TYPE>::setFitness(Fitness<FITNESS_TYPE> * const fit){
 	_fitness = fit;
 }
 
-
-template <class FT> unsigned int BaseChromosome<FT>::doAge(){
+template <class FITNESS_TYPE> unsigned int BaseChromosome<FITNESS_TYPE>::doAge(){
 	return ++_age;
 }
 
-template <class FT> void BaseChromosome<FT>::setAge(unsigned int age){
+template <class FITNESS_TYPE> void BaseChromosome<FITNESS_TYPE>::setAge(unsigned int age){
 	_age = age;
 }
 
-template <class FT> unsigned int BaseChromosome<FT>::getAge() const{
+template <class FITNESS_TYPE> unsigned int BaseChromosome<FITNESS_TYPE>::getAge() const{
 	return _age;
 }
 
