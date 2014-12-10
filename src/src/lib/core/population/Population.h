@@ -31,11 +31,11 @@ public:
 	population_age getAge() const;
 	void setAge(population_age age);
 	void doAge();
-	std::vector<Chromosome::BaseChromosome<FITNESS_TYPE> > getChromosomes();
+	std::vector<Chromosome::BaseChromosome<FITNESS_TYPE>* >& getChromosomes();
 	int size() const;
 
 private:
-	std::vector<Chromosome::BaseChromosome<FITNESS_TYPE> > chromosomes;
+	std::vector<Chromosome::BaseChromosome<FITNESS_TYPE>* > chromosomes;
 	unsigned int _age;
 };
 

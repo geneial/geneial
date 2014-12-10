@@ -16,8 +16,8 @@ template <typename FITNESS_TYPE>
 class BaseChromosomeFactory {
 private:
 public:
-	BaseChromosomeFactory();
-	virtual ~BaseChromosomeFactory();
+	BaseChromosomeFactory() {};
+	virtual ~BaseChromosomeFactory() {}
 	virtual BaseChromosome<FITNESS_TYPE> *createChromosome() = 0;
 };
 

@@ -17,18 +17,18 @@ namespace Chromosome {
 template <typename VALUE_TYPE>
 class MultiValueBuilderSettings : public BuilderSettings<VALUE_TYPE> {
 private:
-	int _num;
+	unsigned int _num;
 
 public:
 	MultiValueBuilderSettings() : BuilderSettings<VALUE_TYPE>(),_num() {};
-	MultiValueBuilderSettings(int num, VALUE_TYPE random_max,	VALUE_TYPE random_min ): BuilderSettings<VALUE_TYPE>(random_max,random_min), _num(num) {};
-	virtual ~MultiValueBuilderSettings();
+	MultiValueBuilderSettings(unsigned int num, VALUE_TYPE random_max,	VALUE_TYPE random_min ): BuilderSettings<VALUE_TYPE>(random_max,random_min), _num(num) {};
+	virtual ~MultiValueBuilderSettings() {};
 
-	int getNum() const {
+	unsigned int getNum() const {
 		return _num;
 	}
 
-	void setNum(int num) {
+	void setNum(unsigned int num) {
 		_num = num;
 	}
 };

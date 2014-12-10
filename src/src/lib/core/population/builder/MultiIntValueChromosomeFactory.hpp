@@ -9,27 +9,29 @@
 #define MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_
 
 #include <core/population/builder/MultiIntValueChromosomeFactory.h>
+#include <core/population/chromosome/MultiValueChromosome.h>
 
 namespace GeneticLibrary {
 namespace Population {
 namespace Chromosome {
-template <typename FITNESS_TYPE> BaseChromosome<FITNESS_TYPE> *MultiIntValueChromosomeFactory<FITNESS_TYPE>::createChromosome(){
+
+template <typename FITNESS_TYPE>
+BaseChromosome<FITNESS_TYPE> *MultiIntValueChromosomeFactory<FITNESS_TYPE>::createChromosome(){
 
 	using namespace GeneticLibrary::Utility;
 
-	MultiValueBuilderSettings<VALUE_TYPE> *settings = &MultiValueChromosomeFactory<int,FITNESS_TYPE>::_settings;
 	MultiValueChromosome<int,FITNESS_TYPE> *new_chromosome = new MultiValueChromosome<int,FITNESS_TYPE>();
 	assert(new_chromosome->getSize() == 0);
 
-	new_chromosome->getContainer().reserve(settings->getNum());
+	new_chromosome->getContainer().reserve(this->_settings.getNum());
 
-	int i = settings->getNum();
+	int i = this->_settings.getNum();
 	while(i--){
-		new_chromosome->getContainer().push_back(random::generateInt(settings->getRandomMax(),settings->getRandomMin()));
+		new_chromosome->getContainer().push_back(random::instance()->generateInt(this->_settings.getRandomMax(),this->_settings.getRandomMin()));
 	}
-	assert(new_chromosome->getSize() == MultiValueChromosomeFactory<int,FITNESS_TYPE>::_settings.getNum());
+	assert(new_chromosome->getSize() == this->_settings.getNum());
 
-	BaseChromosome<FITNESS_TYPE> *result = *new_chromosome;
+	//BaseChromosome<FITNESS_TYPE> *result = *new_chromosome;
 	return new_chromosome;
 }
 

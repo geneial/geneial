@@ -5,8 +5,10 @@
  *      Author: bewo
  */
 
+
 #include <algorithm/BaseGeneticAlgorithm.h>
 #include <algorithm/criteria/MaxIterationCriterion.h>
+#include <core/population/PopulationSettings.h>
 #include <core/population/builder/MultiValueBuilderSettings.h>
 #include <core/population/builder/MultiIntValueChromosomeFactory.h>
 #include <Config.h>
@@ -26,7 +28,7 @@ int main(int argc, char **argv) {
 
 	MultiValueBuilderSettings<int> builderSettings = MultiValueBuilderSettings<int>(50,0,130);
 
-	BaseChromosomeFactory<double> *chromosomeFactory = &MultiIntValueChromosomeFactory<double>(builderSettings);
+	BaseChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 
 	StoppingCriteria::BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(100);
 

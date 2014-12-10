@@ -18,7 +18,7 @@ private:
 
 public:
 	PopulationSettings(int max_chromosomes) :_max_chromosomes(max_chromosomes){};
-	virtual ~PopulationSettings();
+	virtual ~PopulationSettings() {};
 
 	int getMaxChromosomes() const {
 		return _max_chromosomes;

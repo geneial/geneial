@@ -19,7 +19,7 @@ namespace StoppingCriteria {
 template <typename FITNESS_TYPE>
 class FitnessDeltaCriterion : public BaseStoppingCriterion<FITNESS_TYPE> {
 public:
-	virtual ~FitnessDeltaCriterion();
+	virtual ~FitnessDeltaCriterion() {};
 	virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager){
 		//TODO (bewo) here be dragons!
 		return true;

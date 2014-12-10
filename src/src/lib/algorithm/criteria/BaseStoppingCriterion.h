@@ -19,7 +19,7 @@ namespace StoppingCriteria {
 template <typename FITNESS_TYPE>
 class BaseStoppingCriterion{
 public:
-	virtual ~BaseStoppingCriterion();
+	virtual ~BaseStoppingCriterion(){};
 	virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager) = 0;
 };
 

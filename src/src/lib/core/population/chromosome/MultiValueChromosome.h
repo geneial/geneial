@@ -8,7 +8,7 @@
 #ifndef MULTIVALUECHROMOSOME_H_
 #define MULTIVALUECHROMOSOME_H_
 
-#include <population/chromosome/BaseChromosome.h>
+#include <core/population/chromosome/BaseChromosome.h>
 #include <assert.h>
 #include <vector>
 #include <algorithm>
@@ -23,9 +23,9 @@ using namespace std;
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 class MultiValueChromosome: public BaseChromosome<FITNESS_TYPE> {
 public:
-	typedef std::vector<VALUE_TYPE> value_container;
-	typedef value_container::const_iterator const_it;
-	typedef value_container::iterator it;
+	typedef typename std::vector<VALUE_TYPE> value_container;
+	typedef typename value_container::const_iterator const_it;
+	typedef typename value_container::iterator it;
 
 
 	MultiValueChromosome() :_container(){};
@@ -45,7 +45,7 @@ public:
 
 	//TODO (bewo) : provide further convenience methods at this point.
 
-	value_container& getContainer() const;
+	value_container& getContainer();
 	void setValueContainer(value_container container);
 
 	virtual void print(std::ostream& os) const;
@@ -59,5 +59,5 @@ private:
 } /* namespace Population */
 } /* namespace GeneticLibrary */
 
-#include "MultiValueChromosome.hpp"
+#include <core/population/chromosome/MultiValueChromosome.hpp>
 #endif /* MULTIVALUECHROMOSOME_H_ */

@@ -8,15 +8,12 @@
 #ifndef MULTIVALUECHROMOSOME_HPP_
 #define MULTIVALUECHROMOSOME_HPP_
 
-#include <population/chromosome/MultiValueChromosome.h>
+#include <core/population/chromosome/MultiValueChromosome.h>
+#include <iterator>
 
 namespace GeneticLibrary {
 namespace Population {
 namespace Chromosome {
-
-template <typename VALUE_TYPE, typename FITNESS_TYPE>
-MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::MultiValueChromosome() {
-}
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::~MultiValueChromosome() {
@@ -28,7 +25,7 @@ unsigned int MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getSize() const{
 }
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
-MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::value_container& MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getContainer() const{
+typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::value_container& MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getContainer(){
 	return _container;
 }
 
@@ -38,21 +35,21 @@ void MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::setValueContainer(value_cont
 }
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
-MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::const_it MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getConstIt() const{
+typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::const_it MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getConstIt() const{
 	return _container.const_iterator;
 }
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
-MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::it MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getIt() const{
+typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::it MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getIt() const{
 	return _container.iterator;
 }
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
-MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::it MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getMax() const{
+typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::it MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getMax() const{
 	    return max_element(_container.begin(),_container.end());
 }
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
-MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::it MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getMin() const{
+typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::it MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getMin() const{
 	   return min_element(_container.begin(),_container.end());
 }
 
@@ -87,7 +84,7 @@ VALUE_TYPE MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getSum() const{
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 void MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::print(std::ostream& os) const{
 	os << "Values: " << std::endl;
-	std::ostream_iterator<VALUE_TYPE,FITNESS_TYPE> out_it(os, "; ");
+	std::ostream_iterator<VALUE_TYPE> out_it(os, "; ");
 	std::copy ( _container.begin(), _container.end(), out_it );
 }
 

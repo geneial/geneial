@@ -8,6 +8,8 @@
 #ifndef MULTI_INT_VALUE_CHROMOSOME_FACTORY_H_
 #define MULTI_INT_VALUE_CHROMOSOME_FACTORY_H_
 
+#include <core/population/builder/MultiValueChromosomeFactory.h>
+
 namespace GeneticLibrary {
 namespace Population {
 namespace Chromosome {

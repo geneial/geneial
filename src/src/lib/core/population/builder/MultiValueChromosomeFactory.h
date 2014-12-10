@@ -13,7 +13,6 @@ namespace Population {
 namespace Chromosome {
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 class MultiValueChromosomeFactory : public BaseChromosomeFactory<FITNESS_TYPE>{
-private:
 protected:
 	MultiValueBuilderSettings<VALUE_TYPE> _settings;
 public:

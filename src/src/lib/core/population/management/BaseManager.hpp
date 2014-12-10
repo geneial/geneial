@@ -24,7 +24,9 @@ Population<FITNESS_TYPE> BaseManager<FITNESS_TYPE>::replenishPopulation (){
 		BaseChromosome<FITNESS_TYPE> *newChromosome = _chromosomeFactory->createChromosome();
 
 		//add at the end of vector
-		_population.getChromosomes().push_back(*newChromosome);
+		_population.getChromosomes().push_back(newChromosome);
+
+		std::cout << _population.size() << std::endl;
 	}
 	return _population;
 }

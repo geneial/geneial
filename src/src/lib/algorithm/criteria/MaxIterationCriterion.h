@@ -24,9 +24,9 @@ private:
 
 public:
 	MaxIterationCriterion(long num_max_iterations):_max(num_max_iterations){};
-	virtual ~MaxIterationCriterion();
+	virtual ~MaxIterationCriterion() {};
 	virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager){
-		return (manager.getPopulation().getAge() <_max);
+		return !(manager.getPopulation().getAge() < _max);
 	}
 };
 

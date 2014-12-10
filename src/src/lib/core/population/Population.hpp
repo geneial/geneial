@@ -35,7 +35,7 @@ void Population<FITNESS_TYPE>::print(std::ostream& os) const {
  * @return A vector of chromosomes
  */
 template <typename FITNESS_TYPE>
-std::vector<Chromosome::BaseChromosome<FITNESS_TYPE> > Population<FITNESS_TYPE>::getChromosomes(){
+std::vector<Chromosome::BaseChromosome<FITNESS_TYPE> * >& Population<FITNESS_TYPE>::getChromosomes(){
 	return this->chromosomes;
 }
 

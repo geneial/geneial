@@ -13,6 +13,7 @@
 #include <core/population/Population.h>
 #include <core/population/PopulationSettings.h>
 #include <core/population/builder/BaseChromosomeFactory.h>
+#include <assert.h>
 
 namespace GeneticLibrary {
 namespace Population {
@@ -34,11 +35,12 @@ public:
 		PopulationSettings *populationSettings,
 		Chromosome::BaseChromosomeFactory<FITNESS_TYPE> *chromosomeFactory
 		):
-	_populationSettings(populationSettings),
-	_chromosomeFactory(chromosomeFactory)
+	_population(),
+	_chromosomeFactory(chromosomeFactory),
+	_populationSettings(populationSettings)
 	{
 		assert(_chromosomeFactory != NULL);
-		//assert(_populationSettings != NULL); TODO (bewo)
+		assert(_populationSettings != NULL);
 	};
 
 
@@ -57,7 +59,7 @@ public:
 	 */
 	Population<FITNESS_TYPE> replenishPopulation ();
 
-	const Population<FITNESS_TYPE>& getPopulation() const {
+	Population<FITNESS_TYPE>& getPopulation() {
 		return _population;
 	}
 

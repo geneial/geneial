@@ -31,16 +31,19 @@ public:
 			StoppingCriteria::BaseStoppingCriterion<FITNESS_TYPE> *stoppingCriterion
 	):
 		_manager(
-			*populationSettings,
-			*chromosomeFactory
+			populationSettings,
+			chromosomeFactory
 			),
 		_stoppingCriterion(stoppingCriterion){};
-	virtual ~BaseGeneticAlgorithm();
+
+	virtual ~BaseGeneticAlgorithm() {};
 
 	void solve();
 };
 
 } /* namespace Algorithm */
 } /* namespace GeneticLibrary */
+
+#include <algorithm/BaseGeneticAlgorithm.hpp>
 
 #endif /* BASEGENETICALGORITHM_H_ */

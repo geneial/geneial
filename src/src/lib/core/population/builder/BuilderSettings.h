@@ -20,8 +20,8 @@ private:
 
 public:
 	BuilderSettings() {};
-	BuilderSettings(VALUE_TYPE random_max,	VALUE_TYPE random_min) :_random_min(random_min), _random_max(random_max) {};
-	virtual ~BuilderSettings();
+	BuilderSettings(VALUE_TYPE random_max,	VALUE_TYPE random_min) : _random_max(random_max),_random_min(random_min) {};
+	virtual ~BuilderSettings() {};
 
 	VALUE_TYPE getRandomMax() const {
 		return _random_max;

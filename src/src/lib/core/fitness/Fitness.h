@@ -17,9 +17,9 @@ class Fitness : public GeneticLibrary::Utility::printable
 private:
 	FITNESS_TYPE _value;
   public:
-	Fitness();
+	Fitness() {};
 
-	virtual ~Fitness();
+	virtual ~Fitness() {};
 
 	void set(FITNESS_TYPE value);
 
