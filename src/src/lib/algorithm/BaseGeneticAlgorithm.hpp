@@ -33,8 +33,7 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 	//Do a barrel roll...
 	while(!_stoppingCriterion->wasReached(_manager)){
 
-		//std::cout << _manager.getPopulation() << std::endl;
-		_manager.getPopulation().print(std::cout);
+		std::cout << _manager.getPopulation() << std::endl;
 
 		//TODO (bewo) implement genetic algorithm workflow here
 		//TODO (bewo) selection

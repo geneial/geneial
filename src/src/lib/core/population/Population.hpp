@@ -31,7 +31,7 @@ void Population<FITNESS_TYPE>::print(std::ostream& os) const {
 
 	//TODO (bewo) maybe use outstream iterator instead here.
 	for(typename chromosome_container::const_iterator chrom_it = _chromosomes.begin(); chrom_it != _chromosomes.end(); ++chrom_it) {
-		(*chrom_it)->print(os);
+		os << **chrom_it;
 	}
 }
 
