@@ -11,7 +11,8 @@
 #include <utility/printable.h>
 namespace GeneticLibrary{
 
-template <typename FITNESS_TYPE> class Fitness : public GeneticLibrary::Utility::printable
+template <typename FITNESS_TYPE>
+class Fitness : public GeneticLibrary::Utility::printable
 {
 private:
 	FITNESS_TYPE _value;
@@ -29,6 +30,6 @@ private:
     void print(std::ostream&) const;
 };
 
-}
-#include "Fitness.hpp"
+} /* namespace GeneticLibrary */
+#include <core/fitness/Fitness.hpp>
 #endif /* FITNESS_H_ */

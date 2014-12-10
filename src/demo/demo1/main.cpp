@@ -6,14 +6,35 @@
  */
 
 #include <algorithm/BaseGeneticAlgorithm.h>
+#include <algorithm/criteria/MaxIterationCriterion.h>
+#include <core/population/builder/MultiValueBuilderSettings.h>
+#include <core/population/builder/MultiIntValueChromosomeFactory.h>
 #include <Config.h>
+
+using namespace GeneticLibrary::Algorithm;
+using namespace GeneticLibrary::Algorithm::StoppingCriteria;
+using namespace GeneticLibrary::Population;
 
 int main(int argc, char **argv) {
 
-	std::cout << "GENEIAL demo1 - Version " << GENEIAL_VERSION_MAJOR << "." << GENEIAL_VERSION_MINOR << std::endl;
+	std::cout << "Running GENEIAL demo1 - Version " << GENEIAL_VERSION_MAJOR << "." << GENEIAL_VERSION_MINOR << std::endl;
+
 
 	//TODO (bewo): write example demo
-	using namespace GeneticLibrary::Algorithm;
 
-	BaseGeneticAlgorithm();
+	PopulationSettings *populationSettings = new PopulationSettings(50);
+
+	MultiValueBuilderSettings<int> builderSettings = MultiValueBuilderSettings<int>(50,0,130);
+
+	BaseChromosomeFactory<double> *chromosomeFactory = &MultiIntValueChromosomeFactory<double>(builderSettings);
+
+	StoppingCriteria::BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(100);
+
+	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(
+			populationSettings,
+			chromosomeFactory,
+			stoppingCriterion
+	);
+
+	algorithm.solve();
 }

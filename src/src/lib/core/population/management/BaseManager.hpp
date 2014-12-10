@@ -12,24 +12,20 @@ namespace GeneticLibrary {
 namespace Population {
 namespace Manager {
 
-template <typename FITNESS_TYPE>
-Population<FITNESS_TYPE> BaseManager<FITNESS_TYPE>::replenishPopulation (Population<FITNESS_TYPE> population){
+using namespace Chromosome;
 
-	/* TODO (bewo)
-	 *
+template <typename FITNESS_TYPE>
+Population<FITNESS_TYPE> BaseManager<FITNESS_TYPE>::replenishPopulation (){
+
 	//if there are less chromosomes than required fill up:
-	while (_population.size() < defPopulationSize){
+	while (_population.size() < _populationSettings->getMaxChromosomes()){
 
 		//build new chromosome
-		Chromosome::BaseChromosome<FITNESS_TYPE> newChromosome = GeneticLibrary::Population::Chromosome::BasicChromosome::BasicChromosome();
+		BaseChromosome<FITNESS_TYPE> *newChromosome = _chromosomeFactory->createChromosome();
 
 		//add at the end of vector
-		population.getChromosomes().push_back(newChromosome);
+		_population.getChromosomes().push_back(*newChromosome);
 	}
-	return population;
-
-	*/
-
 	return _population;
 }
 
@@ -47,7 +43,6 @@ Chromosome::BaseChromosome<FITNESS_TYPE> BaseManager<FITNESS_TYPE>::selectBestCh
 	return bestChromosome;
 
 	*/
-
 	return Chromosome::BaseChromosome<FITNESS_TYPE>();
 }
 

@@ -18,11 +18,7 @@ namespace Population {
  * @see replenishPopulation
  */
 template <typename FITNESS_TYPE>
-Population<FITNESS_TYPE>::Population(): _age(0) {
-	//put one Chromosome into the population to create a starting point
-	//TODO (bewo)
-	//chromosomes.push_back(Chromosome::BasicChromosome());
-}
+Population<FITNESS_TYPE>::Population(): _age(0) {}
 
 template <typename FITNESS_TYPE>
 Population<FITNESS_TYPE>::~Population() {

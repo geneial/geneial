@@ -6,7 +6,7 @@
  */
 #ifndef FITNESS_HPP_
 #define FITNESS_HPP_
-#include "Fitness.h"
+#include <core/fitness/Fitness.h>
 
 template <typename FITNESS_TYPE> FITNESS_TYPE GeneticLibrary::Fitness<FITNESS_TYPE>::get() const {
   return _value;

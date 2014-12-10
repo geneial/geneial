@@ -22,7 +22,6 @@ template <typename VALUE_TYPE, typename FITNESS_TYPE>
 MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::~MultiValueChromosome() {
 }
 
-
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 unsigned int MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getSize() const{
 	return _container.size();
@@ -37,7 +36,6 @@ template <typename VALUE_TYPE, typename FITNESS_TYPE>
 void MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::setValueContainer(value_container container){
 	_container = container;
 }
-
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::const_it MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getConstIt() const{

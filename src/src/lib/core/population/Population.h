@@ -23,12 +23,13 @@ namespace Population {
 template <typename FITNESS_TYPE>
 class Population : public printable {
 public:
+	typedef unsigned int population_age;
 
 	Population();
 	virtual ~Population();
 	virtual void print(std::ostream& os) const;
-	unsigned int getAge() const;
-	void setAge(unsigned int age);
+	population_age getAge() const;
+	void setAge(population_age age);
 	void doAge();
 	std::vector<Chromosome::BaseChromosome<FITNESS_TYPE> > getChromosomes();
 	int size() const;
