@@ -14,13 +14,13 @@ namespace Population {
 
 class PopulationSettings {
 private:
-	int _max_chromosomes;
+	unsigned int _max_chromosomes;
 
 public:
 	PopulationSettings(int max_chromosomes) :_max_chromosomes(max_chromosomes){};
 	virtual ~PopulationSettings() {};
 
-	int getMaxChromosomes() const {
+	unsigned int getMaxChromosomes() const {
 		return _max_chromosomes;
 	}
 

@@ -29,7 +29,7 @@ public:
 
 
 	MultiValueChromosome() :_container(){};
-	virtual ~MultiValueChromosome();
+	virtual ~MultiValueChromosome() {};
 
 	const_it getConstIt() const;
 	it getIt() const;

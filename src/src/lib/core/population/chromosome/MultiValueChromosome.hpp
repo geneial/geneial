@@ -16,10 +16,6 @@ namespace Population {
 namespace Chromosome {
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
-MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::~MultiValueChromosome() {
-}
-
-template <typename VALUE_TYPE, typename FITNESS_TYPE>
 unsigned int MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getSize() const{
 	return _container.size();
 }
@@ -86,6 +82,7 @@ void MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::print(std::ostream& os) cons
 	os << "Values: " << std::endl;
 	std::ostream_iterator<VALUE_TYPE> out_it(os, "; ");
 	std::copy ( _container.begin(), _container.end(), out_it );
+	os << std::endl;
 }
 
 } /* namespace Chromosome */

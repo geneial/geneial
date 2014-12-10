@@ -24,6 +24,16 @@ template <typename FITNESS_TYPE>
 class Population : public printable {
 public:
 	typedef unsigned int population_age;
+	typedef unsigned int population_size;
+
+	typedef typename std::vector<Chromosome::BaseChromosome<FITNESS_TYPE>* > chromosome_container;
+	typedef typename chromosome_container::const_iterator const_it;
+	typedef typename chromosome_container::iterator it;
+
+	const_it getConstIt() const;
+	it getIt() const;
+
+	population_size getSize() const;
 
 	Population();
 	virtual ~Population();
@@ -31,12 +41,13 @@ public:
 	population_age getAge() const;
 	void setAge(population_age age);
 	void doAge();
-	std::vector<Chromosome::BaseChromosome<FITNESS_TYPE>* >& getChromosomes();
-	int size() const;
+
+	const chromosome_container& getChromosomes() const;
+	chromosome_container& getChromosomes();
 
 private:
-	std::vector<Chromosome::BaseChromosome<FITNESS_TYPE>* > chromosomes;
-	unsigned int _age;
+	chromosome_container _chromosomes;
+	population_age _age;
 };
 
 } /* namespace Population */

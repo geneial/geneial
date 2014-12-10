@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
 	std::cout << "Running GENEIAL demo1 - Version " << GENEIAL_VERSION_MAJOR << "." << GENEIAL_VERSION_MINOR << std::endl;
 
 
-	//TODO (bewo): write example demo
+	//TODO (bewo): write reasonable example demo
 
 	PopulationSettings *populationSettings = new PopulationSettings(50);
 
