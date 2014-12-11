@@ -8,14 +8,15 @@
 #define MANAGER_HPP_
 
 #include <core/population/management/BaseManager.h>
+#include <iterator>
+
 namespace GeneticLibrary {
 namespace Population {
 namespace Manager {
 
 using namespace Chromosome;
 
-template <typename FITNESS_TYPE>
-Population<FITNESS_TYPE> BaseManager<FITNESS_TYPE>::replenishPopulation (){
+template <typename FITNESS_TYPE>void BaseManager<FITNESS_TYPE>::replenishPopulation (){
 
 	//if there are less chromosomes than required fill up:
 	while (_population.getSize() < _populationSettings->getMaxChromosomes()){
@@ -26,14 +27,13 @@ Population<FITNESS_TYPE> BaseManager<FITNESS_TYPE>::replenishPopulation (){
 		//add at the end of vector
 		_population.getChromosomes().push_back(newChromosome);
 	}
-	return _population;
 }
 
 
 template <typename FITNESS_TYPE>
 void BaseManager<FITNESS_TYPE>::replacePopulation (typename Population<FITNESS_TYPE>::chromosome_container replacementPopulation){
 	_population.getChromosomes().clear();
-	 std::copy(replacementPopulation.begin(),replacementPopulation.end(), _population.getChromosomes().begin());
+	std::copy(replacementPopulation.begin(),replacementPopulation.end(), std::back_inserter(_population.getChromosomes()));
 }
 
 template <typename FITNESS_TYPE>

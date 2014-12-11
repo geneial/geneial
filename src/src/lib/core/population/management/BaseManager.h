@@ -67,9 +67,8 @@ public:
 
 	/**
 	 * Adds new chromosomes to the population until a limit is reached
-	 * @return a population which contains a predefined number of chromosomes
 	 */
-	Population<FITNESS_TYPE> replenishPopulation ();
+	void replenishPopulation ();
 
 	Population<FITNESS_TYPE>& getPopulation() {
 		return _population;

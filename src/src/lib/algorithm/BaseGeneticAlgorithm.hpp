@@ -52,6 +52,11 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 		//For testing purposes just replace the current population by the selection result
 		_manager.replacePopulation(selectionResult);
 
+		std::cout << "======================" << std::endl;
+		std::cout << "Selection Result: " << std::endl;
+		std::cout << _manager.getPopulation() << std::endl;
+		std::cout << "======================" << std::endl;
+
 		//TODO (bewo) crossover
 		//TODO (bewo) mutation
 		//TODO (bewo) scaling

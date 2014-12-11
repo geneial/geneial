@@ -30,9 +30,6 @@ public:
 	typedef typename chromosome_container::const_iterator const_it;
 	typedef typename chromosome_container::iterator it;
 
-	const_it getConstIt() const;
-	it getIt() const;
-
 	population_size getSize() const;
 
 	Population();
@@ -42,8 +39,8 @@ public:
 	void setAge(population_age age);
 	void doAge();
 
-	const chromosome_container& getChromosomes() const;
-	chromosome_container& getChromosomes();
+	const chromosome_container& getChromosomes() const { return _chromosomes; }
+	chromosome_container& getChromosomes() { return _chromosomes; }
 
 private:
 	chromosome_container _chromosomes;
