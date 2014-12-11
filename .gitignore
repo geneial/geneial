@@ -23,4 +23,5 @@ install_manifest.txt
 build/
 
 #any kind of valgrind logfile or alike
-.log
+*.log
+callgrind.out.*
