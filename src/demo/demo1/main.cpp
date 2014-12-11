@@ -5,7 +5,7 @@
  *      Author: bewo
  */
 
-
+#include "boost/shared_ptr.hpp"
 #include <algorithm/BaseGeneticAlgorithm.h>
 #include <algorithm/criteria/MaxIterationCriterion.h>
 #include <core/fitness/Fitness.h>
@@ -31,17 +31,17 @@ using namespace GeneticLibrary::Operation::Selection;
 class DemoChromosomeEvaluator: public FitnessEvaluator<double>{
 public:
 	DemoChromosomeEvaluator(){};
-	Fitness<double>* evaluate(const BaseChromosome<double> *chromosome) const{
+	Fitness<double>::ptr evaluate(const BaseChromosome<double> *chromosome) const{
 
 		const MultiValueChromosome<int,double> *mvc = dynamic_cast<const MultiValueChromosome<int,double> *>(chromosome);
 		if(mvc){
 			//Let the fitness be the sum of all values
-			return new Fitness<double>(mvc->getSum());
+			return boost::shared_ptr<Fitness<double> > (new Fitness<double>(mvc->getSum()));
 		}else{
 			throw new std::runtime_error("Chromosome is not an Integer Multi Value Chromosome!");
 		}
-
-		return new Fitness<double>(1);
+		boost::shared_ptr<Fitness<double> > ptr(new Fitness<double>(1));
+		return ptr;
 	};
 };
 
@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
 
 	DemoChromosomeEvaluator *evaluator = new DemoChromosomeEvaluator();
 
-	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(1000);
+	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(10000);
 
 	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(
 			populationSettings,

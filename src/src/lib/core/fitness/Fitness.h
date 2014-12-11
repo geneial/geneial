@@ -9,6 +9,8 @@
 #define FITNESS_H_
 
 #include <utility/printable.h>
+#include "boost/shared_ptr.hpp"
+
 namespace GeneticLibrary{
 
 template <typename FITNESS_TYPE>
@@ -16,7 +18,10 @@ class Fitness : public GeneticLibrary::Utility::printable
 {
 private:
 	FITNESS_TYPE _value;
-  public:
+public:
+	typedef boost::shared_ptr<Fitness <FITNESS_TYPE> > ptr;
+	typedef boost::shared_ptr<const Fitness <FITNESS_TYPE> > const_ptr;
+
 	Fitness() {};
 	Fitness(FITNESS_TYPE value): _value(value) {};
 

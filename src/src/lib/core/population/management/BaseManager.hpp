@@ -38,7 +38,7 @@ void BaseManager<FITNESS_TYPE>::replacePopulation (typename Population<FITNESS_T
 
 template <typename FITNESS_TYPE>
 unsigned int BaseManager<FITNESS_TYPE>::updateFitness(){
-	//Iterate backwards over container (since new chromosomes are inserted at the end)
+	//Iterate backwards over container (since new chromosomes are always inserted at the end)
 	typename Population<FITNESS_TYPE>::chromosome_container::reverse_iterator rit =
 			getPopulation().getChromosomes().rbegin();
 	unsigned int num = 0;

@@ -10,11 +10,12 @@
 
 #define CHROMOSOME_AGE_UNITIALIZED (0)
 
-#include <iostream>
 #include <utility/random.h>
 #include <utility/printable.h>
 #include <core/fitness/Fitness.h>
-#include "Config.h"
+
+#include <iostream>
+#include "boost/shared_ptr.hpp"
 
 namespace GeneticLibrary {
 namespace Population {
@@ -28,10 +29,13 @@ class BaseChromosome : public Utility::printable {
 
 public:
 	typedef unsigned int chromosome_age;
+	typedef typename boost::shared_ptr<BaseChromosome <FITNESS_TYPE> > ptr;
+	typedef typename boost::shared_ptr<const BaseChromosome <FITNESS_TYPE> > const_ptr;
+
 	/**
 	 * Creates a new Chromosome with random values and a fitness of -1
 	 */
-	BaseChromosome() : _fitness(NULL), _age(CHROMOSOME_AGE_UNITIALIZED) {};
+	BaseChromosome() : _fitness(), _age(CHROMOSOME_AGE_UNITIALIZED) {};
 	virtual ~BaseChromosome() {};
 
 
@@ -39,11 +43,11 @@ public:
 	 * Gets the fitness value of a Chromosome.
 	 * Does not calculate the fitness.
 	 */
-	Fitness<FITNESS_TYPE>* getFitness() const;
+	const typename Fitness<FITNESS_TYPE>::ptr getFitness() const;
 	/**
 	 * Sets Fitness of a chromosome
 	 */
-	void setFitness(Fitness<FITNESS_TYPE> * const fitness);
+	void setFitness(const typename Fitness<FITNESS_TYPE>::ptr& fitness);
 
 	/**
 	 * Used to 'age' a chromosome. Increments the age of a chromosome by one
@@ -61,11 +65,11 @@ public:
 	virtual void print(std::ostream& os) const = 0;
 
 	const bool hasFitness() const{
-		return (_fitness != NULL);
+		return !(_fitness == NULL);
 	};
 
 private:
-	Fitness<FITNESS_TYPE>* _fitness;
+	typename Fitness<FITNESS_TYPE>::ptr  _fitness;
 	chromosome_age _age;
 };
 

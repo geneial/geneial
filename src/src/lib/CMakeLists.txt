@@ -40,4 +40,4 @@ install (TARGETS ${LIB_GENEIAL_SHARED_NAME} DESTINATION bin)
 install (TARGETS ${LIB_GENEIAL_STATIC_NAME} DESTINATION bin)
 install( DIRECTORY ./ 
             DESTINATION include/${PROJECT_NAME}
-            FILES_MATCHING PATTERN "*.h" )
+            FILES_MATCHING PATTERN "*.h|*.hpp" )

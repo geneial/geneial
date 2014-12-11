@@ -12,11 +12,11 @@ namespace Population {
 namespace Chromosome {
 
 
-template <class FITNESS_TYPE> Fitness<FITNESS_TYPE>* BaseChromosome<FITNESS_TYPE>::getFitness() const{
-	return _fitness;
+template <class FITNESS_TYPE> const typename Fitness<FITNESS_TYPE>::ptr BaseChromosome<FITNESS_TYPE>::getFitness() const{
+	return this->_fitness;
 }
 
-template <class FITNESS_TYPE> void BaseChromosome<FITNESS_TYPE>::setFitness(Fitness<FITNESS_TYPE> * const fit){
+template <class FITNESS_TYPE> void BaseChromosome<FITNESS_TYPE>::setFitness(const typename Fitness<FITNESS_TYPE>::ptr& fit){
 	_fitness = fit;
 }
 
