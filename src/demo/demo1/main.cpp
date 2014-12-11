@@ -31,14 +31,14 @@ using namespace GeneticLibrary::Operation::Selection;
 class DemoChromosomeEvaluator: public FitnessEvaluator<double>{
 public:
 	DemoChromosomeEvaluator(){};
-	Fitness<double>::ptr evaluate(const BaseChromosome<double> *chromosome) const{
+	Fitness<double>::ptr evaluate(const BaseChromosome<double>::ptr chromosome) const{
 
-		const MultiValueChromosome<int,double> *mvc = dynamic_cast<const MultiValueChromosome<int,double> *>(chromosome);
+		MultiValueChromosome<int,double>::ptr mvc = boost::dynamic_pointer_cast<MultiValueChromosome<int,double> >(chromosome);
 		if(mvc){
 			//Let the fitness be the sum of all values
 			return boost::shared_ptr<Fitness<double> > (new Fitness<double>(mvc->getSum()));
 		}else{
-			throw new std::runtime_error("Chromosome is not an Integer Multi Value Chromosome!");
+			throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
 		}
 		boost::shared_ptr<Fitness<double> > ptr(new Fitness<double>(1));
 		return ptr;
@@ -75,4 +75,12 @@ int main(int argc, char **argv) {
 	);
 
 	algorithm.solve();
+
+	//normally, this is not necessary because we're existing, but for valgrind's satisfaction, we free stuff anyway.
+	delete populationSettings;
+	delete evaluator;
+	delete chromosomeFactory;
+	delete selectionOperation;
+	delete selectionSettings;
+	delete stoppingCriterion;
 }

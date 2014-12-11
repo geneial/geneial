@@ -12,7 +12,6 @@
 #include <core/population/chromosome/BaseChromosome.h>
 #include <vector>
 
-//TODO (bewo) chromosome_age is unsigned int but -1?
 #define POPULATION_AGE_INITIAL (0)
 
 using namespace GeneticLibrary::Utility;
@@ -26,7 +25,7 @@ public:
 	typedef unsigned int population_age;
 	typedef unsigned int population_size;
 
-	typedef typename std::vector<Chromosome::BaseChromosome<FITNESS_TYPE>* > chromosome_container;
+	typedef typename std::vector<typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr > chromosome_container;
 	typedef typename chromosome_container::const_iterator const_it;
 	typedef typename chromosome_container::iterator it;
 

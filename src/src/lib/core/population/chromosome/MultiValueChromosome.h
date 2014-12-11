@@ -9,6 +9,8 @@
 #define MULTIVALUECHROMOSOME_H_
 
 #include <core/population/chromosome/BaseChromosome.h>
+#include "boost/shared_ptr.hpp"
+
 #include <assert.h>
 #include <vector>
 #include <algorithm>
@@ -27,6 +29,8 @@ public:
 	typedef typename value_container::const_iterator const_it;
 	typedef typename value_container::iterator it;
 
+	typedef typename boost::shared_ptr<MultiValueChromosome <VALUE_TYPE,FITNESS_TYPE> > ptr;
+	typedef typename boost::shared_ptr<const MultiValueChromosome <VALUE_TYPE,FITNESS_TYPE> > const_ptr;
 
 	MultiValueChromosome() :_container(){};
 	virtual ~MultiValueChromosome() {};

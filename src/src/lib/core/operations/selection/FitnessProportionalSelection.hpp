@@ -23,35 +23,40 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 		const Population::Population<FITNESS_TYPE> &population,
 		BaseManager<FITNESS_TYPE> &manager){
 
-		typedef std::multimap<FITNESS_TYPE, BaseChromosome<FITNESS_TYPE>* > map_type;
+		//shorthands for type mess
+		typedef std::multimap<FITNESS_TYPE, typename BaseChromosome<FITNESS_TYPE>::ptr > map_type;
+		typedef typename BaseChromosome<FITNESS_TYPE>::ptr chrom_ptr_type;
+		typedef typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set result_set;
+		typedef typename Population::Population<FITNESS_TYPE>::const_it const_pop_itr;
+
+		result_set result;
+
 
 		//Calculate total sum of fitness
 		FITNESS_TYPE sum(0);
-		for (typename Population::Population<FITNESS_TYPE>::const_it it =
-				population.getChromosomes().begin();
+		for (const_pop_itr it =	population.getChromosomes().begin();
 				it != population.getChromosomes().end(); ++it) {
 			sum += (*it)->getFitness()->get();
 		}
+		//TODO (bewo) maybe use a fancy-ass functor instead?
 
 		assert(sum>0);
 
 		//Create a multimap with fitness-proportional probability as key
 		map_type sorted_multimap;
-		for (typename Population::Population<FITNESS_TYPE>::const_it it =
-				population.getChromosomes().begin();
+		for (const_pop_itr it = population.getChromosomes().begin();
 				it != population.getChromosomes().end(); ++it) {
 			FITNESS_TYPE prop_fitness = (*it)->getFitness()->get() / sum;
-			sorted_multimap.insert(std::pair<FITNESS_TYPE,BaseChromosome<FITNESS_TYPE>* >(prop_fitness,*it));
+			sorted_multimap.insert(std::pair<FITNESS_TYPE, chrom_ptr_type >(prop_fitness,*it));
 		}
 
 		SelectionSettings* settings = this->getSettings();
 
-		typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set result;
 
 		unsigned int left_select = settings->getNumberOfParents();
 		//First, handle elitism, iterate backwards over the sorted multimap and select the best chromosomes.
 
-		//TODO (bewo) OPTIMIZE: using sth like transform(i, j, back_inserter(v), select2nd<MapType::value_type>()); ???
+		//TODO (bewo) OPTIMIZE: using sth like transform(i, j, back_inserter(v), select2nd<MapType::value_type>()); instead ???
 		unsigned int elitism_to_select = settings->getElitismSuccessors();
 		typename map_type::reverse_iterator crit = sorted_multimap.rbegin();
 		for (;crit != sorted_multimap.rend() && elitism_to_select > 0; ++crit) {
@@ -71,7 +76,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 			//wrap around if necessary.
 			typename map_type::reverse_iterator crit = sorted_multimap.rbegin();
 			 while (crit != sorted_multimap.rend() && left_select > 0) {
-				 BaseChromosome<FITNESS_TYPE>* chrom = crit->second;
+				 chrom_ptr_type chrom = crit->second;
 				 double prob = (crit->first);
 				 if(random::instance()->decision(prob)){
 					 //Use it.

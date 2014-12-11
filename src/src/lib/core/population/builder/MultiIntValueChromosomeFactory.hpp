@@ -16,11 +16,11 @@ namespace Population {
 namespace Chromosome {
 
 template <typename FITNESS_TYPE>
-BaseChromosome<FITNESS_TYPE> *MultiIntValueChromosomeFactory<FITNESS_TYPE>::createChromosome(){
+typename BaseChromosome<FITNESS_TYPE>::ptr MultiIntValueChromosomeFactory<FITNESS_TYPE>::createChromosome(){
 
 	using namespace GeneticLibrary::Utility;
 
-	MultiValueChromosome<int,FITNESS_TYPE> *new_chromosome = new MultiValueChromosome<int,FITNESS_TYPE>();
+	typename MultiValueChromosome<int,FITNESS_TYPE>::ptr new_chromosome(new MultiValueChromosome<int,FITNESS_TYPE>());
 	assert(new_chromosome->getSize() == 0);
 
 	new_chromosome->getContainer().reserve(this->_settings.getNum());
@@ -31,8 +31,8 @@ BaseChromosome<FITNESS_TYPE> *MultiIntValueChromosomeFactory<FITNESS_TYPE>::crea
 	}
 	assert(new_chromosome->getSize() == this->_settings.getNum());
 
-	//BaseChromosome<FITNESS_TYPE> *result = *new_chromosome;
-	return new_chromosome;
+	typename BaseChromosome<FITNESS_TYPE>::ptr result = boost::dynamic_pointer_cast<BaseChromosome<FITNESS_TYPE> >(new_chromosome);
+	return result;
 }
 
 } /* namespace Chromosome */

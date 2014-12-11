@@ -17,7 +17,7 @@ protected:
 	MultiValueBuilderSettings<VALUE_TYPE> _settings;
 public:
 	MultiValueChromosomeFactory(MultiValueBuilderSettings<VALUE_TYPE> settings):_settings(settings){};
-	BaseChromosome<FITNESS_TYPE> *createChromosome() = 0;
+	typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome() = 0;
 
 };
 

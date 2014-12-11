@@ -18,7 +18,7 @@ private:
 public:
 	BaseChromosomeFactory() {};
 	virtual ~BaseChromosomeFactory() {}
-	virtual BaseChromosome<FITNESS_TYPE> *createChromosome() = 0;
+	virtual typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome() = 0;
 };
 
 } /* namespace Chromosome */

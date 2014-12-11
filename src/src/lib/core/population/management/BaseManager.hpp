@@ -22,7 +22,7 @@ template <typename FITNESS_TYPE>void BaseManager<FITNESS_TYPE>::replenishPopulat
 	while (_population.getSize() < _populationSettings->getMaxChromosomes()){
 
 		//build new chromosome
-		BaseChromosome<FITNESS_TYPE> *newChromosome = _chromosomeFactory->createChromosome();
+		typename BaseChromosome<FITNESS_TYPE>::ptr newChromosome = _chromosomeFactory->createChromosome();
 
 		//add at the end of vector
 		_population.getChromosomes().push_back(newChromosome);

@@ -20,7 +20,7 @@ class MultiIntValueChromosomeFactory : public MultiValueChromosomeFactory<int,FI
 
 public:
 	MultiIntValueChromosomeFactory(MultiValueBuilderSettings<int> settings): MultiValueChromosomeFactory<int,FITNESS_TYPE>(settings){};
-	BaseChromosome<FITNESS_TYPE> *createChromosome();
+	typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome();
 
 };
 
