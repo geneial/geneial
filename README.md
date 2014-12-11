@@ -3,8 +3,8 @@ This file uses markdown syntax, adhere when fiddling!
 http://en.wikipedia.org/wiki/Markdown
 -->
 
-OASysGL - Elitism and RWTH: Yin and Yang
-========================================
+libGENEIAL - Elitism and RWTH: Yin and Yang
+===========================================
 
 
 ##1. Building the library
@@ -74,8 +74,49 @@ Then in the `build/` directory run
 
 You will find the documentation in `build/doc/html/index.html`
 
+
+
+##7. Running Benchmarks
+Currently, we provide two test suites for running memory leak checks and profiling the calls.
+The benchmarks are located in the `benchmark/`-folder.
+
+###7.1 Preliminaries
+You'll need valgrind on Debian-based distributions this may be installed by running
+    
+    sudo apt-get install valgrind
+
+In addition, to plot the callgraph you may run
+
+    sudo apt-get install python graphviz
+
+###7.2 Executing the benchmarks
+
+For running the memcheck benchmark run 
+
+    cd benchmarks
+    ./valgrind-suite.sh
+
+Analougously, for the callgrind benchmark run
+
+    cd benchmarks
+    ./callgrind-suite.sh
+
+
+##8. Running the demo(s)
+Currently, libGENEIAL is mainly a template-based library. Hence, it is essential that the demos compile to ensure 
+that the library itself is compiling.
+The demos are also compiled by either running the all-encompassing `make` or the more unequivocal `make demo{X}` , respectively where `{X}` denotes the demo number to build.
+
+
 ##99.TODOs
-* write the actual library 
+* coupling/crossover
+* mutation
+* scaling
+* multithreading 
+
+
+* unit tests for like everything except random :)
+
 * write demo programs
 * write code documentation
 * profit / world domination
