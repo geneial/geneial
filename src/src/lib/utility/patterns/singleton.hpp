@@ -10,13 +10,13 @@ public:
 		return _instance;
 	}
 	virtual ~singleton() {
+		delete _instance;
 		_instance = 0;
 	}
 private:
 	static C* _instance;
 protected:
-	singleton() {
-	}
+	singleton() {}
 };
 template<typename C> C* singleton<C>::_instance = 0;
 

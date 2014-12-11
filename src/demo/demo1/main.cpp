@@ -76,7 +76,8 @@ int main(int argc, char **argv) {
 
 	algorithm.solve();
 
-	//normally, this is not necessary because we're existing, but for valgrind's satisfaction, we free stuff anyway.
+	//normally, this is not necessary because we're exiting anyway,
+	//but for valgrind's satisfaction, we free stuff nonetheless.
 	delete populationSettings;
 	delete evaluator;
 	delete chromosomeFactory;
