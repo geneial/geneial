@@ -29,6 +29,13 @@ Population<FITNESS_TYPE> BaseManager<FITNESS_TYPE>::replenishPopulation (){
 	return _population;
 }
 
+
+template <typename FITNESS_TYPE>
+void BaseManager<FITNESS_TYPE>::replacePopulation (typename Population<FITNESS_TYPE>::chromosome_container replacementPopulation){
+	_population.getChromosomes().clear();
+	 std::copy(replacementPopulation.begin(),replacementPopulation.end(), _population.getChromosomes().begin());
+}
+
 template <typename FITNESS_TYPE>
 unsigned int BaseManager<FITNESS_TYPE>::updateFitness(){
 	//Iterate backwards over container (since new chromosomes are inserted at the end)

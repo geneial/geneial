@@ -9,16 +9,18 @@ namespace Utility {
 class random : public singleton<random> {
 	 friend class singleton <random>;
  public:
-	bool generateBit();
+	bool generateBit()  const;
 
-	int generateInt();
-	int generateInt(const int min, const int max);
+	bool decision(const double probability) const;
 
-	double generateDouble();
-	double generateDouble(const double min, const double max);
+	int generateInt() const;
+	int generateInt(const int min, const int max) const;
 
-	float generateFloat();
-	float generateFloat(const float min, const float max);
+	double generateDouble() const;
+	double generateDouble(const double min, const double max) const;
+
+	float generateFloat() const;
+	float generateFloat(const float min, const float max) const;
 
 	virtual ~random() {};
 

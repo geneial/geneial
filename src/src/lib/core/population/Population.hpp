@@ -38,16 +38,13 @@ void Population<FITNESS_TYPE>::print(std::ostream& os) const {
 
 template <typename FITNESS_TYPE>
 typename Population<FITNESS_TYPE>::const_it Population<FITNESS_TYPE>::getConstIt() const{
-	return _chromosomes.const_iterator;
+	return _chromosomes.begin();
 }
 
 template <typename FITNESS_TYPE>
 typename Population<FITNESS_TYPE>::it Population<FITNESS_TYPE>::getIt() const{
-	return _chromosomes.iterator;
+	return _chromosomes.begin();
 }
-
-
-
 
 
 /**
@@ -56,6 +53,15 @@ typename Population<FITNESS_TYPE>::it Population<FITNESS_TYPE>::getIt() const{
  */
 template <typename FITNESS_TYPE>
 typename Population<FITNESS_TYPE>::chromosome_container& Population<FITNESS_TYPE>::getChromosomes(){
+	return _chromosomes;
+}
+
+/**
+ * Returns a Vector of Chromosomes, each Chromosome contains a set of Values and a fitness value
+ * @return A vector of chromosomes
+ */
+template <typename FITNESS_TYPE>
+const typename Population<FITNESS_TYPE>::chromosome_container& Population<FITNESS_TYPE>::getChromosomes() const{
 	return _chromosomes;
 }
 

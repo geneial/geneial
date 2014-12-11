@@ -19,7 +19,7 @@ class FitnessEvaluator {
 public:
 	FitnessEvaluator() {};
 	virtual ~FitnessEvaluator(){}
-	virtual Fitness<FITNESS_TYPE>* evaluate(const BaseChromosome<FITNESS_TYPE> *chromosome) const= 0;
+	virtual Fitness<FITNESS_TYPE>* evaluate(const BaseChromosome<FITNESS_TYPE> * const chromosome) const= 0;
 };
 
 } /* namespace GeneticLibrary */

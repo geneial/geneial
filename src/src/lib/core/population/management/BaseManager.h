@@ -50,7 +50,11 @@ public:
 	};
 
 
+	void replacePopulation (typename Population<FITNESS_TYPE>::chromosome_container replacementPopulation);
+
 	unsigned int updateFitness();
+
+
 
 
 	/**
