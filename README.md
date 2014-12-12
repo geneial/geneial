@@ -44,7 +44,15 @@ After running make, you may run the unit-tests
 
     make test
 
-You can create new unit-tests based on boost unit testing libarary in the tests/suites/ folder.
+Instead of running all test at once, you may run individual test by 
+
+    ctest -R random_test
+
+In case a test-case fails you can see the verbose output by running
+
+    ctest -VV
+    
+You can create new unit-tests based on boost unit testing libarary in the tests/suites/ folder. Make sure to run `make test` again.
 
 ##4. Setting up an Eclipse CDT 4 Project
 
