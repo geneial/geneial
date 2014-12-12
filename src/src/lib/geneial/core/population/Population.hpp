@@ -59,8 +59,12 @@ void Population<FITNESS_TYPE>::setAge(unsigned int age){
 /**
  * Increments the age of the current population by 1
  */
-template <typename FITNESS_TYPE>
-void Population<FITNESS_TYPE>::doAge(){
+template<typename FITNESS_TYPE>
+void Population<FITNESS_TYPE>::doAge() {
+	for (typename chromosome_container::iterator chrom_it =
+			_chromosomes.begin(); chrom_it != _chromosomes.end(); ++chrom_it) {
+		*chrom_it->doAge();
+	}
 	++_age;
 }
 
