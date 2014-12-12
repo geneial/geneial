@@ -5,6 +5,9 @@
  *      Author: bewo
  */
 
+#ifndef BASE_CHROMOSOME_HPP_
+#define BASE_CHROMOSOME_HPP_
+
 #include <core/population/chromosome/BaseChromosome.h>
 
 namespace GeneticLibrary {
@@ -36,3 +39,6 @@ template <class FITNESS_TYPE> unsigned int BaseChromosome<FITNESS_TYPE>::getAge(
 } /* namespace Chromosome */
 } /* namespace Population */
 } /* namespace GeneticLibrary */
+
+
+#endif /* BASE_CHROMOSOME_HPP_ */

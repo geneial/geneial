@@ -98,6 +98,6 @@ public:
 } /* namespace GeneticLibrary */
 
 
-#include "BaseManager.hpp"
+#include <core/population/management/BaseManager.hpp>
 
 #endif /* MANAGER_H_ */

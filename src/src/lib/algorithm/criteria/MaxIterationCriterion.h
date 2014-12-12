@@ -8,6 +8,7 @@
 #ifndef MAX_ITERATION_CRITERION_H_
 #define MAX_ITERATION_CRITERION_H_
 
+#include <core/population/management/BaseManager.h>
 #include <algorithm/criteria/BaseStoppingCriterion.h>
 #include <core/population/Population.h>
 

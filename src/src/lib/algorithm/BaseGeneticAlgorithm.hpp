@@ -10,8 +10,6 @@
 
 #include <algorithm/BaseGeneticAlgorithm.h>
 
-#include <algorithm> //std::set_intersection
-
 using namespace GeneticLibrary::Operation;
 
 namespace GeneticLibrary {
@@ -60,7 +58,7 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 
 
 		_manager.getPopulation().doAge();
-		std::cout << "Age: " << _manager.getPopulation().getAge() << std::endl;
+		//std::cout << "Age: " << _manager.getPopulation().getAge() << std::endl;
 
 		// }}}
 

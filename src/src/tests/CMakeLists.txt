@@ -14,7 +14,7 @@ message(STATUS "Suites : ${TEST_SRC}")
 foreach(testSrc ${TEST_SRC})
         #Extract the filename without an extension (NAME_WE)
         get_filename_component(testName ${testSrc} NAME_WE)
-		message(STATUS "Test : ${testName}")
+		message(STATUS "Found Test : ${testName}")
 
         #Add compile target
         add_executable(${testName} ${testSrc})

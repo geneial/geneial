@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
 
 	DemoChromosomeEvaluator *evaluator = new DemoChromosomeEvaluator();
 
-	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(10000);
+	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(1000);
 
 	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(
 			populationSettings,
@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
 
 	algorithm.solve();
 
-	//normally, this is not necessary because we're exiting anyway,
+	//normally, this is not necessary because we're exiting here anyway,
 	//but for valgrind's satisfaction, we free stuff nonetheless.
 	delete populationSettings;
 	delete evaluator;

@@ -13,7 +13,6 @@ configure_file (
 include_directories(${CMAKE_BINARY_DIR}/generated)
 
 
-
 #Make sure we can include files from this directory as root directory
 #(e.g, using #include "utility/random.h")
 include_directories(.)
@@ -25,7 +24,7 @@ file(GLOB_RECURSE TMPL *.hpp)
 
 
 #print all the source files.
-message(STATUS "Building Source Files : ${SRC}")
+message(STATUS "Building Source Files : ${SRCS}")
 
 
 #Create a static library

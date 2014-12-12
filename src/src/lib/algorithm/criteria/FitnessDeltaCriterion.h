@@ -8,6 +8,7 @@
 #ifndef FITNESSDELTACRITERION_H_
 #define FITNESSDELTACRITERION_H_
 
+#include <core/population/management/BaseManager.h>
 #include <algorithm/criteria/BaseStoppingCriterion.h>
 
 using namespace GeneticLibrary::Population::Manager;
