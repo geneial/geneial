@@ -6,7 +6,7 @@
 #define BOOST_TEST_MODULE utility/random
 #include <boost/test/unit_test.hpp>
 
-#include <utility/random.h>
+#include <geneial/utility/random.h>
 
 BOOST_AUTO_TEST_SUITE( RandomSuite )
 

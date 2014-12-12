@@ -6,15 +6,15 @@
  */
 
 #include "boost/shared_ptr.hpp"
-#include <algorithm/BaseGeneticAlgorithm.h>
-#include <algorithm/criteria/MaxIterationCriterion.h>
-#include <core/fitness/Fitness.h>
-#include <core/fitness/FitnessEvaluator.h>
-#include <core/population/PopulationSettings.h>
-#include <core/population/builder/MultiValueBuilderSettings.h>
-#include <core/population/builder/MultiIntValueChromosomeFactory.h>
-#include <core/operations/selection/FitnessProportionalSelection.h>
-#include <Config.h>
+#include <geneial/algorithm/BaseGeneticAlgorithm.h>
+#include <geneial/algorithm/criteria/MaxIterationCriterion.h>
+#include <geneial/core/fitness/Fitness.h>
+#include <geneial/core/fitness/FitnessEvaluator.h>
+#include <geneial/core/population/PopulationSettings.h>
+#include <geneial/core/population/builder/MultiValueBuilderSettings.h>
+#include <geneial/core/population/builder/MultiIntValueChromosomeFactory.h>
+#include <geneial/core/operations/selection/FitnessProportionalSelection.h>
+#include <geneial/config.h>
 
 #include <stdexcept>
 

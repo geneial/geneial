@@ -13,7 +13,7 @@ PROJECT_NAME           = @PROJECT_NAME@
 # This could be handy for archiving the generated documentation or
 # if some version control system is used.
 
-PROJECT_NUMBER         = @OASysGL_VERSION_MAJOR@.@OASysGL_VERSION_MINOR@
+PROJECT_NUMBER         = @GENEIAL_VERSION_MAJOR@.@GENEIAL_VERSION_MINOR@ = @GIT_BRANCH@/@GIT_COMMIT_HASH@
 
 OUTPUT_LANGUAGE        = English
 
