@@ -1,4 +1,4 @@
-INPUT = @CMAKE_CURRENT_SOURCE_DIR@/../src/lib/
+INPUT = @CMAKE_CURRENT_SOURCE_DIR@/src/lib/
 
 #---------------------------------------------------------------------------
 # Project related configuration options
@@ -16,3 +16,7 @@ PROJECT_NAME           = @PROJECT_NAME@
 PROJECT_NUMBER         = @OASysGL_VERSION_MAJOR@.@OASysGL_VERSION_MINOR@
 
 OUTPUT_LANGUAGE        = English
+
+RECURSIVE              = YES
+
+JAVADOC_AUTOBRIEF 	   = YES
