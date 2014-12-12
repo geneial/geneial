@@ -17,13 +17,7 @@ namespace Selection {
  */
 class SelectionSettings{
 public:
-	unsigned int getElitismSuccessors() const {
-		return _elitismSuccessors;
-	}
-
-	void setElitismSuccessors(unsigned int elitismSuccessors) {
-		_elitismSuccessors = elitismSuccessors;
-	}
+	virtual ~SelectionSettings(){};
 
 	unsigned int getNumberOfParents() const {
 		return _numberOfParents;
@@ -34,19 +28,12 @@ public:
 	}
 
 	SelectionSettings(unsigned int numberOfParents):
-		_numberOfParents(numberOfParents),
-		_elitismSuccessors(0){
-		assert(_numberOfParents>=_elitismSuccessors);
-	};
-	SelectionSettings(unsigned int numberOfParents,unsigned int elitismSuccessors):
-		_numberOfParents(numberOfParents)
-		,_elitismSuccessors(elitismSuccessors){
-		assert(_numberOfParents>=_elitismSuccessors);
+		_numberOfParents(numberOfParents){
+		assert(_numberOfParents>0);
 	};
 
 private:
 	unsigned int _numberOfParents;
-	unsigned int _elitismSuccessors;
 
 };
 

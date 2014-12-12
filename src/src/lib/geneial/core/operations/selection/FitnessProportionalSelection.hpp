@@ -50,14 +50,11 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 			sorted_multimap.insert(std::pair<FITNESS_TYPE, chrom_ptr_type >(prop_fitness,*it));
 		}
 
-		SelectionSettings* settings = this->getSettings();
-
-
-		unsigned int left_select = settings->getNumberOfParents();
+		unsigned int left_select = _settings->getNumberOfParents();
 		//First, handle elitism, iterate backwards over the sorted multimap and select the best chromosomes.
 
 		//TODO (bewo) OPTIMIZE: using sth like transform(i, j, back_inserter(v), select2nd<MapType::value_type>()); instead ???
-		unsigned int elitism_to_select = settings->getElitismSuccessors();
+		unsigned int elitism_to_select = _settings->getNumberSelectBest();
 		typename map_type::reverse_iterator crit = sorted_multimap.rbegin();
 		for (;crit != sorted_multimap.rend() && elitism_to_select > 0; ++crit) {
 			result.push_back(crit->second);
@@ -66,8 +63,8 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 		//Strip the inserted part from the map
 		sorted_multimap.erase ( crit.base(), sorted_multimap.end() );
 
-		assert(result.size() == settings->getElitismSuccessors());
-		left_select -= settings->getElitismSuccessors();
+		assert(result.size() == _settings->getNumberSelectBest());
+		left_select -= _settings->getNumberSelectBest();
 		assert(left_select <= sorted_multimap.size());
 
 

@@ -14,6 +14,7 @@
 #include <geneial/core/population/builder/MultiValueBuilderSettings.h>
 #include <geneial/core/population/builder/MultiIntValueChromosomeFactory.h>
 #include <geneial/core/operations/selection/FitnessProportionalSelection.h>
+#include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
 #include <geneial/config.h>
 
 #include <stdexcept>
@@ -58,7 +59,7 @@ int main(int argc, char **argv) {
 
 	BaseChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 
-	SelectionSettings* selectionSettings = new SelectionSettings(10,2);
+	FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(10,2);
 
 	BaseSelectionOperation<double> *selectionOperation = new FitnessProportionalSelection<double>(selectionSettings);
 

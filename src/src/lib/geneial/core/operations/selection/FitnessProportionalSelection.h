@@ -9,7 +9,9 @@
 #define FITNESSPROPORTIONALSELECTION_H_
 
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
+#include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
 #include <map>
+#include <stdexcept>
 
 using namespace GeneticLibrary::Population::Manager;
 
@@ -21,13 +23,24 @@ namespace Selection {
  */
 template <typename FITNESS_TYPE>
 class FitnessProportionalSelection : public BaseSelectionOperation<FITNESS_TYPE>{
+private:
+	FitnessProportionalSelectionSettings* _settings;
 public:
-	FitnessProportionalSelection(SelectionSettings* settings): BaseSelectionOperation<FITNESS_TYPE>(settings) {};
+	FitnessProportionalSelection(SelectionSettings* settings): BaseSelectionOperation<FITNESS_TYPE>(settings) {
+		_settings = dynamic_cast<FitnessProportionalSelectionSettings*>(settings);
+		if(!_settings){
+			throw new runtime_error("settings must be FitnessProportionalSelectionSettings");
+		}
+
+	};
 	virtual ~FitnessProportionalSelection(){};
 
 	virtual typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set doSelect(
 			const Population::Population<FITNESS_TYPE> &population,
 			BaseManager<FITNESS_TYPE> &manager);
+
+
+
 };
 
 

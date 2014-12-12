@@ -44,11 +44,16 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 
 		//TODO (bewo) implement genetic algorithm workflow here {{{
 
-		typename Selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set selectionResult;
-		selectionResult = _selectionOperation->doSelect(_manager.getPopulation(),_manager);
+		typename Selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set mating_pool;
+		mating_pool = _selectionOperation->doSelect(_manager.getPopulation(),_manager);
+
+		//typename Selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set offspring;
+		//offspring = _crossoverOperation->makeOffspring(mating_pool,_manager);
+
+
 
 		//For testing purposes just replace the current population by the selection result
-		_manager.replacePopulation(selectionResult);
+		//_manager.replacePopulation(maiting_pool);
 
 
 		//TODO (bewo) crossover
