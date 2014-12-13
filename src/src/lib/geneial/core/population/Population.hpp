@@ -63,7 +63,7 @@ template<typename FITNESS_TYPE>
 void Population<FITNESS_TYPE>::doAge() {
 	for (typename chromosome_container::iterator chrom_it =
 			_chromosomes.begin(); chrom_it != _chromosomes.end(); ++chrom_it) {
-		*chrom_it->doAge();
+		(*chrom_it)->doAge();
 	}
 	++_age;
 }

@@ -15,6 +15,13 @@
 #include <geneial/core/population/builder/MultiIntValueChromosomeFactory.h>
 #include <geneial/core/operations/selection/FitnessProportionalSelection.h>
 #include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
+
+#include <geneial/core/operations/coupling/SimpleCouplingOperation.h>
+
+#include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
+#include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossoverSettings.h>
+
+
 #include <geneial/config.h>
 
 #include <stdexcept>
@@ -27,6 +34,8 @@ using namespace GeneticLibrary::Population;
 using namespace GeneticLibrary::Population::Chromosome;
 
 using namespace GeneticLibrary::Operation::Selection;
+using namespace GeneticLibrary::Operation::Coupling;
+using namespace GeneticLibrary::Operation::Crossover;
 
 
 class DemoChromosomeEvaluator: public FitnessEvaluator<double>{
@@ -43,7 +52,7 @@ public:
 		}
 		boost::shared_ptr<Fitness<double> > ptr(new Fitness<double>(1));
 		return ptr;
-	};
+	}
 };
 
 int main(int argc, char **argv) {
@@ -53,26 +62,36 @@ int main(int argc, char **argv) {
 
 	//TODO (bewo): write reasonable example demo
 
-	PopulationSettings *populationSettings = new PopulationSettings(50);
+	PopulationSettings *populationSettings = new PopulationSettings(200);
 
-	MultiValueBuilderSettings<int> builderSettings = MultiValueBuilderSettings<int>(50,0,130);
+	MultiValueBuilderSettings<int> *builderSettings = new MultiValueBuilderSettings<int>(50,0,130);
 
-	BaseChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
+	MultiIntValueChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 
-	FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(10,2);
+	FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(20,10);
 
 	BaseSelectionOperation<double> *selectionOperation = new FitnessProportionalSelection<double>(selectionSettings);
 
+	CouplingSettings *couplingSettings = new CouplingSettings(20);
+
+	BaseCouplingOperation<double> *couplingOperation = new SimpleCouplingOperation<double>(couplingSettings);
+
+	MultiValueChromosomeNPointCrossoverSettings *crossoverSettings = new MultiValueChromosomeNPointCrossoverSettings(50);
+
+	BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeNPointCrossover<int,double>(crossoverSettings,builderSettings,chromosomeFactory);
+
 	DemoChromosomeEvaluator *evaluator = new DemoChromosomeEvaluator();
 
-	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(1000);
+	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(10000);
 
 	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(
 			populationSettings,
 			chromosomeFactory,
 			stoppingCriterion,
 			evaluator,
-			selectionOperation
+			selectionOperation,
+			couplingOperation,
+			crossoverOperation
 	);
 
 	algorithm.solve();
@@ -85,4 +104,6 @@ int main(int argc, char **argv) {
 	delete selectionOperation;
 	delete selectionSettings;
 	delete stoppingCriterion;
+	delete couplingOperation;
+	delete crossoverOperation;
 }
