@@ -13,8 +13,12 @@
 #include <geneial/core/population/PopulationSettings.h>
 #include <geneial/core/population/builder/MultiValueBuilderSettings.h>
 #include <geneial/core/population/builder/MultiIntValueChromosomeFactory.h>
-#include <geneial/core/operations/selection/FitnessProportionalSelection.h>
-#include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
+
+//#include <geneial/core/operations/selection/FitnessProportionalSelection.h>
+//#include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
+
+#include <geneial/core/operations/selection/SelectionSettings.h>
+#include <geneial/core/operations/selection/RouletteWheelSelection.h>
 
 #include <geneial/core/operations/coupling/SimpleCouplingOperation.h>
 
@@ -68,9 +72,11 @@ int main(int argc, char **argv) {
 
 	MultiIntValueChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 
-	FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(20,10);
+	//FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(20,10);
+	SelectionSettings* selectionSettings = new SelectionSettings(20);
 
-	BaseSelectionOperation<double> *selectionOperation = new FitnessProportionalSelection<double>(selectionSettings);
+	//BaseSelectionOperation<double> *selectionOperation = new FitnessProportionalSelection<double>(selectionSettings);
+	BaseSelectionOperation<double> *selectionOperation = new RouletteWheelSelection<double>(selectionSettings);
 
 	CouplingSettings *couplingSettings = new CouplingSettings(20);
 

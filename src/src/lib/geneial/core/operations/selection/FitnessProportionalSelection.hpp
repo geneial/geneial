@@ -12,6 +12,7 @@
 
 using namespace GeneticLibrary::Population::Manager;
 using namespace GeneticLibrary::Population::Chromosome;
+using namespace GeneticLibrary::Utility;
 
 namespace GeneticLibrary {
 namespace Operation {
