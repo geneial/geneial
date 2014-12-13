@@ -86,6 +86,9 @@ void MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::print(std::ostream& os) cons
 		os << "N/A";
 	}
 	os << ", ";
+	os << "Age: " << this->getAge() << ", ";
+
+
 	os << "Values: " << std::endl;
 	std::ostream_iterator<VALUE_TYPE> out_it(os, "; ");
 	std::copy ( _container.begin(), _container.end(), out_it );
