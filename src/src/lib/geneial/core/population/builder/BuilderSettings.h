@@ -8,36 +8,34 @@
 #ifndef BUILDERSETTINGS_H_
 #define BUILDERSETTINGS_H_
 
+#include <geneial/core/fitness/FitnessEvaluator.h>
+
 namespace GeneticLibrary {
 namespace Population {
 namespace Chromosome {
 
-template <typename VALUE_TYPE>
+template <typename FITNESS_TYPE>
 class BuilderSettings {
 private:
-	VALUE_TYPE _random_max;
-	VALUE_TYPE _random_min;
-
+	typename FitnessEvaluator<FITNESS_TYPE>::ptr _fitnessEvaluator;
 public:
-	BuilderSettings() {};
-	BuilderSettings(VALUE_TYPE random_max,	VALUE_TYPE random_min) : _random_max(random_max),_random_min(random_min) {};
+	BuilderSettings(const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator):
+		_fitnessEvaluator(fitnessEvaluator)
+	{};
+
 	virtual ~BuilderSettings() {};
 
-	VALUE_TYPE getRandomMax() const {
-		return _random_max;
-	}
 
-	void setRandomMax(VALUE_TYPE randomMax) {
-		_random_max = randomMax;
-	}
+	const typename FitnessEvaluator<FITNESS_TYPE>::ptr& getFitnessEvaluator() const {
+		return _fitnessEvaluator;
+	};
 
-	VALUE_TYPE getRandomMin() const {
-		return _random_min;
-	}
+	void setFitnessEvaluator(
+			const typename FitnessEvaluator<FITNESS_TYPE>::ptr& fitnessEvaluator) {
+		_fitnessEvaluator = fitnessEvaluator;
+	};
 
-	void setRandomMin(VALUE_TYPE randomMin) {
-		_random_min = randomMin;
-	}
+
 };
 
 } /* namespace Chromosome */

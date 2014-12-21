@@ -36,15 +36,13 @@ public:
 			PopulationSettings *populationSettings,
 			BaseChromosomeFactory<FITNESS_TYPE> *chromosomeFactory,
 			StoppingCriteria::BaseStoppingCriterion<FITNESS_TYPE> *stoppingCriterion,
-			FitnessEvaluator<FITNESS_TYPE> *fitnessEvaluator,
 			Selection::BaseSelectionOperation<FITNESS_TYPE> *selectionOperation,
 			Coupling::BaseCouplingOperation<FITNESS_TYPE> *couplingOperation,
 			Crossover::BaseCrossoverOperation<FITNESS_TYPE> *crossoverOperation
 	):
 		_manager(
 			populationSettings,
-			chromosomeFactory,
-			fitnessEvaluator
+			chromosomeFactory
 			),
 		_stoppingCriterion(stoppingCriterion),
 		_selectionOperation(selectionOperation),

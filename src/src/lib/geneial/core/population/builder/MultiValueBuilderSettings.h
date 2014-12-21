@@ -14,14 +14,18 @@ namespace GeneticLibrary {
 namespace Population {
 namespace Chromosome {
 
-template <typename VALUE_TYPE>
-class MultiValueBuilderSettings : public BuilderSettings<VALUE_TYPE> {
+template <typename VALUE_TYPE, typename FITNESS_TYPE>
+class MultiValueBuilderSettings : public BuilderSettings<FITNESS_TYPE> {
 private:
+	VALUE_TYPE _random_max;
+	VALUE_TYPE _random_min;
 	unsigned int _num;
-
 public:
-	MultiValueBuilderSettings() : BuilderSettings<VALUE_TYPE>(),_num() {};
-	MultiValueBuilderSettings(unsigned int num, VALUE_TYPE random_max,	VALUE_TYPE random_min ): BuilderSettings<VALUE_TYPE>(random_max,random_min), _num(num) {};
+	MultiValueBuilderSettings(const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator, unsigned int num, VALUE_TYPE random_max,	VALUE_TYPE random_min): BuilderSettings<FITNESS_TYPE>(fitnessEvaluator),
+	_random_max(random_max),
+	_random_min(random_min),
+	_num(num) {};
+
 	virtual ~MultiValueBuilderSettings() {};
 
 	unsigned int getNum() const {
@@ -30,6 +34,22 @@ public:
 
 	void setNum(unsigned int num) {
 		_num = num;
+	}
+
+	VALUE_TYPE getRandomMax() const {
+		return _random_max;
+	}
+
+	void setRandomMax(VALUE_TYPE randomMax) {
+		_random_max = randomMax;
+	}
+
+	VALUE_TYPE getRandomMin() const {
+		return _random_min;
+	}
+
+	void setRandomMin(VALUE_TYPE randomMin) {
+		_random_min = randomMin;
 	}
 };
 

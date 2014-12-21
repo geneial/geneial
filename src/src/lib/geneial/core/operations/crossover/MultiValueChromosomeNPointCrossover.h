@@ -21,13 +21,13 @@ template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class MultiValueChromosomeNPointCrossover: public BaseCrossoverOperation<FITNESS_TYPE> {
 private:
 	MultiValueChromosomeNPointCrossoverSettings * _crossoverSettings;
-	MultiValueBuilderSettings<VALUE_TYPE> * _builderSettings;
+	MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE> * _builderSettings;
 	MultiValueChromosomeFactory<VALUE_TYPE,FITNESS_TYPE> *_builderFactory;
 
 public:
 	MultiValueChromosomeNPointCrossover(
 			MultiValueChromosomeNPointCrossoverSettings *crossoverSettings,
-			MultiValueBuilderSettings<VALUE_TYPE> *builderSettings,
+			MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE> *builderSettings,
 			MultiValueChromosomeFactory<VALUE_TYPE,FITNESS_TYPE> *builderFactory
 			) :
 			_crossoverSettings(crossoverSettings),
@@ -75,12 +75,12 @@ public:
 	doCrossover(typename BaseChromosome<FITNESS_TYPE>::ptr mommy,
 			typename BaseChromosome<FITNESS_TYPE>::ptr daddy);
 
-	MultiValueBuilderSettings<VALUE_TYPE>* const & getBuilderSettings() const {
+	MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>* const & getBuilderSettings() const {
 		return _builderSettings;
 	}
 
 	void setBuilderSettings(
-			const MultiValueBuilderSettings<VALUE_TYPE>* & builderSettings) {
+			const MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>* & builderSettings) {
 		_builderSettings = builderSettings;
 	}
 

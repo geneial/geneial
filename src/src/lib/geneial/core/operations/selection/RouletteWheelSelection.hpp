@@ -21,8 +21,7 @@ namespace GeneticLibrary {
 namespace Operation {
 namespace Selection {
 
-
-//TODO (bewo) check whether this will work with negative fitness values
+//TODO (bewo) check whether all this will work with negative fitness values
 
 template <typename FITNESS_TYPE>
 class RouletteWheelComparator {
@@ -54,8 +53,8 @@ public:
     RouletteWheel(const Population::Population<FITNESS_TYPE> &population) :_sum(0){
 		for (const_pop_itr it =	population.getChromosomes().begin();
 				it != population.getChromosomes().end(); ++it) {
-			ranges[std::pair<FITNESS_TYPE, FITNESS_TYPE>(_sum, (*it)->getFitness()->get()+_sum)] = *it;
-			_sum += (*it)->getFitness()->get();
+			ranges[std::pair<FITNESS_TYPE, FITNESS_TYPE>(_sum, it->first + _sum)] = it->second;
+			_sum += it->first;
 		}
     }
 
@@ -71,7 +70,6 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
 		BaseManager<FITNESS_TYPE> &manager){
 
 		//shorthands for type mess
-		typedef std::multimap<FITNESS_TYPE, typename BaseChromosome<FITNESS_TYPE>::ptr > map_type;
 		typedef typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set result_set;
 		typedef typename BaseChromosome<FITNESS_TYPE>::ptr chrom_ptr_type;
 
@@ -81,8 +79,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
 
 		RouletteWheel<FITNESS_TYPE> rouletteWheel(population);
 
-		//TODO (bewo) allow parameter for the best chromosomes to be selected
-
+		//TODO (bewo) allow parameter for the best chromosomes to be selected (and skipped here)
 		assert(population.getSize()>=left_select);
 
 		while(left_select > 0){
@@ -92,12 +89,9 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
 			do{
 				//TODO (bewo) this is suboptimal:
 				FITNESS_TYPE random = (FITNESS_TYPE) random::instance()->generateDouble(0.0,1.0);
-				std::cout << "Random: " << random << std::endl;
 				ptr = rouletteWheel.spin(random);
 			}while(allowDuplicates || std::find(result.begin(), result.end(), ptr)!=result.end());
 			left_select--;
-
-			std::cout << "Selected: " << *ptr << std::endl;
 			result.push_back(ptr);
 		}
 		return result;

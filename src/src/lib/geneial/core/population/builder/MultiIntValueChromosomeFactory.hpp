@@ -20,7 +20,7 @@ typename BaseChromosome<FITNESS_TYPE>::ptr MultiIntValueChromosomeFactory<FITNES
 
 	using namespace GeneticLibrary::Utility;
 
-	typename MultiValueChromosome<int,FITNESS_TYPE>::ptr new_chromosome(new MultiValueChromosome<int,FITNESS_TYPE>());
+	typename MultiValueChromosome<int,FITNESS_TYPE>::ptr new_chromosome(new MultiValueChromosome<int,FITNESS_TYPE>(this->_settings->getFitnessEvaluator()));
 	assert(new_chromosome->getSize() == 0);
 
 	new_chromosome->getContainer().reserve(this->_settings->getNum());

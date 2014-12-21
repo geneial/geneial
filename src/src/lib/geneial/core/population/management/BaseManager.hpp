@@ -8,6 +8,7 @@
 #define MANAGER_HPP_
 
 #include <geneial/core/population/management/BaseManager.h>
+#include <geneial/core/population/Population.h>
 #include <iterator>
 
 namespace GeneticLibrary {
@@ -24,8 +25,11 @@ template <typename FITNESS_TYPE>void BaseManager<FITNESS_TYPE>::replenishPopulat
 		//build new chromosome
 		typename BaseChromosome<FITNESS_TYPE>::ptr newChromosome = _chromosomeFactory->createChromosome();
 
+		FITNESS_TYPE fitness = newChromosome->getFitness()->get();
+		typename Population<FITNESS_TYPE>::container_value value(fitness,newChromosome);
+
 		//add at the end of vector
-		_population.getChromosomes().push_back(newChromosome);
+		_population.getChromosomes().insert(value);
 	}
 }
 
@@ -33,40 +37,12 @@ template <typename FITNESS_TYPE>void BaseManager<FITNESS_TYPE>::replenishPopulat
 template <typename FITNESS_TYPE>
 void BaseManager<FITNESS_TYPE>::replacePopulation (typename Population<FITNESS_TYPE>::chromosome_container replacementPopulation){
 	_population.getChromosomes().clear();
-	std::copy(replacementPopulation.begin(),replacementPopulation.end(), std::back_inserter(_population.getChromosomes()));
+	  for (typename Population<FITNESS_TYPE>::chromosome_container::iterator it = replacementPopulation.begin() ; it != replacementPopulation.end(); ++it){
+		  typename Population<FITNESS_TYPE>::container_value value((*it)->getFitness()->get(),*it);
+		  _population.getChromosomes().insert(value);
+	  } //TODO (bewo) is there a cooler way to do this?
 }
 
-template <typename FITNESS_TYPE>
-unsigned int BaseManager<FITNESS_TYPE>::updateFitness(){
-	//Iterate backwards over container (since new chromosomes are always inserted at the end)
-	typename Population<FITNESS_TYPE>::chromosome_container::reverse_iterator rit =
-			getPopulation().getChromosomes().rbegin();
-	unsigned int num = 0;
-	for (;rit != getPopulation().getChromosomes().rend()
-					&& !(*rit)->hasFitness(); ++rit) {
-		(*rit)->setFitness(_fitnessEvaluator->evaluate(*rit));
-		num++;
-	}
-	return num;
-}
-
-template <typename FITNESS_TYPE>
-Chromosome::BaseChromosome<FITNESS_TYPE> BaseManager<FITNESS_TYPE>::selectBestChromosome(Population<FITNESS_TYPE> population){
-	/*
-	 * TODO (bewo) use functors as argument for comparison and fitness class here
-	 * {
-
-	Chromosome::BaseChromosome<FITNESS_TYPE> bestChromosome = population.getChromosomes().at(0);
-	for (int i = 0; i <= population.size(); i++){
-		if (population.getChromosomes().at(i) > bestChromosome.getFitness()){
-			bestChromosome = population.getChromosomes().at(i);
-		}
-	}
-	return bestChromosome;
-
-	*/
-	return Chromosome::BaseChromosome<FITNESS_TYPE>(); //dummy
-}
 
 } /* namespace Manager */
 } /* namespace Population */

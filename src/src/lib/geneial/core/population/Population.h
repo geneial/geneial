@@ -10,6 +10,7 @@
 
 #include <geneial/utility/printable.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
+#include <map>
 #include <vector>
 
 #define POPULATION_AGE_INITIAL (0)
@@ -25,9 +26,16 @@ public:
 	typedef unsigned int population_age;
 	typedef unsigned int population_size;
 
-	typedef typename std::vector<typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr > chromosome_container;
-	typedef typename chromosome_container::const_iterator const_it;
-	typedef typename chromosome_container::iterator it;
+	//A generic container to pass chromomsomes between operations.
+	typedef typename std::vector<typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr> chromosome_container;
+
+	//A fitness <-> chromsome map holding the actual population
+	typedef typename std::multimap<FITNESS_TYPE , typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr> chromosome_map;
+
+	typedef typename chromosome_map::value_type container_value;
+
+	typedef typename chromosome_map::const_iterator const_it;
+	typedef typename chromosome_map::iterator it;
 
 	population_size getSize() const;
 
@@ -39,11 +47,11 @@ public:
 	void setAge(population_age age);
 	void doAge();
 
-	const chromosome_container& getChromosomes() const { return _chromosomes; }
-	chromosome_container& getChromosomes() { return _chromosomes; }
+	const chromosome_map& getChromosomes() const { return _chromosomes; }
+	chromosome_map& getChromosomes() { return _chromosomes; }
 
 private:
-	chromosome_container _chromosomes;
+	chromosome_map _chromosomes;
 	population_age _age;
 };
 

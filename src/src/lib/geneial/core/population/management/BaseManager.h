@@ -13,7 +13,6 @@
 #include <geneial/core/population/Population.h>
 #include <geneial/core/population/PopulationSettings.h>
 #include <geneial/core/population/builder/BaseChromosomeFactory.h>
-#include <geneial/core/fitness/FitnessEvaluator.h>
 #include <assert.h>
 
 namespace GeneticLibrary {
@@ -31,39 +30,22 @@ private:
 
 	PopulationSettings *_populationSettings;
 
-	FitnessEvaluator<FITNESS_TYPE> *_fitnessEvaluator;
 
 public:
 	BaseManager<FITNESS_TYPE>(
 		PopulationSettings *populationSettings,
-		Chromosome::BaseChromosomeFactory<FITNESS_TYPE> *chromosomeFactory,
-		FitnessEvaluator<FITNESS_TYPE> *fitnessEvaluator
+		Chromosome::BaseChromosomeFactory<FITNESS_TYPE> *chromosomeFactory
 		):
 	_population(),
 	_chromosomeFactory(chromosomeFactory),
-	_populationSettings(populationSettings),
-	_fitnessEvaluator(fitnessEvaluator)
+	_populationSettings(populationSettings)
 	{
 		assert(_chromosomeFactory != NULL);
 		assert(_populationSettings != NULL);
-		assert(_fitnessEvaluator != NULL);
 	};
 
 
 	void replacePopulation (typename Population<FITNESS_TYPE>::chromosome_container replacementPopulation);
-
-	unsigned int updateFitness();
-
-
-
-
-	/**
-	 * Selects the best Chromosome based on the fitness of each Chromosome in 'population'
-	 * @param population population containing at least one Chromosone
-	 * @return Chromosome with the highest fitness value
-	 */
-
-	Chromosome::BaseChromosome<FITNESS_TYPE> selectBestChromosome(Population<FITNESS_TYPE> population);
 
 	/**
 	 * Adds new chromosomes to the population until a limit is reached

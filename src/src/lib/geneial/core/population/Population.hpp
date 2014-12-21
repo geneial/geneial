@@ -30,8 +30,8 @@ void Population<FITNESS_TYPE>::print(std::ostream& os) const {
 	os << "  Chromosomes" << std::endl;
 
 	//TODO (bewo) maybe use outstream iterator instead here.
-	for(typename chromosome_container::const_iterator chrom_it = _chromosomes.begin(); chrom_it != _chromosomes.end(); ++chrom_it) {
-		os << **chrom_it;
+	for(typename chromosome_map::const_iterator chrom_it = _chromosomes.begin(); chrom_it != _chromosomes.end(); ++chrom_it) {
+		os << *(chrom_it->second);
 	}
 }
 
@@ -61,9 +61,9 @@ void Population<FITNESS_TYPE>::setAge(unsigned int age){
  */
 template<typename FITNESS_TYPE>
 void Population<FITNESS_TYPE>::doAge() {
-	for (typename chromosome_container::iterator chrom_it =
+	for (typename chromosome_map::iterator chrom_it =
 			_chromosomes.begin(); chrom_it != _chromosomes.end(); ++chrom_it) {
-		(*chrom_it)->doAge();
+		chrom_it->second->doAge();
 	}
 	++_age;
 }

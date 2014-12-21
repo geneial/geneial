@@ -27,8 +27,6 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 
 	//Initialize the first population candidate
 	_manager.replenishPopulation();
-	//Initial fitness
-	_manager.updateFitness();
 
 	std::cout << _manager.getPopulation().getAge() << std::endl;
 
@@ -77,8 +75,8 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 		//TODO (bewo) proper replacement
 		//For testing temporary testing purposes replace the current population by the selection result  {{{
 
+			std::copy(offspring.begin(), offspring.end(), std::back_inserter(mating_pool));
 			_manager.replacePopulation(mating_pool);
-			std::copy(offspring.begin(), offspring.end(), std::back_inserter(_manager.getPopulation().getChromosomes()));
 			_manager.replenishPopulation();
 
 		// }}}
@@ -90,9 +88,6 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 		//std::cout << "Age: " << _manager.getPopulation().getAge() << std::endl;
 
 		// }}}
-
-
-		_manager.updateFitness();
 
 	}
 

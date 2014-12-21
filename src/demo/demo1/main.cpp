@@ -6,6 +6,7 @@
  */
 
 #include "boost/shared_ptr.hpp"
+
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
 #include <geneial/algorithm/criteria/MaxIterationCriterion.h>
 #include <geneial/core/fitness/Fitness.h>
@@ -31,6 +32,7 @@
 #include <stdexcept>
 
 using namespace GeneticLibrary;
+
 using namespace GeneticLibrary::Algorithm;
 using namespace GeneticLibrary::Algorithm::StoppingCriteria;
 
@@ -54,6 +56,7 @@ public:
 		}else{
 			throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
 		}
+
 		boost::shared_ptr<Fitness<double> > ptr(new Fitness<double>(1));
 		return ptr;
 	}
@@ -64,11 +67,13 @@ int main(int argc, char **argv) {
 	std::cout << "Running GENEIAL demo1 - Version " << GENEIAL_VERSION_MAJOR << "." << GENEIAL_VERSION_MINOR << std::endl;
 
 
+	DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
+
 	//TODO (bewo): write reasonable example demo
 
 	PopulationSettings *populationSettings = new PopulationSettings(200);
 
-	MultiValueBuilderSettings<int> *builderSettings = new MultiValueBuilderSettings<int>(50,0,130);
+	MultiValueBuilderSettings<int,double> *builderSettings = new MultiValueBuilderSettings<int,double>(evaluator,50,0,130);
 
 	MultiIntValueChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 
@@ -86,7 +91,7 @@ int main(int argc, char **argv) {
 
 	BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeNPointCrossover<int,double>(crossoverSettings,builderSettings,chromosomeFactory);
 
-	DemoChromosomeEvaluator *evaluator = new DemoChromosomeEvaluator();
+
 
 	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(10000);
 
@@ -94,7 +99,6 @@ int main(int argc, char **argv) {
 			populationSettings,
 			chromosomeFactory,
 			stoppingCriterion,
-			evaluator,
 			selectionOperation,
 			couplingOperation,
 			crossoverOperation
@@ -105,7 +109,6 @@ int main(int argc, char **argv) {
 	//normally, this is not necessary because we're exiting here anyway,
 	//but for valgrind's satisfaction, we free stuff nonetheless.
 	delete populationSettings;
-	delete evaluator;
 	delete chromosomeFactory;
 	delete selectionOperation;
 	delete selectionSettings;

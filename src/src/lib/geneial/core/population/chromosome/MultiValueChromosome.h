@@ -32,7 +32,7 @@ public:
 	typedef typename boost::shared_ptr<MultiValueChromosome <VALUE_TYPE,FITNESS_TYPE> > ptr;
 	typedef typename boost::shared_ptr<const MultiValueChromosome <VALUE_TYPE,FITNESS_TYPE> > const_ptr;
 
-	MultiValueChromosome() :_container(){};
+	MultiValueChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) : BaseChromosome<FITNESS_TYPE>(fitnessEvaluator), _container(){};
 	virtual ~MultiValueChromosome() {};
 
 	const_it getConstIt() const;
