@@ -21,11 +21,17 @@
 #include <geneial/core/operations/selection/SelectionSettings.h>
 #include <geneial/core/operations/selection/RouletteWheelSelection.h>
 
-#include <geneial/core/operations/coupling/SimpleCouplingOperation.h>
+//#include <geneial/core/operations/coupling/SimpleCouplingOperation.h>
+#include <geneial/core/operations/coupling/RandomCouplingOperation.h>
+
+#include <geneial/core/operations/replacement/BaseReplacementSettings.h>
+//#include <geneial/core/operations/replacement/ReplaceWorstOperation.h>
+#include <geneial/core/operations/replacement/ReplaceRandomOperation.h>
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossoverSettings.h>
 
+#include <geneial/core/operations/crossover/MultiValueChromosomeAverageCrossover.h>
 
 #include <geneial/config.h>
 
@@ -42,6 +48,7 @@ using namespace GeneticLibrary::Population::Chromosome;
 using namespace GeneticLibrary::Operation::Selection;
 using namespace GeneticLibrary::Operation::Coupling;
 using namespace GeneticLibrary::Operation::Crossover;
+using namespace GeneticLibrary::Operation::Replacement;
 
 
 class DemoChromosomeEvaluator: public FitnessEvaluator<double>{
@@ -71,26 +78,32 @@ int main(int argc, char **argv) {
 
 	//TODO (bewo): write reasonable example demo
 
-	PopulationSettings *populationSettings = new PopulationSettings(200);
+	PopulationSettings *populationSettings = new PopulationSettings(400);
 
 	MultiValueBuilderSettings<int,double> *builderSettings = new MultiValueBuilderSettings<int,double>(evaluator,50,0,130);
 
 	MultiIntValueChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 
 	//FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(20,10);
-	SelectionSettings* selectionSettings = new SelectionSettings(20);
+	SelectionSettings* selectionSettings = new SelectionSettings(10);
 
 	//BaseSelectionOperation<double> *selectionOperation = new FitnessProportionalSelection<double>(selectionSettings);
 	BaseSelectionOperation<double> *selectionOperation = new RouletteWheelSelection<double>(selectionSettings);
 
-	CouplingSettings *couplingSettings = new CouplingSettings(20);
+	CouplingSettings *couplingSettings = new CouplingSettings(2);
 
-	BaseCouplingOperation<double> *couplingOperation = new SimpleCouplingOperation<double>(couplingSettings);
+	//BaseCouplingOperation<double> *couplingOperation = new SimpleCouplingOperation<double>(couplingSettings);
+	BaseCouplingOperation<double> *couplingOperation = new RandomCouplingOperation<double>(couplingSettings);
 
-	MultiValueChromosomeNPointCrossoverSettings *crossoverSettings = new MultiValueChromosomeNPointCrossoverSettings(50);
+	//MultiValueChromosomeNPointCrossoverSettings *crossoverSettings = new MultiValueChromosomeNPointCrossoverSettings(50);
+	//BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeNPointCrossover<int,double>(crossoverSettings,builderSettings,chromosomeFactory);
+	BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeAverageCrossover<int,double>(builderSettings,chromosomeFactory);
 
-	BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeNPointCrossover<int,double>(crossoverSettings,builderSettings,chromosomeFactory);
+	//BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::replace_offspring_mode::REPLACE_FIXED_NUMBER,20);
+	BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::REPLACE_ALL_OFFSPRING,0,3);
 
+	//ReplaceWorstOperation<double> *replacementOperation = new ReplaceWorstOperation<double>(replacementSettings);
+	ReplaceRandomOperation<double> *replacementOperation = new ReplaceRandomOperation<double>(replacementSettings);
 
 
 	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(10000);
@@ -101,7 +114,8 @@ int main(int argc, char **argv) {
 			stoppingCriterion,
 			selectionOperation,
 			couplingOperation,
-			crossoverOperation
+			crossoverOperation,
+			replacementOperation
 	);
 
 	algorithm.solve();
@@ -115,4 +129,5 @@ int main(int argc, char **argv) {
 	delete stoppingCriterion;
 	delete couplingOperation;
 	delete crossoverOperation;
+	delete replacementOperation;
 }
