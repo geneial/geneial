@@ -117,7 +117,6 @@ The demos are also compiled by either running the all-encompassing `make` or the
 
 
 ##99.TODOs
-* coupling/crossover
 * mutation
 * scaling
 * multithreading 
