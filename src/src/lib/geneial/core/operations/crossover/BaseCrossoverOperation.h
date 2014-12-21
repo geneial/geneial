@@ -13,7 +13,6 @@ namespace Operation {
 namespace Crossover {
 
 using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Population::Manager;
 using namespace GeneticLibrary::Operation::Coupling;
 
 template <typename FITNESS_TYPE>

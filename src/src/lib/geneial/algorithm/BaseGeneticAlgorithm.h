@@ -14,6 +14,7 @@
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
 #include <geneial/core/operations/coupling/BaseCouplingOperation.h>
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
+#include <geneial/core/operations/replacement/BaseReplacementOperation.h>
 
 using namespace GeneticLibrary::Population;
 using namespace GeneticLibrary::Population::Manager;
@@ -31,14 +32,19 @@ private:
 	Selection::BaseSelectionOperation<FITNESS_TYPE> * _selectionOperation;
 	Coupling::BaseCouplingOperation<FITNESS_TYPE> *_couplingOperation;
 	Crossover::BaseCrossoverOperation<FITNESS_TYPE> *_crossoverOperation;
+	Replacement::BaseReplacementOperation<FITNESS_TYPE> *_replacementOperation;
 public:
 	BaseGeneticAlgorithm(
 			PopulationSettings *populationSettings,
 			BaseChromosomeFactory<FITNESS_TYPE> *chromosomeFactory,
+
 			StoppingCriteria::BaseStoppingCriterion<FITNESS_TYPE> *stoppingCriterion,
+
 			Selection::BaseSelectionOperation<FITNESS_TYPE> *selectionOperation,
 			Coupling::BaseCouplingOperation<FITNESS_TYPE> *couplingOperation,
-			Crossover::BaseCrossoverOperation<FITNESS_TYPE> *crossoverOperation
+			Crossover::BaseCrossoverOperation<FITNESS_TYPE> *crossoverOperation,
+			Replacement::BaseReplacementOperation<FITNESS_TYPE> *replacementOperation
+
 	):
 		_manager(
 			populationSettings,
@@ -47,7 +53,8 @@ public:
 		_stoppingCriterion(stoppingCriterion),
 		_selectionOperation(selectionOperation),
 		_couplingOperation(couplingOperation),
-		_crossoverOperation(crossoverOperation)
+		_crossoverOperation(crossoverOperation),
+		_replacementOperation(replacementOperation)
 		{};
 
 	virtual ~BaseGeneticAlgorithm() {};

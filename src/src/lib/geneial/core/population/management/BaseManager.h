@@ -23,12 +23,6 @@ namespace Manager {
  */
 template <typename FITNESS_TYPE>
 class BaseManager{
-private:
-	Population<FITNESS_TYPE> _population;
-
-	Chromosome::BaseChromosomeFactory<FITNESS_TYPE> *_chromosomeFactory;
-
-	PopulationSettings *_populationSettings;
 
 
 public:
@@ -73,6 +67,13 @@ public:
 			const PopulationSettings*& populationSettings) {
 		_populationSettings = populationSettings;
 	}
+private:
+	Population<FITNESS_TYPE> _population;
+
+	Chromosome::BaseChromosomeFactory<FITNESS_TYPE> *_chromosomeFactory;
+
+	PopulationSettings *_populationSettings;
+
 };
 
 } /* namespace Manager */

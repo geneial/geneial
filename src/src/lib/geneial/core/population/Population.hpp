@@ -68,6 +68,14 @@ void Population<FITNESS_TYPE>::doAge() {
 	++_age;
 }
 
+template<typename FITNESS_TYPE>
+void Population<FITNESS_TYPE>::insertChromosomeContainer(const chromosome_container &container){
+	  for (typename chromosome_container::const_iterator it = container.begin() ; it != container.end(); ++it){
+		  container_value value((*it)->getFitness()->get(),*it);
+		  getChromosomes().insert(value);
+	  } //TODO (bewo) is there a cooler way to do this?
+}
+
 } /* namespace Population */
 } /* namespace GeneticLibrary */
 

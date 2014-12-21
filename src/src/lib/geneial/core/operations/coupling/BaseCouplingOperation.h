@@ -25,8 +25,10 @@ namespace Coupling {
 
 template <typename FITNESS_TYPE>
 class BaseCouplingOperation {
+
 private:
 	CouplingSettings* _settings;
+
 public:
 	typedef typename Population::Population<FITNESS_TYPE>::chromosome_container offspring_result_set;
 	BaseCouplingOperation(CouplingSettings *settings): _settings(settings)  {};
@@ -41,11 +43,12 @@ public:
 
 	CouplingSettings* const& getSettings() const {
 		return _settings;
-	}
+	};
 
 	void setSettings(const CouplingSettings*& settings) {
 		_settings = settings;
-	}
+	};
+
 };
 
 } /* namespace Coupling */

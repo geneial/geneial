@@ -50,6 +50,9 @@ public:
 	const chromosome_map& getChromosomes() const { return _chromosomes; }
 	chromosome_map& getChromosomes() { return _chromosomes; }
 
+	void insertChromosomeContainer(const chromosome_container &container);
+
+
 private:
 	chromosome_map _chromosomes;
 	population_age _age;

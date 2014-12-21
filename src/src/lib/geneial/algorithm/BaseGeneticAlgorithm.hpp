@@ -58,7 +58,7 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 		}
 		std::cout << "MATING POOL END"<< std::endl;
 		*/
-		typename Selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set offspring;
+		typename Coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set offspring;
 		offspring = _couplingOperation->doCopulate(mating_pool,_crossoverOperation,_manager);
 		/*
 		typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container::iterator it2 =
@@ -71,15 +71,7 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 		std::cout << "OFFSPRING POOL END"<< std::endl;
 		 */
 
-
-		//TODO (bewo) proper replacement
-		//For testing temporary testing purposes replace the current population by the selection result  {{{
-
-			std::copy(offspring.begin(), offspring.end(), std::back_inserter(mating_pool));
-			_manager.replacePopulation(mating_pool);
-			_manager.replenishPopulation();
-
-		// }}}
+		_replacementOperation->doReplace(_manager.getPopulation(),mating_pool,offspring,_manager);
 
 		//TODO (bewo) mutation
 

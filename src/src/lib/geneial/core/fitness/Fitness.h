@@ -18,6 +18,7 @@ class Fitness : public GeneticLibrary::Utility::printable
 {
 private:
 	FITNESS_TYPE _value;
+
 public:
 	typedef boost::shared_ptr<Fitness <FITNESS_TYPE> > ptr;
 	typedef boost::shared_ptr<const Fitness <FITNESS_TYPE> > const_ptr;
@@ -37,5 +38,7 @@ public:
 };
 
 } /* namespace GeneticLibrary */
+
 #include <geneial/core/fitness/Fitness.hpp>
+
 #endif /* FITNESS_H_ */

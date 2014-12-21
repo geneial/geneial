@@ -37,10 +37,7 @@ template <typename FITNESS_TYPE>void BaseManager<FITNESS_TYPE>::replenishPopulat
 template <typename FITNESS_TYPE>
 void BaseManager<FITNESS_TYPE>::replacePopulation (typename Population<FITNESS_TYPE>::chromosome_container replacementPopulation){
 	_population.getChromosomes().clear();
-	  for (typename Population<FITNESS_TYPE>::chromosome_container::iterator it = replacementPopulation.begin() ; it != replacementPopulation.end(); ++it){
-		  typename Population<FITNESS_TYPE>::container_value value((*it)->getFitness()->get(),*it);
-		  _population.getChromosomes().insert(value);
-	  } //TODO (bewo) is there a cooler way to do this?
+	_population.insertChromosomeContainer(replacementPopulation);
 }
 
 
