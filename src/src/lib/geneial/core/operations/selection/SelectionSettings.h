@@ -16,6 +16,9 @@ namespace Selection {
  * Select a number of parents based on a certain criteria.
  */
 class SelectionSettings{
+private:
+	unsigned int _numberOfParents;
+
 public:
 	virtual ~SelectionSettings(){};
 
@@ -31,9 +34,6 @@ public:
 		_numberOfParents(numberOfParents){
 		assert(_numberOfParents>0);
 	};
-
-private:
-	unsigned int _numberOfParents;
 
 };
 

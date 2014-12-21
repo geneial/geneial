@@ -20,6 +20,9 @@ namespace Selection {
  */
 template <typename FITNESS_TYPE>
 class BaseSelectionOperation{
+private:
+	SelectionSettings* _settings;
+
 public:
 	typedef typename Population::Population<FITNESS_TYPE>::chromosome_container selection_result_set;
 
@@ -37,8 +40,6 @@ public:
 		_settings = settings;
 	}
 
-private:
-	SelectionSettings* _settings;
 };
 
 } /* namespace Selection */

@@ -16,6 +16,9 @@ namespace Selection {
  * Select a number of parents based on a certain criteria.
  */
 class FitnessProportionalSelectionSettings: public SelectionSettings{
+private:
+	unsigned int _numberSelectBest;
+
 public:
 	FitnessProportionalSelectionSettings(unsigned int numberOfParents, unsigned int numberSelectBest):
 		SelectionSettings(numberOfParents),
@@ -31,9 +34,6 @@ public:
 	}
 
 	;
-
-private:
-	unsigned int _numberSelectBest;
 
 };
 

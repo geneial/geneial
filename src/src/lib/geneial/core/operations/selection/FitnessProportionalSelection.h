@@ -23,8 +23,10 @@ namespace Selection {
  */
 template <typename FITNESS_TYPE>
 class FitnessProportionalSelection : public BaseSelectionOperation<FITNESS_TYPE>{
+
 private:
 	FitnessProportionalSelectionSettings* _settings;
+
 public:
 	FitnessProportionalSelection(SelectionSettings* settings): BaseSelectionOperation<FITNESS_TYPE>(settings) {
 		_settings = dynamic_cast<FitnessProportionalSelectionSettings*>(settings);
@@ -38,7 +40,6 @@ public:
 	virtual typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set doSelect(
 			const Population::Population<FITNESS_TYPE> &population,
 			BaseManager<FITNESS_TYPE> &manager);
-
 
 
 };

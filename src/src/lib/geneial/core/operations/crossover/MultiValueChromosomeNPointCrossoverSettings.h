@@ -19,24 +19,24 @@ using namespace GeneticLibrary::Population::Manager;
 using namespace GeneticLibrary::Operation::Coupling;
 
 class MultiValueChromosomeNPointCrossoverSettings{
+private:
+	unsigned int _crossOverPoints;
+
 public:
 	MultiValueChromosomeNPointCrossoverSettings(unsigned int crossOverPoints): _crossOverPoints(crossOverPoints) {
 		assert(crossOverPoints >0);
 	};
+
 	virtual ~MultiValueChromosomeNPointCrossoverSettings() {
-	}
+	};
 
 	unsigned int getCrossOverPoints() const {
 		return _crossOverPoints;
-	}
+	};
 
 	void setCrossOverPoints(unsigned int crossOverPoints) {
 		_crossOverPoints = crossOverPoints;
-	}
-
-	;
-private:
-	unsigned int _crossOverPoints;
+	};
 };
 
 } /* namespace Crossover */
