@@ -42,6 +42,10 @@ public:
 		//ensure the crossoverpoints does not exceed the number of values.
 		assert(_crossoverSettings->getCrossOverPoints() <= this->getBuilderSettings()->getNum());
 
+		//ensure when minwidth is selected that the minwidth does not exceed the amount of spaces we have.
+		assert(_crossoverSettings->getWidthSetting() != MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH
+				|| _crossoverSettings->getMinWidth() * _crossoverSettings->getCrossOverPoints()  <= this->getBuilderSettings()->getNum());
+
 	}
 	;
 	virtual ~MultiValueChromosomeNPointCrossover() {

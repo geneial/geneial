@@ -9,6 +9,8 @@
 #define RANDOMCOUPLING_HPP_
 
 #include <geneial/core/operations/coupling/RandomCouplingOperation.h>
+#include <geneial/utility/random.h>
+
 #include <algorithm>
 #include <iterator>
 
