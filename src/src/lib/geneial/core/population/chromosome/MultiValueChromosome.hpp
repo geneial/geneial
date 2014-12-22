@@ -10,10 +10,23 @@
 
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
 #include <iterator>
+#include <algorithm>
 
 namespace GeneticLibrary {
 namespace Population {
 namespace Chromosome {
+
+template <typename VALUE_TYPE, typename FITNESS_TYPE>
+bool MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::equals(typename BaseChromosome<FITNESS_TYPE>::const_ptr chromosome) const{
+
+	typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::const_ptr mvc = boost::dynamic_pointer_cast<const MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(chromosome);
+	if(mvc){
+		return std::equal(_container.begin(),_container.end(),mvc->getConstIt());
+	}else{
+		return false;
+	}
+}
+
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 unsigned int MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getSize() const{
@@ -32,12 +45,12 @@ void MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::setValueContainer(value_cont
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::const_it MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getConstIt() const{
-	return _container.const_iterator;
+	return _container.begin();
 }
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::it MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getIt() const{
-	return _container.iterator;
+	return _container.begin();
 }
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>

@@ -57,6 +57,9 @@ public:
 	virtual ~BaseChromosome() {};
 
 
+	virtual bool equals(const_ptr chromosome) const = 0;
+
+
 	/**
 	 * Used to 'age' a chromosome. Increments the age of a chromosome by one
 	 * Returns the new age of the chromosome

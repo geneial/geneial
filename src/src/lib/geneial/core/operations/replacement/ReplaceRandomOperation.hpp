@@ -56,10 +56,10 @@ void ReplaceRandomOperation<FITNESS_TYPE>::doReplace(
 	//Remove random elements from the population w.r.t. elitism
 	while(numberToReplace){
 		//Ignore the very last chromosomes (elitism):
-		const unsigned int max = population.getChromosomes().size() - this->getSettings()->getAmountElitism();
+		const unsigned int max = population.getChromosomes().size() - this->getSettings()->getAmountElitism() - 1;
 
 		//pick a random element to delete:
-		const unsigned int rnd_advance = random::instance()->generateInt(0,max-1);
+		const unsigned int rnd_advance = random::instance()->generateInt(0,max);
 
 		//construct an iterator
 		typename Population::Population<FITNESS_TYPE>::it advanced = population.getChromosomes().begin();

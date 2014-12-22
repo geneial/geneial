@@ -15,9 +15,6 @@ using namespace GeneticLibrary::Population::Manager;
 namespace GeneticLibrary {
 namespace Operation {
 namespace Replacement {
-/**
- * Select a number of parents based on a certain criteria.
- */
 template <typename FITNESS_TYPE>
 class BaseReplacementOperation{
 private:

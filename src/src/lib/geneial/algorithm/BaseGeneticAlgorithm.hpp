@@ -72,6 +72,42 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 		std::cout << "OFFSPRING POOL END"<< std::endl;
 		*/
 
+		typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container::iterator offspring_it =
+				offspring.begin();
+
+		for (; offspring_it != offspring.end();
+				++offspring_it) {
+			typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container::iterator offspring_it2 =
+					offspring.begin();
+			for (; offspring_it2 != offspring.end();) {
+				if (offspring_it != offspring_it2 && (*offspring_it)->equals(*offspring_it2)) {
+					offspring_it2 = offspring.erase(offspring_it2);
+				} else {
+					++offspring_it2;
+				}
+			}
+		}
+
+		typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_map::iterator pop_it =
+		_manager.getPopulation().getChromosomes().begin();
+
+
+		//Remove offspring duplicates
+		//TODO (bewo): This is very inefficient.
+		for (; pop_it != _manager.getPopulation().getChromosomes().end();
+				++pop_it) {
+			typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container::iterator it2 =
+					offspring.begin();
+			for (; it2 != offspring.end();) {
+				if (pop_it->second->equals(*it2)) {
+					it2 = offspring.erase(it2);
+				} else {
+					++it2;
+				}
+			}
+		}
+
+
 		_replacementOperation->doReplace(_manager.getPopulation(),mating_pool,offspring,_manager);
 
 		//TODO (bewo) mutation

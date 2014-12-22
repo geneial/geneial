@@ -35,6 +35,8 @@ public:
 	MultiValueChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) : BaseChromosome<FITNESS_TYPE>(fitnessEvaluator), _container(){};
 	virtual ~MultiValueChromosome() {};
 
+	bool equals(typename BaseChromosome<FITNESS_TYPE>::const_ptr chromosome) const;
+
 	const_it getConstIt() const;
 	it getIt() const;
 
@@ -50,6 +52,7 @@ public:
 	//TODO (bewo) : provide further convenience methods at this point.
 
 	value_container& getContainer();
+	value_container getContainer() const;
 	void setValueContainer(value_container container);
 
 	virtual void print(std::ostream& os) const;
