@@ -49,17 +49,18 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 		typename Selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set mating_pool; //<-- TODO (bewo) (use shared_ptr here?)
 		mating_pool = _selectionOperation->doSelect(_manager.getPopulation(),_manager);
 
-		typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container::iterator it =
+		/*typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container::iterator it =
 				mating_pool.begin();
-		/*
+
 		std::cout << "MATING POOL:" << std::endl;
 		for (;it != mating_pool.end(); ++it) {
 			std::cout << **it << std::endl;
 		}
-		std::cout << "MATING POOL END"<< std::endl;
-		*/
+		std::cout << "MATING POOL END"<< std::endl;*/
+
 		typename Coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set offspring;
 		offspring = _couplingOperation->doCopulate(mating_pool,_crossoverOperation,_manager);
+
 		/*
 		typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container::iterator it2 =
 				offspring.begin();
@@ -69,7 +70,7 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 			std::cout << **it2 << std::endl;
 		}
 		std::cout << "OFFSPRING POOL END"<< std::endl;
-		 */
+		*/
 
 		_replacementOperation->doReplace(_manager.getPopulation(),mating_pool,offspring,_manager);
 

@@ -16,6 +16,7 @@ namespace GeneticLibrary {
 namespace Operation {
 namespace Crossover {
 
+//TODO (bewo) allow random crossover width per settings
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class MultiValueChromosomeNPointCrossover: public BaseCrossoverOperation<FITNESS_TYPE> {

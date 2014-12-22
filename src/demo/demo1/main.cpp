@@ -20,13 +20,15 @@
 
 #include <geneial/core/operations/selection/SelectionSettings.h>
 #include <geneial/core/operations/selection/RouletteWheelSelection.h>
+//#include <geneial/core/operations/selection/UniformRandomSelection.h>
 
 //#include <geneial/core/operations/coupling/SimpleCouplingOperation.h>
 #include <geneial/core/operations/coupling/RandomCouplingOperation.h>
 
 #include <geneial/core/operations/replacement/BaseReplacementSettings.h>
-//#include <geneial/core/operations/replacement/ReplaceWorstOperation.h>
-#include <geneial/core/operations/replacement/ReplaceRandomOperation.h>
+
+#include <geneial/core/operations/replacement/ReplaceWorstOperation.h>
+//#include <geneial/core/operations/replacement/ReplaceRandomOperation.h>
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossoverSettings.h>
@@ -78,9 +80,9 @@ int main(int argc, char **argv) {
 
 	//TODO (bewo): write reasonable example demo
 
-	PopulationSettings *populationSettings = new PopulationSettings(400);
+	PopulationSettings *populationSettings = new PopulationSettings(100);
 
-	MultiValueBuilderSettings<int,double> *builderSettings = new MultiValueBuilderSettings<int,double>(evaluator,50,0,130);
+	MultiValueBuilderSettings<int,double> *builderSettings = new MultiValueBuilderSettings<int,double>(evaluator,10,0,130);
 
 	MultiIntValueChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 
@@ -89,6 +91,7 @@ int main(int argc, char **argv) {
 
 	//BaseSelectionOperation<double> *selectionOperation = new FitnessProportionalSelection<double>(selectionSettings);
 	BaseSelectionOperation<double> *selectionOperation = new RouletteWheelSelection<double>(selectionSettings);
+	//BaseSelectionOperation<double> *selectionOperation = new UniformRandomSelection<double>(selectionSettings);
 
 	CouplingSettings *couplingSettings = new CouplingSettings(2);
 
@@ -100,10 +103,10 @@ int main(int argc, char **argv) {
 	BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeAverageCrossover<int,double>(builderSettings,chromosomeFactory);
 
 	//BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::replace_offspring_mode::REPLACE_FIXED_NUMBER,20);
-	BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::REPLACE_ALL_OFFSPRING,0,3);
+	BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::REPLACE_ALL_OFFSPRING,0,5);
 
-	//ReplaceWorstOperation<double> *replacementOperation = new ReplaceWorstOperation<double>(replacementSettings);
-	ReplaceRandomOperation<double> *replacementOperation = new ReplaceRandomOperation<double>(replacementSettings);
+	ReplaceWorstOperation<double> *replacementOperation = new ReplaceWorstOperation<double>(replacementSettings);
+	//ReplaceRandomOperation<double> *replacementOperation = new ReplaceRandomOperation<double>(replacementSettings);
 
 
 	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(10000);

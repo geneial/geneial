@@ -26,14 +26,14 @@ unsigned int ReplaceWorstOperation<FITNESS_TYPE>::getAmountToReplace(
 
 		case BaseReplacementSettings::REPLACE_ALL_OFFSPRING:
 		{
-			return std::min(population.getChromosomes().size()-this->getSettings()->getAmountElitism(),offspring.size());
+			return std::min(population.getChromosomes().size()-this->getSettings()->getAmountElitism()-1,offspring.size());
 		}
 		break;
 
 		case BaseReplacementSettings::REPLACE_FIXED_NUMBER: /*FALLTHROUGH*/
 		default:
 		{
-			return std::min(population.getChromosomes().size,
+			return std::min(population.getChromosomes().size()-1,
 					(typename Population::Population<FITNESS_TYPE>::chromosome_map::size_type)
 					this->getSettings()->getAmountToReplace());
 		}

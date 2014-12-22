@@ -18,6 +18,8 @@ namespace GeneticLibrary {
 namespace Operation {
 namespace Crossover {
 
+//TODO (bewo) allow random weighting factor param for one side
+//value = (e.g. 2x ParentA + 1x ParentB) / 3 etc.
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueChromosomeAverageCrossover<VALUE_TYPE,FITNESS_TYPE>::doCrossover(
 		typename BaseChromosome<FITNESS_TYPE>::ptr mommy,
@@ -56,6 +58,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 			mommy_it != mommy_container.end();
 			++i){
 			child_container.push_back((*mommy_it + *daddy_it) / 2);
+			//child_container.push_back(std::max(*mommy_it,*daddy_it));
 		++mommy_it;
 		++daddy_it;
 	}
