@@ -38,6 +38,9 @@ public:
 	virtual ~MultiValueChromosomeAverageCrossover() {
 	}
 	;
+
+	virtual bool inline isSymmetric() const{return true;};
+
 	/****
 	 * Computes the average of the two parents.
 	 *

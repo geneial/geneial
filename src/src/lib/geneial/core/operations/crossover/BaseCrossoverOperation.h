@@ -24,6 +24,9 @@ public:
 	virtual crossover_result_set
 		doCrossover( typename BaseChromosome<FITNESS_TYPE>::ptr mommy, typename BaseChromosome<FITNESS_TYPE>::ptr daddy ) = 0;
 
+	//Is the order of mommy for and daddy for doCrossover() relevant?, true if yes.
+	virtual bool inline isSymmetric() const = 0;
+
 };
 
 } /* namespace Crossover */

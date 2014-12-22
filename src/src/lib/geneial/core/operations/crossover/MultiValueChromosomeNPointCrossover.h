@@ -47,6 +47,9 @@ public:
 	}
 	;
 
+	virtual bool inline isSymmetric() const{return false;};
+
+
 	/****
 	 * Computes the N-Point crossover of two multi value chromosomes.
 	 *

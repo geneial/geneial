@@ -71,7 +71,7 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
 			offspring.push_back(*it);
 			offspring_left--;
 		}
-		if(offspring_left){
+		if(offspring_left && crossoverOperation->isSymmetric()){
 			 children_container children2 = crossoverOperation->doCrossover(parent2,parent1);
 			for (typename children_container::iterator it = children2.begin(); offspring_left > 0 && it != children2.end();++it){
 				offspring.push_back(*it);
