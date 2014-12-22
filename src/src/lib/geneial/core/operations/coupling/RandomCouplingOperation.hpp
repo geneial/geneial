@@ -45,18 +45,18 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set RandomCouplin
 		const unsigned int rnd_mommy = random::instance()->generateInt(0,mating_pool_size);
 		typename mating_container::iterator it_mommy = mating_pool.begin();
 		std::advance(it_mommy,rnd_mommy);
-
 		//pick a random daddy:
 		unsigned int rnd_daddy;
 		do{
 			rnd_daddy = random::instance()->generateInt(0,mating_pool_size);
-		}while(rnd_daddy != rnd_mommy);
+		}while(rnd_daddy == rnd_mommy);
 
 		typename mating_container::iterator it_daddy = mating_pool.begin();
 		std::advance(it_daddy,rnd_daddy);
 
 		//compute crossover
 		children_container children1 = crossoverOperation->doCrossover(*it_mommy,*it_daddy);
+
 		for (typename children_container::iterator it = children1.begin(); offspring_left > 0 && it != children1.end();++it){
 			offspring.push_back(*it);
 			offspring_left--;
