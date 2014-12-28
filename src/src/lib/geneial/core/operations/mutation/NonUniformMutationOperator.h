@@ -1,12 +1,12 @@
 /*
- * UniformMutationOperation.h
+ * NonUniformMutationOperator.h
  *
  *  Created on: Dec 28, 2014
  *      Author: lukas
  */
 
-#ifndef SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_UNIFORMMUTATIONOPERATION_H_
-#define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_UNIFORMMUTATIONOPERATION_H_
+#ifndef SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_NONUNIFORMMUTATIONOPERATOR_H_
+#define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_NONUNIFORMMUTATIONOPERATOR_H_
 
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
 
@@ -18,14 +18,14 @@ using namespace GeneticLibrary::Population::Manager;
 using namespace GeneticLibrary::Operation::Mutation::BaseMutationOperation;
 
 template <typename FITNESS_TYPE>
-class UniformMutationOperation : public BaseMutationOperation<FITNESS_TYPE> {
+class NonUniformMutationOperation : public BaseMutationOperation<FITNESS_TYPE> {
 
 public:
 	/*
 	 * UniformMutationOperation Mutates a chromosome, by replacing some of it's values randomly.
 	 */
-	UniformMutationOperation(MutationSettings *settings): BaseMutationOperation<FITNESS_TYPE>(settings){};
-	virtual ~UniformMutationOperation() {};
+	NonUniformMutationOperation(MutationSettings *settings): BaseMutationOperation<FITNESS_TYPE>(settings){};
+	virtual ~NonUniformMutationOperation() {};
 
 	virtual typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set doMutate(BaseChromosome<FITNESS_TYPE>::ptr mutant);
 
@@ -36,5 +36,4 @@ public:
 } // namespace GeneticLibrary
 
 
-
-#endif /* SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_UNIFORMMUTATIONOPERATION_H_ */
+#endif /* SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_NONUNIFORMMUTATIONOPERATOR_H_ */
