@@ -11,7 +11,7 @@
 using namespace GeneticLibrary::Population::Manager;
 
 namespace GeneticLibrary {
-namespace Opertation {
+namespace Operation {
 namespace Mutation {
 
 template <typename FITNESS_TYPE>
