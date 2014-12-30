@@ -33,6 +33,7 @@ private:
 	Coupling::BaseCouplingOperation<FITNESS_TYPE> *_couplingOperation;
 	Crossover::BaseCrossoverOperation<FITNESS_TYPE> *_crossoverOperation;
 	Replacement::BaseReplacementOperation<FITNESS_TYPE> *_replacementOperation;
+	Mutation::BaseMutationOperation<FITNESS_TYPE> *_mutationOperation;
 public:
 	BaseGeneticAlgorithm(
 			PopulationSettings *populationSettings,
@@ -43,7 +44,8 @@ public:
 			Selection::BaseSelectionOperation<FITNESS_TYPE> *selectionOperation,
 			Coupling::BaseCouplingOperation<FITNESS_TYPE> *couplingOperation,
 			Crossover::BaseCrossoverOperation<FITNESS_TYPE> *crossoverOperation,
-			Replacement::BaseReplacementOperation<FITNESS_TYPE> *replacementOperation
+			Replacement::BaseReplacementOperation<FITNESS_TYPE> *replacementOperation,
+			Mutation::BaseMutationOperation<FITNESS_TYPE> *mutationOperation
 
 	):
 		_manager(

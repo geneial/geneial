@@ -28,7 +28,7 @@ public:
 						typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set,
 						BaseMutationOperation<FITNESS_TYPE> *mutationOperation,
 						BaseManager<FITNESS_TYPE> &manager
-				) = 0; //Wofür das bei doCopulate ??
+				) = 0;
 
 	MutationSettings* const& getSettings() const {
 		return _settings;

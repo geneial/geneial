@@ -18,7 +18,6 @@ namespace Coupling {
 class CouplingSettings{
 private:
 	unsigned int _numberOfOffspring;
-
 public:
 	virtual ~CouplingSettings(){};
 
