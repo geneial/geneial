@@ -27,7 +27,7 @@ public:
 	NonUniformMutationOperation(MutationSettings *settings): BaseMutationOperation<FITNESS_TYPE>(settings){};
 	virtual ~NonUniformMutationOperation() {};
 
-	virtual typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set doMutate(BaseChromosome<FITNESS_TYPE>::ptr mutant);
+	virtual typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set doMutate(Population::Chromosome::BaseChromosome<FITNESS_TYPE>::ptr mutant);
 
 };
 
