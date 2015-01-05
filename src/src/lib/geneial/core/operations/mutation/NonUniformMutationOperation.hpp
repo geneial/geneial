@@ -18,7 +18,7 @@ namespace Operation {
 namespace Mutation {
 
 template<typename FITNESS_TYPE>
-typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set doMutate(double min, double max, typename BaseChromosome<FITNESS_TYPE>::ptr mutant){
+typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set doMutate(typename BaseChromosome<FITNESS_TYPE>::ptr mutant){
 
 //TODO Write awesome Non-Uniform Mutation-algorithm here.
 

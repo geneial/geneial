@@ -14,6 +14,7 @@ namespace Mutation {
 using namespace GeneticLibrary::Population::Manager;
 template <typename VALUE_TYPE,typename FITNESS_TYPE>
 class UniformMutationOperation : public BaseMutationOperation<FITNESS_TYPE> {
+
 private:
    MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE> * _builderSettings;
    MultiValueChromosomeFactory<VALUE_TYPE,FITNESS_TYPE> *_builderFactory;
@@ -35,7 +36,15 @@ public:
        assert(_builderFactory != NULL);
    };
    virtual ~UniformMutationOperation() {};
-   virtual typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set doMutate(double min, double max, typename Population::Chromosome::BaseChromosome<FITNESS_TYPE>::ptr mutant);
+   /*
+    *  Returns a new chromosome which is a partially mutated version of the old one.
+    *  */
+   virtual typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set doMutate
+   	   	   	   (
+   	   			   typename Population::Chromosome::BaseChromosome<FITNESS_TYPE>::ptr mutant
+			   );
+
+
    //TODO lukas copy paste from MultiValueChromosomeAvarageCrossover.h ...
    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const {
        return _builderFactory;

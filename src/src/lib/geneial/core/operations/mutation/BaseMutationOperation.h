@@ -8,6 +8,7 @@
 #define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_BASEMUTATIONOPERATION_H_
 #include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/population/management/BaseManager.h>
+
 using namespace GeneticLibrary::Population::Manager;
 namespace GeneticLibrary {
 namespace Operation {
@@ -22,12 +23,7 @@ public:
    typedef typename Population::Population<FITNESS_TYPE>::chromosome_container mutation_result_set;
    virtual mutation_result_set doMutate
                (
-                       double max,
-                       double min,
                        typename BaseChromosome<FITNESS_TYPE>::ptr mutant
-                       //typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set,
-                       //BaseMutationOperation<FITNESS_TYPE> *mutationOperation,
-                       //BaseManager<FITNESS_TYPE> &manager
                ) =0;
    MutationSettings* const& getSettings() const {
        return _settings;

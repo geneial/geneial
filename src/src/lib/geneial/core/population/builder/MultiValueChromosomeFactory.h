@@ -19,7 +19,14 @@ public:
 	MultiValueChromosomeFactory(MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE> *settings):_settings(settings){};
 	typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome() = 0;
 
+
+	/* TODO: Lukas                            Why the "&" ?  v
 	const MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>*& getSettings() const {
+			return _settings;
+		}
+
+	*/
+	const MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>* getSettings() const {
 		return _settings;
 	}
 

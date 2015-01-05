@@ -9,6 +9,8 @@
 #define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_UNIFORMMUTATIONOPERATION_HPP_
 
 #include <geneial/core/operations/mutation/UniformMutationOperation.h>
+#include <geneial/core/operations/mutation/MutationSettings.h>
+#include <geneial/core/population/builder/BuilderSettings.h>
 //#include <geneial/core/operations/mutation/BaseMutationOperation.h>
 
 using namespace GeneticLibrary::Population::Chromosome;
@@ -20,7 +22,11 @@ namespace Operation {
 namespace Mutation {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate(double max, double min,typename BaseChromosome<FITNESS_TYPE>::ptr mutant){
+/*
+ *  Returns a new chromosome which is a partially mutated version of the old one.
+ *
+ *  */
+typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate(typename BaseChromosome<FITNESS_TYPE>::ptr mutant){
 
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::value_container value_container;
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr mvc_ptr;
@@ -48,15 +54,18 @@ typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set UniformMutatio
 	typename value_container::iterator mutant_it = mutant_container.begin();
 
 	double mutate_chromosome = random::instance()->generateDouble(0.0,1.0);
-	//todo lukas use mutation settings
-	if (mutate_chromosome <= 0.1) {
+	//Probability to mutate this chromosome
+	if (mutate_chromosome <= this->getSettings()->getPropabilityOfMutation()) {
 		for (unsigned int i=0; mutant_it != mutant_container.end(); i++){
 
 			double mutate_value = random::instance()->generateDouble(0.0,1.0);
-			VALUE_TYPE random_mutation = random::instance()->generateDouble(min,max);
+			VALUE_TYPE random_mutation = random::instance()->generateDouble(
+					this->getBuilderFactory()->getSettings()->getRandomMax(),
+					this->getBuilderFactory()->getSettings()->getRandomMin()
+				);
 
-			//todo lukas use mutation settings
-			if(mutate_value <= 0.1) {
+			//Probability to Mutate this value
+			if(mutate_value <= this->getSettings()->getAmountOfMutation()) {
 				result_container.push_back (random_mutation);
 			} else {
 				result_container.push_back (*mutant_it);

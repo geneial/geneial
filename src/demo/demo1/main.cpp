@@ -91,7 +91,7 @@ int main(int argc, char **argv) {
 
 	MultiIntValueChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 
-	MutationSettings* mutationSettings = new MutationSettings(0.1,0.5,0.1);
+	MutationSettings* mutationSettings = new MutationSettings(0.1,0.1);
 
 	BaseMutationOperation<double> *mutationOperation = new UniformMutationOperation<int,double>(mutationSettings, builderSettings, chromosomeFactory);
 
