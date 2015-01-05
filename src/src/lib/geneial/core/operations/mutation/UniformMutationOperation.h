@@ -41,7 +41,7 @@ public:
     *  */
    virtual typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set doMutate
    	   	   	   (
-   	   			   typename Population::Chromosome::BaseChromosome<FITNESS_TYPE>::ptr mutant
+   	   	   			   typename Mutation::BaseMutationOperation<FITNESS_TYPE>::mutation_result_set mutants
 			   );
 
 

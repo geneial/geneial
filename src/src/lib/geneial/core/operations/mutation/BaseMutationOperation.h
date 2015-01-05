@@ -23,7 +23,7 @@ public:
    typedef typename Population::Population<FITNESS_TYPE>::chromosome_container mutation_result_set;
    virtual mutation_result_set doMutate
                (
-                       typename BaseChromosome<FITNESS_TYPE>::ptr mutant
+            		   typename Mutation::BaseMutationOperation<FITNESS_TYPE>::mutation_result_set mutants
                ) =0;
    MutationSettings* const& getSettings() const {
        return _settings;

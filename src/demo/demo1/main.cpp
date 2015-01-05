@@ -134,6 +134,7 @@ int main(int argc, char **argv) {
 
 	algorithm.solve();
 
+
 	//normally, this is not necessary because we're exiting here anyway,
 	//but for valgrind's satisfaction, we free stuff nonetheless.
 	delete populationSettings;
@@ -144,4 +145,5 @@ int main(int argc, char **argv) {
 	delete couplingOperation;
 	delete crossoverOperation;
 	delete replacementOperation;
+
 }
