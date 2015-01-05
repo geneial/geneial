@@ -42,7 +42,7 @@ typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set UniformMutatio
 
 		//casting mutant as MVC
 			mvc_ptr mvc_mutant
-					= boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(mutants_it);
+					= boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(*mutants_it);
 			assert(mvc_mutant);
 
 			//creating a new MVC (to keep things reversible)
@@ -60,14 +60,14 @@ typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set UniformMutatio
 
 			typename value_container::iterator mutant_it = mutant_container.begin();
 
-			//double mutate_chromosome = random::instance()->generateDouble(0.0,1.0);
+			double mutate_chromosome = random::instance()->generateDouble(0.0,1.0);
 
 			//Probability to mutate this chromosome
 
 			if (mutate_chromosome <= this->getSettings()->getPropabilityOfMutation()) {
 				for (unsigned int i=0; mutant_it != mutant_container.end(); i++){
 
-					//double mutate_value = random::instance()->generateDouble(0.0,1.0);
+					double mutate_value = random::instance()->generateDouble(0.0,1.0);
 					VALUE_TYPE random_mutation = random::instance()->generateDouble(
 							this->getBuilderFactory()->getSettings()->getRandomMax(),
 							this->getBuilderFactory()->getSettings()->getRandomMin()

@@ -57,7 +57,8 @@ public:
 		_selectionOperation(selectionOperation),
 		_couplingOperation(couplingOperation),
 		_crossoverOperation(crossoverOperation),
-		_replacementOperation(replacementOperation)
+		_replacementOperation(replacementOperation),
+		_mutationOperation(mutationOperation)
 		{};
 
 	virtual ~BaseGeneticAlgorithm() {};

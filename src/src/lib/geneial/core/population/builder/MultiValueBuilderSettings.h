@@ -36,7 +36,7 @@ public:
 		_num = num;
 	}
 
-	VALUE_TYPE getRandomMax() const {
+	const VALUE_TYPE getRandomMax() const {
 		return _random_max;
 	}
 

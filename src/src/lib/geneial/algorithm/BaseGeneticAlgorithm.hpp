@@ -72,15 +72,11 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 		std::cout << "OFFSPRING POOL END"<< std::endl;
 		*/
 
+
+		offspring = _mutationOperation->doMutate(offspring);
+
 		typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container::iterator offspring_it =
 				offspring.begin();
-
-		//Mutation
-		for (; offspring_it != offspring.end();
-						++offspring_it) {
-					offspring_it = GeneticLibrary::Operation::Mutation::doMutate(offspring_it);
-				}
-
 
 		for (; offspring_it != offspring.end();
 				++offspring_it) {
