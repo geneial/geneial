@@ -14,6 +14,7 @@
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
 #include <geneial/core/operations/coupling/BaseCouplingOperation.h>
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
+#include <geneial/core/operations/mutation/BaseMutationOperation.h>
 #include <geneial/core/operations/replacement/BaseReplacementOperation.h>
 
 using namespace GeneticLibrary::Population;

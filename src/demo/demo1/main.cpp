@@ -35,6 +35,10 @@
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeAverageCrossover.h>
 
+#include <geneial/core/operations/mutation/MutationSettings.h>
+#include <geneial/core/operations/mutation/UniformMutationOperation.h>
+
+
 #include <geneial/config.h>
 
 #include <stdexcept>
@@ -51,6 +55,7 @@ using namespace GeneticLibrary::Operation::Selection;
 using namespace GeneticLibrary::Operation::Coupling;
 using namespace GeneticLibrary::Operation::Crossover;
 using namespace GeneticLibrary::Operation::Replacement;
+using namespace GeneticLibrary::Operation::Mutation;
 
 
 class DemoChromosomeEvaluator: public FitnessEvaluator<double>{
@@ -86,6 +91,11 @@ int main(int argc, char **argv) {
 
 	MultiIntValueChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 
+	MutationSettings* mutationSettings = new MutationSettings(0.1,0.5,0.1);
+
+	BaseMutationOperation<double> *mutationOperation = new UniformMutationOperation<int,double>(mutationSettings, builderSettings, chromosomeFactory);
+
+
 	//FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(20,10);
 	SelectionSettings* selectionSettings = new SelectionSettings(10);
 
@@ -118,7 +128,8 @@ int main(int argc, char **argv) {
 			selectionOperation,
 			couplingOperation,
 			crossoverOperation,
-			replacementOperation
+			replacementOperation,
+			mutationOperation
 	);
 
 	algorithm.solve();
