@@ -20,7 +20,7 @@ namespace Mutation {
 template<typename FITNESS_TYPE>
 typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set doMutate(double min, double max, typename BaseChromosome<FITNESS_TYPE>::ptr mutant){
 
-//TODO Write awesome Non-Uniform Mutation-algorithm here, while trying not to get to distracted by Austrian landscape.
+//TODO Write awesome Non-Uniform Mutation-algorithm here.
 
 };
 

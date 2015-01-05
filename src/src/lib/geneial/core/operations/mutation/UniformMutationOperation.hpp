@@ -20,7 +20,7 @@ namespace Operation {
 namespace Mutation {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set doMutate(double max, double min,typename BaseChromosome<FITNESS_TYPE>::ptr mutant){
+typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate(double max, double min,typename BaseChromosome<FITNESS_TYPE>::ptr mutant){
 
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::value_container value_container;
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr mvc_ptr;
@@ -42,7 +42,7 @@ typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set doMutate(doubl
 
 	//getting values
 	value_container &mutant_container = mvc_mutant->getContainer();
-	value_container &result_container = mutation_result->get_container();
+	value_container &result_container = mutation_result->getContainer();
 	result_container.clear();
 
 	typename value_container::iterator mutant_it = mutant_container.begin();
@@ -59,8 +59,11 @@ typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set doMutate(doubl
 			if(mutate_value <= 0.1) {
 				result_container.push_back (random_mutation);
 			} else {
-				result_container.push_back (mutant_it);
+				result_container.push_back (*mutant_it);
 			}
+
+			//increase iterator
+			++mutant_it;
 
 		}
 	}

@@ -4,6 +4,8 @@
  *  Created on: Dec 19, 2014
  *      Author: lukas
  */
+#ifndef SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_BASEMUTATIONOPERATION_H_
+#define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_BASEMUTATIONOPERATION_H_
 
 #include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/population/management/BaseManager.h>
@@ -49,4 +51,4 @@ public:
 } //namespace Operation
 } //namespace GeneticLibrary
 
-
+#endif //SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_BASEMUTATIONOPERATION_H_
