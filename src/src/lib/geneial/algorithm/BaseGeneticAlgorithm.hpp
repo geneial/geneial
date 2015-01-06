@@ -110,10 +110,8 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 			}
 		}
 
-
+		//create new population
 		_replacementOperation->doReplace(_manager.getPopulation(),mating_pool,offspring,_manager);
-
-		//TODO (bewo) mutation
 
 		//TODO (bewo) scaling
 
