@@ -33,14 +33,15 @@ typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set UniformMutatio
 
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::value_container value_container;
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr mvc_ptr;
-
+	int _pointOfMutation;
+	int _mutationCounter;
 	typename Mutation::BaseMutationOperation<FITNESS_TYPE>::mutation_result_set resultset;
 
 	typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container::iterator _chromosomeInputContainer_it;
-	//std::cout << "12345678901234567890"<< endl;
 	for (_chromosomeInputContainer_it = _chromosomeInputContainer.begin();
 			_chromosomeInputContainer_it != _chromosomeInputContainer.end(); ++_chromosomeInputContainer_it){
-
+			_mutationCounter = 0;
+			//std::cout << "[";
 			//casting mutant as MVC
 			mvc_ptr _mvcMutant
 					= boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(*_chromosomeInputContainer_it);
@@ -55,8 +56,8 @@ typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set UniformMutatio
 
 
 			//getting values
-			value_container _mutantChromosomeContainer = _mvcMutant->getContainer();
-			value_container result_container = _mutatedChromosome->getContainer();
+			value_container &_mutantChromosomeContainer = _mvcMutant->getContainer();
+			value_container &result_container = _mutatedChromosome->getContainer();
 			result_container.clear();
 
 			//iterator for one chromosome (to iterate it's values)
@@ -68,7 +69,11 @@ typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set UniformMutatio
 			//Probability to mutate this chromosome
 			if (chromosome_choise <= this->getSettings()->getPropabilityOfMutation()) {
 
-				//std::cout << "X";
+				//first point of mutation
+				if (this->getSettings()->getAmountOfPointsOfMutation()>0){
+							 _pointOfMutation = random::instance()->generateInt(0,this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation());
+							}
+
 				for (unsigned int i=0; mutant_it != _mutantChromosomeContainer.end(); i++){
 
 					double value_choise = random::instance()->generateDouble(0.0,1.0);
@@ -77,12 +82,33 @@ typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set UniformMutatio
 							this->getBuilderFactory()->getSettings()->getRandomMin()
 						);
 
-					//Probability to Mutate this value
-					if(value_choise <= this->getSettings()->getAmountOfMutation()) {
+					//next point of mutation
+					if (this->getSettings()->getAmountOfPointsOfMutation()>0){
+								if (i==_pointOfMutation){
+									if (this->getSettings()->getAmountOfPointsOfMutation() != _mutationCounter){
+										//std::cout << _mutationCounter+1;
+										result_container.push_back (random_mutation);
+										_mutationCounter++;
+										_pointOfMutation = random::instance()->generateInt(
+												i+1,
+												(i+this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation()) % this->getBuilderFactory()->getSettings()->getNum()
+											);
+									} else {
+										//std::cout << "-";
+										result_container.push_back (*mutant_it);
+									}
+								} else {
+									//std::cout << "-";
+									result_container.push_back (*mutant_it);
+								}
+
+
+					} else if(value_choise <= this->getSettings()->getAmountOfMutation()) {
 						result_container.push_back (random_mutation);
-						//std::cout << "[" << random_mutation << "]";
+						//std::cout << "Y";
 					} else {
 						result_container.push_back (*mutant_it);
+						//std::cout << "=";
 					}
 
 					//increase iterator
@@ -98,9 +124,10 @@ typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set UniformMutatio
 				//std::cout << "+";
 				resultset.push_back(*_chromosomeInputContainer_it);
 			}
+			//std::cout << "]";
 	}
 
-	//std::cout << "|" << endl;
+	//std::cout << ";" << endl;;
 	return resultset;
 
 }

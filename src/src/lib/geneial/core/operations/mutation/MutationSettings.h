@@ -15,15 +15,31 @@ namespace Mutation {
 
 class MutationSettings{
 private:
-	double _propabilityOfMutation; //propability of the mutation for one Chromosome
-	//double _levelOfMutation; //amount of change caused to one chromosome
-	double _amountOfMutation; //points of change in one chromosome
+
+	/**
+	 * propability that one Chromosome is choosen for mutation
+	 */
+
+	double _propabilityOfMutation;
+
+	/**
+	 * _amountOfMutation defines the propability to choose a value in a chromosome.
+	 */
+	double _amountOfMutation;
+
+	/**
+	 * _amountOfPointsOfMutation defines at how many points, Mutation will change a chromosome.
+	 * Does ignore _amountOfMutation.
+	 * 0 Will turn of this feature, and switch to _amountOfMutation
+	 */
+	unsigned int _amountOfPointsOfMutation;
 
 public:
 	virtual ~MutationSettings(){};
 
-	MutationSettings(double propabilityOfMutation, double amountOfMutation){
+	MutationSettings(double propabilityOfMutation, double amountOfMutation, unsigned int amountOfPointsOfMutation){
 		_propabilityOfMutation = propabilityOfMutation;
+		_amountOfPointsOfMutation = amountOfPointsOfMutation;
 		//_levelOfMutation = levelOfMutation;
 		_amountOfMutation = amountOfMutation;
 	};
@@ -39,6 +55,14 @@ public:
 	double getAmountOfMutation() const {
 		return _amountOfMutation;
 	};
+
+	unsigned int getAmountOfPointsOfMutation(){
+		return _amountOfPointsOfMutation;
+	};
+
+	void setAmountOfPointsOfMutation (unsigned int amount){
+		_amountOfPointsOfMutation = amount;
+	}
 
 	void setPropabilityOfMutation(double propabilityOfMutation){
 		_propabilityOfMutation = propabilityOfMutation;

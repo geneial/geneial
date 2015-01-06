@@ -14,16 +14,16 @@
 
 BOOST_AUTO_TEST_SUITE( MutatuionSuite )
 
-using namespace GeneticLibrary::Operation::Mutation;
+	using namespace GeneticLibrary::Operation::Mutation;
 	using namespace GeneticLibrary::Population::Chromosome;
 	using namespace GeneticLibrary;
 
-	class DemoChromosomeEvaluator: public FitnessEvaluator<double>{
+	/*valuator: public FitnessEvaluator<double>{
 		public:
 			DemoChromosomeEvaluator(){};
 			Fitness<double>::ptr evaluate(const BaseChromosome<double>::ptr chromosome) const{
 
-				MultiValueChromosome<int,double>::ptr mvc = boost::dynamic_pointer_cast<MultiValueChromosome<int,double> >(chromosome);
+				GeneticLibrary::Population::Chromosome::MultiValueChromosome<int,double>::ptr mvc = boost::dynamic_pointer_cast<MultiValueChromosome<int,double> >(chromosome);
 				if(mvc){
 					//Let the fitness be the sum of all values
 					return boost::shared_ptr<Fitness<double> > (new Fitness<double>(mvc->getSum()));
@@ -35,25 +35,27 @@ using namespace GeneticLibrary::Operation::Mutation;
 				return ptr;
 			}
 		};
-
+	*/
 BOOST_AUTO_TEST_CASE( basicMutation )
 {
 	using namespace GeneticLibrary::Population::Chromosome;
-
-	DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
-	typename BaseChromosome<double>::ptr _newChromosome = GeneticLibrary::Population::Chromosome::MultiIntValueChromosomeFactory::createChromosome();
+	using namespace GeneticLibrary::Operation::Mutation;
+	using namespace GeneticLibrary;
+	//TODO (Lukas) clean up this mess
+	/*DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
+	typename BaseChromosome<double>::ptr _newChromosome = GeneticLibrary::Population::Chromosome::MultiIntValueChromosomeFactory<double>::createChromosome();
 	typename GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
 	typename GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set resultSet;
 
 	resultSet.push_back(_newChromosome);
 
-	MultiValueBuilderSettings<int,double> *builderSettings = new MultiValueBuilderSettings<int,double>(evaluator,10,0,130);
+	GeneticLibrary::Population::Chromosome::MultiValueBuilderSettings<int,double> *builderSettings = new GeneticLibrary::Population::Chromosome::MultiValueBuilderSettings<int,double>(evaluator,10,0,130);
 	MutationSettings* mutationSettings = new MutationSettings(0.1,0.1);
 	MultiIntValueChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 	BaseMutationOperation<double> *mutationOperation = new UniformMutationOperation<int,double>(mutationSettings, builderSettings, chromosomeFactory);
 	resultSet = mutationOperation->doMutate(inputSet);
 
-	BOOST_CHECK( 1 = 1);
+	BOOST_CHECK(inputSet != resultSet);*/
 }
 
 BOOST_AUTO_TEST_SUITE_END()
