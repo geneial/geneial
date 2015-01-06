@@ -132,8 +132,6 @@ typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set UniformMutatio
 
 }
 
-
-
 } //namespace Mutation
 } //namespace Operation
 } //namespace GeneticLibrary
