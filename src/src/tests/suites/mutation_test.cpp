@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_SUITE( MutatuionSuite )
 	using namespace GeneticLibrary::Population::Chromosome;
 	using namespace GeneticLibrary;
 
-	/*valuator: public FitnessEvaluator<double>{
+	/*Evaluator: public FitnessEvaluator<double>{
 		public:
 			DemoChromosomeEvaluator(){};
 			Fitness<double>::ptr evaluate(const BaseChromosome<double>::ptr chromosome) const{
@@ -35,14 +35,17 @@ BOOST_AUTO_TEST_SUITE( MutatuionSuite )
 				return ptr;
 			}
 		};
-	*/
+		*/
+
 BOOST_AUTO_TEST_CASE( basicMutation )
 {
+
+	/*
 	using namespace GeneticLibrary::Population::Chromosome;
 	using namespace GeneticLibrary::Operation::Mutation;
 	using namespace GeneticLibrary;
 	//TODO (Lukas) clean up this mess
-	/*DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
+	DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
 	typename BaseChromosome<double>::ptr _newChromosome = GeneticLibrary::Population::Chromosome::MultiIntValueChromosomeFactory<double>::createChromosome();
 	typename GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
 	typename GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set resultSet;
@@ -50,12 +53,14 @@ BOOST_AUTO_TEST_CASE( basicMutation )
 	resultSet.push_back(_newChromosome);
 
 	GeneticLibrary::Population::Chromosome::MultiValueBuilderSettings<int,double> *builderSettings = new GeneticLibrary::Population::Chromosome::MultiValueBuilderSettings<int,double>(evaluator,10,0,130);
-	MutationSettings* mutationSettings = new MutationSettings(0.1,0.1);
+	MutationSettings* mutationSettings = new MutationSettings(0.1,0.1,0);
 	MultiIntValueChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 	BaseMutationOperation<double> *mutationOperation = new UniformMutationOperation<int,double>(mutationSettings, builderSettings, chromosomeFactory);
 	resultSet = mutationOperation->doMutate(inputSet);
 
-	BOOST_CHECK(inputSet != resultSet);*/
+
+	BOOST_CHECK(inputSet != resultSet);
+	*/
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -6,12 +6,14 @@
  */
 #ifndef SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_UNIFORMMUTATIONOPERATION_H_
 #define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_UNIFORMMUTATIONOPERATION_H_
+
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
 #include "assert.h"
 namespace GeneticLibrary {
 namespace Operation {
 namespace Mutation {
 using namespace GeneticLibrary::Population::Manager;
+
 template <typename VALUE_TYPE,typename FITNESS_TYPE>
 class UniformMutationOperation : public BaseMutationOperation<FITNESS_TYPE> {
 

@@ -94,7 +94,7 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 		typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_map::iterator pop_it =
 		_manager.getPopulation().getChromosomes().begin();
 
-
+/*
 		//Remove offspring duplicates
 		//TODO (bewo): This is very inefficient.
 		for (; pop_it != _manager.getPopulation().getChromosomes().end();
@@ -109,7 +109,7 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 				}
 			}
 		}
-
+*/
 		//create new population
 		_replacementOperation->doReplace(_manager.getPopulation(),mating_pool,offspring,_manager);
 

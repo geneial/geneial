@@ -87,11 +87,11 @@ int main(int argc, char **argv) {
 
 	PopulationSettings *populationSettings = new PopulationSettings(50);
 
-	MultiValueBuilderSettings<int,double> *builderSettings = new MultiValueBuilderSettings<int,double>(evaluator,20,0,130);
+	MultiValueBuilderSettings<int,double> *builderSettings = new MultiValueBuilderSettings<int,double>(evaluator,10,0,130);
 
 	MultiIntValueChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 
-	MutationSettings* mutationSettings = new MutationSettings(0.1,0.1,3);
+	MutationSettings* mutationSettings = new MutationSettings(0.1,0.1,5);
 
 	BaseMutationOperation<double> *mutationOperation = new UniformMutationOperation<int,double>(mutationSettings, builderSettings, chromosomeFactory);
 
@@ -133,7 +133,7 @@ int main(int argc, char **argv) {
 	);
 
 	algorithm.solve();
-
+	std::cout << "end." << endl;
 
 	//normally, this is not necessary because we're exiting here anyway,
 	//but for valgrind's satisfaction, we free stuff nonetheless.

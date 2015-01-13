@@ -84,7 +84,7 @@ typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set UniformMutatio
 
 					//next point of mutation
 					if (this->getSettings()->getAmountOfPointsOfMutation()>0){
-								if (i==_pointOfMutation){
+								if ((i==_pointOfMutation) || (this->getSettings()->getAmountOfPointsOfMutation() >= this->getBuilderFactory()->getSettings()->getNum()) ){
 									if (this->getSettings()->getAmountOfPointsOfMutation() != _mutationCounter){
 										//std::cout << _mutationCounter+1;
 										result_container.push_back (random_mutation);
