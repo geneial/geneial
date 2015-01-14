@@ -38,6 +38,7 @@
 #include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/operations/mutation/UniformMutationOperation.h>
 
+#include <geneial/core/operations/choosing/ChooseRandom.h>
 
 #include <geneial/config.h>
 
@@ -93,7 +94,9 @@ int main(int argc, char **argv) {
 
 	MutationSettings* mutationSettings = new MutationSettings(0.1,0.1,5);
 
-	BaseMutationOperation<double> *mutationOperation = new UniformMutationOperation<int,double>(mutationSettings, builderSettings, chromosomeFactory);
+	ChooseRandom<int,double> *mutationChoosingOperation = new ChooseRandom<int,double>(mutationSettings);
+
+	BaseMutationOperation<double> *mutationOperation = new UniformMutationOperation<int,double>(mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
 
 	//FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(20,10);
@@ -145,5 +148,9 @@ int main(int argc, char **argv) {
 	delete couplingOperation;
 	delete crossoverOperation;
 	delete replacementOperation;
+
+	delete mutationSettings;
+	delete mutationChoosingOperation;
+	delete mutationOperation;
 
 }

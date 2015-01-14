@@ -9,30 +9,49 @@
 #include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/population/management/BaseManager.h>
 
-using namespace GeneticLibrary::Population::Manager;
+#include <geneial/core/operations/choosing/BaseChoosingOperation.h>
+
 namespace GeneticLibrary {
 namespace Operation {
 namespace Mutation {
-template <typename FITNESS_TYPE>
+
+using namespace GeneticLibrary::Population::Manager;
+using namespace GeneticLibrary::Operation::Choosing;
+
+template<typename FITNESS_TYPE>
 class BaseMutationOperation {
 private:
-   MutationSettings* _settings;
+	MutationSettings* _settings;
+	BaseChoosingOperation<FITNESS_TYPE>* _choosingOperation;
 public:
-   BaseMutationOperation(MutationSettings *settings): _settings(settings) {}; //Constructor
-   virtual ~BaseMutationOperation() {}; //Destructor
-   typedef typename Population::Population<FITNESS_TYPE>::chromosome_container mutation_result_set;
-   virtual mutation_result_set doMutate
-               (
-            		   typename Mutation::BaseMutationOperation<FITNESS_TYPE>::mutation_result_set mutants
-               ) =0;
-   MutationSettings* const& getSettings() const {
-       return _settings;
-   };
-   void setSettings(const MutationSettings*& settings) {
-       _settings = settings;
-   };
-};//class
-} //namespace Mutation
+	BaseMutationOperation(MutationSettings *settings, BaseChoosingOperation<FITNESS_TYPE> *choosingOperation) :
+			_settings(settings),
+			_choosingOperation(choosingOperation)
+			{
+	}
+	; //Constructor
+	virtual ~BaseMutationOperation() {
+	}
+	; //Destructor
+	typedef typename Population::Population<FITNESS_TYPE>::chromosome_container mutation_result_set;
+	virtual mutation_result_set doMutate(
+			typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container mutants) =0;
+	MutationSettings* const & getSettings() const {
+		return _settings;
+	}
+	;
+	void setSettings(const MutationSettings*& settings) {
+		_settings = settings;
+	}
+
+	BaseChoosingOperation<FITNESS_TYPE>* getChoosingOperation() const {
+		return _choosingOperation;
+	}
+
+	;
+};
+//class
+}//namespace Mutation
 } //namespace Operation
 } //namespace GeneticLibrary
 #endif //SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_BASEMUTATIONOPERATION_H_

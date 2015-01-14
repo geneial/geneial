@@ -20,7 +20,7 @@ private:
 	 * propability that one Chromosome is choosen for mutation
 	 */
 
-	double _propabilityOfMutation;
+	double _propability;
 
 	/**
 	 * _amountOfMutation defines the propability to choose a value in a chromosome.
@@ -37,15 +37,15 @@ private:
 public:
 	virtual ~MutationSettings(){};
 
-	MutationSettings(double propabilityOfMutation, double amountOfMutation, unsigned int amountOfPointsOfMutation){
-		_propabilityOfMutation = propabilityOfMutation;
+	MutationSettings(double propability, double amountOfMutation, unsigned int amountOfPointsOfMutation){
+		_propability = propability;
 		_amountOfPointsOfMutation = amountOfPointsOfMutation;
 		//_levelOfMutation = levelOfMutation;
 		_amountOfMutation = amountOfMutation;
 	};
 
-	double getPropabilityOfMutation() const {
-		return _propabilityOfMutation;
+	double getPropability() const {
+		return _propability;
 	};
 /*
 	double getLevelOfMutation() const {
@@ -64,8 +64,8 @@ public:
 		_amountOfPointsOfMutation = amount;
 	}
 
-	void setPropabilityOfMutation(double propabilityOfMutation){
-		_propabilityOfMutation = propabilityOfMutation;
+	void setPropability(double propabilityOfMutation){
+		_propability = propabilityOfMutation;
 	};
 /*
 	void setLevelOfMutation(double levelOfMutation){

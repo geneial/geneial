@@ -9,6 +9,7 @@
 #define SRC_LIB_GENEIAL_CORE_OPERATIONS_BASECHOOSINGOPERATION_H_
 
 #include <geneial/core/operations/mutation/MutationSettings.h>
+#include <geneial/core/population/Population.h>
 
 namespace GeneticLibrary {
 namespace Operation {
@@ -19,16 +20,13 @@ using namespace GeneticLibrary::Operation::Mutation;
 template <typename FITNESS_TYPE>
 class BaseChoosingOperation{
 private:
-	MutationSettings* _settings;
-public:
-	BaseChoosingOperation (MutationSettings *settings): _settings(settings) {};
-	virtual ~BaseChoosingOperation() {};
-	typedef typename Population::Population<FITNESS_TYPE>::chromosome_container chosingChromosomeSet;
 
-	virtual chosingChromosomeSet doChoose (typename Choosing::BaseChoosingOperation<FITNESS_TYPE>::chosingChromosomeSet chromosomeInputSet)=0;
-	MutationSettings* const& getSettings() const {
-		return _settings;
-	}
+public:
+	BaseChoosingOperation () {};
+	virtual ~BaseChoosingOperation() {};
+
+	virtual typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container doChoose (
+			typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container chromosomeInputSet) = 0;
 };
 
 } //namespace Mutation
