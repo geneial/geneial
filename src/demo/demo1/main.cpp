@@ -57,6 +57,7 @@ using namespace GeneticLibrary::Operation::Coupling;
 using namespace GeneticLibrary::Operation::Crossover;
 using namespace GeneticLibrary::Operation::Replacement;
 using namespace GeneticLibrary::Operation::Mutation;
+using namespace GeneticLibrary::Operation::Choosing;
 
 
 class DemoChromosomeEvaluator: public FitnessEvaluator<double>{

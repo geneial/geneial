@@ -31,30 +31,42 @@ template<typename VALUE_TYPE, typename FITNESS_TYPE>
  *  Returns a new chromosome which is a partially mutated version of the old one.
  *
  *  */
-typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate
+typename Population::Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate
 			(
 					typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container _chromosomeInputContainer
 			){
 
+
+
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::value_container value_container;
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr mvc_ptr;
-	int pointOfMutation;
-	int mutationCounter;
-	typename Mutation::BaseMutationOperation<FITNESS_TYPE>::mutation_result_set resultset;
-
-	typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container _choosenChromosomeContainer;
+	int pointOfMutation = 0;
+	int mutationCounter = 0;
+	typename Population::Population<FITNESS_TYPE>::chromosome_container resultset;
+	typename Population::Population<FITNESS_TYPE>::chromosome_container _choosenChromosomeContainer;
+	typename Population::Population<FITNESS_TYPE>::chromosome_container _notChoosenChromosomeContainer;
 	_choosenChromosomeContainer = this->getChoosingOperation()->doChoose(_chromosomeInputContainer);
+
+
+
+	//calculates difference: _notChoosenChromosomeContainer = _choosenChromosomeContainer - _chromosomeInputContainer
+	std::set_difference(_chromosomeInputContainer.begin(),_chromosomeInputContainer.end(),
+				_choosenChromosomeContainer.begin(),_choosenChromosomeContainer.end(),
+				std::inserter(_notChoosenChromosomeContainer,_notChoosenChromosomeContainer.begin()));
 
 	//TODO (lukas) compute set difference
 
-	typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container::iterator _chromosomeInputContainer_it;
-	for (_chromosomeInputContainer_it = _chromosomeInputContainer.begin();
-			_chromosomeInputContainer_it != _chromosomeInputContainer.end(); ++_chromosomeInputContainer_it){
+
+
+	typename Population::Population<FITNESS_TYPE>::chromosome_container::iterator _choosenChromosomeContainer_it;
+	for (_choosenChromosomeContainer_it = _choosenChromosomeContainer.begin();
+			_choosenChromosomeContainer_it != _choosenChromosomeContainer.end(); ++_choosenChromosomeContainer_it){
 			mutationCounter = 0;
+
 			//std::cout << "[";
 			//casting mutant as MVC
 			mvc_ptr _mvcMutant
-					= boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(*_chromosomeInputContainer_it);
+					= boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(*_choosenChromosomeContainer_it);
 			assert(_mvcMutant);
 
 			//creating a new MVC (to keep things reversible)
@@ -64,79 +76,91 @@ typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set UniformMutatio
 						);
 			assert(_mutatedChromosome);
 
-
 			//getting values
 			value_container &_mutantChromosomeContainer = _mvcMutant->getContainer();
 			value_container &result_container = _mutatedChromosome->getContainer();
 			result_container.clear();
 
+
+
+			//first point of mutation
+			if (this->getSettings()->getAmountOfPointsOfMutation()>0){
+						 pointOfMutation = random::instance()->generateInt(0,this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation());
+						}
+
 			//iterator for one chromosome (to iterate it's values)
 			typename value_container::iterator mutant_it = _mutantChromosomeContainer.begin();
 
-			double chromosome_choise = random::instance()->generateDouble(0.0,1.0);
+			//Insinde Chromosome loop
+			for (unsigned int i=0; mutant_it != _mutantChromosomeContainer.end(); i++){
 
-			//Probability to mutate this chromosome
-			//if (chromosome_choise <= this->getSettings()->getPropability()) {
+				double value_choise = random::instance()->generateDouble(0.0,1.0);
+				//generate a mutation value to replace an old value
 
-				//first point of mutation
+				VALUE_TYPE random_mutation = random::instance()->generateDouble(
+						this->getBuilderFactory()->getSettings()->getRandomMax(),
+						this->getBuilderFactory()->getSettings()->getRandomMin()
+					);
+
+				//Check amount of mutation targets in one chromosome (pointsOfMutation)
 				if (this->getSettings()->getAmountOfPointsOfMutation()>0){
-							 pointOfMutation = random::instance()->generateInt(0,this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation());
-							}
-
-				for (unsigned int i=0; mutant_it != _mutantChromosomeContainer.end(); i++){
-
-					double value_choise = random::instance()->generateDouble(0.0,1.0);
-					VALUE_TYPE random_mutation = random::instance()->generateDouble(
-							this->getBuilderFactory()->getSettings()->getRandomMax(),
-							this->getBuilderFactory()->getSettings()->getRandomMin()
-						);
-
-					//next point of mutation
-					if (this->getSettings()->getAmountOfPointsOfMutation()>0){
-								if ((i==pointOfMutation) || (this->getSettings()->getAmountOfPointsOfMutation() >= this->getBuilderFactory()->getSettings()->getNum()) ){
-									if (this->getSettings()->getAmountOfPointsOfMutation() != mutationCounter){
-										std::cout << mutationCounter+1;
-										result_container.push_back (random_mutation);
-										mutationCounter++;
-										pointOfMutation = random::instance()->generateInt(
-												i+1,
-												(i+this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation()) % this->getBuilderFactory()->getSettings()->getNum()
-											);
-									} else {
-										//std::cout << "-";
-										result_container.push_back (*mutant_it);
-									}
+							//pointOfMutation = Position of Mutation Target
+							//Check if current position is a target for mutation.
+							if ((i==pointOfMutation) || (this->getSettings()->getAmountOfPointsOfMutation() >= this->getBuilderFactory()->getSettings()->getNum()) ){
+								//Check if we reached the maximum points of mutation
+								if (this->getSettings()->getAmountOfPointsOfMutation() != mutationCounter){
+									//std::cout << mutationCounter+1;
+									//add mutation to result_container
+									result_container.push_back (random_mutation);
+									mutationCounter++;
+									//create a new target
+									pointOfMutation = random::instance()->generateInt(
+											i+1,
+											(i+this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation()) % this->getBuilderFactory()->getSettings()->getNum()
+										);
+								//if no more mutation is needed (mutated already n times)
 								} else {
 									//std::cout << "-";
 									result_container.push_back (*mutant_it);
 								}
+							//current point is no target
+							} else {
+								//std::cout << "-";
+								result_container.push_back (*mutant_it);
+							}
 
-
-					} else if(value_choise <= this->getSettings()->getAmountOfMutation()) {
-						result_container.push_back (random_mutation);
-						//std::cout << "Y";
-					} else {
-						result_container.push_back (*mutant_it);
-						//std::cout << "=";
-					}
-
-					//increase iterator
-					++mutant_it;
-
+				//Target points are not used for mutation
+				} else if(value_choise <= this->getSettings()->getAmountOfMutation()) {
+					result_container.push_back (random_mutation);
+					//std::cout << "Y";
+				} else {
+					result_container.push_back (*mutant_it);
+					//std::cout << "=";
 				}
 
-				//Age reset
-				_mutatedChromosome->setAge(0);
+				//step to next mutant.
+				if (mutant_it != _mutantChromosomeContainer.end()) ++mutant_it;
+			}
 
-				resultset.push_back(_mutatedChromosome);
-			//} else {
-				//std::cout << "+";
-			//	resultset.push_back(*_chromosomeInputContainer_it);
-			//}
+			//Age reset
+			_mutatedChromosome->setAge(0);
+			resultset.push_back(_mutatedChromosome);
 
 			//std::cout << "]";
 	}
 
+	std::cout << "Chrome Loop A" << endl;
+
+	//TODO (lukas) This for loop creates runtime errors!
+	//add not mutated Chromosomes
+	typename Population::Population<FITNESS_TYPE>::chromosome_container::iterator _notChoosenChromosomeContainer_it;
+	for (unsigned int i = 0; _notChoosenChromosomeContainer_it != _notChoosenChromosomeContainer.end(); i++)
+	{
+		resultset.push_back(*_notChoosenChromosomeContainer_it);
+		++_notChoosenChromosomeContainer_it;
+	}
+
+	std::cout << "Chrome Loop B" << endl;
 	//std::cout << ";" << endl;;
 	return resultset;
 

@@ -33,6 +33,7 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container ChooseRandom
 			chromosomeOutputSet.push_back(*chromosomeInputContainer_it);
 		}
 	}
+	return chromosomeOutputSet;
 }
 
 } //Choosing

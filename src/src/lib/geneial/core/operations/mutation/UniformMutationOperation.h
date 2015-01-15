@@ -41,7 +41,7 @@ public:
 	/*
 	 *  Returns a new chromosome which is a partially mutated version of the old one.
 	 *  */
-	virtual typename BaseMutationOperation<FITNESS_TYPE>::mutation_result_set doMutate(
+	virtual typename Population::Population<FITNESS_TYPE>::chromosome_container doMutate(
 			typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container mutants);
 
 	//TODO lukas copy paste from MultiValueChromosomeAvarageCrossover.h ...

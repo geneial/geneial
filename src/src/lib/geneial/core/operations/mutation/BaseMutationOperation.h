@@ -34,7 +34,7 @@ public:
 	}
 	; //Destructor
 	typedef typename Population::Population<FITNESS_TYPE>::chromosome_container mutation_result_set;
-	virtual mutation_result_set doMutate(
+	virtual typename Population::Population<FITNESS_TYPE>::chromosome_container doMutate(
 			typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container mutants) =0;
 	MutationSettings* const & getSettings() const {
 		return _settings;
