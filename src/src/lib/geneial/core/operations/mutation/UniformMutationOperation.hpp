@@ -28,7 +28,19 @@ namespace Mutation {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 /*
- *  Returns a new chromosome which is a partially mutated version of the old one.
+ *  Returns a chromosome container with some new chromosomes which are partially mutated versions of the old ones.
+ *
+ *  Targetpoints for mutation represent the choosen values within an Chromosome to be changed
+ *  Example for 3 Points of Mutation:
+ *
+ *   Old Chrom.					  New Chrom.
+ *  	(X) <- Mutate this value --> (Y)
+ *	 	(X)							 (X)
+ *  	(X)						     (X)
+ *  	(X) <- Mutate this value --> (Y)
+ *  	(X)							 (X)
+ *  	(X) <- Mutate this value --> (Y)
+ *  	(X)							 (X)
  *
  *  */
 typename Population::Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate
@@ -40,30 +52,28 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container UniformMutat
 
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::value_container value_container;
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr mvc_ptr;
-	int pointOfMutation = 0;
-	int mutationCounter = 0;
+
 	typename Population::Population<FITNESS_TYPE>::chromosome_container resultset;
 	typename Population::Population<FITNESS_TYPE>::chromosome_container _choosenChromosomeContainer;
 	typename Population::Population<FITNESS_TYPE>::chromosome_container _notChoosenChromosomeContainer;
+
+	int pointOfMutation = 0;
+	int mutationCounter = 0;
+
 	_choosenChromosomeContainer = this->getChoosingOperation()->doChoose(_chromosomeInputContainer);
-
-
 
 	//calculates difference: _notChoosenChromosomeContainer = _choosenChromosomeContainer - _chromosomeInputContainer
 	std::set_difference(_chromosomeInputContainer.begin(),_chromosomeInputContainer.end(),
 				_choosenChromosomeContainer.begin(),_choosenChromosomeContainer.end(),
 				std::inserter(_notChoosenChromosomeContainer,_notChoosenChromosomeContainer.begin()));
 
-	//TODO (lukas) compute set difference
-
-
-
 	typename Population::Population<FITNESS_TYPE>::chromosome_container::iterator _choosenChromosomeContainer_it;
+
+	//only mutate choosen chromosomes
 	for (_choosenChromosomeContainer_it = _choosenChromosomeContainer.begin();
 			_choosenChromosomeContainer_it != _choosenChromosomeContainer.end(); ++_choosenChromosomeContainer_it){
 			mutationCounter = 0;
 
-			//std::cout << "[";
 			//casting mutant as MVC
 			mvc_ptr _mvcMutant
 					= boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(*_choosenChromosomeContainer_it);
@@ -81,9 +91,7 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container UniformMutat
 			value_container &result_container = _mutatedChromosome->getContainer();
 			result_container.clear();
 
-
-
-			//first point of mutation
+			//first target point of mutation
 			if (this->getSettings()->getAmountOfPointsOfMutation()>0){
 						 pointOfMutation = random::instance()->generateInt(0,this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation());
 						}
@@ -94,9 +102,11 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container UniformMutat
 			//Insinde Chromosome loop
 			for (unsigned int i=0; mutant_it != _mutantChromosomeContainer.end(); i++){
 
-				double value_choise = random::instance()->generateDouble(0.0,1.0);
-				//generate a mutation value to replace an old value
 
+				//dicing whether to mutate or not (influeced by propability setting)
+				double value_choise = random::instance()->generateDouble(0.0,1.0);
+
+				//generate a mutation value to replace an old value
 				VALUE_TYPE random_mutation = random::instance()->generateDouble(
 						this->getBuilderFactory()->getSettings()->getRandomMax(),
 						this->getBuilderFactory()->getSettings()->getRandomMin()
@@ -109,7 +119,6 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container UniformMutat
 							if ((i==pointOfMutation) || (this->getSettings()->getAmountOfPointsOfMutation() >= this->getBuilderFactory()->getSettings()->getNum()) ){
 								//Check if we reached the maximum points of mutation
 								if (this->getSettings()->getAmountOfPointsOfMutation() != mutationCounter){
-									//std::cout << mutationCounter+1;
 									//add mutation to result_container
 									result_container.push_back (random_mutation);
 									mutationCounter++;
@@ -120,48 +129,35 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container UniformMutat
 										);
 								//if no more mutation is needed (mutated already n times)
 								} else {
-									//std::cout << "-";
 									result_container.push_back (*mutant_it);
 								}
 							//current point is no target
 							} else {
-								//std::cout << "-";
 								result_container.push_back (*mutant_it);
 							}
 
 				//Target points are not used for mutation
 				} else if(value_choise <= this->getSettings()->getAmountOfMutation()) {
 					result_container.push_back (random_mutation);
-					//std::cout << "Y";
+				//In case dicing (value_choise) choose not to mutate the value
 				} else {
 					result_container.push_back (*mutant_it);
-					//std::cout << "=";
 				}
 
 				//step to next mutant.
 				if (mutant_it != _mutantChromosomeContainer.end()) ++mutant_it;
-			}
+
+			}//inside chromosome loop
 
 			//Age reset
 			_mutatedChromosome->setAge(0);
 			resultset.push_back(_mutatedChromosome);
-
-			//std::cout << "]";
 	}
 
-	std::cout << "Chrome Loop A" << endl;
 
-	//TODO (lukas) This for loop creates runtime errors!
 	//add not mutated Chromosomes
-	typename Population::Population<FITNESS_TYPE>::chromosome_container::iterator _notChoosenChromosomeContainer_it;
-	for (unsigned int i = 0; _notChoosenChromosomeContainer_it != _notChoosenChromosomeContainer.end(); i++)
-	{
-		resultset.push_back(*_notChoosenChromosomeContainer_it);
-		++_notChoosenChromosomeContainer_it;
-	}
+	resultset.insert(resultset.end(),_notChoosenChromosomeContainer.begin(),_notChoosenChromosomeContainer.end());
 
-	std::cout << "Chrome Loop B" << endl;
-	//std::cout << ";" << endl;;
 	return resultset;
 
 }
