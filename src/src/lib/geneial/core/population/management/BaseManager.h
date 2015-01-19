@@ -46,6 +46,16 @@ public:
 	 */
 	void replenishPopulation ();
 
+
+	typename BaseChromosome<FITNESS_TYPE>::ptr getHighestFitnessChromosome() const;
+
+	FITNESS_TYPE getHighestFitness()  const;
+
+	typename BaseChromosome<FITNESS_TYPE>::ptr getLowestFitnessChromosome() const;
+
+	FITNESS_TYPE getLowestFitness() const;
+
+
 	Population<FITNESS_TYPE>& getPopulation() {
 		return _population;
 	}

@@ -29,6 +29,8 @@ template <typename FITNESS_TYPE>
 class BaseGeneticAlgorithm {
 private:
 	BaseManager<FITNESS_TYPE> _manager;
+	bool _wasSolved;
+	bool _wasStarted;
 	StoppingCriteria::BaseStoppingCriterion<FITNESS_TYPE> * _stoppingCriterion;
 	Selection::BaseSelectionOperation<FITNESS_TYPE> * _selectionOperation;
 	Coupling::BaseCouplingOperation<FITNESS_TYPE> *_couplingOperation;
@@ -53,6 +55,8 @@ public:
 			populationSettings,
 			chromosomeFactory
 			),
+		_wasSolved(false),
+		_wasStarted(false),
 		_stoppingCriterion(stoppingCriterion),
 		_selectionOperation(selectionOperation),
 		_couplingOperation(couplingOperation),
@@ -63,7 +67,34 @@ public:
 
 	virtual ~BaseGeneticAlgorithm() {};
 
-	void solve();
+	virtual void solve();
+
+	//Delegates to manager,
+	//*caution*: the user should never directly interact with the manager, rather use this class as facade
+	typename BaseChromosome<FITNESS_TYPE>::ptr getHighestFitnessChromosome() const{
+		return this->_manager.getHighestFitnessChromosome();
+	}
+
+	FITNESS_TYPE getHighestFitness()  const{
+		return this->_manager.getHighestFitness();
+	}
+
+	typename BaseChromosome<FITNESS_TYPE>::ptr getLowestFitnessChromosome() const{
+		return this->_manager.getLowestFitnessChromosome();
+	}
+
+	FITNESS_TYPE getLowestFitness() const{
+		return this->_manager.getLowestFitness();
+	}
+
+
+	virtual bool hasBeenSolved() const{
+		return _wasSolved;
+	}
+
+	virtual bool hasBeenStarted() const{
+		return _wasStarted;
+	}
 };
 
 } /* namespace Algorithm */

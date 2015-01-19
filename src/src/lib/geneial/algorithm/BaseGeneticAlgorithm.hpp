@@ -23,21 +23,17 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 
 	//TODO (bewo) scout for Memleaks using valgrind
 
-	std::cout << "Initial Replenishing" << std::endl;
 
 	//Initialize the first population candidate
 	_manager.replenishPopulation();
 
-	std::cout << _manager.getPopulation().getAge() << std::endl;
 
 
-	std::cout << "Initial Population" << std::endl;
-	std::cout << _manager.getPopulation() << std::endl;
-
-	std::cout << "Entering Main Loop" << std::endl;
+//	std::cout << _manager.getPopulation() << std::endl;
 
 	//Do a barrel roll...
 	while(!_stoppingCriterion->wasReached(_manager)){
+		_wasStarted = true;
 
 		_manager.getPopulation().doAge();
 
@@ -94,8 +90,8 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 		typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_map::iterator pop_it =
 		_manager.getPopulation().getChromosomes().begin();
 
-/*
-		//Remove offspring duplicates
+
+		//Remove offspring duplicates --{{{
 		//TODO (bewo): This is very inefficient.
 		for (; pop_it != _manager.getPopulation().getChromosomes().end();
 				++pop_it) {
@@ -109,23 +105,17 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 				}
 			}
 		}
-*/
-		//create new population
+		// }}}---
+
+		//Create new population
 		_replacementOperation->doReplace(_manager.getPopulation(),mating_pool,offspring,_manager);
 
-		//TODO (bewo) scaling
-
-		//std::cout << "Age: " << _manager.getPopulation().getAge() << std::endl;
+		//TODO (bewo) scaling?
 
 		// }}}
 
 	}
-
-	std::cout << "Main Loop Done" << std::endl;
-
-	std::cout << "Final Population" << std::endl;
-	std::cout << _manager.getPopulation() << std::endl;
-
+	_wasSolved = true;
 }
 
 
