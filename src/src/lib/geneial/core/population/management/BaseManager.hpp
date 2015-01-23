@@ -46,10 +46,6 @@ typename BaseChromosome<FITNESS_TYPE>::ptr BaseManager<FITNESS_TYPE>::getHighest
 	return this->_population.getChromosomes().rbegin()->second;
 }
 
-template <typename FITNESS_TYPE>
-typename BaseChromosome<FITNESS_TYPE>::ptr BaseManager<FITNESS_TYPE>::getHighestFitnessChromosome() const{
-	return this->_population.getChromosomes().rbegin()->second;
-}
 
 template <typename FITNESS_TYPE>
 FITNESS_TYPE BaseManager<FITNESS_TYPE>::getHighestFitness()  const{
