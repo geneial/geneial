@@ -45,7 +45,8 @@ template<typename VALUE_TYPE, typename FITNESS_TYPE>
  *  */
 typename Population::Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate
 			(
-					typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container _chromosomeInputContainer
+					typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container _chromosomeInputContainer,
+					BaseManager<FITNESS_TYPE> &manager
 			){
 
 
