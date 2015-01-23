@@ -117,13 +117,9 @@ The demos are also compiled by either running the all-encompassing `make` or the
 
 
 ##99.TODOs
-* mutation
 * scaling
 * multithreading 
-
-
 * unit tests for like everything except random :)
-
 * write demo programs
 * write code documentation
 * profit / world domination
