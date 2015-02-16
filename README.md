@@ -27,6 +27,22 @@ Make sure there is no Cmakecache.txt in the main directory, otherwise cmake does
 
 You'll find the static Libary in the `build/src/lib` library.
 
+
+###1.3 A note on compilers
+
+In general it seems that the `gcc` error output is very verbose and [hard to read](http://clang.llvm.org/diagnostics.html). At the same time gcc seems to be slower/uses more memory.
+For this reasons we advocate to use the `clang` compiler.
+
+On Ubuntu you may install clang by 
+
+    sudo apt-get install clang
+
+You can change switch your system compiler by running
+
+    sudo update-alternatives --config c++
+
+From now on the cmake build system will use clang and provide more comprehensible error messages.
+
 ##2. Installing the library
 To install the library simply run
 
