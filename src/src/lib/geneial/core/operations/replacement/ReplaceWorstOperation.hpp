@@ -6,7 +6,7 @@
  */
 
 #ifndef REPLACEWORSTOPERATION_HPP_
-#define REPLACEWORSTOPERATION_HPP
+#define REPLACEWORSTOPERATION_HPP_
 
 #include <algorithm>
 #include <iterator>
