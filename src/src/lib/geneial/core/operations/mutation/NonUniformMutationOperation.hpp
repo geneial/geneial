@@ -55,8 +55,8 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container NonUniformMu
 	typename Population::Population<FITNESS_TYPE>::chromosome_container _choosenChromosomeContainer;
 	typename Population::Population<FITNESS_TYPE>::chromosome_container _notChoosenChromosomeContainer;
 
-	int pointOfMutation = 0;
-	int mutationCounter = 0;
+	unsigned int pointOfMutation = 0;
+	unsigned int mutationCounter = 0;
 	double split = 0;
 	double value_choise = 0;
 
