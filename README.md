@@ -133,6 +133,7 @@ The demos are also compiled by either running the all-encompassing `make` or the
 
 
 ##99.TODOs
+* http://choorucode.com/2015/01/08/how-to-use-cpplint-in-eclipse-cdt/
 * scaling
 * multithreading 
 * unit tests for like everything except random :)
