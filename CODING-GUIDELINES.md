@@ -19,4 +19,13 @@ However, there are some derivations
  * We fordbid the omittance of `{` and `}` respectively. 
  * Always declare any private members, before public members
  * We restrict the use of inline to functions containing less than 5 SLOC
- * 
+
+
+### 1.2 A note on comments
+ * We use the following syntax to indicate TODOs: 
+
+    //TODO(abbr): Description of the TODO
+
+   Whereas abbr is a shorthand symbol for the author of the TODO.
+
+ * We advocate the same syntax as above for NOTE and IMPORTANT
