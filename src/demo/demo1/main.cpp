@@ -36,7 +36,7 @@
 #include <geneial/core/operations/crossover/MultiValueChromosomeAverageCrossover.h>
 
 #include <geneial/core/operations/mutation/MutationSettings.h>
-#include <geneial/core/operations/mutation/UniformMutationOperation.h>
+#include <geneial/core/operations/mutation/NonUniformMutationOperation.h>
 
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 
@@ -97,7 +97,7 @@ int main(int argc, char **argv) {
 
 	ChooseRandom<int,double> *mutationChoosingOperation = new ChooseRandom<int,double>(mutationSettings);
 
-	BaseMutationOperation<double> *mutationOperation = new UniformMutationOperation<int,double>(mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
+	BaseMutationOperation<double> *mutationOperation = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
 
 	//FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(20,10);
@@ -123,7 +123,7 @@ int main(int argc, char **argv) {
 	//ReplaceRandomOperation<double> *replacementOperation = new ReplaceRandomOperation<double>(replacementSettings);
 
 
-	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(10000);
+	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(1000);
 
 	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(
 			populationSettings,

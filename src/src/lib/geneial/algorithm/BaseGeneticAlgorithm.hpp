@@ -68,8 +68,7 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 		std::cout << "OFFSPRING POOL END"<< std::endl;
 		*/
 
-
-		offspring = _mutationOperation->doMutate(offspring);
+		offspring = _mutationOperation->doMutate(offspring,_manager);
 
 		typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container::iterator offspring_it =
 				offspring.begin();
@@ -113,7 +112,6 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 		//TODO (bewo) scaling?
 
 		// }}}
-
 	}
 	_wasSolved = true;
 }

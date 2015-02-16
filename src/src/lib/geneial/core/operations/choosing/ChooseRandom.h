@@ -40,7 +40,7 @@ public:
 	virtual typename Population::Population<FITNESS_TYPE>::chromosome_container doChoose(
 			typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container chromosomeInputSet);
 
-	const MutationSettings* getSettings() const {
+	const MutationSettings* getSettings() {
 		return _settings;
 	}
 
