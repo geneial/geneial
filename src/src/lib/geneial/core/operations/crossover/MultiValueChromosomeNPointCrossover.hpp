@@ -50,7 +50,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 
 		const unsigned int equidistantwidth = totalWidth / crossoverPoints;
 
-		for(int i = 0;i<crossoverPoints-1;i++){
+		for(unsigned int i = 0;i<crossoverPoints-1;i++){
 			crossoverPositions.insert(i*equidistantwidth);
 		}
 
@@ -65,7 +65,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 		}
 
 
-		for(int i = 0;i<crossoverPoints;i++){
+		for(unsigned int i = 0;i<crossoverPoints;i++){
 			//Pick a random number in the interval
 			unsigned int rnd_pos;
 			bool valid;

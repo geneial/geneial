@@ -57,8 +57,8 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container UniformMutat
 	typename Population::Population<FITNESS_TYPE>::chromosome_container _choosenChromosomeContainer;
 	typename Population::Population<FITNESS_TYPE>::chromosome_container _notChoosenChromosomeContainer;
 
-	int pointOfMutation = 0;
-	int mutationCounter = 0;
+	unsigned int pointOfMutation = 0;
+	unsigned int mutationCounter = 0;
 
 	_choosenChromosomeContainer = this->getChoosingOperation()->doChoose(_chromosomeInputContainer);
 
