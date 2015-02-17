@@ -22,9 +22,9 @@ namespace StoppingCriteria {
 //Container that holds other Criteria which are connected by a logical condition (and/or), which propagate the condition by visitor pattern or sth.
 
 template <typename FITNESS_TYPE>
-class StopLossCriterion : public BaseStoppingCriterion<FITNESS_TYPE> {
+class CombinedCriterion : public BaseStoppingCriterion<FITNESS_TYPE> {
 public:
-	virtual ~StopLossCriterion() {};
+	virtual ~CombinedCriterion() {};
 	virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager){
 		//TODO (bewo) here be dragons!
 		return true;

@@ -25,7 +25,6 @@ namespace Operation {
 namespace Mutation {
 
 
-template<typename VALUE_TYPE, typename FITNESS_TYPE>
 /*
  *  Returns a chromosome container with some new chromosomes which are partially mutated versions of the old ones.
  *
@@ -42,6 +41,7 @@ template<typename VALUE_TYPE, typename FITNESS_TYPE>
  *  	(X)							 (X)
  *
  *  */
+template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename Population::Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate
 			(
 					typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container _chromosomeInputContainer,
