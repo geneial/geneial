@@ -25,6 +25,9 @@ using namespace std;
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 class MultiValueChromosome: public BaseChromosome<FITNESS_TYPE> {
 public:
+
+	typedef typename BaseChromosome<FITNESS_TYPE>::chromsome_hash chromsome_hash;
+
 	typedef typename std::vector<VALUE_TYPE> value_container;
 	typedef typename value_container::const_iterator const_it;
 	typedef typename value_container::iterator it;
@@ -56,6 +59,8 @@ public:
 	void setValueContainer(value_container container);
 
 	virtual void print(std::ostream& os) const;
+
+	virtual chromsome_hash getHash() const;
 
 private:
 	value_container _container;

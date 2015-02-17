@@ -32,6 +32,8 @@ class BaseChromosome : public Utility::printable,
 
 public:
 	typedef unsigned int chromosome_age;
+	typedef long chromsome_hash;
+
 	typedef typename boost::shared_ptr<BaseChromosome <FITNESS_TYPE> > ptr;
 	typedef typename boost::shared_ptr<const BaseChromosome <FITNESS_TYPE> > const_ptr;
 
@@ -105,8 +107,13 @@ public:
 
 	void setFitnessEvaluator(const typename FitnessEvaluator<FITNESS_TYPE>::ptr& fitnessEvaluator);
 
+	virtual chromsome_hash getHash() const = 0;
+protected:
+	virtual bool hashEquals(const_ptr chromosome) const;
+	virtual void printHash(std::ostream& os) const;
 private:
 	typename Fitness<FITNESS_TYPE>::ptr  _fitness;
+
 	typename FitnessEvaluator<FITNESS_TYPE>::ptr _fitnessEvaluator;
 
 	chromosome_age _age;

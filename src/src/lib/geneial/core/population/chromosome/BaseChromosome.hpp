@@ -7,7 +7,7 @@
 
 #ifndef BASE_CHROMOSOME_HPP_
 #define BASE_CHROMOSOME_HPP_
-
+#include <cstring>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 
 namespace GeneticLibrary {
@@ -32,6 +32,21 @@ const typename Fitness<FITNESS_TYPE>::ptr BaseChromosome<FITNESS_TYPE>::getFitne
 
 }
 
+template <typename FITNESS_TYPE>
+bool BaseChromosome<FITNESS_TYPE>::hashEquals(typename BaseChromosome<FITNESS_TYPE>::const_ptr chromosome) const{
+	const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashA = chromosome->getHash();
+	const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashB = this->getHash();
+	if(memcmp((void*) &hashA,(void*) &hashB,sizeof(hashA)) == 0){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+template <typename FITNESS_TYPE>
+void BaseChromosome<FITNESS_TYPE>::printHash(std::ostream& os) const{
+	os << this->getHash();
+}
 
 template <typename FITNESS_TYPE>
 const typename Fitness<FITNESS_TYPE>::ptr BaseChromosome<FITNESS_TYPE>::getFitness() const{

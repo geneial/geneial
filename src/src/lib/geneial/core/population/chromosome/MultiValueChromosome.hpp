@@ -18,13 +18,37 @@ namespace Chromosome {
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 bool MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::equals(typename BaseChromosome<FITNESS_TYPE>::const_ptr chromosome) const{
+	return this->hashEquals(chromosome);
+}
 
-	typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::const_ptr mvc = boost::dynamic_pointer_cast<const MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(chromosome);
-	if(mvc){
-		return std::equal(_container.begin(),_container.end(),mvc->getConstIt());
-	}else{
-		return false;
+
+template <typename VALUE_TYPE, typename FITNESS_TYPE>
+typename BaseChromosome<FITNESS_TYPE>::chromsome_hash MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getHash() const
+{
+	typename BaseChromosome<FITNESS_TYPE>::chromsome_hash result = {0};
+	const int hash_bytes = sizeof(chromsome_hash);
+
+	//TODO (bewo): Tests this on doubles, etc.
+	const int value_bytes = sizeof(VALUE_TYPE);
+
+	unsigned int shift_bit = 0;
+	unsigned int shift_byte = 0;
+
+	//NOTE(bewo): simple hash function
+	//1.) Iterate over all values in the chromosomes.
+	//2.) XOR the bits of the values with a circular bitshift - bytewise with a circular byteshift to the hash memory
+	for (MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::const_it it = _container.begin() ; it != _container.end(); ++it){
+		VALUE_TYPE val = *it;
+		for(int i=0;i<value_bytes;i++){
+			char* ptr_hash = ((char*)&result)+((i+shift_byte)%hash_bytes);
+			char* ptr_value = ((char*)&val)+i;
+			//NOTE(bewo): xor what was previously there with a circular shift.
+			*ptr_hash ^= (*ptr_value << shift_bit) | (*ptr_value >> (sizeof(char) * 8 - shift_bit));
+			shift_bit = (shift_bit + 1) % sizeof(char) * CHAR_BIT;
+		}
+		shift_byte++;
 	}
+	return result;
 }
 
 
@@ -101,6 +125,9 @@ void MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::print(std::ostream& os) cons
 	os << ", ";
 	os << "Age: " << this->getAge() << ", ";
 
+	os << "Hash: " ;
+	this->printHash(os);
+	os << std::endl;
 
 	os << "Values: " << std::endl;
 	std::ostream_iterator<VALUE_TYPE> out_it(os, "; ");
