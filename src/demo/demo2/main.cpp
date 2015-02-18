@@ -10,7 +10,7 @@
 #include "boost/shared_ptr.hpp"
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
-#include <geneial/algorithm/criteria/MaxIterationCriterion.h>
+#include <geneial/algorithm/criteria/MaxGenerationCriterion.h>
 #include <geneial/core/fitness/Fitness.h>
 #include <geneial/core/fitness/FitnessEvaluator.h>
 #include <geneial/core/population/PopulationSettings.h>
@@ -177,7 +177,7 @@ int main(int argc, char **argv) {
 	//ReplaceRandomOperation<double> *replacementOperation = new ReplaceRandomOperation<double>(replacementSettings);
 
 
-	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(10000000);
+	BaseStoppingCriterion<double> *stoppingCriterion = new MaxGenerationCriterion<double>(1000000);
 
 	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(
 			populationSettings,

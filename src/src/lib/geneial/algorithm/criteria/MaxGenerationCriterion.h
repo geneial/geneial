@@ -1,5 +1,5 @@
 /*
- * MaxIterationCriterion.h
+ * MaxGenerationCriterion.h
  *
  *  Created on: Dec 10, 2014
  *      Author: bewo
@@ -19,16 +19,21 @@ namespace Algorithm {
 namespace StoppingCriteria {
 
 template <typename FITNESS_TYPE>
-class MaxIterationCriterion : public BaseStoppingCriterion<FITNESS_TYPE> {
+class MaxGenerationCriterion
+ : public BaseStoppingCriterion<FITNESS_TYPE> {
 private:
 	typename Population::Population<FITNESS_TYPE>::population_age _max;
 
 public:
-	MaxIterationCriterion(long num_max_iterations):_max(num_max_iterations){};
-	virtual ~MaxIterationCriterion() {};
-	virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager){
+	MaxGenerationCriterion (long num_max_iterations):_max(num_max_iterations){};
+	virtual ~MaxGenerationCriterion () {};
+	virtual inline bool wasReached(BaseManager<FITNESS_TYPE> &manager){
 		return !(manager.getPopulation().getAge() < _max);
 	}
+	virtual void print(std::ostream& os) const{
+		os << "MaxGenerationCriterion (" << _max << ")";
+	}
+
 };
 
 } /* namespace StoppingCriteria */
