@@ -15,12 +15,20 @@ using namespace GeneticLibrary::Population::Manager;
 namespace GeneticLibrary {
 namespace Algorithm {
 namespace StoppingCriteria {
-
+/**
+  * @brief checks whether the desired fitness was reached
+*/
 template <typename FITNESS_TYPE>
-class FitnessValueReachedCriterion{
+class FitnessValueReachedCriterion : public BaseStoppingCriterion<FITNESS_TYPE> {
+private:
+	FITNESS_TYPE _desiredFitness;
+
 public:
-	virtual ~FitnessValueReachedCriterion(){};
-	virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager) = 0;
+	FitnessValueReachedCriterion(FITNESS_TYPE desiredFitness):_desiredFitness(desiredFitness){};
+	virtual ~FitnessValueReachedCriterion() {};
+	virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager){
+		return !(manager.getPopulation().getHighestFitness() == _desiredFitness);
+	}
 };
 
 } /* namespace StoppingCriteria */
