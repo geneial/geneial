@@ -9,7 +9,10 @@
 #define POPULATION_HPP_
 
 #include <geneial/core/population/Population.h>
-#include <map>
+#include <cassert>
+#include <iostream>
+#include <set>
+#include <utility>
 
 namespace GeneticLibrary {
 namespace Population {
@@ -75,6 +78,35 @@ void Population<FITNESS_TYPE>::doAge()
 	++_age;
 }
 
+/**
+ * Removes any duplicates from within the container, which are
+ * 	- appearing twice in the container
+ * 	- appearing already in the container
+ *
+ * 	NOTE: This function only considers a chromosome hash value,
+ * 	and does not take the age into consideration.
+ */
+template<typename FITNESS_TYPE>
+inline unsigned int Population<FITNESS_TYPE>::removeDuplicates(chromosome_container &toCheck)
+{
+	unsigned int removed = 0;
+	typename chromosome_container::iterator it = toCheck.begin();
+	std::set<typename BaseChromosome<FITNESS_TYPE>::chromsome_hash> tmpHashSet;
+
+	for (; it != toCheck.end();) {
+		const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue = (*it)->getHash();
+		if (tmpHashSet.find(hashValue) != tmpHashSet.end() || hashExists(toCheck)) {
+			it = toCheck.erase(it);
+			removed++;
+		} else {
+			tmpHashSet.insert(hashValue);
+			++it;
+		}
+	}
+
+	return removed;
+}
+
 template<typename FITNESS_TYPE>
 inline void Population<FITNESS_TYPE>::insertChromosome(typename BaseChromosome<FITNESS_TYPE>::ptr chromosome)
 {
@@ -86,9 +118,9 @@ inline void Population<FITNESS_TYPE>::insertChromosome(typename BaseChromosome<F
 	typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue = chromosome->getHash();
 	if(_hashMap.find(hashValue) != _hashMap.end()){
 		std::cout <<"HASH COLLISION:" << hashValue << std::endl;
-		std::cout <<"CHROMOSOME TO INSERT:" ;
+		std::cout <<"  CHROMOSOME TO INSERT:" ;
 		chromosome->print(std::cout);
-		std::cout <<"CHROMOSOME CONTAINED:" ;
+		std::cout <<"  CHROMOSOME CONTAINED:" ;
 		typename hash_map::iterator it = _hashMap.find(hashValue);
 		it->second->print(std::cout);
 	}

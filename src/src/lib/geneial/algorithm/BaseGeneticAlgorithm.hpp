@@ -23,6 +23,7 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 	//TODO (bewo) use a Logger for output
 
 	//TODO (bewo) scout for Memleaks using valgrind
+	_wasStarted = true;
 
 
 	//Initialize the first population candidate
@@ -34,7 +35,6 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 
 	//Do a barrel roll...
 	while(!_stoppingCriterion->wasReached(_manager)){
-		_wasStarted = true;
 
 		_manager.getPopulation().doAge();
 
@@ -71,28 +71,12 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 
 		offspring = _mutationOperation->doMutate(offspring,_manager);
 
+		int removedDuplicates = _manager.getPopulation().removeDuplicates(offspring);
 
-		//std::cout << _manager.getPopulation() << std::endl;
-
-		typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container::iterator it =
-				offspring.begin();
-
-		std::set<typename BaseChromosome<FITNESS_TYPE>::chromsome_hash> tmpHashSet;
-
-		for (; it != offspring.end();) {
-			const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue = (*it)->getHash();
-			if (tmpHashSet.find(hashValue) != tmpHashSet.end() || _manager.getPopulation().hashExists(hashValue)) {
-				it = offspring.erase(it);
-			} else {
-				tmpHashSet.insert(hashValue);
-				++it;
-			}
-		}
-
-		// }}}---
-		//std::cout << _manager.getPopulation() << std::endl;
-		//Create new population
 		_replacementOperation->doReplace(_manager.getPopulation(),mating_pool,offspring,_manager);
+
+
+
 		//TODO (bewo) scaling?
 
 		// }}}

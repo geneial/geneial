@@ -69,6 +69,9 @@ public:
 
 	bool hashExists(const typename Chromosome::BaseChromosome<FITNESS_TYPE>::chromsome_hash);
 
+	void unsigned int removeDuplicates(chromosome_container &toCheck);
+
+
 	typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr getChromosomeByHash(const typename Chromosome::BaseChromosome<FITNESS_TYPE>::chromsome_hash);
 
 	void replacePopulation(const chromosome_container &replacementPopulation);
