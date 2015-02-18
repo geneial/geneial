@@ -8,7 +8,7 @@
 #ifndef BASEGENETICALGORITHM_H_
 #define BASEGENETICALGORITHM_H_
 
-#include <geneial/core/population/management/BaseManager.h>
+#include <geneial/core/population/Population.h>
 #include <geneial/core/population/PopulationSettings.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
@@ -16,6 +16,7 @@
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
 #include <geneial/core/operations/replacement/BaseReplacementOperation.h>
+#include <geneial/core/population/management/BaseManager.h>
 
 using namespace GeneticLibrary::Population;
 using namespace GeneticLibrary::Population::Manager;
@@ -69,30 +70,39 @@ public:
 
 	virtual void solve();
 
+	virtual void setInitialPopulation(typename Population::Population<FITNESS_TYPE>::chromosome_container &container){
+		assert(!_wasStarted);
+		_manager.getPopulation().replacePopulation(container);
+	}
+
 	//Delegates to manager,
 	//*caution*: the user should never directly interact with the manager, rather use this class as facade
-	typename BaseChromosome<FITNESS_TYPE>::ptr getHighestFitnessChromosome() const{
+	inline typename BaseChromosome<FITNESS_TYPE>::ptr getHighestFitnessChromosome() const{
+		assert(_wasStarted);
 		return this->_manager.getHighestFitnessChromosome();
 	}
 
-	FITNESS_TYPE getHighestFitness()  const{
+	inline FITNESS_TYPE getHighestFitness()  const{
+		assert(_wasStarted);
 		return this->_manager.getHighestFitness();
 	}
 
-	typename BaseChromosome<FITNESS_TYPE>::ptr getLowestFitnessChromosome() const{
+	inline typename BaseChromosome<FITNESS_TYPE>::ptr getLowestFitnessChromosome() const{
+		assert(_wasStarted);
 		return this->_manager.getLowestFitnessChromosome();
 	}
 
-	FITNESS_TYPE getLowestFitness() const{
+	inline FITNESS_TYPE getLowestFitness() const{
+		assert(_wasStarted);
 		return this->_manager.getLowestFitness();
 	}
 
 
-	virtual bool hasBeenSolved() const{
+	inline virtual bool hasBeenSolved() const{
 		return _wasSolved;
 	}
 
-	virtual bool hasBeenStarted() const{
+	inline virtual bool hasBeenStarted() const{
 		return _wasStarted;
 	}
 };

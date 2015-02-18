@@ -21,24 +21,26 @@ namespace GeneticLibrary {
 namespace Population {
 
 template <typename FITNESS_TYPE>
-class Population : public printable {
+class Population : public printable
+{
 public:
+	//TODO(bewo): cleanup this typedef mess
 	typedef unsigned int population_age;
 	typedef unsigned int population_size;
 
 	//A generic container to pass chromomsomes between operations.
 	typedef typename std::vector<typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr> chromosome_container;
 
-
 	//A map containing all the chromosomes hash values.
 	typedef typename std::map
 			<typename Chromosome::BaseChromosome<FITNESS_TYPE>::chromsome_hash,
 			 typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr> hash_map;
 
+	//A hash <-> chromosome ptr map, hash value demands to be unique
 	typedef typename hash_map::value_type hashmap_value;
 
 
-	//A fitness <-> chromsome map holding the actual population
+	//A fitness <-> chromsome map holding the actual population, multiple chromosomes might have same fitness
 	typedef typename std::multimap<FITNESS_TYPE , typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr> chromosome_map;
 	typedef typename chromosome_map::value_type container_value;
 	typedef typename chromosome_map::const_iterator const_it;
@@ -54,23 +56,29 @@ public:
 	void setAge(population_age age);
 	void doAge();
 
-	const chromosome_map& getChromosomes() const { return _fitnessMap; }
+
+	const inline chromosome_map& getChromosomes() const
+	{
+		return _fitnessMap;
+	}
+
+	const inline hash_map& getHashmap() const
+	{
+		return _hashMap;
+	}
 
 	bool hashExists(const typename Chromosome::BaseChromosome<FITNESS_TYPE>::chromsome_hash);
 
 	typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr getChromosomeByHash(const typename Chromosome::BaseChromosome<FITNESS_TYPE>::chromsome_hash);
 
 	void replacePopulation(const chromosome_container &replacementPopulation);
-
 	void insertChromosomeContainer(const chromosome_container &container);
+
 	void insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
 
 	void removeChromosomeContainer(const chromosome_container &container);
 	void removeChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
 
-	const hash_map& getHashmap() const {
-		return _hashMap;
-	}
 
 private:
 	chromosome_map _fitnessMap;

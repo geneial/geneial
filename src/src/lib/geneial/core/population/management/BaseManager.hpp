@@ -17,9 +17,12 @@ namespace Manager {
 
 using namespace Chromosome;
 
-template <typename FITNESS_TYPE>
-void BaseManager<FITNESS_TYPE>::replenishPopulation (){
 
+
+
+template <typename FITNESS_TYPE>
+void BaseManager<FITNESS_TYPE>::replenishPopulation ()
+{
 	//if there are less chromosomes than required fill up:
 	while (_population.getSize() < _populationSettings->getMaxChromosomes()){
 		//build new chromosome
@@ -28,30 +31,34 @@ void BaseManager<FITNESS_TYPE>::replenishPopulation (){
 	}
 }
 
-
 template <typename FITNESS_TYPE>
-void BaseManager<FITNESS_TYPE>::replacePopulation (typename Population<FITNESS_TYPE>::chromosome_container replacementPopulation){
+void BaseManager<FITNESS_TYPE>::replacePopulation (typename Population<FITNESS_TYPE>::chromosome_container replacementPopulation)
+{
 	_population.replacePopulation(replacementPopulation);
 }
 
 template <typename FITNESS_TYPE>
-typename BaseChromosome<FITNESS_TYPE>::ptr BaseManager<FITNESS_TYPE>::getHighestFitnessChromosome() const{
+typename BaseChromosome<FITNESS_TYPE>::ptr BaseManager<FITNESS_TYPE>::getHighestFitnessChromosome() const
+{
 	return _population.getChromosomes().rbegin()->second;
 }
 
 
 template <typename FITNESS_TYPE>
-FITNESS_TYPE BaseManager<FITNESS_TYPE>::getHighestFitness()  const{
+FITNESS_TYPE BaseManager<FITNESS_TYPE>::getHighestFitness() const
+{
 	return _population.getChromosomes().rbegin()->first;
 }
 
 template <typename FITNESS_TYPE>
-typename BaseChromosome<FITNESS_TYPE>::ptr BaseManager<FITNESS_TYPE>::getLowestFitnessChromosome() const{
+typename BaseChromosome<FITNESS_TYPE>::ptr BaseManager<FITNESS_TYPE>::getLowestFitnessChromosome() const
+{
 	return _population.getChromosomes().begin()->second;
 }
 
 template <typename FITNESS_TYPE>
-FITNESS_TYPE BaseManager<FITNESS_TYPE>::getLowestFitness() const{
+FITNESS_TYPE BaseManager<FITNESS_TYPE>::getLowestFitness() const
+{
 	return _population.getChromosomes().begin()->first;
 }
 
