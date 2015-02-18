@@ -37,7 +37,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 		FITNESS_TYPE sum(0);
 		for (const_pop_itr it =	population.getChromosomes().begin();
 				it != population.getChromosomes().end(); ++it) {
-			sum += (*it)->getFitness()->get();
+			sum += (it->second)->getFitness()->get();
 		}
 		//TODO (bewo) maybe use a fancy-ass functor instead?
 
@@ -47,8 +47,8 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 		map_type sorted_multimap;
 		for (const_pop_itr it = population.getChromosomes().begin();
 				it != population.getChromosomes().end(); ++it) {
-			FITNESS_TYPE prop_fitness = (*it)->getFitness()->get() / sum;
-			sorted_multimap.insert(std::pair<FITNESS_TYPE, chrom_ptr_type >(prop_fitness,*it));
+			FITNESS_TYPE prop_fitness = (it->second)->getFitness()->get() / sum;
+			sorted_multimap.insert(std::pair<FITNESS_TYPE, chrom_ptr_type >(prop_fitness,it->second));
 		}
 
 		unsigned int left_select = _settings->getNumberOfParents();

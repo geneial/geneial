@@ -17,8 +17,8 @@
 #include <geneial/core/population/builder/MultiValueBuilderSettings.h>
 #include <geneial/core/population/builder/MultiIntValueChromosomeFactory.h>
 
-//#include <geneial/core/operations/selection/FitnessProportionalSelection.h>
-//#include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
+#include <geneial/core/operations/selection/FitnessProportionalSelection.h>
+#include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
 
 #include <geneial/core/operations/selection/SelectionSettings.h>
 #include <geneial/core/operations/selection/RouletteWheelSelection.h>
@@ -125,7 +125,7 @@ void printChromosome(MultiValueChromosome<int,double>::ptr chromosomeToPrint)
 	assert(container.size() == charsPerFigure);
 	while(it < charsPerFigure)
 	{
-		printf("%c",(char) container[it]);
+		std::cout << (char) container[it];
 		if(0 == it % lineBreakAfter)
 		{
 			std::cout << std::endl;
@@ -142,42 +142,42 @@ int main(int argc, char **argv) {
 	DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
 
 
-	PopulationSettings *populationSettings = new PopulationSettings(100);
+	PopulationSettings *populationSettings = new PopulationSettings(30);
 
-	MultiValueBuilderSettings<int,double> *builderSettings = new MultiValueBuilderSettings<int,double>(evaluator,charsPerFigure,0,CHAR_MAX);
+	MultiValueBuilderSettings<int,double> *builderSettings = new MultiValueBuilderSettings<int,double>(evaluator,charsPerFigure,0,255);
 
 	MultiIntValueChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 
-	MutationSettings* mutationSettings = new MutationSettings(0.1,0.1,5);
+	MutationSettings* mutationSettings = new MutationSettings(0.8,0.2,0);
 
 	ChooseRandom<int,double> *mutationChoosingOperation = new ChooseRandom<int,double>(mutationSettings);
 
 	BaseMutationOperation<double> *mutationOperation = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
-	//FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(20,10);
-	SelectionSettings* selectionSettings = new SelectionSettings(20);
+	FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(6,6);
+	//SelectionSettings* selectionSettings = new SelectionSettings(10);
 
-	//BaseSelectionOperation<double> *selectionOperation = new FitnessProportionalSelection<double>(selectionSettings);
-	BaseSelectionOperation<double> *selectionOperation = new RouletteWheelSelection<double>(selectionSettings);
+	BaseSelectionOperation<double> *selectionOperation = new FitnessProportionalSelection<double>(selectionSettings);
+	//BaseSelectionOperation<double> *selectionOperation = new RouletteWheelSelection<double>(selectionSettings);
 	//BaseSelectionOperation<double> *selectionOperation = new UniformRandomSelection<double>(selectionSettings);
 
-	CouplingSettings *couplingSettings = new CouplingSettings(20);
+	CouplingSettings *couplingSettings = new CouplingSettings(6);
 
 	//BaseCouplingOperation<double> *couplingOperation = new SimpleCouplingOperation<double>(couplingSettings);
 	BaseCouplingOperation<double> *couplingOperation = new RandomCouplingOperation<double>(couplingSettings);
 
-	MultiValueChromosomeNPointCrossoverSettings *crossoverSettings = new MultiValueChromosomeNPointCrossoverSettings(2,MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH,5);
+	MultiValueChromosomeNPointCrossoverSettings *crossoverSettings = new MultiValueChromosomeNPointCrossoverSettings(4,MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH,10);
 	BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeNPointCrossover<int,double>(crossoverSettings,builderSettings,chromosomeFactory);
 	//BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeAverageCrossover<int,double>(builderSettings,chromosomeFactory);
 
 	//BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::replace_offspring_mode::REPLACE_FIXED_NUMBER,20);
-	BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::REPLACE_ALL_OFFSPRING,10,5);
+	BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::REPLACE_ALL_OFFSPRING,6,0);
 
 	ReplaceWorstOperation<double> *replacementOperation = new ReplaceWorstOperation<double>(replacementSettings);
 	//ReplaceRandomOperation<double> *replacementOperation = new ReplaceRandomOperation<double>(replacementSettings);
 
 
-	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(10000);
+	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(10000000);
 
 	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(
 			populationSettings,
