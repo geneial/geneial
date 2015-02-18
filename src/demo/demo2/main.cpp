@@ -177,7 +177,7 @@ int main(int argc, char **argv) {
 	//ReplaceRandomOperation<double> *replacementOperation = new ReplaceRandomOperation<double>(replacementSettings);
 
 
-	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(100);
+	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(10000);
 
 	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(
 			populationSettings,

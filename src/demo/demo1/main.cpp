@@ -123,7 +123,7 @@ int main(int argc, char **argv) {
 	//ReplaceRandomOperation<double> *replacementOperation = new ReplaceRandomOperation<double>(replacementSettings);
 
 
-	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(1000);
+	BaseStoppingCriterion<double> *stoppingCriterion = new MaxIterationCriterion<double>(10000);
 
 	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(
 			populationSettings,
@@ -137,6 +137,7 @@ int main(int argc, char **argv) {
 	);
 
 	algorithm.solve();
+	std::cout << *algorithm.getHighestFitnessChromosome() <<endl;
 	std::cout << "end." << endl;
 
 	//normally, this is not necessary because we're exiting here anyway,

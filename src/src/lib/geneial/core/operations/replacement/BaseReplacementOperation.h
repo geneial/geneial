@@ -9,6 +9,7 @@
 #define BASEREPLACEMENTOPERATION_H_
 
 #include <geneial/core/operations/replacement/BaseReplacementSettings.h>
+#include <geneial/core/population/management/BaseManager.h>
 
 using namespace GeneticLibrary::Population::Manager;
 

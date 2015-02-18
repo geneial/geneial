@@ -29,11 +29,18 @@ public:
 	//A generic container to pass chromomsomes between operations.
 	typedef typename std::vector<typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr> chromosome_container;
 
+
+	//A map containing all the chromosomes hash values.
+	typedef typename std::map
+			<typename Chromosome::BaseChromosome<FITNESS_TYPE>::chromsome_hash,
+			 typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr> hash_map;
+
+	typedef typename hash_map::value_type hashmap_value;
+
+
 	//A fitness <-> chromsome map holding the actual population
 	typedef typename std::multimap<FITNESS_TYPE , typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr> chromosome_map;
-
 	typedef typename chromosome_map::value_type container_value;
-
 	typedef typename chromosome_map::const_iterator const_it;
 	typedef typename chromosome_map::iterator it;
 
@@ -47,14 +54,27 @@ public:
 	void setAge(population_age age);
 	void doAge();
 
-	const chromosome_map& getChromosomes() const { return _chromosomes; }
-	chromosome_map& getChromosomes() { return _chromosomes; }
+	const chromosome_map& getChromosomes() const { return _fitnessMap; }
+
+	bool hashExists(const typename Chromosome::BaseChromosome<FITNESS_TYPE>::chromsome_hash);
+
+	typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr getChromosomeByHash(const typename Chromosome::BaseChromosome<FITNESS_TYPE>::chromsome_hash);
+
+	void replacePopulation(const chromosome_container &replacementPopulation);
 
 	void insertChromosomeContainer(const chromosome_container &container);
+	void insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
 
+	void removeChromosomeContainer(const chromosome_container &container);
+	void removeChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
+
+	const hash_map& getHashmap() const {
+		return _hashMap;
+	}
 
 private:
-	chromosome_map _chromosomes;
+	chromosome_map _fitnessMap;
+	hash_map _hashMap;
 	population_age _age;
 };
 

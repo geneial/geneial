@@ -25,7 +25,8 @@ bool MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::equals(typename BaseChromoso
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 typename BaseChromosome<FITNESS_TYPE>::chromsome_hash MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::getHash() const
 {
-	typename BaseChromosome<FITNESS_TYPE>::chromsome_hash result = {0};
+
+	typename BaseChromosome<FITNESS_TYPE>::chromsome_hash result = 0; //(long) getSum();
 	const int hash_bytes = sizeof(chromsome_hash);
 
 	//TODO (bewo): Tests this on doubles, etc.
@@ -48,6 +49,8 @@ typename BaseChromosome<FITNESS_TYPE>::chromsome_hash MultiValueChromosome<VALUE
 		}
 		shift_byte++;
 	}
+
+
 	return result;
 }
 

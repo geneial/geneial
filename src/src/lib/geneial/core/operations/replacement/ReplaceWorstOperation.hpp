@@ -52,9 +52,15 @@ void ReplaceWorstOperation<FITNESS_TYPE>::doReplace(
 	unsigned int numberToReplace = getAmountToReplace(population,offspring); //this also takes care of elitism!
 
 	//remove the worst n chromosomes to replace (assuming worst is at the very beginning)
-	typename Population::Population<FITNESS_TYPE>::it advanced = population.getChromosomes().begin();
+	typename Population::Population<FITNESS_TYPE>::const_it advanced = population.getChromosomes().begin();
 	std::advance(advanced,numberToReplace);
-	population.getChromosomes().erase(population.getChromosomes().begin(),advanced);
+	typename Population::Population<FITNESS_TYPE>::chromosome_container toRemove;
+	//TODO (bewo) copy?
+	for(typename Population::Population<FITNESS_TYPE>::const_it it = population.getChromosomes().begin();
+			it != advanced; it++ ){
+		toRemove.push_back(it->second);
+	}
+	population.removeChromosomeContainer(toRemove);
 
 	//Insert all the offspring, parents are ignored here (since they are assumed to be already in the population)
 	population.insertChromosomeContainer(offspring);

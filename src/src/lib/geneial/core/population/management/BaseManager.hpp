@@ -22,44 +22,37 @@ void BaseManager<FITNESS_TYPE>::replenishPopulation (){
 
 	//if there are less chromosomes than required fill up:
 	while (_population.getSize() < _populationSettings->getMaxChromosomes()){
-
 		//build new chromosome
 		typename BaseChromosome<FITNESS_TYPE>::ptr newChromosome = _chromosomeFactory->createChromosome();
-
-		FITNESS_TYPE fitness = newChromosome->getFitness()->get();
-		typename Population<FITNESS_TYPE>::container_value value(fitness,newChromosome);
-
-		//add at the end of vector
-		_population.getChromosomes().insert(value);
+		_population.insertChromosome(newChromosome);
 	}
 }
 
 
 template <typename FITNESS_TYPE>
 void BaseManager<FITNESS_TYPE>::replacePopulation (typename Population<FITNESS_TYPE>::chromosome_container replacementPopulation){
-	_population.getChromosomes().clear();
-	_population.insertChromosomeContainer(replacementPopulation);
+	_population.replacePopulation(replacementPopulation);
 }
 
 template <typename FITNESS_TYPE>
 typename BaseChromosome<FITNESS_TYPE>::ptr BaseManager<FITNESS_TYPE>::getHighestFitnessChromosome() const{
-	return this->_population.getChromosomes().rbegin()->second;
+	return _population.getChromosomes().rbegin()->second;
 }
 
 
 template <typename FITNESS_TYPE>
 FITNESS_TYPE BaseManager<FITNESS_TYPE>::getHighestFitness()  const{
-	return this->_population.getChromosomes().rbegin()->first;
+	return _population.getChromosomes().rbegin()->first;
 }
 
 template <typename FITNESS_TYPE>
 typename BaseChromosome<FITNESS_TYPE>::ptr BaseManager<FITNESS_TYPE>::getLowestFitnessChromosome() const{
-	return this->_population.getChromosomes().begin()->second;
+	return _population.getChromosomes().begin()->second;
 }
 
 template <typename FITNESS_TYPE>
 FITNESS_TYPE BaseManager<FITNESS_TYPE>::getLowestFitness() const{
-	return this->_population.getChromosomes().begin()->first;
+	return _population.getChromosomes().begin()->first;
 }
 
 } /* namespace Manager */

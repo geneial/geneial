@@ -10,6 +10,7 @@
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
 #include <iterator>
+#include <set>
 
 using namespace GeneticLibrary::Operation;
 
@@ -70,45 +71,28 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 
 		offspring = _mutationOperation->doMutate(offspring,_manager);
 
-		typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container::iterator offspring_it =
+
+		//std::cout << _manager.getPopulation() << std::endl;
+
+		typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container::iterator it =
 				offspring.begin();
 
-		for (; offspring_it != offspring.end();
-				++offspring_it) {
-			typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container::iterator offspring_it2 =
-					offspring.begin();
-			for (; offspring_it2 != offspring.end();) {
-				if (offspring_it != offspring_it2 && (*offspring_it)->equals(*offspring_it2)) {
-					offspring_it2 = offspring.erase(offspring_it2);
-				} else {
-					++offspring_it2;
-				}
+		std::set<typename BaseChromosome<FITNESS_TYPE>::chromsome_hash> tmpHashSet;
+
+		for (; it != offspring.end();) {
+			const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue = (*it)->getHash();
+			if (tmpHashSet.find(hashValue) != tmpHashSet.end() || _manager.getPopulation().hashExists(hashValue)) {
+				it = offspring.erase(it);
+			} else {
+				tmpHashSet.insert(hashValue);
+				++it;
 			}
 		}
 
-		typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_map::iterator pop_it =
-		_manager.getPopulation().getChromosomes().begin();
-
-
-		//Remove offspring duplicates --{{{
-		//TODO (bewo): This is very inefficient.
-		for (; pop_it != _manager.getPopulation().getChromosomes().end();
-				++pop_it) {
-			typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container::iterator it2 =
-					offspring.begin();
-			for (; it2 != offspring.end();) {
-				if (pop_it->second->equals(*it2)) {
-					it2 = offspring.erase(it2);
-				} else {
-					++it2;
-				}
-			}
-		}
 		// }}}---
-
+		//std::cout << _manager.getPopulation() << std::endl;
 		//Create new population
 		_replacementOperation->doReplace(_manager.getPopulation(),mating_pool,offspring,_manager);
-
 		//TODO (bewo) scaling?
 
 		// }}}
