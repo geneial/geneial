@@ -11,6 +11,7 @@
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
 #include <iterator>
 #include <algorithm>
+#include <limits.h>
 
 namespace GeneticLibrary {
 namespace Population {
@@ -49,8 +50,6 @@ typename BaseChromosome<FITNESS_TYPE>::chromsome_hash MultiValueChromosome<VALUE
 		}
 		shift_byte++;
 	}
-
-
 	return result;
 }
 
