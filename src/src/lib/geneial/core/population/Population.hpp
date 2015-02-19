@@ -108,6 +108,47 @@ inline unsigned int Population<FITNESS_TYPE>::removeDuplicates(chromosome_contai
 	return removed;
 }
 
+
+
+template<typename FITNESS_TYPE>
+typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getOldestChromosome(){
+	typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr oldest;
+	for(typename chromosome_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
+	{
+		if (!oldest)
+		{
+			oldest = chrom_it->second;
+		}else{
+			if(oldest->getAge() < chrom_it->second->getAge()){
+				oldest = chrom_it->second;
+			}
+		}
+	}
+	return oldest;
+}
+
+
+
+template<typename FITNESS_TYPE>
+typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getYoungestChromosome(){
+	typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr youngest;
+	for(typename chromosome_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
+	{
+		if (!youngest)
+		{
+			youngest = chrom_it->second;
+		}else{
+			if(youngest->getAge() > chrom_it->second->getAge()){
+				youngest = chrom_it->second;
+			}
+		}
+	}
+	return youngest;
+}
+
+
+
+
 template<typename FITNESS_TYPE>
 inline void Population<FITNESS_TYPE>::insertChromosome(typename BaseChromosome<FITNESS_TYPE>::ptr chromosome)
 {

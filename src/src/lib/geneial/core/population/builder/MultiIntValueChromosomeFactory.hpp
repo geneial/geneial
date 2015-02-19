@@ -10,6 +10,7 @@
 
 #include <geneial/core/population/builder/MultiIntValueChromosomeFactory.h>
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
+#include <geneial/utility/Random.h>
 
 namespace GeneticLibrary {
 namespace Population {

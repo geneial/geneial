@@ -19,18 +19,22 @@ namespace Algorithm {
 namespace StoppingCriteria {
 
 template <typename FITNESS_TYPE>
-class MaxGenerationCriterion
- : public BaseStoppingCriterion<FITNESS_TYPE> {
+class NegationDecorator: public BaseStoppingCriterion<FITNESS_TYPE> {
 private:
 	typename Population::Population<FITNESS_TYPE>::population_age _max;
 
 public:
-	MaxGenerationCriterion (long num_max_iterations):_max(num_max_iterations){};
-	virtual ~MaxGenerationCriterion () {};
-	virtual inline bool wasReached(BaseManager<FITNESS_TYPE> &manager){
+	NegationDecorator (long num_max_iterations):_max(num_max_iterations){};
+
+	virtual ~NegationDecorator () {};
+
+	virtual inline bool wasReached(BaseManager<FITNESS_TYPE> &manager)
+	{
 		return !(manager.getPopulation().getAge() < _max);
 	}
-	virtual void print(std::ostream& os) const{
+
+	virtual void print(std::ostream& os) const
+	{
 		os << "MaxGenerationCriterion (" << _max << ")";
 	}
 

@@ -18,13 +18,30 @@ namespace Algorithm {
 namespace StoppingCriteria {
 
 template <typename FITNESS_TYPE>
-class FitnessDeltaCriterion : public BaseStoppingCriterion<FITNESS_TYPE> {
+class FitnessValueDeltaCriterion<FITNESS_TYPE>: public BaseStoppingCriterion<FITNESS_TYPE> {
 public:
-	virtual ~FitnessDeltaCriterion() {};
-	virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager){
-		//TODO (bewo) here be dragons!
-		return true;
+	FITNESS_TYPE _desiredFitness;
+	FITNESS_TYPE _delta;
+
+	FitnessValueDeltaCriterion(FITNESS_TYPE desiredFitness,FITNESS_TYPE delta):_desiredFitness(desiredFitness),_delta(delta)
+	{
+		assert(_delta <= _desiredFitness);
 	}
+
+	virtual ~FitnessValueDeltaCriterion() {}
+
+	virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager)
+	{
+		return !(manager.getPopulation().getHighestFitness() >= _desiredFitness - _delta);
+	}
+
+	virtual void print(std::ostream& os) const
+	{
+		os << "FitnessValueDelta (" << _desiredFitness << ")";
+	}
+
+private:
+	FITNESS_TYPE _desiredFitness;
 };
 
 } /* namespace StoppingCriteria */

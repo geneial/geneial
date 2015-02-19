@@ -24,11 +24,20 @@ private:
 	FITNESS_TYPE _desiredFitness;
 
 public:
-	FitnessValueReachedCriterion(FITNESS_TYPE desiredFitness):_desiredFitness(desiredFitness){};
-	virtual ~FitnessValueReachedCriterion() {};
-	virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager){
+	FitnessValueReachedCriterion(FITNESS_TYPE desiredFitness):_desiredFitness(desiredFitness){}
+
+	virtual ~FitnessValueReachedCriterion() {}
+
+	virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager)
+	{
 		return !(manager.getPopulation().getHighestFitness() == _desiredFitness);
 	}
+
+	virtual void print(std::ostream& os) const
+	{
+		os << "FitnessValue (" << _desiredFitness << ")";
+	}
+
 };
 
 } /* namespace StoppingCriteria */

@@ -9,12 +9,12 @@
 #define FITNESS_H_
 
 #include "boost/shared_ptr.hpp"
-#include <geneial/utility/printable.h>
+#include <geneial/utility/Printable.h>
 
 namespace GeneticLibrary{
 
 template <typename FITNESS_TYPE>
-class Fitness : public GeneticLibrary::Utility::printable
+class Fitness : public GeneticLibrary::Utility::Printable
 {
 private:
 	FITNESS_TYPE _value;

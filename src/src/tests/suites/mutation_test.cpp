@@ -9,33 +9,18 @@
 #include <boost/test/unit_test.hpp>
 
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
+
+#include <geneial/core/operations/mutation/NonUniformMutationOperation.h>
+#include <geneial/core/operations/mutation/UniformMutationOperation.h>
+
+
 #include <geneial/core/fitness/FitnessEvaluator.h>
 #include <geneial/core/fitness/Fitness.h>
 
-BOOST_AUTO_TEST_SUITE( MutatuionSuite )
+BOOST_AUTO_TEST_SUITE( UniformMutationOperation )
 
-	using namespace GeneticLibrary::Operation::Mutation;
-	using namespace GeneticLibrary::Population::Chromosome;
 	using namespace GeneticLibrary;
 
-	/*Evaluator: public FitnessEvaluator<double>{
-		public:
-			DemoChromosomeEvaluator(){};
-			Fitness<double>::ptr evaluate(const BaseChromosome<double>::ptr chromosome) const{
-
-				GeneticLibrary::Population::Chromosome::MultiValueChromosome<int,double>::ptr mvc = boost::dynamic_pointer_cast<MultiValueChromosome<int,double> >(chromosome);
-				if(mvc){
-					//Let the fitness be the sum of all values
-					return boost::shared_ptr<Fitness<double> > (new Fitness<double>(mvc->getSum()));
-				}else{
-					throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
-				}
-
-				boost::shared_ptr<Fitness<double> > ptr(new Fitness<double>(1));
-				return ptr;
-			}
-		};
-		*/
 
 BOOST_AUTO_TEST_CASE( basicMutation )
 {
@@ -62,5 +47,10 @@ BOOST_AUTO_TEST_CASE( basicMutation )
 	BOOST_CHECK(inputSet != resultSet);
 	*/
 }
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_AUTO_TEST_SUITE( NonUniformMutationOperation )
 
 BOOST_AUTO_TEST_SUITE_END()
