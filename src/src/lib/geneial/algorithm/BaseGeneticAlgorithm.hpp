@@ -71,7 +71,7 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 
 		offspring = _mutationOperation->doMutate(offspring,_manager);
 
-		int removedDuplicates = _manager.getPopulation().removeDuplicates(offspring);
+		unsigned int removedDuplicates = _manager.getPopulation().removeDuplicates(offspring);
 
 		_replacementOperation->doReplace(_manager.getPopulation(),mating_pool,offspring,_manager);
 

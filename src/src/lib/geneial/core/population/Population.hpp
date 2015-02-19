@@ -95,7 +95,8 @@ inline unsigned int Population<FITNESS_TYPE>::removeDuplicates(chromosome_contai
 
 	for (; it != toCheck.end();) {
 		const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue = (*it)->getHash();
-		if (tmpHashSet.find(hashValue) != tmpHashSet.end() || hashExists(toCheck)) {
+		//Check whether hash is already contained in the container, or in the population
+		if (tmpHashSet.find(hashValue) != tmpHashSet.end() || hashExists(hashValue)) {
 			it = toCheck.erase(it);
 			removed++;
 		} else {

@@ -8,8 +8,8 @@
 #ifndef POPULATION_H_
 #define POPULATION_H_
 
-#include <geneial/utility/printable.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
+#include <iostream>
 #include <map>
 #include <vector>
 
@@ -69,7 +69,7 @@ public:
 
 	bool hashExists(const typename Chromosome::BaseChromosome<FITNESS_TYPE>::chromsome_hash);
 
-	void unsigned int removeDuplicates(chromosome_container &toCheck);
+	unsigned int removeDuplicates(chromosome_container &toCheck);
 
 
 	typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr getChromosomeByHash(const typename Chromosome::BaseChromosome<FITNESS_TYPE>::chromsome_hash);
