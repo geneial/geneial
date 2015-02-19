@@ -9,6 +9,9 @@
 #define FITNESSPROPORTIONALSELECTION_HPP_
 
 #include <geneial/core/operations/selection/FitnessProportionalSelection.h>
+#include <geneial/utility/Random.h>
+
+#include <cassert>
 
 using namespace GeneticLibrary::Population::Manager;
 using namespace GeneticLibrary::Population::Chromosome;
@@ -76,7 +79,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 			 while (crit != sorted_multimap.rend() && left_select > 0) {
 				 chrom_ptr_type chrom = crit->second;
 				 double prob = (crit->first);
-				 if(random::instance()->decision(prob)){
+				 if(Random::instance()->decision(prob)){
 					 //Use it.
 					 result.push_back(chrom);
 					 left_select--;

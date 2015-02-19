@@ -8,7 +8,7 @@
 #define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_UNIFORMMUTATIONOPERATION_H_
 
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
-#include "assert.h"
+#include <cassert>
 namespace GeneticLibrary {
 namespace Operation {
 namespace Mutation {

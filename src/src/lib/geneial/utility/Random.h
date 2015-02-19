@@ -6,8 +6,8 @@
 namespace GeneticLibrary {
 namespace Utility {
 
-class random : public singleton<random> {
-	 friend class singleton <random>;
+class Random : public singleton<Random> {
+	 friend class singleton <Random>;
  public:
 	bool generateBit()  const;
 
@@ -22,11 +22,11 @@ class random : public singleton<random> {
 	float generateFloat() const;
 	float generateFloat(const float min, const float max) const;
 
-	virtual ~random() {};
+	virtual ~Random() {};
 
 
  protected:
-	random();
+	Random();
 
 
 };

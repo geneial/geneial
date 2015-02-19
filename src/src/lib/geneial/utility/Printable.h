@@ -3,19 +3,19 @@
 #include <iostream>
 namespace GeneticLibrary {
 namespace Utility {
-class printable {
+class Printable {
 public:
-	virtual ~printable() {};
+	virtual ~Printable() {};
 	virtual void print(std::ostream& os) const = 0;
 };
 /**
  * Output as a stream of characters. Calls the print() method of the class.
  */
-std::ostream& operator<<(std::ostream& os, const printable& p);
+std::ostream& operator<<(std::ostream& os, const Printable& p);
 /**
  * Output as a stream of characters. Calls the print() method of the class.
  */
-std::ostream& operator<<(std::ostream& os, const printable*& p);
+std::ostream& operator<<(std::ostream& os, const Printable*& p);
 
 } /* namespace Utility */
 } /* namespace GeneticLibrary */

@@ -9,7 +9,7 @@
 #define RANDOMCOUPLING_HPP_
 
 #include <geneial/core/operations/coupling/RandomCouplingOperation.h>
-#include <geneial/utility/random.h>
+#include <geneial/utility/Random.h>
 
 #include <algorithm>
 #include <iterator>
@@ -44,13 +44,13 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set RandomCouplin
 		const unsigned int mating_pool_size = std::distance(mating_pool.begin(), mating_pool.end()) -1;
 
 		//pick a random mommy:
-		const unsigned int rnd_mommy = random::instance()->generateInt(0,mating_pool_size);
+		const unsigned int rnd_mommy = Random::instance()->generateInt(0,mating_pool_size);
 		typename mating_container::iterator it_mommy = mating_pool.begin();
 		std::advance(it_mommy,rnd_mommy);
 		//pick a random daddy:
 		unsigned int rnd_daddy;
 		do{
-			rnd_daddy = random::instance()->generateInt(0,mating_pool_size);
+			rnd_daddy = Random::instance()->generateInt(0,mating_pool_size);
 		}while(rnd_daddy == rnd_mommy);
 
 		typename mating_container::iterator it_daddy = mating_pool.begin();

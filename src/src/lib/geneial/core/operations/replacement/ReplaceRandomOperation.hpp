@@ -8,10 +8,11 @@
 #ifndef REPLACERANDOMOPERATION_HPP_
 #define REPLACERANDOMOPERATION_HPP_
 
+#include <geneial/core/operations/replacement/BaseReplacementSettings.h>
+#include <geneial/utility/Random.h>
+
 #include <algorithm>
 #include <iterator>
-#include <geneial/core/operations/replacement/BaseReplacementSettings.h>
-#include <geneial/utility/random.h>
 
 using namespace GeneticLibrary::Population::Manager;
 using namespace GeneticLibrary::Utility;
@@ -59,7 +60,7 @@ void ReplaceRandomOperation<FITNESS_TYPE>::doReplace(
 		const unsigned int max = population.getChromosomes().size() - this->getSettings()->getAmountElitism() - 1;
 
 		//pick a random element to delete:
-		const unsigned int rnd_advance = random::instance()->generateInt(0,max);
+		const unsigned int rnd_advance = Random::instance()->generateInt(0,max);
 
 		//construct an iterator
 		typename Population::Population<FITNESS_TYPE>::it advanced = population.getChromosomes().begin();

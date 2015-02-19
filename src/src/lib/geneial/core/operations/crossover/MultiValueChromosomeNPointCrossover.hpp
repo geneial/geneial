@@ -9,7 +9,7 @@
 #define MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_HPP_
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
-#include <geneial/utility/random.h>
+#include <geneial/utility/Random.h>
 
 #include <set>
 #include <algorithm>
@@ -70,7 +70,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 			unsigned int rnd_pos;
 			bool valid;
 			do{
-				rnd_pos = random::instance()->generateInt(0,this->getBuilderSettings()->getNum());
+				rnd_pos = Random::instance()->generateInt(0,this->getBuilderSettings()->getNum());
 
 				std::set<unsigned int>::iterator itlow=std::lower_bound(crossoverPositions.begin(),crossoverPositions.end(),rnd_pos);
 				if(itlow != crossoverPositions.end()){

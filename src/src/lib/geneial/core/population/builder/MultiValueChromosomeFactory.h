@@ -8,6 +8,8 @@
 #ifndef MULTIVALUECHROMOSOMEFACTORY_H_
 #define MULTIVALUECHROMOSOMEFACTORY_H_
 
+#include <geneial/core/population/builder/MultiValueBuilderSettings.h>
+
 namespace GeneticLibrary {
 namespace Population {
 namespace Chromosome {

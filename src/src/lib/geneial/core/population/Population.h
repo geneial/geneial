@@ -21,7 +21,7 @@ namespace GeneticLibrary {
 namespace Population {
 
 template <typename FITNESS_TYPE>
-class Population : public printable
+class Population : public Printable
 {
 public:
 	//TODO(bewo): cleanup this typedef mess
@@ -55,6 +55,10 @@ public:
 	population_age getAge() const;
 	void setAge(population_age age);
 	void doAge();
+
+	typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr getOldestChromosome();
+
+	typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr getYoungestChromosome();
 
 
 	const inline chromosome_map& getChromosomes() const

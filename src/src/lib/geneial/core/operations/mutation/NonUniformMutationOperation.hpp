@@ -93,7 +93,7 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container NonUniformMu
 
 			//first target point of mutation
 			if (this->getSettings()->getAmountOfPointsOfMutation()>0){
-						 pointOfMutation = random::instance()->generateInt(0,this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation());
+						 pointOfMutation = Random::instance()->generateInt(0,this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation());
 						}
 
 			//iterator for one chromosome (to iterate it's values)
@@ -104,7 +104,7 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container NonUniformMu
 
 
 				//dicing whether to mutate or not (influeced by propability setting)
-				value_choise = random::instance()->generateDouble(0.0,1.0);
+				value_choise = Random::instance()->generateDouble(0.0,1.0);
 
 				/*
 				 * Creates a split which shifts the weight from the random value to the old value.
@@ -120,7 +120,7 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container NonUniformMu
 				if (this->getAffectedGenerations() < manager.getPopulation().getAge()) split = this->getMinimumModification();
 				if (split < this->getMinimumModification()) split = this->getMinimumModification();
 
-				VALUE_TYPE randomMutation = random::instance()->generateDouble(
+				VALUE_TYPE randomMutation = Random::instance()->generateDouble(
 						this->getBuilderFactory()->getSettings()->getRandomMin(),
 						this->getBuilderFactory()->getSettings()->getRandomMax()
 					);
@@ -138,7 +138,7 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container NonUniformMu
 									result_container.push_back (int (weightedMutation));
 									mutationCounter++;
 									//create a new target
-									pointOfMutation = random::instance()->generateInt(
+									pointOfMutation = Random::instance()->generateInt(
 											i+1,
 											(i+this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation()) % this->getBuilderFactory()->getSettings()->getNum()
 										);

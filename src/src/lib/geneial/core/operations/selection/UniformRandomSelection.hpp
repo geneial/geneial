@@ -10,8 +10,11 @@
 
 #include <geneial/core/operations/selection/UniformRandomSelection.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
-#include <geneial/utility/random.h>
+#include <geneial/utility/Random.h>
+
 #include <map>
+#include <cassert>
+
 
 using namespace GeneticLibrary::Population::Manager;
 using namespace GeneticLibrary::Population::Chromosome;
@@ -45,7 +48,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set UniformRando
 			const_pop_itr rnditer;
 			do{
 				rnditer = population.getChromosomes().begin();
-				std::advance( rnditer, random::instance()->generateInt(0,population.getChromosomes().size()-1) );
+				std::advance( rnditer, Random::instance()->generateInt(0,population.getChromosomes().size()-1) );
 			}while(allowDuplicates || std::find(result.begin(), result.end(), rnditer->second)!=result.end());
 			left_select--;
 			result.push_back(rnditer->second);

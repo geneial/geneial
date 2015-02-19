@@ -10,8 +10,10 @@
 
 #include <geneial/core/operations/selection/RouletteWheelSelection.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
-#include <geneial/utility/random.h>
+#include <geneial/utility/Random.h>
+
 #include <map>
+#include <cassert>
 
 using namespace GeneticLibrary::Population::Manager;
 using namespace GeneticLibrary::Population::Chromosome;
@@ -88,7 +90,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
 			chrom_ptr_type ptr;
 			do{
 				//TODO (bewo) this is suboptimal:
-				FITNESS_TYPE random = (FITNESS_TYPE) random::instance()->generateDouble(0.0,1.0);
+				FITNESS_TYPE random = (FITNESS_TYPE) Random::instance()->generateDouble(0.0,1.0);
 				ptr = rouletteWheel.spin(random);
 			}while(allowDuplicates || std::find(result.begin(), result.end(), ptr)!=result.end());
 			left_select--;

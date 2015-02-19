@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE( HASHMVC___different_hash )
 	BOOST_CHECK(ptrAd->getHash() != ptrBd->getHash());
 }
 
-#define COLLISION_ROBUSTNESS  (100000000)
+#define COLLISION_ROBUSTNESS  (10000) // (100000000)
 BOOST_AUTO_TEST_CASE( HASHMVC___no_collisions )
 {
 	std::set<MultiValueChromosome<int,double>::chromsome_hash> setHashes;

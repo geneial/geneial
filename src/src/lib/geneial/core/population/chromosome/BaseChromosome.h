@@ -10,8 +10,7 @@
 
 #define CHROMOSOME_AGE_UNITIALIZED (0)
 
-#include <geneial/utility/random.h>
-#include <geneial/utility/printable.h>
+#include <geneial/utility/Printable.h>
 #include <geneial/core/fitness/Fitness.h>
 #include <geneial/core/fitness/FitnessEvaluator.h>
 
@@ -27,7 +26,7 @@ namespace Chromosome {
  * @brief Abstract superclass for any type of chromosome
  */
 template <typename FITNESS_TYPE>
-class BaseChromosome : public Utility::printable,
+class BaseChromosome : public Utility::Printable,
 					   public boost::enable_shared_from_this<BaseChromosome <FITNESS_TYPE> > {
 
 public:

@@ -9,7 +9,12 @@
 #define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_NONUNIFORMMUTATIONOPERATION_H_
 
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
-#include "assert.h"
+
+#include <geneial/core/population/chromosome/MultiValueChromosome.h>
+#include <geneial/core/population/builder/MultiValueChromosomeFactory.h>
+#include <geneial/utility/Random.h>
+
+#include <cassert>
 
 namespace GeneticLibrary {
 namespace Operation {
@@ -21,7 +26,7 @@ template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class NonUniformMutationOperation: public BaseMutationOperation<FITNESS_TYPE> {
 
 private:
-	MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> * _builderSettings;
+	MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *_builderSettings;
 	MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *_builderFactory;
 
 	double _minimumModification;
@@ -45,10 +50,11 @@ public:
 			MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *builderFactory) :
 			BaseMutationOperation<FITNESS_TYPE>(settings,choosingOperation),
 					_builderSettings(builderSettings),
-					_builderFactory(builderFactory) {
+					_builderFactory(builderFactory),
+					_minimumModification(minimumModification),
+					_affectedGenerations(affectedGenerations)
+					{
 		//assert(minimumModification <= 1 && minimumModification >= 0);
-		_minimumModification = minimumModification;
-		_affectedGenerations = affectedGenerations;
 		assert(_builderSettings != NULL);
 		assert(_builderFactory != NULL);
 	}

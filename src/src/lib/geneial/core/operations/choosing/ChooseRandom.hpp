@@ -27,9 +27,9 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container ChooseRandom
 
 	for (chromosomeInputContainer_it = chromosomeInputSet.begin();
 				chromosomeInputContainer_it != chromosomeInputSet.end(); ++chromosomeInputContainer_it){
-		double random = random::instance()->generateDouble(0.0,1.0);
+
 		//Uses Mutation Settings
-		if (random <= this->getSettings()->getPropability()){
+		if (Random::instance()->decision(this->getSettings()->getPropability())){
 			chromosomeOutputSet.push_back(*chromosomeInputContainer_it);
 		}
 	}

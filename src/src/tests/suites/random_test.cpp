@@ -6,14 +6,14 @@
 #define BOOST_TEST_MODULE utility/random
 #include <boost/test/unit_test.hpp>
 
-#include <geneial/utility/random.h>
+#include <geneial/utility/Random.h>
 
 BOOST_AUTO_TEST_SUITE( RandomSuite )
 
 BOOST_AUTO_TEST_CASE( valid_values_ranges )
 {
 	using namespace GeneticLibrary::Utility;
-	bool myRandBool = random::instance()->generateBit();
+	bool myRandBool = Random::instance()->generateBit();
 	BOOST_CHECK( myRandBool == true || myRandBool == false);
 }
 
@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE( int_uniform )
 	}
 
 	for(int i=1;i<TEST_INT_UNIFORM_RUNS;i++){
-		occurrences[random::instance()->generateInt(0,9)]++;
+		occurrences[Random::instance()->generateInt(0,9)]++;
 	}
 
 	for(int i=0; i<(TEST_INT_UNIFORM_SLOTS-1); i++)
