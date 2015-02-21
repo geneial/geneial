@@ -15,18 +15,37 @@ Simply run
 
     ./autobuilder.sh 
 
-###1.2 The manual way
+###1.2 The manual way [Debug Mode]
 
 To build the genetic library use the following commands
 
+    mkdir -p build/
     cd build/
     cmake ../src
     make
 
-Make sure there is no Cmakecache.txt in the main directory, otherwise cmake does not work in out of source folder.
+Make sure there is no `Cmakecache.txt` in the main directory, otherwise cmake does not work in out of source folder.
 
 You'll find the static Libary in the `build/src/lib` library.
 
+####1.2.1 Make parameters
+You may add `make -j8` whereas `8` denotes the number of CPU cores, to run make multithreaded, which speeds up things.
+
+You may further add `make VERBOSE=1` to see whats going on.
+
+####1.2.2 Debug vs. Release
+
+By default the Debug version is build which is build without compiler optimization. While the Debug version is convenient for debugging and testing, it is approximately 10 times slower. In order to build the Release version (Optimization level 3) execute 
+
+    cmake -D CMAKE_BUILD_TYPE=Release ../src
+
+in your `build`-directory.
+
+To compile the debug version again run
+
+    cmake -D CMAKE_BUILD_TYPE=Debug ../src
+
+You can also make different out-of-source build directories such as `debug/` or `release`.
 
 ###1.3 A note on compilers
 
@@ -109,7 +128,7 @@ You'll need valgrind on Debian-based distributions this may be installed by runn
     
     sudo apt-get install valgrind
 
-In addition, to plot the callgraph you may run
+In addition, to be able to plot the callgraph you may run
 
     sudo apt-get install python graphviz
 
@@ -125,6 +144,10 @@ Analougously, for the callgrind benchmark run
     cd benchmarks
     ./callgrind-suite.sh
 
+The callgrind suite produces a `callgrind.TIMESTAMP.log` whereas TIMESTAMP denotes the creation date. This log can be analyzed with tools such as `kcachegrind`. 
+On an Ubuntu/Debian machine you may install kcachegrind by  
+
+    sudo apt-get install kcachegrind
 
 ##8. Running the demo(s)
 Currently, libGENEIAL is mainly a template-based library. Hence, it is essential that the demos compile to ensure 
