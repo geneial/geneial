@@ -35,7 +35,7 @@ You may further add `make VERBOSE=1` to see whats going on.
 
 ####1.2.2 Debug vs. Release
 
-By default the Debug version is build which is build without compiler optimization. While the Debug version is convenient for debugging and testing, it is approximately 10 times slower. In order to build the Release version (Optimization level 3) execute 
+By default the Debug version is build which is build without compiler optimization. While the Debug version is convenient for debugging and testing, it is **approximately 10-14 times slower**. In order to build the Release version (Optimization level 3) execute 
 
     cmake -D CMAKE_BUILD_TYPE=Release ../src
 
@@ -56,7 +56,7 @@ On Ubuntu you may install clang by
 
     sudo apt-get install clang
 
-You can change switch your system compiler by running
+You can switch your system compiler by running
 
     sudo update-alternatives --config c++
 
@@ -93,7 +93,7 @@ You can create new unit-tests based on boost unit testing libarary in the tests/
 
 In the `build/`-directory execute
 
-    cmake -G"Eclipse CDT4 - Unix Makefiles" -DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE -D CMAKE_BUILD_TYPE=Debug ../src
+    cmake -G"Eclipse CDT4 - Unix Makefiles" -DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE ../src
 
 now there are Eclipse .project and .cproject files found in your build/ directory.
 
