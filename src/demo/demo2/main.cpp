@@ -148,36 +148,36 @@ int main(int argc, char **argv) {
 
 	MultiIntValueChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 
-	MutationSettings* mutationSettings = new MutationSettings(0.8,0.2,0);
+	MutationSettings* mutationSettings = new MutationSettings(0.1,0.1,0);
 
 	ChooseRandom<int,double> *mutationChoosingOperation = new ChooseRandom<int,double>(mutationSettings);
 
 	BaseMutationOperation<double> *mutationOperation = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
-	FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(6,6);
+	FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(10,10);
 	//SelectionSettings* selectionSettings = new SelectionSettings(10);
 
-	BaseSelectionOperation<double> *selectionOperation = new FitnessProportionalSelection<double>(selectionSettings);
-	//BaseSelectionOperation<double> *selectionOperation = new RouletteWheelSelection<double>(selectionSettings);
+//	BaseSelectionOperation<double> *selectionOperation = new FitnessProportionalSelection<double>(selectionSettings);
+	BaseSelectionOperation<double> *selectionOperation = new RouletteWheelSelection<double>(selectionSettings);
 	//BaseSelectionOperation<double> *selectionOperation = new UniformRandomSelection<double>(selectionSettings);
 
-	CouplingSettings *couplingSettings = new CouplingSettings(6);
+	CouplingSettings *couplingSettings = new CouplingSettings(10);
 
 	//BaseCouplingOperation<double> *couplingOperation = new SimpleCouplingOperation<double>(couplingSettings);
 	BaseCouplingOperation<double> *couplingOperation = new RandomCouplingOperation<double>(couplingSettings);
 
-	MultiValueChromosomeNPointCrossoverSettings *crossoverSettings = new MultiValueChromosomeNPointCrossoverSettings(4,MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH,10);
+	MultiValueChromosomeNPointCrossoverSettings *crossoverSettings = new MultiValueChromosomeNPointCrossoverSettings(1,MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH,1);
 	BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeNPointCrossover<int,double>(crossoverSettings,builderSettings,chromosomeFactory);
 	//BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeAverageCrossover<int,double>(builderSettings,chromosomeFactory);
 
 	//BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::replace_offspring_mode::REPLACE_FIXED_NUMBER,20);
-	BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::REPLACE_ALL_OFFSPRING,6,0);
+	BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::REPLACE_ALL_OFFSPRING,10,0);
 
 	ReplaceWorstOperation<double> *replacementOperation = new ReplaceWorstOperation<double>(replacementSettings);
 	//ReplaceRandomOperation<double> *replacementOperation = new ReplaceRandomOperation<double>(replacementSettings);
 
 
-	BaseStoppingCriterion<double> *stoppingCriterion = new MaxGenerationCriterion<double>(1000000);
+	BaseStoppingCriterion<double> *stoppingCriterion = new MaxGenerationCriterion<double>(10000000);
 
 	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(
 			populationSettings,

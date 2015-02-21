@@ -9,6 +9,7 @@
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
 #include <geneial/algorithm/criteria/MaxGenerationCriterion.h>
+#include <geneial/algorithm/criteria/NegationDecorator.h>
 #include <geneial/core/fitness/Fitness.h>
 #include <geneial/core/fitness/FitnessEvaluator.h>
 #include <geneial/core/population/PopulationSettings.h>
@@ -112,7 +113,7 @@ int main(int argc, char **argv) {
 	//BaseCouplingOperation<double> *couplingOperation = new SimpleCouplingOperation<double>(couplingSettings);
 	BaseCouplingOperation<double> *couplingOperation = new RandomCouplingOperation<double>(couplingSettings);
 
-	MultiValueChromosomeNPointCrossoverSettings *crossoverSettings = new MultiValueChromosomeNPointCrossoverSettings(3,MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH,1);
+	MultiValueChromosomeNPointCrossoverSettings *crossoverSettings = new MultiValueChromosomeNPointCrossoverSettings(1,MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH,1);
 	BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeNPointCrossover<int,double>(crossoverSettings,builderSettings,chromosomeFactory);
 	//BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeAverageCrossover<int,double>(builderSettings,chromosomeFactory);
 
@@ -121,7 +122,6 @@ int main(int argc, char **argv) {
 
 	ReplaceWorstOperation<double> *replacementOperation = new ReplaceWorstOperation<double>(replacementSettings);
 	//ReplaceRandomOperation<double> *replacementOperation = new ReplaceRandomOperation<double>(replacementSettings);
-
 
 	BaseStoppingCriterion<double> *stoppingCriterion = new MaxGenerationCriterion<double>(100000);
 

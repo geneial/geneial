@@ -11,6 +11,7 @@
 #include <geneial/core/population/builder/MultiIntValueChromosomeFactory.h>
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
 #include <geneial/utility/Random.h>
+#include <cassert>
 
 namespace GeneticLibrary {
 namespace Population {
