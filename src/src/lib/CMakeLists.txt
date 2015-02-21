@@ -24,7 +24,12 @@ file(GLOB_RECURSE TMPL *.hpp)
 
 
 #print all the source files.
-message(STATUS "Building Source Files : ${SRCS}")
+#message(STATUS "Building Source Files : ${SRCS}")
+#message(STATUS "Building Source Files : ${HDRS}")
+#message(STATUS "Building Source Files : ${TMPL}")
+message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+message(STATUS "CMAKE_EXE_LINKER1_FLAGS: ${CMAKE_EXE_LINKER_FLAGS}")
 
 
 #Create a static library
