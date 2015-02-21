@@ -5,8 +5,8 @@
  *      Author: bewo
  */
 
-#ifndef BASESTOPPINGCRITERION_H_
-#define BASESTOPPINGCRITERION_H_
+#ifndef POPULATION_UNCHANGED_CRITERION_H_
+#define POPULATION_UNCHANGED_CRITERION_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
@@ -24,7 +24,7 @@ public:
 
 	PopulationUnchangedCriterion() :
 			_wasEverInvoked(false), _lastGenerationOldestAge(0), _lastGenerationYoungestAge(
-					0), StatefulStoppingCriterion() {}
+					0){}
 
 	virtual ~PopulationUnchangedCriterion(){};
 
@@ -66,4 +66,4 @@ private:
 } /* namespace Algorithm */
 } /* namespace GeneticLibrary */
 
-#endif /* BASESTOPPINGCRITERION_H_ */
+#endif /* POPULATION_UNCHANGED_CRITERION_H_ */

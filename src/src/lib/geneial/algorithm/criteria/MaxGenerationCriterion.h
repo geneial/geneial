@@ -5,8 +5,8 @@
  *      Author: bewo
  */
 
-#ifndef MAX_ITERATION_CRITERION_H_
-#define MAX_ITERATION_CRITERION_H_
+#ifndef MAX_GENERATION_CRITERION_H_
+#define MAX_GENERATION_CRITERION_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
@@ -44,4 +44,4 @@ public:
 } /* namespace Algorithm */
 } /* namespace GeneticLibrary */
 
-#endif /* MAX_ITERATION_CRITERION_H_ */
+#endif /* MAX_GENERATION_CRITERION_H_ */

@@ -5,8 +5,8 @@
  *      Author: bewo
  */
 
-#ifndef FITNESSDELTACRITERION_H_
-#define FITNESSDELTACRITERION_H_
+#ifndef COMBINED_CRITERION_H_
+#define COMBINED_CRITERION_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
@@ -97,4 +97,4 @@ private:
 } /* namespace Algorithm */
 } /* namespace GeneticLibrary */
 
-#endif /* FITNESSDELTACRITERION_H_ */
+#endif /* COMBINED_CRITERION_H_ */

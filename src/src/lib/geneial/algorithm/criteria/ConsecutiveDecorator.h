@@ -5,11 +5,12 @@
  *      Author: bewo
  */
 
-#ifndef MAX_ITERATION_CRITERION_H_
-#define MAX_ITERATION_CRITERION_H_
+#ifndef CONSECUTIVE_CRITERION_H_
+#define CONSECUTIVE_CRITERION_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
+#include <deque>
 
 using namespace GeneticLibrary::Population::Manager;
 
@@ -26,8 +27,8 @@ public:
 	typedef typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion;
 
 	ConsecutiveDecorator(unsigned int windowSize, unsigned int consecutiveHits,
-			BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion) :
-			BaseStoppingCriterion(), _windowSize(windowSize), _consecutiveHits(
+			typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion) :
+			_windowSize(windowSize), _consecutiveHits(
 					consecutiveHits), _criterion(criterion) {
 		assert(windowSize >= 1); //Allow wrapper valuss of 1 here, make it as flexible as possible
 		assert(consecutiveHits > 0);
@@ -40,7 +41,7 @@ public:
 	{
 		updateWindowValues(manager);
 
-		boolean result = false;
+		bool result = false;
 
 		std::deque<bool>::iterator it = _window.begin();
 		//run over deque, count how often the criteria was met.
@@ -51,7 +52,7 @@ public:
 			}
 		}
 
-		if (count >= consecutiveHits) {
+		if (count >= _consecutiveHits) {
 			result = true;
 		}
 
@@ -61,18 +62,13 @@ public:
 protected:
 	void inline updateWindowValues(BaseManager<FITNESS_TYPE> &manager)
 	{
-		const size_t currentWindowSize = _window.size();
-
-		assert(currentWindowSize <= _windowSize);
-
+		assert(_window.size() <= _windowSize);
 		_window.push_front(_criterion->wasReached(manager));
 
 		while (_window.size() > _windowSize) {
 			_window.pop_back();
 		}
-
-		const size_t afterInsertSize = _window.size();
-		assert(afterInsertSize <= _windowSize);
+		assert(_window.size() <= _windowSize);
 	}
 
 	virtual void print(std::ostream& os) const
@@ -102,4 +98,4 @@ private:
 } /* namespace Algorithm */
 } /* namespace GeneticLibrary */
 
-#endif /* MAX_ITERATION_CRITERION_H_ */
+#endif /* CONSECUTIVE_CRITERION_H_ */

@@ -5,8 +5,8 @@
  *      Author: bewo
  */
 
-#ifndef BASESTOPPINGCRITERION_H_
-#define BASESTOPPINGCRITERION_H_
+#ifndef STATEFUL_STOPPING_CRITERION_H_
+#define STATEFUL_STOPPING_CRITERION_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
@@ -52,4 +52,4 @@ private:
 } /* namespace Algorithm */
 } /* namespace GeneticLibrary */
 
-#endif /* BASESTOPPINGCRITERION_H_ */
+#endif /* STATEFUL_STOPPING_CRITERION_H_ */

@@ -5,8 +5,8 @@
  *      Author: bewo
  */
 
-#ifndef BASESTOPPINGCRITERION_H_
-#define BASESTOPPINGCRITERION_H_
+#ifndef FITNESS_VALUE_REACHEDCRITERION_H_
+#define FITNESS_VALUE_REACHEDCRITERION_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 
@@ -44,4 +44,4 @@ public:
 } /* namespace Algorithm */
 } /* namespace GeneticLibrary */
 
-#endif /* BASESTOPPINGCRITERION_H_ */
+#endif /* FITNESS_VALUE_REACHEDCRITERION_H_ */

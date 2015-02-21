@@ -5,8 +5,8 @@
  *      Author: bewo
  */
 
-#ifndef FITNESSDELTACRITERION_H_
-#define FITNESSDELTACRITERION_H_
+#ifndef FIXPOINT_CRITERION_H_
+#define FIXPOINT_CRITERION_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
@@ -26,9 +26,8 @@ class FixPointCriterion : public StatefulStoppingCriterion<FITNESS_TYPE> {
 public:
 	virtual ~FixPointCriterion() {};
 
-	virtual FixPointCriterion(FITNESS_VALUE threshold = 0, windowSize = 10, minDiff = 1):
-					_threshold(FITNESS_VALUE),
-					_windowSize(windowSize), _minDiff(minDiff), _lastGeneration(0), StatefulStoppingCriterion() {
+	FixPointCriterion(FITNESS_TYPE threshold = 0, FITNESS_TYPE windowSize = 10,FITNESS_TYPE minDiff = 1):
+					_threshold(threshold), _windowSize(windowSize), _minDiff(minDiff){
 		assert(_minDiff <= _windowSize);
 		assert(_minDiff > 0);
 	};
@@ -43,7 +42,7 @@ public:
 	{
 		updateWindowValues(manager);
 
-		boolean result = false;
+		bool result = false;
 
 		if(_window.size() >= _minDiff){
 			const FITNESS_TYPE latest = _window.front();
@@ -62,9 +61,7 @@ protected:
 	void inline updateWindowValues(BaseManager<FITNESS_TYPE> &manager)
 	{
 			const FITNESS_TYPE bestFitness = manager.getPopulation().getHighestFitnessChromosome();
-			const size_t currentWindowSize = _window.size();
-
-			assert(currentWindowSize <= _windowSize);
+			assert(_window.size() <= _windowSize);
 
 			_window.push_front(bestFitness);
 
@@ -73,8 +70,7 @@ protected:
 				_window.pop_back();
 			}
 
-			const size_t afterInsertSize = _window.size();
-			assert(afterInsertSize <= _windowSize);
+			assert(_window.size() <= _windowSize);
 	}
 
 private:
@@ -82,9 +78,9 @@ private:
 	const unsigned int _windowSize;
 
 	//Difference threshold between first and last of window
-	FITNESS_VALUE _threshold;
+	FITNESS_TYPE _threshold;
 
-	std::deque<typename FITNESS_VALUE> _window;
+	std::deque<FITNESS_TYPE> _window;
 
 	//minimum window size for a compare
 	const unsigned int _minDiff;
@@ -95,4 +91,4 @@ private:
 } /* namespace Algorithm */
 } /* namespace GeneticLibrary */
 
-#endif /* FITNESSDELTACRITERION_H_ */
+#endif /* FIXPOINT_CRITERION_H_ */

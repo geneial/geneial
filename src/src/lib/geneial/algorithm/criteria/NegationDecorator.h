@@ -5,8 +5,8 @@
  *      Author: bewo
  */
 
-#ifndef MAX_ITERATION_CRITERION_H_
-#define MAX_ITERATION_CRITERION_H_
+#ifndef NEGATION_DECORTATOR_H_
+#define NEGATION_DECORTATOR_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
@@ -59,4 +59,4 @@ private:
 } /* namespace Algorithm */
 } /* namespace GeneticLibrary */
 
-#endif /* MAX_ITERATION_CRITERION_H_ */
+#endif /* NEGATION_DECORTATOR_H_ */

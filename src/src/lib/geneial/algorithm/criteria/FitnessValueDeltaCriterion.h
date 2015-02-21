@@ -18,11 +18,8 @@ namespace Algorithm {
 namespace StoppingCriteria {
 
 template <typename FITNESS_TYPE>
-class FitnessValueDeltaCriterion<FITNESS_TYPE>: public BaseStoppingCriterion<FITNESS_TYPE> {
+class FitnessValueDeltaCriterion: public BaseStoppingCriterion<FITNESS_TYPE> {
 public:
-	FITNESS_TYPE _desiredFitness;
-	FITNESS_TYPE _delta;
-
 	FitnessValueDeltaCriterion(FITNESS_TYPE desiredFitness,FITNESS_TYPE delta):_desiredFitness(desiredFitness),_delta(delta)
 	{
 		assert(_delta <= _desiredFitness);
@@ -42,6 +39,7 @@ public:
 
 private:
 	FITNESS_TYPE _desiredFitness;
+	FITNESS_TYPE _delta;
 };
 
 } /* namespace StoppingCriteria */
