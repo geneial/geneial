@@ -20,16 +20,10 @@ namespace Algorithm {
 template <typename FITNESS_TYPE>
 void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 
-	//TODO (bewo) use a Logger for output
-
-	//TODO (bewo) scout for Memleaks using valgrind
 	_wasStarted = true;
 
-
-	//Initialize the first population candidate
+	//Initialize the first population candidate, take whatever has been inserted and fill it up to max size.
 	_manager.replenishPopulation();
-
-
 
 //	std::cout << _manager.getPopulation() << std::endl;
 
@@ -71,13 +65,15 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 
 		offspring = _mutationOperation->doMutate(offspring,_manager);
 
-		unsigned int removedDuplicates = _manager.getPopulation().removeDuplicates(offspring);
+		//TODO (bewo): Scaling?
+
+		//unsigned int removedDuplicates = _manager.getPopulation().removeDuplicates(offspring);
 
 		_replacementOperation->doReplace(_manager.getPopulation(),mating_pool,offspring,_manager);
 
+		//In we had a deficit, fill up population with fresh chromosomes
+		_manager.replenishPopulation();
 
-
-		//TODO (bewo) scaling?
 
 		// }}}
 	}

@@ -150,34 +150,48 @@ typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>:
 
 
 template<typename FITNESS_TYPE>
-inline void Population<FITNESS_TYPE>::insertChromosome(typename BaseChromosome<FITNESS_TYPE>::ptr chromosome)
+inline bool Population<FITNESS_TYPE>::insertChromosome(typename BaseChromosome<FITNESS_TYPE>::ptr chromosome)
 {
-	//Insert into fitness map
-	container_value fitness_map_value(chromosome->getFitness()->get(),chromosome);
-	_fitnessMap.insert(fitness_map_value);
-
 	//Insert into hash map
 	typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue = chromosome->getHash();
-	if(_hashMap.find(hashValue) != _hashMap.end()){
-		std::cout <<"HASH COLLISION:" << hashValue << std::endl;
-		std::cout <<"  CHROMOSOME TO INSERT:" ;
-		chromosome->print(std::cout);
-		std::cout <<"  CHROMOSOME CONTAINED:" ;
-		typename hash_map::iterator it = _hashMap.find(hashValue);
-		it->second->print(std::cout);
+
+	if(!hashExists(hashValue))
+	{
+		//Insert into fitness map
+		container_value fitness_map_value(chromosome->getFitness()->get(),chromosome);
+		_fitnessMap.insert(fitness_map_value);
+
+		/*
+		if(_hashMap.find(hashValue) != _hashMap.end()){
+			std::cout <<"HASH COLLISION:" << hashValue << std::endl;
+			std::cout <<"  CHROMOSOME TO INSERT:" ;
+			chromosome->print(std::cout);
+			std::cout <<"  CHROMOSOME CONTAINED:" ;
+			typename hash_map::iterator it = _hashMap.find(hashValue);
+			it->second->print(std::cout);
+		}
+		assert(_hashMap.find(hashValue) == _hashMap.end()); //NOTE (bewo): Without duplicate removal this check is superflous
+		*/
+
+		hashmap_value hash_map_value(hashValue,chromosome);
+		_hashMap.insert(hash_map_value);
+		return true;
 	}
-	assert(_hashMap.find(hashValue) == _hashMap.end()); //NOTE (bewo): Without duplicate removal this check is superflous
-	hashmap_value hash_map_value(hashValue,chromosome);
-	_hashMap.insert(hash_map_value);
+	else
+	{
+		return false;
+	}
 }
 
 template<typename FITNESS_TYPE>
-inline void Population<FITNESS_TYPE>::insertChromosomeContainer(const chromosome_container &container)
+inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(const chromosome_container &container)
 {
+	unsigned int inserted = 0;
 	  for (typename chromosome_container::const_iterator it = container.begin() ; it != container.end(); ++it)
 	  {
-		  this->insertChromosome(*it);
+		  inserted += this->insertChromosome(*it);
 	  }
+	  return inserted;
 }
 
 

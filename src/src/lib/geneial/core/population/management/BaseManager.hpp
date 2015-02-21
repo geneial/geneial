@@ -27,9 +27,7 @@ void BaseManager<FITNESS_TYPE>::replenishPopulation ()
 	while (_population.getSize() < _populationSettings->getMaxChromosomes()){
 		//build new chromosome
 		typename BaseChromosome<FITNESS_TYPE>::ptr newChromosome = _chromosomeFactory->createChromosome();
-		if(!_population.hashExists(newChromosome->getHash())){
-			_population.insertChromosome(newChromosome);
-		}
+		_population.insertChromosome(newChromosome);
 	}
 }
 

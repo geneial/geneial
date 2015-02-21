@@ -79,9 +79,9 @@ public:
 	typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr getChromosomeByHash(const typename Chromosome::BaseChromosome<FITNESS_TYPE>::chromsome_hash);
 
 	void replacePopulation(const chromosome_container &replacementPopulation);
-	void insertChromosomeContainer(const chromosome_container &container);
+	unsigned int insertChromosomeContainer(const chromosome_container &container);
 
-	void insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
+	bool insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
 
 	void removeChromosomeContainer(const chromosome_container &container);
 	void removeChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
