@@ -114,34 +114,33 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 	value_container &mommy_container = mvc_mommy->getContainer();
 	value_container &child_container = child_candidate->getContainer();
 
+	assert(child_container.size() == mommy_container.size());
+
 	child_container.clear();
 
 	assert(daddy_container.size() == mommy_container.size());
 
-	typename value_container::iterator mommy_it = mommy_container.begin();
-	typename value_container::iterator daddy_it = daddy_container.begin();
+	typename std::back_insert_iterator<value_container> target_it = std::back_inserter(child_container);
 	std::set<unsigned int>::const_iterator widthIterator = crossoverPositions.begin();
-		bool flip = true; //copy from ladies first.
+	bool flip = true; //copy from ladies first.
 
-		for (unsigned int i=0;
-			mommy_it != mommy_container.end();
-			++i){
+	crossoverPositions.insert(daddy_container.size());
 
-		if(flip){
-			child_container.push_back(*mommy_it);
-		}else{
-			child_container.push_back(*daddy_it);
+	unsigned int i = 0;
+
+	for (; widthIterator != crossoverPositions.end(); ++widthIterator) {
+		if (flip) {
+			std::copy(mommy_container.begin() + i, mommy_container.begin()+*widthIterator,target_it);
+		} else {
+			std::copy(daddy_container.begin() + i, daddy_container.begin()+*widthIterator,target_it);
 		}
-
-		if(i==*widthIterator){
-			++widthIterator;
-			flip = !flip;
-		}
-		++mommy_it;
-		++daddy_it;
+		i = *widthIterator;
+		flip = !flip;
 	}
+	assert(child_container.size() == mommy_container.size());
 
 	resultset.push_back(child_candidate);
+
 	return resultset;
 }
 
