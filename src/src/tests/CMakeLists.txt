@@ -10,6 +10,9 @@ file(GLOB TEST_SRC RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} suites/*.cpp)
 
 message(STATUS "Suites : ${TEST_SRC}")
 
+#make sure BOOST_MESSAGE are shown on ctest -VV
+set(testArgs "--log_level=message")
+
 #Run through each source
 foreach(testSrc ${TEST_SRC})
         #Extract the filename without an extension (NAME_WE)
@@ -28,10 +31,12 @@ foreach(testSrc ${TEST_SRC})
         #I like to move testing binaries into a testBin directory
         set_target_properties(${testName} PROPERTIES 
             RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_CURRENT_BINARY_DIR}/test_bin)
-
+        
+        
+        
         #Finally add it to test execution - 
         #Notice the WORKING_DIRECTORY and COMMAND
         add_test(NAME ${testName} 
                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/test_bin 
-                 COMMAND ${CMAKE_CURRENT_BINARY_DIR}/test_bin/${testName} )
+                 COMMAND "${CMAKE_CURRENT_BINARY_DIR}/test_bin/${testName}" ${testArgs})
 endforeach(testSrc)
