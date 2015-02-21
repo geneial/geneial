@@ -28,7 +28,7 @@ public:
 
 	virtual ~MultiValueBuilderSettings() {};
 
-	unsigned int getNum() const {
+	inline unsigned int getNum() const {
 		return _num;
 	}
 
@@ -36,15 +36,15 @@ public:
 		_num = num;
 	}
 
-	const VALUE_TYPE getRandomMax() const {
+	inline VALUE_TYPE getRandomMax() const {
 		return _random_max;
 	}
 
-	void setRandomMax(VALUE_TYPE randomMax) {
+	void inline setRandomMax(VALUE_TYPE randomMax) {
 		_random_max = randomMax;
 	}
 
-	VALUE_TYPE getRandomMin() const {
+	inline VALUE_TYPE getRandomMin() const {
 		return _random_min;
 	}
 
