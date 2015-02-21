@@ -79,22 +79,27 @@ public:
 	//*caution*: the user should never directly interact with the manager, rather use this class as facade
 	inline typename BaseChromosome<FITNESS_TYPE>::ptr getHighestFitnessChromosome() const{
 		assert(_wasStarted);
-		return this->_manager.getHighestFitnessChromosome();
+		return _manager.getHighestFitnessChromosome();
 	}
 
 	inline FITNESS_TYPE getHighestFitness()  const{
 		assert(_wasStarted);
-		return this->_manager.getHighestFitness();
+		return _manager.getHighestFitness();
+	}
+
+
+	virtual typename Population::Population<FITNESS_TYPE>& getPopulation(){
+			return _manager.getPopulation();
 	}
 
 	inline typename BaseChromosome<FITNESS_TYPE>::ptr getLowestFitnessChromosome() const{
 		assert(_wasStarted);
-		return this->_manager.getLowestFitnessChromosome();
+		return _manager.getLowestFitnessChromosome();
 	}
 
 	inline FITNESS_TYPE getLowestFitness() const{
 		assert(_wasStarted);
-		return this->_manager.getLowestFitness();
+		return _manager.getLowestFitness();
 	}
 
 
