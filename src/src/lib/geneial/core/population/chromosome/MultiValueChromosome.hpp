@@ -9,6 +9,7 @@
 #define MULTIVALUECHROMOSOME_HPP_
 
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
+#include <boost/functional/hash.hpp>
 #include <iterator>
 #include <algorithm>
 #include <limits.h>
@@ -28,7 +29,10 @@ typename BaseChromosome<FITNESS_TYPE>::chromsome_hash MultiValueChromosome<VALUE
 {
 
 	typename BaseChromosome<FITNESS_TYPE>::chromsome_hash result = 0; //(long) getSum();
+	/*
+
 	const int hash_bytes = sizeof(chromsome_hash);
+	this is too slow:
 
 	//TODO (bewo): Tests this on doubles, etc.
 	const int value_bytes = sizeof(VALUE_TYPE);
@@ -50,6 +54,10 @@ typename BaseChromosome<FITNESS_TYPE>::chromsome_hash MultiValueChromosome<VALUE
 		}
 		shift_byte++;
 	}
+	*/
+
+	result = boost::hash_range(_container.begin(),_container.end());
+
 	return result;
 }
 
