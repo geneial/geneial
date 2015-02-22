@@ -44,40 +44,56 @@ bool BaseChromosome<FITNESS_TYPE>::hashEquals(typename BaseChromosome<FITNESS_TY
 }
 
 template <typename FITNESS_TYPE>
-void BaseChromosome<FITNESS_TYPE>::printHash(std::ostream& os) const{
+void BaseChromosome<FITNESS_TYPE>::printHash(std::ostream& os) const
+{
 	os << this->getHash();
 }
 
 template <typename FITNESS_TYPE>
-const typename Fitness<FITNESS_TYPE>::ptr BaseChromosome<FITNESS_TYPE>::getFitness() const{
+const typename Fitness<FITNESS_TYPE>::ptr BaseChromosome<FITNESS_TYPE>::getFitness() const
+{
 	return _fitness;
 }
 
 template <typename FITNESS_TYPE>
-void BaseChromosome<FITNESS_TYPE>::setFitness(const typename Fitness<FITNESS_TYPE>::ptr& fit){
+void BaseChromosome<FITNESS_TYPE>::setFitness(const typename Fitness<FITNESS_TYPE>::ptr& fit)
+{
 	_fitness = fit;
 }
 
 template <typename FITNESS_TYPE>
-const typename FitnessEvaluator<FITNESS_TYPE>::ptr BaseChromosome<FITNESS_TYPE>::getFitnessEvaluator() const{
+const typename FitnessEvaluator<FITNESS_TYPE>::ptr BaseChromosome<FITNESS_TYPE>::getFitnessEvaluator() const
+{
 	return _fitnessEvaluator;
 }
 
 template <typename FITNESS_TYPE>
+void BaseChromosome<FITNESS_TYPE>::invalidateFitness()
+{
+	_fitness.reset(); //sets the ptr to null
+}
+
+template <typename FITNESS_TYPE>
 void BaseChromosome<FITNESS_TYPE>::setFitnessEvaluator(
-		const typename FitnessEvaluator<FITNESS_TYPE>::ptr& fitnessEvaluator) {
+		const typename FitnessEvaluator<FITNESS_TYPE>::ptr& fitnessEvaluator)
+{
 	_fitnessEvaluator = fitnessEvaluator;
 }
 
-template <typename FITNESS_TYPE> unsigned int BaseChromosome<FITNESS_TYPE>::doAge(){
+template <typename FITNESS_TYPE>
+unsigned int BaseChromosome<FITNESS_TYPE>::doAge()
+{
 	return ++_age;
 }
 
-template <typename FITNESS_TYPE> void BaseChromosome<FITNESS_TYPE>::setAge(unsigned int age){
+template <typename FITNESS_TYPE>
+void BaseChromosome<FITNESS_TYPE>::setAge(unsigned int age)
+{
 	_age = age;
 }
 
-template <typename FITNESS_TYPE> unsigned int BaseChromosome<FITNESS_TYPE>::getAge() const{
+template <typename FITNESS_TYPE>
+unsigned int BaseChromosome<FITNESS_TYPE>::getAge() const{
 	return _age;
 }
 

@@ -47,7 +47,7 @@ public:
     };
 
 	/**
-	 * Creates a new Chromosome with random values and a fitness of -1
+	 *
 	 */
 	BaseChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator)
 		: _fitness(),
@@ -55,6 +55,7 @@ public:
 		 _age(CHROMOSOME_AGE_UNITIALIZED) {
 		assert(_fitnessEvaluator);
 	};
+
 	virtual ~BaseChromosome() {};
 
 
@@ -91,8 +92,20 @@ public:
 	 * Does not evaluate the fitness.
 	 */
 	const typename Fitness<FITNESS_TYPE>::ptr getFitness() const;
+
 	/**
-	 * Sets Fitness of a chromosome
+	 * If the chromosome was modified from outside and it's "cached" fitness can no no longer be
+	 * guaranteed to be accurate, this should be invoked to trigger a new Fitness Evaluation
+	 *
+	 * Caution: this function only has an effect on the concrete chromosome object, but does not
+	 * alter any external datastructures outside of the object's context
+	 * (e.g., the fitness map of a population)
+	 */
+	void invalidateFitness();
+
+
+	/**
+	 * Sets fitness of a chromosome
 	 */
 	void setFitness(const typename Fitness<FITNESS_TYPE>::ptr& fitness);
 
@@ -107,9 +120,11 @@ public:
 	void setFitnessEvaluator(const typename FitnessEvaluator<FITNESS_TYPE>::ptr& fitnessEvaluator);
 
 	virtual chromsome_hash getHash() const = 0;
+
 protected:
 	virtual bool hashEquals(const_ptr chromosome) const;
 	virtual void printHash(std::ostream& os) const;
+
 private:
 	typename Fitness<FITNESS_TYPE>::ptr  _fitness;
 

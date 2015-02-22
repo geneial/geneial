@@ -17,9 +17,6 @@ namespace Manager {
 
 using namespace Chromosome;
 
-
-
-
 template <typename FITNESS_TYPE>
 void BaseManager<FITNESS_TYPE>::replenishPopulation ()
 {
