@@ -78,7 +78,8 @@ public:
 
 	virtual void print(std::ostream& os) const = 0;
 
-	bool hasFitness() const{
+	bool inline hasFitness() const
+	{
 		return !(_fitness == NULL);
 	};
 
@@ -112,7 +113,8 @@ public:
 
 
 
-	bool hasFitnessEvaluator() const{
+	bool inline hasFitnessEvaluator() const
+	{
 		return !(_fitnessEvaluator == NULL);
 	}
 
