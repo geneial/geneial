@@ -137,8 +137,8 @@ int main(int argc, char **argv) {
 	);
 
 	algorithm.solve();
-	std::cout << *algorithm.getHighestFitnessChromosome() <<endl;
-	std::cout << "end." << endl;
+	std::cout << *algorithm.getHighestFitnessChromosome() <<std::endl;
+	std::cout << "end." << std::endl;
 
 	//normally, this is not necessary because we're exiting here anyway,
 	//but for valgrind's satisfaction, we free stuff nonetheless.

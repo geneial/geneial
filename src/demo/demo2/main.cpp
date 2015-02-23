@@ -191,7 +191,7 @@ int main(int argc, char **argv) {
 	);
 
 	algorithm.solve();
-	std::cout << "end." << endl;
+	std::cout << "end." << std::endl;
 
 	BaseChromosome<double>::ptr chromosome = algorithm.getHighestFitnessChromosome();
 	MultiValueChromosome<int,double>::ptr mvc = boost::dynamic_pointer_cast<MultiValueChromosome<int,double> >(chromosome);

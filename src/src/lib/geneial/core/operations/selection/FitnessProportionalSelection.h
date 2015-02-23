@@ -31,7 +31,7 @@ public:
 	FitnessProportionalSelection(SelectionSettings* settings): BaseSelectionOperation<FITNESS_TYPE>(settings) {
 		_settings = dynamic_cast<FitnessProportionalSelectionSettings*>(settings);
 		if(!_settings){
-			throw new runtime_error("settings must be FitnessProportionalSelectionSettings");
+			throw new std::runtime_error("settings must be FitnessProportionalSelectionSettings");
 		}
 
 	};
