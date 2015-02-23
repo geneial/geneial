@@ -36,6 +36,7 @@ public:
 	typedef typename boost::shared_ptr<BaseChromosome <FITNESS_TYPE> > ptr;
 	typedef typename boost::shared_ptr<const BaseChromosome <FITNESS_TYPE> > const_ptr;
 
+
 	ptr getPtr() //TODO (bewo) constness correct?
     {
         return this->shared_from_this();

@@ -20,8 +20,6 @@ namespace GeneticLibrary {
 namespace Population {
 namespace Chromosome {
 
-using namespace std;
-
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 class MultiValueChromosome: public BaseChromosome<FITNESS_TYPE> {
 public:
