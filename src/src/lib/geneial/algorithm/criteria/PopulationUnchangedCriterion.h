@@ -18,6 +18,7 @@ namespace StoppingCriteria {
 
 using namespace GeneticLibrary::Population::Manager;
 
+//TODO (bewo) Think about this class...
 template <typename FITNESS_TYPE>
 class PopulationUnchangedCriterion: StatefulStoppingCriterion<FITNESS_TYPE>
 {
@@ -39,8 +40,9 @@ public:
 		}
 		else
 		{
+			//TODO(bewo) is this correct?
 			//Check the oldest age of the youngest chromosome against the previous run and if it has not changed abort
-			result = (_lastGenerationOldestAge == manager.getPopulation().getYoungestChromosome()->getAge());
+			result = (_lastGenerationOldestAge == manager.getPopulation().getYoungestChromosome()->getAge() - 1);
 		}
 
 		_lastGenerationOldestAge = manager.getPopulation().getOldestChromosome()->getAge();

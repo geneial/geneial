@@ -186,7 +186,7 @@ template<typename FITNESS_TYPE>
 inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(const chromosome_container &container)
 {
 
-	MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE> strategy(2);
+	MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE> strategy(4);
 	strategy.ensureHasFitness(container);
 
 	unsigned int inserted = 0;
