@@ -8,10 +8,10 @@
 #ifndef FITNESS_H_
 #define FITNESS_H_
 
-#include "boost/shared_ptr.hpp"
 #include <geneial/utility/Printable.h>
+#include "boost/shared_ptr.hpp"
 
-namespace GeneticLibrary{
+namespace GeneticLibrary {
 
 template <typename FITNESS_TYPE>
 class Fitness : public GeneticLibrary::Utility::Printable
@@ -36,6 +36,7 @@ public:
 
     void print(std::ostream&) const;
 };
+
 
 } /* namespace GeneticLibrary */
 

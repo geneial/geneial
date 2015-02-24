@@ -8,7 +8,8 @@
 #ifndef SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_MUTATIONSETTINGS_H_
 #define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_MUTATIONSETTINGS_H_
 
-#include "assert.h"
+#include <cassert>
+
 namespace GeneticLibrary {
 namespace Operation {
 namespace Mutation {
@@ -40,31 +41,31 @@ public:
 	MutationSettings(double propability, double amountOfMutation, unsigned int amountOfPointsOfMutation){
 		_probability = propability;
 		_amountOfPointsOfMutation = amountOfPointsOfMutation;
-		//_levelOfMutation = levelOfMutation;
 		_amountOfMutation = amountOfMutation;
 	};
 
-	double getPropability() const {
+	double getPropability() const
+	{
 		return _probability;
 	};
-/*
-	double getLevelOfMutation() const {
-		return _levelOfMutation;
-	};
-*/
-	double getAmountOfMutation() const {
+
+	double getAmountOfMutation() const
+	{
 		return _amountOfMutation;
 	};
 
-	unsigned int getAmountOfPointsOfMutation(){
+	unsigned int getAmountOfPointsOfMutation()
+	{
 		return _amountOfPointsOfMutation;
 	};
 
-	void setAmountOfPointsOfMutation (unsigned int amount){
+	void setAmountOfPointsOfMutation (unsigned int amount)
+	{
 		_amountOfPointsOfMutation = amount;
 	}
 
-	void setPropability(double propabilityOfMutation){
+	void setPropability(double propabilityOfMutation)
+	{
 		_probability = propabilityOfMutation;
 	};
 /*
@@ -73,7 +74,8 @@ public:
 	};
 */
 
-	void setAmountOfMutation(double amountOfMutation){
+	void setAmountOfMutation(double amountOfMutation)
+	{
 		_amountOfMutation = amountOfMutation;
 	};
 };//Class MutationSettings

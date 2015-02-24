@@ -13,11 +13,14 @@
 #include <map>
 #include <stdexcept>
 
-using namespace GeneticLibrary::Population::Manager;
 
 namespace GeneticLibrary {
 namespace Operation {
 namespace Selection {
+
+using namespace GeneticLibrary::Population;
+using namespace GeneticLibrary::Population::Manager;
+
 /**
  * Select a number of parents based on a roulette wheel distribution over the chromosomes fitness
  */
@@ -28,7 +31,7 @@ public:
 	virtual ~RouletteWheelSelection(){};
 
 	virtual typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set doSelect(
-			const Population::Population<FITNESS_TYPE> &population,
+			const Population<FITNESS_TYPE> &population,
 			BaseManager<FITNESS_TYPE> &manager);
 
 };

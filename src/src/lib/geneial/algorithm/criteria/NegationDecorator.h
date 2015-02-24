@@ -12,11 +12,13 @@
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 #include <geneial/core/population/Population.h>
 
-using namespace GeneticLibrary::Population::Manager;
 
 namespace GeneticLibrary {
 namespace Algorithm {
 namespace StoppingCriteria {
+
+using namespace GeneticLibrary::Population::Manager;
+
 /**
  * Decorator that negates a criterion
  */

@@ -11,11 +11,12 @@
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 
-using namespace GeneticLibrary::Population::Manager;
 
 namespace GeneticLibrary {
 namespace Algorithm {
 namespace StoppingCriteria {
+
+using namespace GeneticLibrary::Population::Manager;
 
 //Encapsulates when a StoppingCriterion has a state and makes sure wasReached has no sideeffects
 //and ensures wasStatefully reached is only called once per generation
@@ -33,7 +34,7 @@ public:
 		const unsigned int currentAge = manager.getPopulation().getAge();
 
 		if( (!_wasInvoked) || (_lastGenerationChecked != currentAge) ){
-			assert((wasInvoked)?(_lastGenerationChecked < currentAge):(_lastGenerationChecked <= currentAge));
+			assert((_wasInvoked)?(_lastGenerationChecked < currentAge):(_lastGenerationChecked <= currentAge));
 			_cachedResult = wasStatefullyReached(manager);
 			_lastGenerationChecked = manager.getPopulation().getAge();
 		}

@@ -13,25 +13,25 @@
 
 #include <cassert>
 
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Utility;
 
 namespace GeneticLibrary {
 namespace Operation {
 namespace Selection {
 
+using namespace GeneticLibrary::Population::Manager;
+using namespace GeneticLibrary::Population::Chromosome;
+using namespace GeneticLibrary::Utility;
 
 template <typename FITNESS_TYPE>
 typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessProportionalSelection<FITNESS_TYPE>::doSelect(
-		const Population::Population<FITNESS_TYPE> &population,
+		const Population<FITNESS_TYPE> &population,
 		BaseManager<FITNESS_TYPE> &manager){
 
 		//shorthands for type mess
 		typedef std::multimap<FITNESS_TYPE, typename BaseChromosome<FITNESS_TYPE>::ptr > map_type;
 		typedef typename BaseChromosome<FITNESS_TYPE>::ptr chrom_ptr_type;
 		typedef typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set result_set;
-		typedef typename Population::Population<FITNESS_TYPE>::const_it const_pop_itr;
+		typedef typename Population<FITNESS_TYPE>::const_it const_pop_itr;
 
 		result_set result;
 

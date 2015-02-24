@@ -8,22 +8,23 @@
 #ifndef SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_NONUNIFORMMUTATIONOPERATION_HPP_
 #define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_NONUNIFORMMUTATIONOPERATION_HPP_
 
+#include <geneial/core/population/Population.h>
 #include <geneial/core/operations/mutation/NonUniformMutationOperation.h>
 #include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/population/builder/BuilderSettings.h>
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
-#include <geneial/core/population/Population.h>
 
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Operation::Mutation;
-using namespace GeneticLibrary::Operation::Choosing;
 
 namespace GeneticLibrary {
 namespace Operation {
 namespace Mutation {
 
+using namespace GeneticLibrary::Population;
+using namespace GeneticLibrary::Population::Chromosome;
+using namespace GeneticLibrary::Population::Manager;
+using namespace GeneticLibrary::Operation::Mutation;
+using namespace GeneticLibrary::Operation::Choosing;
 
 /*
  *  Returns a chromosome container with some new chromosomes which are partially mutated versions of the old ones.
@@ -42,18 +43,18 @@ namespace Mutation {
  *
  *  */
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-typename Population::Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate
+typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate
 			(
-					typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container _chromosomeInputContainer,
+					typename Population<FITNESS_TYPE>::chromosome_container _chromosomeInputContainer,
 					BaseManager<FITNESS_TYPE> &manager
 			){
 
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::value_container value_container;
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr mvc_ptr;
 
-	typename Population::Population<FITNESS_TYPE>::chromosome_container resultset;
-	typename Population::Population<FITNESS_TYPE>::chromosome_container _choosenChromosomeContainer;
-	typename Population::Population<FITNESS_TYPE>::chromosome_container _notChoosenChromosomeContainer;
+	typename Population<FITNESS_TYPE>::chromosome_container resultset;
+	typename Population<FITNESS_TYPE>::chromosome_container _choosenChromosomeContainer;
+	typename Population<FITNESS_TYPE>::chromosome_container _notChoosenChromosomeContainer;
 
 	unsigned int pointOfMutation = 0;
 	unsigned int mutationCounter = 0;
@@ -67,7 +68,7 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container NonUniformMu
 				_choosenChromosomeContainer.begin(),_choosenChromosomeContainer.end(),
 				std::inserter(_notChoosenChromosomeContainer,_notChoosenChromosomeContainer.begin()));
 
-	typename Population::Population<FITNESS_TYPE>::chromosome_container::iterator _choosenChromosomeContainer_it;
+	typename Population<FITNESS_TYPE>::chromosome_container::iterator _choosenChromosomeContainer_it;
 
 	//only mutate choosen chromosomes
 	for (_choosenChromosomeContainer_it = _choosenChromosomeContainer.begin();
@@ -138,10 +139,13 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container NonUniformMu
 									result_container.push_back (int (weightedMutation));
 									mutationCounter++;
 									//create a new target
-									pointOfMutation = Random::instance()->generateInt(
-											i+1,
-											(i+this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation()) % this->getBuilderFactory()->getSettings()->getNum()
-										);
+									const int FIXME = (i+this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation()) % this->getBuilderFactory()->getSettings()->getNum();
+									const int FIXME2 = i+1;
+									if(FIXME > FIXME2) {
+										pointOfMutation = Random::instance()->generateInt(FIXME2,FIXME);
+									}else{
+										pointOfMutation = Random::instance()->generateInt(FIXME,FIXME2);
+									}
 								//if no more mutation is needed (mutated already n times)
 								} else {
 									result_container.push_back (*mutant_it);

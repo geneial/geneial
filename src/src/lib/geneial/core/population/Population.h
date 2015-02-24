@@ -9,16 +9,18 @@
 #define POPULATION_H_
 
 #include <geneial/core/population/chromosome/BaseChromosome.h>
+#include <geneial/utility/Printable.h>
 #include <iostream>
 #include <map>
 #include <vector>
 
 #define POPULATION_AGE_INITIAL (0)
 
-using namespace GeneticLibrary::Utility;
 
 namespace GeneticLibrary {
 namespace Population {
+
+using namespace GeneticLibrary::Utility;
 
 template <typename FITNESS_TYPE>
 class Population : public Printable

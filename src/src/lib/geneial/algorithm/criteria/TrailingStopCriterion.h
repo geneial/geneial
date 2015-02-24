@@ -11,12 +11,12 @@
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 
-using namespace GeneticLibrary::Population::Manager;
 
 namespace GeneticLibrary {
 namespace Algorithm {
 namespace StoppingCriteria {
 
+using namespace GeneticLibrary::Population::Manager;
 
 //TODO (bewo) Idea to implement here: -> c.f. TrailingStop in Stock market
 //Trace the best chromosome, when its gets worser as a given threshold abort.

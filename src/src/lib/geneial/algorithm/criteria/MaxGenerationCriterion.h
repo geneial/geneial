@@ -12,16 +12,17 @@
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 #include <geneial/core/population/Population.h>
 
-using namespace GeneticLibrary::Population::Manager;
 
 namespace GeneticLibrary {
 namespace Algorithm {
 namespace StoppingCriteria {
 
+using namespace GeneticLibrary::Population::Manager;
+
 template <typename FITNESS_TYPE>
 class MaxGenerationCriterion: public BaseStoppingCriterion<FITNESS_TYPE> {
 private:
-	typename Population::Population<FITNESS_TYPE>::population_age _max;
+	typename Population<FITNESS_TYPE>::population_age _max;
 
 public:
 	MaxGenerationCriterion (long num_max_iterations):_max(num_max_iterations){};

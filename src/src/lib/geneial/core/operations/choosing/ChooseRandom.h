@@ -15,6 +15,7 @@ namespace GeneticLibrary {
 namespace Operation {
 namespace Choosing {
 
+using namespace GeneticLibrary::Population;
 using namespace GeneticLibrary::Operation::Mutation;
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
@@ -25,26 +26,24 @@ private:
 public:
 	ChooseRandom(MutationSettings *settings) :
 		BaseChoosingOperation<FITNESS_TYPE>(),
-		_settings(settings) {
-	}
-	;
-	virtual ~ChooseRandom() {
-	}
-	;
+		_settings(settings) {}
+	virtual ~ChooseRandom() {}
 
 	/*
 	 * Chooses from an chromosomeContainer Random values. The propability that a Chromosome is choosen and therefore part of the
 	 * resultset is defined in MutationSettings.
 	 */
 
-	virtual typename Population::Population<FITNESS_TYPE>::chromosome_container doChoose(
-			typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container chromosomeInputSet);
+	virtual typename Population<FITNESS_TYPE>::chromosome_container doChoose(
+			typename Population<FITNESS_TYPE>::chromosome_container chromosomeInputSet);
 
-	const MutationSettings* getSettings() {
+	const MutationSettings* getSettings()
+	{
 		return _settings;
 	}
 
-	void setSettings(const MutationSettings*& settings) {
+	void setSettings(const MutationSettings*& settings)
+	{
 		_settings = settings;
 	}
 };

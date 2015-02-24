@@ -8,19 +8,22 @@
 #ifndef REPLACEWORSTOPERATION_HPP_
 #define REPLACEWORSTOPERATION_HPP_
 
-#include <algorithm>
-#include <iterator>
 #include <geneial/core/operations/replacement/BaseReplacementSettings.h>
 
-using namespace GeneticLibrary::Population::Manager;
+#include <algorithm>
+#include <iterator>
+
 
 namespace GeneticLibrary {
 namespace Operation {
 namespace Replacement {
 
+using namespace GeneticLibrary::Population;
+using namespace GeneticLibrary::Population::Manager;
+
 template<typename FITNESS_TYPE>
 unsigned int ReplaceWorstOperation<FITNESS_TYPE>::getAmountToReplace(
-		const typename Population::Population<FITNESS_TYPE> &population,
+		const Population<FITNESS_TYPE> &population,
 		const typename Coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const{
 	switch(this->getSettings()->getMode()){
 
@@ -34,7 +37,7 @@ unsigned int ReplaceWorstOperation<FITNESS_TYPE>::getAmountToReplace(
 		default:
 		{
 			return std::min(population.getChromosomes().size()-1,
-					(typename Population::Population<FITNESS_TYPE>::chromosome_map::size_type)
+					(typename Population<FITNESS_TYPE>::chromosome_map::size_type)
 					this->getSettings()->getAmountToReplace());
 		}
 		break;
@@ -44,7 +47,7 @@ unsigned int ReplaceWorstOperation<FITNESS_TYPE>::getAmountToReplace(
 
 template<typename FITNESS_TYPE>
 void ReplaceWorstOperation<FITNESS_TYPE>::doReplace(
-		typename Population::Population<FITNESS_TYPE> &population,
+		Population<FITNESS_TYPE> &population,
 		typename Selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
 		typename Coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
 		BaseManager<FITNESS_TYPE> &manager) {
@@ -52,11 +55,11 @@ void ReplaceWorstOperation<FITNESS_TYPE>::doReplace(
 	unsigned int numberToReplace = getAmountToReplace(population,offspring); //this also takes care of elitism!
 
 	//remove the worst n chromosomes to replace (assuming worst is at the very beginning)
-	typename Population::Population<FITNESS_TYPE>::const_it advanced = population.getChromosomes().begin();
+	typename Population<FITNESS_TYPE>::const_it advanced = population.getChromosomes().begin();
 	std::advance(advanced,numberToReplace);
-	typename Population::Population<FITNESS_TYPE>::chromosome_container toRemove;
+	typename Population<FITNESS_TYPE>::chromosome_container toRemove;
 	//TODO (bewo) copy?
-	for(typename Population::Population<FITNESS_TYPE>::const_it it = population.getChromosomes().begin();
+	for(typename Population<FITNESS_TYPE>::const_it it = population.getChromosomes().begin();
 			it != advanced; it++ ){
 		toRemove.push_back(it->second);
 	}

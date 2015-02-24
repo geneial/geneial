@@ -10,11 +10,11 @@
 
 #include <geneial/core/population/management/BaseManager.h>
 
-using namespace GeneticLibrary::Population::Manager;
-
 namespace GeneticLibrary {
 namespace Algorithm {
 namespace StoppingCriteria {
+
+using namespace GeneticLibrary::Population::Manager;
 
 template <typename FITNESS_TYPE>
 class BaseStoppingCriterion: public Utility::Printable,

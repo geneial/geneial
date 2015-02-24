@@ -8,7 +8,8 @@
 #ifndef COUPLINGSETTINGS_H_
 #define COUPLINGSETTINGS_H_
 
-#include "assert.h"
+#include <cassert>
+
 namespace GeneticLibrary {
 namespace Operation {
 namespace Coupling {

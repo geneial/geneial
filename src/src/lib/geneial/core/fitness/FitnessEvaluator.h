@@ -21,9 +21,10 @@ namespace Chromosome{
 }
 }
 
-using namespace GeneticLibrary::Population::Chromosome;
 
 namespace GeneticLibrary{
+
+using namespace GeneticLibrary::Population::Chromosome;
 
 template <typename FITNESS_TYPE>
 class FitnessEvaluator {

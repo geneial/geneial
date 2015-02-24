@@ -25,8 +25,8 @@ public:
 	BaseChoosingOperation () {};
 	virtual ~BaseChoosingOperation() {};
 
-	virtual typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container doChoose (
-			typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container chromosomeInputSet) = 0;
+	virtual typename Population<FITNESS_TYPE>::chromosome_container doChoose (
+			typename Population<FITNESS_TYPE>::chromosome_container chromosomeInputSet) = 0;
 };
 
 } //namespace Mutation

@@ -10,13 +10,14 @@
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeAverageCrossover.h>
 
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Operation::Coupling;
 
 namespace GeneticLibrary {
 namespace Operation {
 namespace Crossover {
+
+using namespace GeneticLibrary::Population::Chromosome;
+using namespace GeneticLibrary::Population::Manager;
+using namespace GeneticLibrary::Operation::Coupling;
 
 //TODO (bewo) allow random weighting factor param for one side
 //value = (e.g. 2x ParentA + 1x ParentB) / 3 etc.

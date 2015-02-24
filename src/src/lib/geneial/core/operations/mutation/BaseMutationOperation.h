@@ -6,15 +6,18 @@
  */
 #ifndef SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_BASEMUTATIONOPERATION_H_
 #define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_BASEMUTATIONOPERATION_H_
+
 #include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/population/management/BaseManager.h>
-
+#include <geneial/core/population/Population.h>
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
+
 
 namespace GeneticLibrary {
 namespace Operation {
 namespace Mutation {
 
+using namespace GeneticLibrary::Population;
 using namespace GeneticLibrary::Population::Manager;
 using namespace GeneticLibrary::Operation::Choosing;
 
@@ -33,9 +36,9 @@ public:
 	virtual ~BaseMutationOperation() {
 	}
 	; //Destructor
-	typedef typename Population::Population<FITNESS_TYPE>::chromosome_container mutation_result_set;
-	virtual typename Population::Population<FITNESS_TYPE>::chromosome_container doMutate(
-			typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container mutants,
+	typedef typename Population<FITNESS_TYPE>::chromosome_container mutation_result_set;
+	virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
+			typename Population<FITNESS_TYPE>::chromosome_container mutants,
 			BaseManager<FITNESS_TYPE> &manager
 			) =0;
 	MutationSettings* const & getSettings() const {

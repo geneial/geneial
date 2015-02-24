@@ -10,14 +10,18 @@
 
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
 #include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
+
 #include <map>
 #include <stdexcept>
 
-using namespace GeneticLibrary::Population::Manager;
 
 namespace GeneticLibrary {
 namespace Operation {
 namespace Selection {
+
+using namespace GeneticLibrary::Population;
+using namespace GeneticLibrary::Population::Manager;
+
 /**
  * Select a number of parents based on a certain criteria.
  */
@@ -38,7 +42,7 @@ public:
 	virtual ~FitnessProportionalSelection(){};
 
 	virtual typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set doSelect(
-			const Population::Population<FITNESS_TYPE> &population,
+			const Population<FITNESS_TYPE> &population,
 			BaseManager<FITNESS_TYPE> &manager);
 
 

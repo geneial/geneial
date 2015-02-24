@@ -10,11 +10,14 @@
 
 #include <geneial/core/operations/replacement/BaseReplacementOperation.h>
 
-using namespace GeneticLibrary::Population::Manager;
 
 namespace GeneticLibrary {
 namespace Operation {
 namespace Replacement {
+
+using namespace GeneticLibrary::Population;
+using namespace GeneticLibrary::Population::Manager;
+
 /**
  * Select a number of parents based on a certain criteria.
  */
@@ -22,14 +25,14 @@ template <typename FITNESS_TYPE>
 class ReplaceWorstOperation : public BaseReplacementOperation<FITNESS_TYPE>{
 private:
 	unsigned int getAmountToReplace(
-			const typename Population::Population<FITNESS_TYPE> &population,
+			const Population<FITNESS_TYPE> &population,
 			const typename Coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const;
 public:
 	ReplaceWorstOperation(BaseReplacementSettings* settings): BaseReplacementOperation<FITNESS_TYPE>(settings){};
 	virtual ~ReplaceWorstOperation() {};
 
 	void doReplace(
-			typename Population::Population<FITNESS_TYPE> &population,
+			Population<FITNESS_TYPE> &population,
 			typename Selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
 			typename Coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
 			BaseManager<FITNESS_TYPE> &manager);

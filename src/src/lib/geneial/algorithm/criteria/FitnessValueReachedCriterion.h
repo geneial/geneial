@@ -10,11 +10,13 @@
 
 #include <geneial/core/population/management/BaseManager.h>
 
-using namespace GeneticLibrary::Population::Manager;
 
 namespace GeneticLibrary {
 namespace Algorithm {
 namespace StoppingCriteria {
+
+using namespace GeneticLibrary::Population::Manager;
+
 /**
   * @brief checks whether the desired fitness was reached
 */

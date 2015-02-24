@@ -11,7 +11,7 @@
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include "boost/shared_ptr.hpp"
 
-#include <assert.h>
+#include <cassert>
 #include <vector>
 #include <algorithm>
 #include <numeric>

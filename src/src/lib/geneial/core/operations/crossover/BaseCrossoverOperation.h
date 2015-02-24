@@ -12,13 +12,14 @@ namespace GeneticLibrary {
 namespace Operation {
 namespace Crossover {
 
+using namespace GeneticLibrary::Population;
 using namespace GeneticLibrary::Population::Chromosome;
 using namespace GeneticLibrary::Operation::Coupling;
 
 template <typename FITNESS_TYPE>
 class BaseCrossoverOperation {
 public:
-	typedef typename Population::Population<FITNESS_TYPE>::chromosome_container crossover_result_set;
+	typedef typename Population<FITNESS_TYPE>::chromosome_container crossover_result_set;
 	BaseCrossoverOperation() {};
 	virtual ~BaseCrossoverOperation() {};
 	virtual crossover_result_set

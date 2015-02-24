@@ -13,15 +13,16 @@
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
 
 #include <geneial/core/population/management/BaseManager.h>
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Operation::Selection;
-using namespace GeneticLibrary::Operation::Crossover;
+
 
 namespace GeneticLibrary {
 namespace Operation {
 namespace Coupling {
 
-
+using namespace GeneticLibrary::Population;
+using namespace GeneticLibrary::Population::Manager;
+using namespace GeneticLibrary::Operation::Selection;
+using namespace GeneticLibrary::Operation::Crossover;
 
 template <typename FITNESS_TYPE>
 class BaseCouplingOperation {
@@ -30,7 +31,7 @@ private:
 	CouplingSettings* _settings;
 
 public:
-	typedef typename Population::Population<FITNESS_TYPE>::chromosome_container offspring_result_set;
+	typedef typename Population<FITNESS_TYPE>::chromosome_container offspring_result_set;
 	BaseCouplingOperation(CouplingSettings *settings): _settings(settings)  {};
 	virtual ~BaseCouplingOperation() {};
 

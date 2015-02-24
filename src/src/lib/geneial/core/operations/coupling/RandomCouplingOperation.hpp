@@ -14,12 +14,13 @@
 #include <algorithm>
 #include <iterator>
 
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Utility;
 
 namespace GeneticLibrary {
 namespace Operation {
 namespace Coupling {
+
+using namespace GeneticLibrary::Population::Chromosome;
+using namespace GeneticLibrary::Utility;
 
 template<typename FITNESS_TYPE>
 typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set RandomCouplingOperation<FITNESS_TYPE>::doCopulate(

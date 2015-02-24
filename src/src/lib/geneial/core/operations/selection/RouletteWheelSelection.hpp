@@ -15,13 +15,15 @@
 #include <map>
 #include <cassert>
 
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Utility;
 
 namespace GeneticLibrary {
 namespace Operation {
 namespace Selection {
+
+using namespace GeneticLibrary::Population;
+using namespace GeneticLibrary::Population::Manager;
+using namespace GeneticLibrary::Population::Chromosome;
+using namespace GeneticLibrary::Utility;
 
 //TODO (bewo) check whether all this will work with negative fitness values
 
@@ -48,11 +50,11 @@ template <typename FITNESS_TYPE>
 class RouletteWheel {
 private:
 	typedef typename BaseChromosome<FITNESS_TYPE>::ptr chrom_ptr_type;
-	typedef typename Population::Population<FITNESS_TYPE>::const_it const_pop_itr;
+	typedef typename Population<FITNESS_TYPE>::const_it const_pop_itr;
 	FITNESS_TYPE _sum;
     std::map<std::pair<FITNESS_TYPE, FITNESS_TYPE> , chrom_ptr_type, RouletteWheelComparator<FITNESS_TYPE> > ranges;
 public:
-    RouletteWheel(const Population::Population<FITNESS_TYPE> &population) :_sum(0){
+    RouletteWheel(const Population<FITNESS_TYPE> &population) :_sum(0){
 		for (const_pop_itr it =	population.getChromosomes().begin();
 				it != population.getChromosomes().end(); ++it) {
 			ranges[std::pair<FITNESS_TYPE, FITNESS_TYPE>(_sum, it->first + _sum)] = it->second;
@@ -68,7 +70,7 @@ public:
 
 template <typename FITNESS_TYPE>
 typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWheelSelection<FITNESS_TYPE>::doSelect(
-		const Population::Population<FITNESS_TYPE> &population,
+		const Population<FITNESS_TYPE> &population,
 		BaseManager<FITNESS_TYPE> &manager){
 
 		//shorthands for type mess
