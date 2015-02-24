@@ -184,7 +184,7 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
 	for (typename chromosome_container::iterator it = container.begin() ; it != container.end();)
 	{
 		const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue = (*it)->getHash();
-		const bool inHashCache = std::find(hashCache.begin(), hashCache.end(), hashValue)!=hashCache.end();
+		const bool inHashCache = std::find(hashCache.begin(), hashCache.end(), hashValue) != hashCache.end();
 		if(!hashExists(hashValue) && !inHashCache)
 		{
 			hashCache.push_back(hashValue);

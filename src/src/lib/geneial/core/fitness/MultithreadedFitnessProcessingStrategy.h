@@ -27,11 +27,13 @@ public:
 
 	static int i; //TODO (bewo) used shared mem?
 
-	void workerTask(){
+	void workerTask()
+	{
 		const int id = MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE>::i++;
 
 		_queueMutex.lock();
 		std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr > *threadQ = _threadQueue[id];
+		assert(threadQ);
 		_queueMutex.unlock();
 
 		bool queueEmpty = false;
@@ -44,6 +46,7 @@ public:
 			if(!queueEmpty)
 			{
 				chromosome = threadQ->front();
+				assert(chromosome);
 				threadQ->pop();
 			}
 
@@ -55,7 +58,8 @@ public:
 		}
 	}
 
-	virtual void ensureHasFitness(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer){
+	virtual void ensureHasFitness(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer)
+	{
 		assert(_threadQueue.empty());
 
 		assert(_workerThreads.empty());
@@ -80,7 +84,9 @@ public:
 		for(typename Population<FITNESS_TYPE>::chromosome_container::const_iterator it = refcontainer.begin();
 				it != refcontainer.end();++it){
 			if(!(*it)->hasFitness()){
-				_threadQueue[j++%spawnThreads]->push(*it);
+				assert(_threadQueue[j%spawnThreads]);
+				_threadQueue[j%spawnThreads]->push(*it);
+				j++;
 			}else{
 				std::cout << "HAS FITNESS!" << std::endl;
 			}
@@ -104,6 +110,7 @@ public:
 
 		for(unsigned int i = 0; i < spawnThreads;i++)
 		{
+			assert(_threadQueue[i]);
 			delete _threadQueue[i];
 		}
 
