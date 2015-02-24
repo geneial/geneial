@@ -130,8 +130,9 @@ void printChromosome(MultiValueChromosome<int,double>::ptr chromosomeToPrint)
 		{
 			std::cout << std::endl;
 		}
-		it++;
+		++it;
 	}
+	std::cout << std::endl;
 }
 
 int main(int argc, char **argv) {
@@ -142,13 +143,13 @@ int main(int argc, char **argv) {
 	DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
 
 
-	PopulationSettings *populationSettings = new PopulationSettings(30);
+	PopulationSettings *populationSettings = new PopulationSettings(60);
 
-	MultiValueBuilderSettings<int,double> *builderSettings = new MultiValueBuilderSettings<int,double>(evaluator,charsPerFigure,0,255);
+	MultiValueBuilderSettings<int,double> *builderSettings = new MultiValueBuilderSettings<int,double>(evaluator,charsPerFigure,0,128);
 
 	MultiIntValueChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 
-	MutationSettings* mutationSettings = new MutationSettings(0.1,0.1,0);
+	MutationSettings* mutationSettings = new MutationSettings(0.8,0.1,1);
 
 	ChooseRandom<int,double> *mutationChoosingOperation = new ChooseRandom<int,double>(mutationSettings);
 
@@ -157,8 +158,8 @@ int main(int argc, char **argv) {
 	FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(10,10);
 	//SelectionSettings* selectionSettings = new SelectionSettings(10);
 
-//	BaseSelectionOperation<double> *selectionOperation = new FitnessProportionalSelection<double>(selectionSettings);
-	BaseSelectionOperation<double> *selectionOperation = new RouletteWheelSelection<double>(selectionSettings);
+	BaseSelectionOperation<double> *selectionOperation = new FitnessProportionalSelection<double>(selectionSettings);
+//	BaseSelectionOperation<double> *selectionOperation = new RouletteWheelSelection<double>(selectionSettings);
 	//BaseSelectionOperation<double> *selectionOperation = new UniformRandomSelection<double>(selectionSettings);
 
 	CouplingSettings *couplingSettings = new CouplingSettings(10);
@@ -177,7 +178,7 @@ int main(int argc, char **argv) {
 	//ReplaceRandomOperation<double> *replacementOperation = new ReplaceRandomOperation<double>(replacementSettings);
 
 
-	BaseStoppingCriterion<double> *stoppingCriterion = new MaxGenerationCriterion<double>(10000000);
+	BaseStoppingCriterion<double> *stoppingCriterion = new MaxGenerationCriterion<double>(300000);
 
 	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(
 			populationSettings,
