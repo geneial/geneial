@@ -139,13 +139,11 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
 									result_container.push_back (int (weightedMutation));
 									mutationCounter++;
 									//create a new target
-									const int FIXME = (i+this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation()) % this->getBuilderFactory()->getSettings()->getNum();
-									const int FIXME2 = i+1;
-									if(FIXME > FIXME2) {
-										pointOfMutation = Random::instance()->generateInt(FIXME2,FIXME);
-									}else{
-										pointOfMutation = Random::instance()->generateInt(FIXME,FIXME2);
-									}
+									const int distanceBetweenTarges = (this->getBuilderFactory()->getSettings()->getNum() / this->getSettings()->getAmountOfPointsOfMutation());
+									pointOfMutation = Random::instance()->generateInt(
+											(i+1),
+											(i+1+distanceBetweenTarges) % this->getBuilderFactory()->getSettings()->getNum()
+									);
 								//if no more mutation is needed (mutated already n times)
 								} else {
 									result_container.push_back (*mutant_it);
