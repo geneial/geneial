@@ -21,6 +21,19 @@ set (GENEIAL_VERSION_MINOR 1)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -Wno-unused-parameter")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
 
+
+# TODO (bewo) make this switchable!
+
+set(Boost_USE_STATIC_LIBS   OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME    OFF)
+find_package(Boost REQUIRED COMPONENTS thread system)
+find_package(Threads REQUIRED)
+INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
+
+
+
+
 add_subdirectory(src)
 add_subdirectory(demo)
 
@@ -37,3 +50,4 @@ if(DOXYGEN_FOUND)
 else()
     message(STATUS "Doxygen not found! Will render no documentation!")
 endif(DOXYGEN_FOUND)
+

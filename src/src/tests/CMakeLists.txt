@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 include_directories ("../lib")
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+find_package(Boost COMPONENTS unit_test_framework system REQUIRED)
 include_directories (${Boost_INCLUDE_DIRS})
 
 

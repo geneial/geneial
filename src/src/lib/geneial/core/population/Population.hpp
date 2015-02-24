@@ -9,18 +9,17 @@
 #define POPULATION_HPP_
 
 #include <geneial/core/population/Population.h>
+#include <geneial/core/fitness/Fitness.h>
+#include <geneial/core/fitness/MultithreadedFitnessProcessingStrategy.h>
 #include <cassert>
 #include <iostream>
 #include <set>
 #include <utility>
 
+
 namespace GeneticLibrary {
 namespace Population {
 
-/**
- * Creates a vector containing ONE chromosome, the population needs to be build with replenishPopulation
- * @see replenishPopulation
- */
 template <typename FITNESS_TYPE>
 Population<FITNESS_TYPE>::Population(): _age(0) {}
 
@@ -186,6 +185,10 @@ inline bool Population<FITNESS_TYPE>::insertChromosome(typename BaseChromosome<F
 template<typename FITNESS_TYPE>
 inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(const chromosome_container &container)
 {
+
+	MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE> strategy(2);
+	strategy.ensureHasFitness(container);
+
 	unsigned int inserted = 0;
 	  for (typename chromosome_container::const_iterator it = container.begin() ; it != container.end(); ++it)
 	  {
