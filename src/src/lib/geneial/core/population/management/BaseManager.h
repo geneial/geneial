@@ -13,7 +13,7 @@
 #include <geneial/core/population/Population.h>
 #include <geneial/core/population/PopulationSettings.h>
 #include <geneial/core/population/builder/BaseChromosomeFactory.h>
-#include <assert.h>
+#include <cassert>
 
 namespace GeneticLibrary {
 namespace Population {

@@ -12,11 +12,12 @@
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
 #include <deque>
 
-using namespace GeneticLibrary::Population::Manager;
 
 namespace GeneticLibrary {
 namespace Algorithm {
 namespace StoppingCriteria {
+
+using namespace GeneticLibrary::Population::Manager;
 
 //Idea to implemented here
 //count the last best xx chromosomes, each iteration count the derivation in the best chromosome

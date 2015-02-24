@@ -18,13 +18,13 @@
 #include <geneial/core/operations/replacement/BaseReplacementOperation.h>
 #include <geneial/core/population/management/BaseManager.h>
 
+namespace GeneticLibrary {
+namespace Algorithm {
+
 using namespace GeneticLibrary::Population;
 using namespace GeneticLibrary::Population::Manager;
 using namespace GeneticLibrary::Population::Chromosome;
 using namespace GeneticLibrary::Operation;
-
-namespace GeneticLibrary {
-namespace Algorithm {
 
 template <typename FITNESS_TYPE>
 class BaseGeneticAlgorithm {
@@ -70,7 +70,7 @@ public:
 
 	virtual void solve();
 
-	virtual void setInitialPopulation(typename Population::Population<FITNESS_TYPE>::chromosome_container &container){
+	virtual void setInitialPopulation(typename Population<FITNESS_TYPE>::chromosome_container &container){
 		assert(!_wasStarted);
 		_manager.getPopulation().replacePopulation(container);
 	}
@@ -88,7 +88,7 @@ public:
 	}
 
 
-	virtual typename Population::Population<FITNESS_TYPE>& getPopulation(){
+	virtual Population<FITNESS_TYPE>& getPopulation(){
 			return _manager.getPopulation();
 	}
 

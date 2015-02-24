@@ -15,18 +15,15 @@
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
 #include <geneial/core/population/Population.h>
 
+namespace GeneticLibrary {
+namespace Operation {
+namespace Mutation {
+
 using namespace GeneticLibrary::Population::Chromosome;
 using namespace GeneticLibrary::Population::Manager;
 using namespace GeneticLibrary::Operation::Mutation;
 using namespace GeneticLibrary::Operation::Choosing;
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Mutation {
-
-
-
-template<typename VALUE_TYPE, typename FITNESS_TYPE>
 /*
  *  Returns a chromosome container with some new chromosomes which are partially mutated versions of the old ones.
  *
@@ -45,9 +42,10 @@ template<typename VALUE_TYPE, typename FITNESS_TYPE>
  * TODO(bewo) reduce cc!
  *
  *  */
-typename Population::Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate
+template<typename VALUE_TYPE, typename FITNESS_TYPE>
+typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate
 			(
-					typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container _chromosomeInputContainer,
+					typename Population<FITNESS_TYPE>::chromosome_container _chromosomeInputContainer,
 					BaseManager<FITNESS_TYPE> &manager
 			){
 
@@ -56,9 +54,9 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container UniformMutat
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::value_container value_container;
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr mvc_ptr;
 
-	typename Population::Population<FITNESS_TYPE>::chromosome_container resultset;
-	typename Population::Population<FITNESS_TYPE>::chromosome_container _choosenChromosomeContainer;
-	typename Population::Population<FITNESS_TYPE>::chromosome_container _notChoosenChromosomeContainer;
+	typename Population<FITNESS_TYPE>::chromosome_container resultset;
+	typename Population<FITNESS_TYPE>::chromosome_container _choosenChromosomeContainer;
+	typename Population<FITNESS_TYPE>::chromosome_container _notChoosenChromosomeContainer;
 
 	unsigned int pointOfMutation = 0;
 	unsigned int mutationCounter = 0;
@@ -70,7 +68,7 @@ typename Population::Population<FITNESS_TYPE>::chromosome_container UniformMutat
 				_choosenChromosomeContainer.begin(),_choosenChromosomeContainer.end(),
 				std::inserter(_notChoosenChromosomeContainer,_notChoosenChromosomeContainer.begin()));
 
-	typename Population::Population<FITNESS_TYPE>::chromosome_container::iterator _choosenChromosomeContainer_it;
+	typename Population<FITNESS_TYPE>::chromosome_container::iterator _choosenChromosomeContainer_it;
 
 	//only mutate choosen chromosomes
 	for (_choosenChromosomeContainer_it = _choosenChromosomeContainer.begin();

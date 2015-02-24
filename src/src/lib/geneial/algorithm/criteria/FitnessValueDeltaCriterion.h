@@ -11,11 +11,12 @@
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 
-using namespace GeneticLibrary::Population::Manager;
 
 namespace GeneticLibrary {
 namespace Algorithm {
 namespace StoppingCriteria {
+
+using namespace GeneticLibrary::Population::Manager;
 
 template <typename FITNESS_TYPE>
 class FitnessValueDeltaCriterion: public BaseStoppingCriterion<FITNESS_TYPE> {

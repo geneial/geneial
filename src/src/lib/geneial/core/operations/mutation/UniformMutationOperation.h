@@ -8,7 +8,9 @@
 #define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_UNIFORMMUTATIONOPERATION_H_
 
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
+
 #include <cassert>
+
 namespace GeneticLibrary {
 namespace Operation {
 namespace Mutation {
@@ -42,8 +44,8 @@ public:
 	/*
 	 *  Returns a new chromosome which is a partially mutated version of the old one.
 	 *  */
-	virtual typename Population::Population<FITNESS_TYPE>::chromosome_container doMutate(
-			typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container mutants,
+	virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
+			typename Population<FITNESS_TYPE>::chromosome_container mutants,
 			BaseManager<FITNESS_TYPE> &manager
 			);
 

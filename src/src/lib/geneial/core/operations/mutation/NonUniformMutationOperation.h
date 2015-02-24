@@ -16,6 +16,7 @@
 
 #include <cassert>
 
+
 namespace GeneticLibrary {
 namespace Operation {
 namespace Mutation {
@@ -65,28 +66,33 @@ public:
 	/*
 	 *  Returns a new chromosome which is a partially mutated version of the old one.
 	 *  */
-	virtual typename Population::Population<FITNESS_TYPE>::chromosome_container doMutate(
-			typename GeneticLibrary::Population::Population<FITNESS_TYPE>::chromosome_container mutants,
+	virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
+			typename Population<FITNESS_TYPE>::chromosome_container mutants,
 			BaseManager<FITNESS_TYPE> &manager
 			);
 
-	MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const {
+	MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const
+	{
 		return _builderFactory;
 	}
 
-	double getMinimumModification() const {
+	double getMinimumModification() const
+	{
 		return _minimumModification;
 	}
 
-	void setMinimumModification(double minimumModification) {
+	void setMinimumModification(double minimumModification)
+	{
 		_minimumModification = minimumModification;
 	}
 
-	unsigned int getAffectedGenerations() const {
+	unsigned int getAffectedGenerations() const
+	{
 		return _affectedGenerations;
 	}
 
-	void setAffectedGenerations(unsigned int affectedGenerations) {
+	void setAffectedGenerations(unsigned int affectedGenerations)
+	{
 		this->affectedGenerations = affectedGenerations;
 	}
 };

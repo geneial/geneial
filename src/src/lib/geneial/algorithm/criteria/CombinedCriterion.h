@@ -12,12 +12,12 @@
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 #include <list>
 #include <map>
-using namespace GeneticLibrary::Population::Manager;
 
 namespace GeneticLibrary {
 namespace Algorithm {
 namespace StoppingCriteria {
 
+using namespace GeneticLibrary::Population::Manager;
 
 //Container that holds other Criteria which are connected by a logical condition (and/or), which propagate the condition by visitor pattern or sth.
 //Composite Pattern for hierarchies of criteria

@@ -12,11 +12,12 @@
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
 #include <deque>
 
-using namespace GeneticLibrary::Population::Manager;
-
 namespace GeneticLibrary {
 namespace Algorithm {
 namespace StoppingCriteria {
+
+using namespace GeneticLibrary::Population::Manager;
+
 /**
  * Decorator that checks whether a given criterion has been reached several times.
  */

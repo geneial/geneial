@@ -15,15 +15,15 @@
 #include <algorithm>
 #include <iterator>
 
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Utility;
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Operation::Coupling;
 
 namespace GeneticLibrary {
 namespace Operation {
 namespace Crossover {
+
+using namespace GeneticLibrary::Utility;
+using namespace GeneticLibrary::Population::Chromosome;
+using namespace GeneticLibrary::Population::Manager;
+using namespace GeneticLibrary::Operation::Coupling;
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueChromosomeNPointCrossover<VALUE_TYPE,FITNESS_TYPE>::doCrossover(

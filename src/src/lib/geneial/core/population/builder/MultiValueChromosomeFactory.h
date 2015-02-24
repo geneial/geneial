@@ -13,6 +13,8 @@
 namespace GeneticLibrary {
 namespace Population {
 namespace Chromosome {
+
+
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 class MultiValueChromosomeFactory : public BaseChromosomeFactory<FITNESS_TYPE>{
 protected:

@@ -14,16 +14,18 @@
 #include <algorithm>
 #include <iterator>
 
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Utility;
 
 namespace GeneticLibrary {
 namespace Operation {
 namespace Replacement {
 
+using namespace GeneticLibrary::Population;
+using namespace GeneticLibrary::Population::Manager;
+using namespace GeneticLibrary::Utility;
+
 template<typename FITNESS_TYPE>
 unsigned int ReplaceRandomOperation<FITNESS_TYPE>::getAmountToReplace(
-		const typename Population::Population<FITNESS_TYPE> &population,
+		const Population<FITNESS_TYPE> &population,
 		const typename Coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const{
 	switch(this->getSettings()->getMode()){
 
@@ -37,7 +39,7 @@ unsigned int ReplaceRandomOperation<FITNESS_TYPE>::getAmountToReplace(
 		default:
 		{
 			return std::min(population.getChromosomes().size(),
-					(typename Population::Population<FITNESS_TYPE>::chromosome_map::size_type)
+					(typename Population<FITNESS_TYPE>::chromosome_map::size_type)
 					this->getSettings()->getAmountToReplace());
 		}
 		break;
@@ -47,7 +49,7 @@ unsigned int ReplaceRandomOperation<FITNESS_TYPE>::getAmountToReplace(
 
 template<typename FITNESS_TYPE>
 void ReplaceRandomOperation<FITNESS_TYPE>::doReplace(
-		typename Population::Population<FITNESS_TYPE> &population,
+		Population<FITNESS_TYPE> &population,
 		typename Selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
 		typename Coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
 		BaseManager<FITNESS_TYPE> &manager) {
@@ -63,7 +65,7 @@ void ReplaceRandomOperation<FITNESS_TYPE>::doReplace(
 		const unsigned int rnd_advance = Random::instance()->generateInt(0,max);
 
 		//construct an iterator
-		typename Population::Population<FITNESS_TYPE>::it advanced = population.getChromosomes().begin();
+		typename Population<FITNESS_TYPE>::it advanced = population.getChromosomes().begin();
 		std::advance(advanced,rnd_advance);
 
 		//remove the element

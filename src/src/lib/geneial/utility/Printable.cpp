@@ -1,9 +1,10 @@
 #include <geneial/utility/Printable.h>
 #include <cassert>
 
-using namespace GeneticLibrary::Utility;
 namespace GeneticLibrary {
 namespace Utility {
+
+using namespace GeneticLibrary::Utility;
 
 std::ostream& operator<<(std::ostream& os, const Printable& p)
 {

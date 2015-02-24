@@ -8,10 +8,12 @@
 #ifndef FITNESS_PROP_SELECTION_SETTINGS_H_
 #define FITNESS_PROP_SELECTION_SETTINGS_H_
 
-#include "assert.h"
+#include <cassert>
+
 namespace GeneticLibrary {
 namespace Operation {
 namespace Selection {
+
 /**
  * Select a number of parents based on a certain criteria.
  */

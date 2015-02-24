@@ -12,10 +12,10 @@
 #include <iterator>
 #include <set>
 
-using namespace GeneticLibrary::Operation;
-
 namespace GeneticLibrary {
 namespace Algorithm {
+
+using namespace GeneticLibrary::Operation;
 
 template <typename FITNESS_TYPE>
 void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){

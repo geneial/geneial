@@ -11,11 +11,11 @@
 #include <geneial/core/operations/coupling/SimpleCouplingOperation.h>
 
 
-using namespace GeneticLibrary::Population::Chromosome;
-
 namespace GeneticLibrary {
 namespace Operation {
 namespace Coupling {
+
+using namespace GeneticLibrary::Population::Chromosome;
 
 template<typename FITNESS_TYPE>
 typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplingOperation<FITNESS_TYPE>::doCopulate(

@@ -29,7 +29,7 @@ typename BaseChromosome<FITNESS_TYPE>::ptr MultiIntValueChromosomeFactory<FITNES
 
 	int i = this->_settings->getNum();
 	while(i--){
-		new_chromosome->getContainer().push_back(Random::instance()->generateInt(this->_settings->getRandomMax(),this->_settings->getRandomMin()));
+		new_chromosome->getContainer().push_back(Random::instance()->generateInt(this->_settings->getRandomMin(),this->_settings->getRandomMax()));
 	}
 	assert(new_chromosome->getSize() == this->_settings->getNum());
 
