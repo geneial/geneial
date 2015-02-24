@@ -80,8 +80,8 @@ public:
 
 	typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr getChromosomeByHash(const typename Chromosome::BaseChromosome<FITNESS_TYPE>::chromsome_hash);
 
-	void replacePopulation(const chromosome_container &replacementPopulation);
-	unsigned int insertChromosomeContainer(const chromosome_container &container);
+	void replacePopulation(chromosome_container &replacementPopulation);
+	unsigned int insertChromosomeContainer(chromosome_container &container);
 
 	bool insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
 
@@ -90,6 +90,9 @@ public:
 
 
 private:
+
+	void _insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome,typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue);
+
 	chromosome_map _fitnessMap;
 	hash_map _hashMap;
 	population_age _age;

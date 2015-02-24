@@ -25,25 +25,28 @@ public:
 		assert(_numWorkerThreads > 0);
 	}
 
+	static int i; //TODO (bewo) used shared mem?
+
 	void workerTask(){
+		const int id = MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE>::i++;
+
+		_queueMutex.lock();
+		std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr > *threadQ = _threadQueue[id];
+		_queueMutex.unlock();
+
 		bool queueEmpty = false;
 		while(!queueEmpty){
 
 			typename BaseChromosome<FITNESS_TYPE>::ptr chromosome;
 
 			//Make sure only
-			_queueMutex.lock();
+			queueEmpty = threadQ->empty();
+			if(!queueEmpty)
 			{
-				queueEmpty = _queue.empty();
-				if(!queueEmpty)
-				{
-					chromosome = _queue.front();
-					_queue.pop();
-				}
+				chromosome = threadQ->front();
+				threadQ->pop();
 			}
-			_queueMutex.unlock();
 
-			//Release Mutex
 			if(chromosome)
 			{
 				//Force evaluation.
@@ -53,23 +56,35 @@ public:
 	}
 
 	virtual void ensureHasFitness(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer){
-		assert(_queue.empty());
+		assert(_threadQueue.empty());
 
 		assert(_workerThreads.empty());
 
-		for(typename Population<FITNESS_TYPE>::chromosome_container::const_iterator it = refcontainer.begin();
-				it != refcontainer.end();++it){
-			_queue.push(*it);
-		}
+		assert(i==0);
 
 		//Avoid zombies..
 		unsigned int spawnThreads = _numWorkerThreads;
-		size_t queueSize = _queue.size();
+		size_t queueSize = refcontainer.size();
 		if(queueSize < _numWorkerThreads)
 		{
 			spawnThreads = queueSize;
 		}
 
+		for(unsigned int i = 0; i < spawnThreads;i++)
+		{
+			std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr>* ptr = new std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr>();
+			_threadQueue.push_back(ptr);
+		}
+
+		unsigned int j = 0;
+		for(typename Population<FITNESS_TYPE>::chromosome_container::const_iterator it = refcontainer.begin();
+				it != refcontainer.end();++it){
+			if(!(*it)->hasFitness()){
+				_threadQueue[j++%spawnThreads]->push(*it);
+			}else{
+				std::cout << "HAS FITNESS!" << std::endl;
+			}
+		}
 
 		//Start Worker Threads...
 		for(unsigned int i = 0; i < spawnThreads;i++)
@@ -81,16 +96,25 @@ public:
 		}
 
 
-		//Wait for workers to shutdown
+		//Wait for workers to shutdown...
 		for(std::vector<boost::thread*>::iterator tid = _workerThreads.begin();tid != _workerThreads.end();tid++)
 		{
 			(*tid)->join();
 		}
 
+		for(unsigned int i = 0; i < spawnThreads;i++)
+		{
+			delete _threadQueue[i];
+		}
+
+
+
 		//Cleanup.
 		_workerThreads.clear();
+		_threadQueue.clear();
 
-		assert(_queue.empty());
+		i = 0;
+		assert(_threadQueue.empty());
 	};
 
 	virtual ~MultiThreadedFitnessProcessingStrategy() {
@@ -104,14 +128,17 @@ public:
 private:
 	unsigned int _numWorkerThreads;
 
-	std::vector<boost::thread*> _workerThreads;
-
 	boost::mutex _queueMutex;
 
-	std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr > _queue;
+	std::vector<boost::thread*> _workerThreads;
+
+	std::vector< std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr >*> _threadQueue;
 
 
 };
+
+template <typename FITNESS_TYPE>
+int GeneticLibrary::MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE>::i = 0;
 
 
 }  // namespace GeneticLibrary

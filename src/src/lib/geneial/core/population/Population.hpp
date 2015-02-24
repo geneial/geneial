@@ -146,8 +146,6 @@ typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>:
 }
 
 
-
-
 template<typename FITNESS_TYPE>
 inline bool Population<FITNESS_TYPE>::insertChromosome(typename BaseChromosome<FITNESS_TYPE>::ptr chromosome)
 {
@@ -156,24 +154,7 @@ inline bool Population<FITNESS_TYPE>::insertChromosome(typename BaseChromosome<F
 
 	if(!hashExists(hashValue))
 	{
-		//Insert into fitness map
-		container_value fitness_map_value(chromosome->getFitness()->get(),chromosome);
-		_fitnessMap.insert(fitness_map_value);
-
-		/*
-		if(_hashMap.find(hashValue) != _hashMap.end()){
-			std::cout <<"HASH COLLISION:" << hashValue << std::endl;
-			std::cout <<"  CHROMOSOME TO INSERT:" ;
-			chromosome->print(std::cout);
-			std::cout <<"  CHROMOSOME CONTAINED:" ;
-			typename hash_map::iterator it = _hashMap.find(hashValue);
-			it->second->print(std::cout);
-		}
-		assert(_hashMap.find(hashValue) == _hashMap.end()); //NOTE (bewo): Without duplicate removal this check is superflous
-		*/
-
-		hashmap_value hash_map_value(hashValue,chromosome);
-		_hashMap.insert(hash_map_value);
+		_insertChromosome(chromosome,hashValue);
 		return true;
 	}
 	else
@@ -183,18 +164,48 @@ inline bool Population<FITNESS_TYPE>::insertChromosome(typename BaseChromosome<F
 }
 
 template<typename FITNESS_TYPE>
-inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(const chromosome_container &container)
+inline void Population<FITNESS_TYPE>::_insertChromosome(typename BaseChromosome<FITNESS_TYPE>::ptr chromosome, typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue)
+{
+	//Insert into fitness map
+	container_value fitness_map_value(chromosome->getFitness()->get(),chromosome);
+	_fitnessMap.insert(fitness_map_value);
+
+	hashmap_value hash_map_value(hashValue,chromosome);
+	_hashMap.insert(hash_map_value);
+}
+
+template<typename FITNESS_TYPE>
+inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromosome_container &container)
 {
 
+	std::vector<typename BaseChromosome<FITNESS_TYPE>::chromsome_hash> hashCache;
+	hashCache.reserve(container.size());
+
+	for (typename chromosome_container::iterator it = container.begin() ; it != container.end();)
+	{
+		const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue = (*it)->getHash();
+		const bool inHashCache = std::find(hashCache.begin(), hashCache.end(), hashValue)!=hashCache.end();
+		if(!hashExists(hashValue) && !inHashCache)
+		{
+			hashCache.push_back(hashValue);
+			it++;
+		}else{
+			it = container.erase(it);
+		}
+	}
+
+	//THIS IS TEST CODE {{{
 	MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE> strategy(4);
 	strategy.ensureHasFitness(container);
+	//}}}
 
-	unsigned int inserted = 0;
-	  for (typename chromosome_container::const_iterator it = container.begin() ; it != container.end(); ++it)
-	  {
-		  inserted += this->insertChromosome(*it);
-	  }
-	  return inserted;
+	unsigned int i=0;
+	for (typename chromosome_container::const_iterator it = container.begin() ; it != container.end(); ++it)
+	{
+		this->_insertChromosome(*it,hashCache[i]);
+		i++;
+	}
+	return hashCache.size(); //TODO (bewo): This is a safe world assumption
 }
 
 
@@ -220,6 +231,7 @@ inline void Population<FITNESS_TYPE>::removeChromosome(typename BaseChromosome<F
 	assert(found);
 	typename hash_map::iterator hit = _hashMap.find(hash);
 	assert(hit != _hashMap.end());
+
 	_fitnessMap.erase(it);
 	_hashMap.erase(hit);
 	//assert(_fitnessMap.find(hash) == _fitnessMap.end());
@@ -250,7 +262,7 @@ inline typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS
 
 
 template<typename FITNESS_TYPE>
-inline void Population<FITNESS_TYPE>::replacePopulation(const chromosome_container &replacementPopulation)
+inline void Population<FITNESS_TYPE>::replacePopulation(chromosome_container &replacementPopulation)
 {
 	_fitnessMap.clear();
 	_hashMap.clear();
