@@ -15,6 +15,7 @@ namespace GeneticLibrary {
 namespace Operation {
 namespace Choosing {
 
+using namespace GeneticLibrary::Population;
 using namespace GeneticLibrary::Operation::Mutation;
 
 template <typename FITNESS_TYPE>
