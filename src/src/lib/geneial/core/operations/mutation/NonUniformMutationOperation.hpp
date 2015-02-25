@@ -29,7 +29,7 @@ using namespace GeneticLibrary::Operation::Choosing;
 /*
  *  Returns a chromosome container with some new chromosomes which are partially mutated versions of the old ones.
  *
- *  Targetpoints for mutation represent the choosen values within an Chromosome to be changed
+ *  Targetpoints for mutation represent the chosen values within an Chromosome to be changed
  *  Example for 3 Points of Mutation:
  *
  *   Old Chrom.					  New Chrom.
@@ -59,7 +59,7 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
 	unsigned int pointOfMutation = 0;
 	unsigned int mutationCounter = 0;
 	double split = 0;
-	double value_choise = 0;
+	double value_choice = 0;
 
 	_choosenChromosomeContainer = this->getChoosingOperation()->doChoose(_chromosomeInputContainer);
 
@@ -80,6 +80,8 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
 					= boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(*_choosenChromosomeContainer_it);
 			assert(_mvcMutant);
 
+
+			//TODO(bewo): avoid creating a fully featured chromosome for perf, rather use some kind of prototype here?!
 			//creating a new MVC (to keep things reversible)
 			mvc_ptr _mutatedChromosome =
 						boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(
@@ -87,15 +89,15 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
 						);
 			assert(_mutatedChromosome);
 
-			//getting values
 			value_container &_mutantChromosomeContainer = _mvcMutant->getContainer();
 			value_container &result_container = _mutatedChromosome->getContainer();
 			result_container.clear();
 
 			//first target point of mutation
-			if (this->getSettings()->getAmountOfPointsOfMutation()>0){
-						 pointOfMutation = Random::instance()->generateInt(0,this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation());
-						}
+			if (this->getSettings()->getAmountOfPointsOfMutation()>0)
+			{
+				pointOfMutation = Random::instance()->generateInt(0,this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation());
+			}
 
 			//iterator for one chromosome (to iterate it's values)
 			typename value_container::iterator mutant_it = _mutantChromosomeContainer.begin();
@@ -105,7 +107,7 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
 
 
 				//dicing whether to mutate or not (influeced by propability setting)
-				value_choise = Random::instance()->generateDouble(0.0,1.0);
+				value_choice = Random::instance()->generateDouble(0.0,1.0);
 
 				/*
 				 * Creates a split which shifts the weight from the random value to the old value.
@@ -129,41 +131,47 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
 
 
 				//Check amount of mutation targets in one chromosome (pointsOfMutation)
-				if (this->getSettings()->getAmountOfPointsOfMutation()>0){
-							//pointOfMutation = Position of Mutation Target
-							//Check if current position is a target for mutation.
-							if ((i==pointOfMutation) || (this->getSettings()->getAmountOfPointsOfMutation() >= this->getBuilderFactory()->getSettings()->getNum()) ){
-								//Check if we reached the maximum points of mutation
-								if (this->getSettings()->getAmountOfPointsOfMutation() != mutationCounter){
-									//add mutation to result_container
-									result_container.push_back (int (weightedMutation));
-									mutationCounter++;
-									//create a new target
-									const int distanceBetweenTarges = (this->getBuilderFactory()->getSettings()->getNum() / this->getSettings()->getAmountOfPointsOfMutation());
-									pointOfMutation = Random::instance()->generateInt(
-											(i+1),
-											(i+1+distanceBetweenTarges) % this->getBuilderFactory()->getSettings()->getNum()
-									);
-								//if no more mutation is needed (mutated already n times)
-								} else {
-									result_container.push_back (*mutant_it);
-								}
-							//current point is no target
-							} else {
-								result_container.push_back (*mutant_it);
-							}
+				if (this->getSettings()->getAmountOfPointsOfMutation()>0)
+				{
+					//pointOfMutation = Position of Mutation Target
+					//Check if current position is a target for mutation.
+					if ((i==pointOfMutation) || (this->getSettings()->getAmountOfPointsOfMutation() >= this->getBuilderFactory()->getSettings()->getNum()) ){
+						//Check if we reached the maximum points of mutation
+						if (this->getSettings()->getAmountOfPointsOfMutation() != mutationCounter){
+
+							//add mutation to result_container
+							result_container.push_back (int (weightedMutation));
+							mutationCounter++;
+
+							//create a new target
+							const int distanceBetweenTarges = (this->getBuilderFactory()->getSettings()->getNum() / this->getSettings()->getAmountOfPointsOfMutation());
+							pointOfMutation = Random::instance()->generateInt(
+									(i+1),
+									(i+1+distanceBetweenTarges)>this->getBuilderFactory()->getSettings()->getNum()?this->getBuilderFactory()->getSettings()->getNum():(i+1+distanceBetweenTarges)
+							);
+						//if no more mutation is needed (mutated already n times)
+						} else {
+							result_container.push_back (*mutant_it);
+						}
+					//current point is no target
+					} else {
+						result_container.push_back (*mutant_it);
+					}
 
 
 				//Target points are not used for mutation
-				} else if(value_choise <= this->getSettings()->getAmountOfMutation()) {
+				} else if(value_choice <= this->getSettings()->getAmountOfMutation()) {
 					result_container.push_back (int (weightedMutation));
-				//In case dicing (value_choise) choose not to mutate the value
+				//In case dicing (value_choice) choose not to mutate the value
 				} else {
 					result_container.push_back (*mutant_it);
 				}
 
 				//step to next mutant.
-				if (mutant_it != _mutantChromosomeContainer.end()) ++mutant_it;
+				if (mutant_it != _mutantChromosomeContainer.end())
+				{
+					++mutant_it;
+				}
 
 			}//inside chromosome loop
 
