@@ -124,10 +124,11 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
 									result_container.push_back (random_mutation);
 									mutationCounter++;
 									//create a new target
+									const int distanceBetweenTarges = (this->getBuilderFactory()->getSettings()->getNum() / this->getSettings()->getAmountOfPointsOfMutation());
 									pointOfMutation = Random::instance()->generateInt(
-											i+1,
-											(i+this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation()) % this->getBuilderFactory()->getSettings()->getNum()
-										);
+											(i+1),
+											(i+1+distanceBetweenTarges) % this->getBuilderFactory()->getSettings()->getNum()
+									);
 								//if no more mutation is needed (mutated already n times)
 								} else {
 									result_container.push_back (*mutant_it);
