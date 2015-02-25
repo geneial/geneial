@@ -60,12 +60,14 @@ using namespace GeneticLibrary::Operation::Replacement;
 using namespace GeneticLibrary::Operation::Mutation;
 using namespace GeneticLibrary::Operation::Choosing;
 
+#include <unistd.h>
 
-class DemoChromosomeEvaluator: public FitnessEvaluator<double>{
+class DemoChromosomeEvaluator: public FitnessEvaluator<double>
+{
 public:
 	DemoChromosomeEvaluator(){};
-	Fitness<double>::ptr evaluate(const BaseChromosome<double>::ptr chromosome) const{
-
+	Fitness<double>::ptr evaluate(const BaseChromosome<double>::ptr chromosome) const
+	{
 		MultiValueChromosome<int,double>::ptr mvc = boost::dynamic_pointer_cast<MultiValueChromosome<int,double> >(chromosome);
 		if(mvc){
 			//Let the fitness be the sum of all values
@@ -123,9 +125,10 @@ int main(int argc, char **argv) {
 	ReplaceWorstOperation<double> *replacementOperation = new ReplaceWorstOperation<double>(replacementSettings);
 	//ReplaceRandomOperation<double> *replacementOperation = new ReplaceRandomOperation<double>(replacementSettings);
 
-	BaseStoppingCriterion<double> *stoppingCriterion = new MaxGenerationCriterion<double>(100000);
+	BaseStoppingCriterion<double> *stoppingCriterion = new MaxGenerationCriterion<double>(100);
 
-	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(
+	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>
+	(
 			populationSettings,
 			chromosomeFactory,
 			stoppingCriterion,

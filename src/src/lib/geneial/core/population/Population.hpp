@@ -11,6 +11,7 @@
 #include <geneial/core/population/Population.h>
 #include <geneial/core/fitness/Fitness.h>
 #include <geneial/core/fitness/MultithreadedFitnessProcessingStrategy.h>
+
 #include <cassert>
 #include <iostream>
 #include <set>
@@ -166,6 +167,8 @@ inline bool Population<FITNESS_TYPE>::insertChromosome(typename BaseChromosome<F
 template<typename FITNESS_TYPE>
 inline void Population<FITNESS_TYPE>::_insertChromosome(typename BaseChromosome<FITNESS_TYPE>::ptr chromosome, typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue)
 {
+	assert(chromosome);
+	assert(chromosome);
 	//Insert into fitness map
 	container_value fitness_map_value(chromosome->getFitness()->get(),chromosome);
 	_fitnessMap.insert(fitness_map_value);
@@ -195,7 +198,7 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
 	}
 
 	//THIS IS TEST CODE {{{
-	MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE> strategy(4);
+	static MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE> strategy(2);
 	strategy.ensureHasFitness(container);
 	//}}}
 

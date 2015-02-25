@@ -29,12 +29,10 @@ public:
 
 	void workerTask()
 	{
-		const int id = MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE>::i++;
-
 		_queueMutex.lock();
-		std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr > *threadQ = _threadQueue[id];
-		assert(threadQ);
+		const int id = MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE>::i++;
 		_queueMutex.unlock();
+		//std::cout << id << "start " << std::endl;
 
 		bool queueEmpty = false;
 		while(!queueEmpty){
@@ -42,12 +40,13 @@ public:
 			typename BaseChromosome<FITNESS_TYPE>::ptr chromosome;
 
 			//Make sure only
-			queueEmpty = threadQ->empty();
+			queueEmpty = _threadQueue[id].empty();
 			if(!queueEmpty)
 			{
-				chromosome = threadQ->front();
+				chromosome = _threadQueue[id].front();
+				//std::cout << id << ": got " << chromosome << std::endl;
 				assert(chromosome);
-				threadQ->pop();
+				_threadQueue[id].pop();
 			}
 
 			if(chromosome)
@@ -58,8 +57,29 @@ public:
 		}
 	}
 
+	void workerTask2(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer){
+		unsigned int j = 0;
+				for(typename Population<FITNESS_TYPE>::chromosome_container::const_iterator it = refcontainer.begin();
+						it != refcontainer.end();++it){
+					if(!(*it)->hasFitness()){
+						(*it)->getFitness()->get();
+						j++;
+					}else{
+						std::cout << "HAS FITNESS!" << std::endl;
+					}
+				}
+	}
+
 	virtual void ensureHasFitness(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer)
 	{
+
+		boost::thread*  workerThread = new boost::thread(
+				boost::bind(&MultiThreadedFitnessProcessingStrategy::workerTask2, this,refcontainer)
+		);
+
+		workerThread->join();
+
+		/*
 		assert(_threadQueue.empty());
 
 		assert(_workerThreads.empty());
@@ -76,16 +96,17 @@ public:
 
 		for(unsigned int i = 0; i < spawnThreads;i++)
 		{
-			std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr>* ptr = new std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr>();
-			_threadQueue.push_back(ptr);
+			_threadQueue.push_back(std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr>());
 		}
 
 		unsigned int j = 0;
 		for(typename Population<FITNESS_TYPE>::chromosome_container::const_iterator it = refcontainer.begin();
 				it != refcontainer.end();++it){
 			if(!(*it)->hasFitness()){
-				assert(_threadQueue[j%spawnThreads]);
-				_threadQueue[j%spawnThreads]->push(*it);
+				//assert(_threadQueue[j%spawnThreads]);
+				assert(*it);
+				_threadQueue[j%spawnThreads].push(*it);
+				//std::cout << "pushing " << *it << " to " << j%spawnThreads <<std::endl;
 				j++;
 			}else{
 				std::cout << "HAS FITNESS!" << std::endl;
@@ -110,8 +131,8 @@ public:
 
 		for(unsigned int i = 0; i < spawnThreads;i++)
 		{
-			assert(_threadQueue[i]);
-			delete _threadQueue[i];
+			//assert(_threadQueue[i]);
+			//delete _threadQueue[i];
 		}
 
 
@@ -119,9 +140,9 @@ public:
 		//Cleanup.
 		_workerThreads.clear();
 		_threadQueue.clear();
-
 		i = 0;
 		assert(_threadQueue.empty());
+		*/
 	};
 
 	virtual ~MultiThreadedFitnessProcessingStrategy() {
@@ -139,7 +160,7 @@ private:
 
 	std::vector<boost::thread*> _workerThreads;
 
-	std::vector< std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr >*> _threadQueue;
+	std::vector< std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr > > _threadQueue;
 
 
 };
