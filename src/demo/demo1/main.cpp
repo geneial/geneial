@@ -13,8 +13,9 @@
 #include <geneial/core/fitness/Fitness.h>
 #include <geneial/core/fitness/FitnessEvaluator.h>
 #include <geneial/core/population/PopulationSettings.h>
-#include <geneial/core/population/builder/MultiValueBuilderSettings.h>
-#include <geneial/core/population/builder/MultiIntValueChromosomeFactory.h>
+
+#include <geneial/core/population/builder/ContinousMultiValueBuilderSettings.h>
+#include <geneial/core/population/builder/ContinousMultiIntValueChromosomeFactory.h>
 
 //#include <geneial/core/operations/selection/FitnessProportionalSelection.h>
 //#include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
@@ -90,9 +91,9 @@ int main(int argc, char **argv) {
 
 	PopulationSettings *populationSettings = new PopulationSettings(50);
 
-	MultiValueBuilderSettings<int,double> *builderSettings = new MultiValueBuilderSettings<int,double>(evaluator,10,130,0);
+	ContinousMultiValueBuilderSettings<int,double> *builderSettings = new ContinousMultiValueBuilderSettings<int,double>(evaluator,10,130,0,true,20,5);
 
-	MultiIntValueChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
+	ContinousMultiIntValueChromosomeFactory<double> *chromosomeFactory = new ContinousMultiIntValueChromosomeFactory<double>(builderSettings);
 
 	MutationSettings* mutationSettings = new MutationSettings(0.1,0.1,5);
 
