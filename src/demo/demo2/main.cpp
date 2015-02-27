@@ -136,8 +136,7 @@ void printChromosome(MultiValueChromosome<int,double>::ptr chromosomeToPrint)
 
 int main(int argc, char **argv) {
 
-	std::cout << "Running GENEIAL demo2 - Version " << GENEIAL_VERSION_MAJOR << "." << GENEIAL_VERSION_MINOR << std::endl;
-
+	std::cout << "Running GENEIAL demo2 - Version " << GENEIAL_VERSION_MAJOR << "." << GENEIAL_VERSION_MINOR << "("<< GENEIAL_BUILD_TYPE << ")"<< std::endl;
 
 	DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
 
