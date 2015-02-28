@@ -203,12 +203,21 @@ int main(int argc, char **argv) {
 	//but for valgrind's satisfaction, we free stuff nonetheless.
 	delete populationSettings;
 	delete chromosomeFactory;
-	delete selectionOperation;
+
 	delete selectionSettings;
+	delete selectionOperation;
+
 	delete stoppingCriterion;
+
+	delete couplingSettings;
 	delete couplingOperation;
+
+	delete crossoverSettings;
 	delete crossoverOperation;
+
+	delete replacementSettings;
 	delete replacementOperation;
+
 
 	delete mutationSettings;
 	delete mutationChoosingOperation;
