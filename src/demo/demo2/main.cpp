@@ -7,7 +7,10 @@
 
 #include <limits>
 #include <stdio.h>
-#include "boost/shared_ptr.hpp"
+#include <stdexcept>
+#include <cassert>
+
+#include <boost/shared_ptr.hpp>
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
 #include <geneial/algorithm/criteria/MaxGenerationCriterion.h>
@@ -44,7 +47,6 @@
 
 #include <geneial/config.h>
 
-#include <stdexcept>
 
 using namespace GeneticLibrary;
 

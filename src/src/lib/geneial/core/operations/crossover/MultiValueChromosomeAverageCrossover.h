@@ -8,7 +8,7 @@
 #ifndef MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_H_
 #define MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_H_
 
-#include "assert.h"
+#include <cassert>
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
 
 namespace GeneticLibrary {

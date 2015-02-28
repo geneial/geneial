@@ -45,6 +45,8 @@
 #include <geneial/config.h>
 
 #include <stdexcept>
+#include <cassert>
+
 
 using namespace GeneticLibrary;
 

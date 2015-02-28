@@ -8,7 +8,7 @@
 #ifndef MOCKFITNESSEVALUATOR_H_
 #define MOCKFITNESSEVALUATOR_H_
 
-#include "boost/shared_ptr.hpp"
+#include <boost/shared_ptr.hpp>
 #include <geneial/core/fitness/Fitness.h>
 #include <geneial/core/fitness/FitnessEvaluator.h>
 
