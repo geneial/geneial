@@ -13,8 +13,9 @@
 #include <geneial/core/fitness/Fitness.h>
 #include <geneial/core/fitness/FitnessEvaluator.h>
 #include <geneial/core/population/PopulationSettings.h>
-#include <geneial/core/population/builder/MultiValueBuilderSettings.h>
-#include <geneial/core/population/builder/MultiIntValueChromosomeFactory.h>
+
+#include <geneial/core/population/builder/ContinousMultiValueBuilderSettings.h>
+#include <geneial/core/population/builder/ContinousMultiIntValueChromosomeFactory.h>
 
 //#include <geneial/core/operations/selection/FitnessProportionalSelection.h>
 //#include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
@@ -44,6 +45,8 @@
 #include <geneial/config.h>
 
 #include <stdexcept>
+#include <cassert>
+
 
 using namespace GeneticLibrary;
 
@@ -83,7 +86,7 @@ public:
 
 int main(int argc, char **argv) {
 
-	std::cout << "Running GENEIAL demo1 - Version " << GENEIAL_VERSION_MAJOR << "." << GENEIAL_VERSION_MINOR << std::endl;
+	std::cout << "Running GENEIAL demo1 - Version " << GENEIAL_VERSION_MAJOR << "." << GENEIAL_VERSION_MINOR << "("<< GENEIAL_BUILD_TYPE << ")"<< std::endl;
 
 
 	DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
@@ -92,9 +95,9 @@ int main(int argc, char **argv) {
 
 	PopulationSettings *populationSettings = new PopulationSettings(50);
 
-	MultiValueBuilderSettings<int,double> *builderSettings = new MultiValueBuilderSettings<int,double>(evaluator,10,130,0);
+	ContinousMultiValueBuilderSettings<int,double> *builderSettings = new ContinousMultiValueBuilderSettings<int,double>(evaluator,10,130,0,true,20,5);
 
-	MultiIntValueChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
+	ContinousMultiIntValueChromosomeFactory<double> *chromosomeFactory = new ContinousMultiIntValueChromosomeFactory<double>(builderSettings);
 
 	MutationSettings* mutationSettings = new MutationSettings(0.1,0.1,5);
 
@@ -147,12 +150,21 @@ int main(int argc, char **argv) {
 	//but for valgrind's satisfaction, we free stuff nonetheless.
 	delete populationSettings;
 	delete chromosomeFactory;
-	delete selectionOperation;
+
 	delete selectionSettings;
+	delete selectionOperation;
+
 	delete stoppingCriterion;
+
+	delete couplingSettings;
 	delete couplingOperation;
+
+	delete crossoverSettings;
 	delete crossoverOperation;
+
+	delete replacementSettings;
 	delete replacementOperation;
+
 
 	delete mutationSettings;
 	delete mutationChoosingOperation;

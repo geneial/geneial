@@ -12,7 +12,6 @@
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 
-#include "mocks/MockFitnessEvaluator.h"
 #include "mocks/MockMultivalueChromosome.h"
 
 BOOST_AUTO_TEST_SUITE( ChromosomeTest )
@@ -86,7 +85,8 @@ BOOST_AUTO_TEST_CASE( HASHMVC___different_hash )
 BOOST_AUTO_TEST_CASE( HASHMVC___no_collisions )
 {
 	std::set<MultiValueChromosome<int,double>::chromsome_hash> setHashes;
-	for(int i =0; i< COLLISION_ROBUSTNESS;i++){
+	for(int i =0; i< COLLISION_ROBUSTNESS;i++)
+	{
 		const int a[] = {i,i+1,i+2,-i,i-1,-2};
 		const std::vector<int> contentsInt1(a,a+sizeof(a)/sizeof(int));
 		MultiValueChromosome<int,double>::const_ptr ptrA = getMockIntMVC(contentsInt1);

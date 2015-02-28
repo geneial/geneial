@@ -7,7 +7,10 @@
 
 #include <limits>
 #include <stdio.h>
-#include "boost/shared_ptr.hpp"
+#include <stdexcept>
+#include <cassert>
+
+#include <boost/shared_ptr.hpp>
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
 #include <geneial/algorithm/criteria/MaxGenerationCriterion.h>
@@ -44,7 +47,6 @@
 
 #include <geneial/config.h>
 
-#include <stdexcept>
 
 using namespace GeneticLibrary;
 
@@ -137,8 +139,7 @@ void printChromosome(MultiValueChromosome<int,double>::ptr chromosomeToPrint)
 
 int main(int argc, char **argv) {
 
-	std::cout << "Running GENEIAL demo2 - Version " << GENEIAL_VERSION_MAJOR << "." << GENEIAL_VERSION_MINOR << std::endl;
-
+	std::cout << "Running GENEIAL demo2 - Version " << GENEIAL_VERSION_MAJOR << "." << GENEIAL_VERSION_MINOR << "("<< GENEIAL_BUILD_TYPE << ")"<< std::endl;
 
 	DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
 
@@ -203,12 +204,21 @@ int main(int argc, char **argv) {
 	//but for valgrind's satisfaction, we free stuff nonetheless.
 	delete populationSettings;
 	delete chromosomeFactory;
-	delete selectionOperation;
+
 	delete selectionSettings;
+	delete selectionOperation;
+
 	delete stoppingCriterion;
+
+	delete couplingSettings;
 	delete couplingOperation;
+
+	delete crossoverSettings;
 	delete crossoverOperation;
+
+	delete replacementSettings;
 	delete replacementOperation;
+
 
 	delete mutationSettings;
 	delete mutationChoosingOperation;

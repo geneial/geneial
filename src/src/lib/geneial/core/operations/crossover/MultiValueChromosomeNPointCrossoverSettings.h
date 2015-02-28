@@ -8,7 +8,7 @@
 #ifndef MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_SETTINGS_H_
 #define MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_SETTINGS_H_
 
-#include "assert.h"
+#include <cassert>
 
 namespace GeneticLibrary {
 namespace Operation {

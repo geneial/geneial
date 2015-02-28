@@ -8,7 +8,8 @@
 #ifndef MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_H_
 #define MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_H_
 
-#include "assert.h"
+#include <cassert>
+
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossoverSettings.h>
 
