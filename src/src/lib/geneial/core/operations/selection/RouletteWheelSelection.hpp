@@ -50,13 +50,13 @@ template <typename FITNESS_TYPE>
 class RouletteWheel {
 private:
 	typedef typename BaseChromosome<FITNESS_TYPE>::ptr chrom_ptr_type;
-	typedef typename Population<FITNESS_TYPE>::const_it const_pop_itr;
+	typedef typename Population<FITNESS_TYPE>::fitnessmap_const_it const_pop_itr;
 	FITNESS_TYPE _sum;
     std::map<std::pair<FITNESS_TYPE, FITNESS_TYPE> , chrom_ptr_type, RouletteWheelComparator<FITNESS_TYPE> > ranges;
 public:
     RouletteWheel(const Population<FITNESS_TYPE> &population) :_sum(0){
-		for (const_pop_itr it =	population.getChromosomes().begin();
-				it != population.getChromosomes().end(); ++it) {
+		for (const_pop_itr it =	population.getFitnessMap().begin();
+				it != population.getFitnessMap().end(); ++it) {
 			ranges[std::pair<FITNESS_TYPE, FITNESS_TYPE>(_sum, it->first + _sum)] = it->second;
 			_sum += it->first;
 		}

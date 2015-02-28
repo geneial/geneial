@@ -31,15 +31,15 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 		typedef std::multimap<FITNESS_TYPE, typename BaseChromosome<FITNESS_TYPE>::ptr > map_type;
 		typedef typename BaseChromosome<FITNESS_TYPE>::ptr chrom_ptr_type;
 		typedef typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set result_set;
-		typedef typename Population<FITNESS_TYPE>::const_it const_pop_itr;
+		typedef typename Population<FITNESS_TYPE>::fitnessmap_const_it const_pop_itr;
 
 		result_set result;
 
 
 		//Calculate total sum of fitness
 		FITNESS_TYPE sum(0);
-		for (const_pop_itr it =	population.getChromosomes().begin();
-				it != population.getChromosomes().end(); ++it) {
+		for (const_pop_itr it =	population.getFitnessMap().begin();
+				it != population.getFitnessMap().end(); ++it) {
 			sum += (it->second)->getFitness()->get();
 		}
 		//TODO (bewo) maybe use a fancy-ass functor instead?
@@ -48,8 +48,8 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 
 		//Create a multimap with fitness-proportional probability as key
 		map_type sorted_multimap;
-		for (const_pop_itr it = population.getChromosomes().begin();
-				it != population.getChromosomes().end(); ++it) {
+		for (const_pop_itr it = population.getFitnessMap().begin();
+				it != population.getFitnessMap().end(); ++it) {
 			FITNESS_TYPE prop_fitness = (it->second)->getFitness()->get() / sum;
 			sorted_multimap.insert(std::pair<FITNESS_TYPE, chrom_ptr_type >(prop_fitness,it->second));
 		}

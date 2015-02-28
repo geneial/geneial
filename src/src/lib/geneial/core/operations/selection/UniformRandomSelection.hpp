@@ -34,7 +34,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set UniformRando
 
 		//shorthands for type mess
 		typedef typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set result_set;
-		typedef typename Population<FITNESS_TYPE>::const_it const_pop_itr;
+		typedef typename Population<FITNESS_TYPE>::fitnessmap_const_it const_pop_itr;
 
 		result_set result;
 
@@ -48,8 +48,8 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set UniformRando
 			const bool allowDuplicates = false;
 			const_pop_itr rnditer;
 			do{
-				rnditer = population.getChromosomes().begin();
-				std::advance( rnditer, Random::instance()->generateInt(0,population.getChromosomes().size()-1) );
+				rnditer = population.getFitnessMap().begin();
+				std::advance( rnditer, Random::instance()->generateInt(0,population.getFitnessMap().size()-1) );
 			}while(allowDuplicates || std::find(result.begin(), result.end(), rnditer->second)!=result.end());
 			left_select--;
 			result.push_back(rnditer->second);

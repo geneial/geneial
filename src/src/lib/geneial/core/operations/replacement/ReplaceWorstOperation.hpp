@@ -29,15 +29,15 @@ unsigned int ReplaceWorstOperation<FITNESS_TYPE>::getAmountToReplace(
 
 		case BaseReplacementSettings::REPLACE_ALL_OFFSPRING:
 		{
-			return std::min(population.getChromosomes().size()-this->getSettings()->getAmountElitism()-1,offspring.size());
+			return std::min(population.getFitnessMap().size()-this->getSettings()->getAmountElitism()-1,offspring.size());
 		}
 		break;
 
 		case BaseReplacementSettings::REPLACE_FIXED_NUMBER: /*FALLTHROUGH*/
 		default:
 		{
-			return std::min(population.getChromosomes().size()-1,
-					(typename Population<FITNESS_TYPE>::chromosome_map::size_type)
+			return std::min(population.getFitnessMap().size()-1,
+					(typename Population<FITNESS_TYPE>::fitness_map::size_type)
 					this->getSettings()->getAmountToReplace());
 		}
 		break;
@@ -55,11 +55,11 @@ void ReplaceWorstOperation<FITNESS_TYPE>::doReplace(
 	unsigned int numberToReplace = getAmountToReplace(population,offspring); //this also takes care of elitism!
 
 	//remove the worst n chromosomes to replace (assuming worst is at the very beginning)
-	typename Population<FITNESS_TYPE>::const_it advanced = population.getChromosomes().begin();
+	typename Population<FITNESS_TYPE>::fitnessmap_const_it advanced = population.getFitnessMap().begin();
 	std::advance(advanced,numberToReplace);
 	typename Population<FITNESS_TYPE>::chromosome_container toRemove;
 	//TODO (bewo) copy?
-	for(typename Population<FITNESS_TYPE>::const_it it = population.getChromosomes().begin();
+	for(typename Population<FITNESS_TYPE>::fitnessmap_const_it it = population.getFitnessMap().begin();
 			it != advanced; it++ ){
 		toRemove.push_back(it->second);
 	}

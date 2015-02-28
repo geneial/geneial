@@ -34,7 +34,7 @@ void Population<FITNESS_TYPE>::print(std::ostream& os) const
 	os << "  Chromosomes" << std::endl;
 
 	//TODO (bewo) maybe use outstream iterator instead here.
-	for(typename chromosome_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
+	for(typename fitness_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
 	{
 		os << *(chrom_it->second);
 	}
@@ -70,7 +70,7 @@ void Population<FITNESS_TYPE>::setAge(unsigned int age)
 template<typename FITNESS_TYPE>
 void Population<FITNESS_TYPE>::doAge()
 {
-	for (typename chromosome_map::iterator chrom_it =
+	for (typename fitness_map::iterator chrom_it =
 			_fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
 	{
 		chrom_it->second->doAge();
@@ -113,7 +113,7 @@ inline unsigned int Population<FITNESS_TYPE>::removeDuplicates(chromosome_contai
 template<typename FITNESS_TYPE>
 typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getOldestChromosome(){
 	typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr oldest;
-	for(typename chromosome_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
+	for(typename fitness_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
 	{
 		if (!oldest)
 		{
@@ -132,7 +132,7 @@ typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>:
 template<typename FITNESS_TYPE>
 typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getYoungestChromosome(){
 	typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr youngest;
-	for(typename chromosome_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
+	for(typename fitness_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
 	{
 		if (!youngest)
 		{
@@ -168,12 +168,11 @@ template<typename FITNESS_TYPE>
 inline void Population<FITNESS_TYPE>::_insertChromosome(typename BaseChromosome<FITNESS_TYPE>::ptr chromosome, typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue)
 {
 	assert(chromosome);
-	assert(chromosome);
 	//Insert into fitness map
-	container_value fitness_map_value(chromosome->getFitness()->get(),chromosome);
+	fitnessmap_value_type fitness_map_value(chromosome->getFitness()->get(),chromosome);
 	_fitnessMap.insert(fitness_map_value);
 
-	hashmap_value hash_map_value(hashValue,chromosome);
+	hashmap_value_type hash_map_value(hashValue,chromosome);
 	_hashMap.insert(hash_map_value);
 }
 
@@ -219,9 +218,9 @@ inline void Population<FITNESS_TYPE>::removeChromosome(typename BaseChromosome<F
 	const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hash = chromosome->getHash();
 
 
-	std::pair <typename chromosome_map::iterator , typename chromosome_map::iterator > ret = _fitnessMap.equal_range(fitness);
+	std::pair <typename fitness_map::iterator , typename fitness_map::iterator > ret = _fitnessMap.equal_range(fitness);
 	bool found = false;
-	typename chromosome_map::iterator it;
+	typename fitness_map::iterator it;
 	assert(ret.first != _fitnessMap.end());
 	//we might have multiple chromosomes with the same key, advance until pointer is found
 	for (it=ret.first; it!=ret.second; ++it)

@@ -37,26 +37,26 @@ void BaseManager<FITNESS_TYPE>::replacePopulation (typename Population<FITNESS_T
 template <typename FITNESS_TYPE>
 typename BaseChromosome<FITNESS_TYPE>::ptr BaseManager<FITNESS_TYPE>::getHighestFitnessChromosome() const
 {
-	return _population.getChromosomes().rbegin()->second;
+	return _population.getFitnessMap().rbegin()->second;
 }
 
 
 template <typename FITNESS_TYPE>
 FITNESS_TYPE BaseManager<FITNESS_TYPE>::getHighestFitness() const
 {
-	return _population.getChromosomes().rbegin()->first;
+	return _population.getFitnessMap().rbegin()->first;
 }
 
 template <typename FITNESS_TYPE>
 typename BaseChromosome<FITNESS_TYPE>::ptr BaseManager<FITNESS_TYPE>::getLowestFitnessChromosome() const
 {
-	return _population.getChromosomes().begin()->second;
+	return _population.getFitnessMap().begin()->second;
 }
 
 template <typename FITNESS_TYPE>
 FITNESS_TYPE BaseManager<FITNESS_TYPE>::getLowestFitness() const
 {
-	return _population.getChromosomes().begin()->first;
+	return _population.getFitnessMap().begin()->first;
 }
 
 } /* namespace Manager */

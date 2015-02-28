@@ -57,29 +57,9 @@ public:
 		}
 	}
 
-	void workerTask2(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer){
-		unsigned int j = 0;
-				for(typename Population<FITNESS_TYPE>::chromosome_container::const_iterator it = refcontainer.begin();
-						it != refcontainer.end();++it){
-					if(!(*it)->hasFitness()){
-						(*it)->getFitness()->get();
-						j++;
-					}else{
-						std::cout << "HAS FITNESS!" << std::endl;
-					}
-				}
-	}
-
 	virtual void ensureHasFitness(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer)
 	{
 
-		boost::thread*  workerThread = new boost::thread(
-				boost::bind(&MultiThreadedFitnessProcessingStrategy::workerTask2, this,refcontainer)
-		);
-
-		workerThread->join();
-
-		/*
 		assert(_threadQueue.empty());
 
 		assert(_workerThreads.empty());
@@ -142,7 +122,6 @@ public:
 		_threadQueue.clear();
 		i = 0;
 		assert(_threadQueue.empty());
-		*/
 	};
 
 	virtual ~MultiThreadedFitnessProcessingStrategy() {
