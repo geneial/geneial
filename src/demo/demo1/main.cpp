@@ -128,10 +128,11 @@ int main(int argc, char **argv) {
 	ReplaceWorstOperation<double> *replacementOperation = new ReplaceWorstOperation<double>(replacementSettings);
 	//ReplaceRandomOperation<double> *replacementOperation = new ReplaceRandomOperation<double>(replacementSettings);
 
-	BaseStoppingCriterion<double> *stoppingCriterion = new MaxGenerationCriterion<double>(100);
+	BaseFitnessProcessingStrategy<double> *fitnessProcessingStrategy = new MultiThreadedFitnessProcessingStrategy<double>(3);
 
-	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>
-	(
+	BaseStoppingCriterion<double> *stoppingCriterion = new MaxGenerationCriterion<double>(10000);
+
+	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(
 			populationSettings,
 			chromosomeFactory,
 			stoppingCriterion,
@@ -139,8 +140,10 @@ int main(int argc, char **argv) {
 			couplingOperation,
 			crossoverOperation,
 			replacementOperation,
-			mutationOperation
+			mutationOperation,
+			fitnessProcessingStrategy
 	);
+
 
 	algorithm.solve();
 	std::cout << *algorithm.getHighestFitnessChromosome() <<std::endl;
@@ -155,6 +158,8 @@ int main(int argc, char **argv) {
 	delete selectionOperation;
 
 	delete stoppingCriterion;
+
+	delete fitnessProcessingStrategy;
 
 	delete couplingSettings;
 	delete couplingOperation;

@@ -103,6 +103,14 @@ public:
 	void removeChromosomeContainer(const chromosome_container &container);
 	void removeChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
 
+	const BaseFitnessProcessingStrategy<FITNESS_TYPE>*& getProcessingStrategy() const {
+		return processingStrategy;
+	}
+
+	void setProcessingStrategy(
+			BaseFitnessProcessingStrategy<FITNESS_TYPE>*& processingStrategy) {
+		this->processingStrategy = processingStrategy;
+	}
 
 private:
 

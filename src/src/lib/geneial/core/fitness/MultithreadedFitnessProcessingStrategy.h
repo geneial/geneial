@@ -21,38 +21,78 @@ template <typename FITNESS_TYPE>
 class MultiThreadedFitnessProcessingStrategy : public BaseFitnessProcessingStrategy<FITNESS_TYPE>
 {
 public:
-	MultiThreadedFitnessProcessingStrategy(unsigned int numWorkerThreads):_numWorkerThreads(numWorkerThreads){
+	MultiThreadedFitnessProcessingStrategy(unsigned int numWorkerThreads):
+		_startBarrier(numWorkerThreads + 1),
+		_endBarrier(numWorkerThreads + 1),
+		_numWorkerThreads(numWorkerThreads)
+		{
 		assert(_numWorkerThreads > 0);
+		startWorkers();
 	}
 
-	static int i; //TODO (bewo) used shared mem?
 
-	void workerTask()
+	void startWorkers(){
+		_shutdown = false;
+		_started = false;
+		for(unsigned int i = 0; i < _numWorkerThreads;i++)
+		{
+			boost::thread*  workerThread = new boost::thread(
+					boost::bind(&MultiThreadedFitnessProcessingStrategy::workerTask, this,i)
+			);
+			_threadQueue.push_back(new std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr>());
+			_workerThreads.push_back(workerThread);
+		}
+	}
+
+	void stopWorkers(){
+	    _startBarrier.wait();
+	    _shutdown = true;
+	    _endBarrier.wait();
+
+		for(unsigned int i = 0; i < _numWorkerThreads;i++)
+		{
+			_workerThreads[i]->join();
+		}
+
+	}
+
+
+
+	void workerTask(unsigned int id)
 	{
-		_queueMutex.lock();
-		const int id = MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE>::i++;
-		_queueMutex.unlock();
-		//std::cout << id << "start " << std::endl;
+		//Wait for any input to become available.
+		while(true){
 
-		bool queueEmpty = false;
-		while(!queueEmpty){
+			_startBarrier.wait();
 
-			typename BaseChromosome<FITNESS_TYPE>::ptr chromosome;
+			bool queueEmpty = false;
+			std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr >* myThreadq(_threadQueue[id]);
+			while(!queueEmpty){
 
-			//Make sure only
-			queueEmpty = _threadQueue[id].empty();
-			if(!queueEmpty)
-			{
-				chromosome = _threadQueue[id].front();
-				//std::cout << id << ": got " << chromosome << std::endl;
-				assert(chromosome);
-				_threadQueue[id].pop();
+				typename BaseChromosome<FITNESS_TYPE>::ptr chromosome;
+
+				//Make sure only
+				queueEmpty = myThreadq->empty();
+
+
+				if(!queueEmpty)
+				{
+					chromosome = myThreadq->front();
+					assert(chromosome);
+					myThreadq->pop();
+				}
+
+				if(chromosome)
+				{
+					//Force evaluation.
+					chromosome->getFitness();
+				}
 			}
 
-			if(chromosome)
-			{
-				//Force evaluation.
-				chromosome->getFitness();
+			_endBarrier.wait();
+
+			if(_shutdown) {
+				return;
 			}
 		}
 	}
@@ -60,93 +100,55 @@ public:
 	virtual void ensureHasFitness(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer)
 	{
 
-		assert(_threadQueue.empty());
-
-		assert(_workerThreads.empty());
-
-		assert(i==0);
-
-		//Avoid zombies..
-		unsigned int spawnThreads = _numWorkerThreads;
-		size_t queueSize = refcontainer.size();
-		if(queueSize < _numWorkerThreads)
-		{
-			spawnThreads = queueSize;
-		}
-
-		for(unsigned int i = 0; i < spawnThreads;i++)
-		{
-			_threadQueue.push_back(std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr>());
-		}
-
 		unsigned int j = 0;
 		for(typename Population<FITNESS_TYPE>::chromosome_container::const_iterator it = refcontainer.begin();
 				it != refcontainer.end();++it){
 			if(!(*it)->hasFitness()){
-				//assert(_threadQueue[j%spawnThreads]);
 				assert(*it);
-				_threadQueue[j%spawnThreads].push(*it);
-				//std::cout << "pushing " << *it << " to " << j%spawnThreads <<std::endl;
+				_threadQueue[j%_numWorkerThreads]->push(*it);
 				j++;
 			}else{
 				std::cout << "HAS FITNESS!" << std::endl;
 			}
 		}
 
-		//Start Worker Threads...
-		for(unsigned int i = 0; i < spawnThreads;i++)
-		{
-			boost::thread*  workerThread = new boost::thread(
-					boost::bind(&MultiThreadedFitnessProcessingStrategy::workerTask, this)
-			);
-			_workerThreads.push_back(workerThread);
-		}
+		//Start Signal!
+		_startBarrier.wait();
 
+	    //Wait for workers to be complete
+	    _endBarrier.wait();
 
-		//Wait for workers to shutdown...
-		for(std::vector<boost::thread*>::iterator tid = _workerThreads.begin();tid != _workerThreads.end();tid++)
-		{
-			(*tid)->join();
-		}
-
-		for(unsigned int i = 0; i < spawnThreads;i++)
-		{
-			//assert(_threadQueue[i]);
-			//delete _threadQueue[i];
-		}
-
-
-
-		//Cleanup.
-		_workerThreads.clear();
-		_threadQueue.clear();
-		i = 0;
-		assert(_threadQueue.empty());
 	};
 
 	virtual ~MultiThreadedFitnessProcessingStrategy() {
+		stopWorkers();
 	}
 
 	unsigned int getNumWorkerThreads() const {
 		return _numWorkerThreads;
 	}
 
+	bool isStarted() const {
+		return _started;
+	}
+
 	;
 private:
-	unsigned int _numWorkerThreads;
 
-	boost::mutex _queueMutex;
+	boost::barrier _startBarrier;
+	boost::barrier _endBarrier;
+
+	bool _started;
+	bool _shutdown;
+
+	unsigned int _numWorkerThreads;
 
 	std::vector<boost::thread*> _workerThreads;
 
-	std::vector< std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr > > _threadQueue;
+	std::vector< std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr >* > _threadQueue;
 
 
 };
-
-template <typename FITNESS_TYPE>
-int GeneticLibrary::MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE>::i = 0;
-
 
 }  // namespace GeneticLibrary
 

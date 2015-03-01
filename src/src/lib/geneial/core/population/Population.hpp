@@ -10,7 +10,6 @@
 
 #include <geneial/core/population/Population.h>
 #include <geneial/core/fitness/Fitness.h>
-#include <geneial/core/fitness/MultithreadedFitnessProcessingStrategy.h>
 
 #include <cassert>
 #include <iostream>
@@ -197,8 +196,7 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
 	}
 
 	//THIS IS TEST CODE {{{
-	static MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE> strategy(2);
-	strategy.ensureHasFitness(container);
+	processingStrategy->ensureHasFitness(container);
 	//}}}
 
 	unsigned int i=0;

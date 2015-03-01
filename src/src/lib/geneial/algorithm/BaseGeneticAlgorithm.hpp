@@ -9,6 +9,7 @@
 #define BASEGENETICALGORITHM_HPP_
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
+#include <geneial/core/fitness/MultithreadedFitnessProcessingStrategy.h>
 #include <iterator>
 #include <set>
 
@@ -21,6 +22,7 @@ template <typename FITNESS_TYPE>
 void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 
 	_wasStarted = true;
+
 
 	//Initialize the first population candidate, take whatever has been inserted and fill it up to max size.
 	_manager.replenishPopulation();
@@ -78,6 +80,7 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 		// }}}
 	}
 	_wasSolved = true;
+
 }
 
 

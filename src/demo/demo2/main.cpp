@@ -122,18 +122,20 @@ void inline printClearScreen()
 
 void printChromosome(MultiValueChromosome<int,double>::ptr chromosomeToPrint)
 {
+	std::cout << std::endl;
 	int it = 0;
 	MultiValueChromosome<int,double>::value_container container = chromosomeToPrint->getContainer();
 	assert(container.size() == charsPerFigure);
 	while(it < charsPerFigure)
 	{
 		std::cout << (char) container[it];
-		if(0 == it % lineBreakAfter)
+		if(it != 0 && 0 == (it % lineBreakAfter))
 		{
 			std::cout << std::endl;
 		}
 		++it;
 	}
+	std::cout << std::endl;
 	std::cout << std::endl;
 }
 
@@ -156,14 +158,14 @@ int main(int argc, char **argv) {
 
 	BaseMutationOperation<double> *mutationOperation = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
-	FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(10,10);
+	FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(20,20);
 	//SelectionSettings* selectionSettings = new SelectionSettings(10);
 
 	BaseSelectionOperation<double> *selectionOperation = new FitnessProportionalSelection<double>(selectionSettings);
 //	BaseSelectionOperation<double> *selectionOperation = new RouletteWheelSelection<double>(selectionSettings);
 	//BaseSelectionOperation<double> *selectionOperation = new UniformRandomSelection<double>(selectionSettings);
 
-	CouplingSettings *couplingSettings = new CouplingSettings(10);
+	CouplingSettings *couplingSettings = new CouplingSettings(20);
 
 	//BaseCouplingOperation<double> *couplingOperation = new SimpleCouplingOperation<double>(couplingSettings);
 	BaseCouplingOperation<double> *couplingOperation = new RandomCouplingOperation<double>(couplingSettings);
@@ -173,13 +175,14 @@ int main(int argc, char **argv) {
 	//BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeAverageCrossover<int,double>(builderSettings,chromosomeFactory);
 
 	//BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::replace_offspring_mode::REPLACE_FIXED_NUMBER,20);
-	BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::REPLACE_ALL_OFFSPRING,10,0);
+	BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::REPLACE_ALL_OFFSPRING,20,0);
 
 	ReplaceWorstOperation<double> *replacementOperation = new ReplaceWorstOperation<double>(replacementSettings);
 	//ReplaceRandomOperation<double> *replacementOperation = new ReplaceRandomOperation<double>(replacementSettings);
 
+	BaseFitnessProcessingStrategy<double> *fitnessProcessingStrategy = new MultiThreadedFitnessProcessingStrategy<double>(1);
 
-	BaseStoppingCriterion<double> *stoppingCriterion = new MaxGenerationCriterion<double>(3000);
+	BaseStoppingCriterion<double> *stoppingCriterion = new MaxGenerationCriterion<double>(10000);
 
 	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(
 			populationSettings,
@@ -189,7 +192,8 @@ int main(int argc, char **argv) {
 			couplingOperation,
 			crossoverOperation,
 			replacementOperation,
-			mutationOperation
+			mutationOperation,
+			fitnessProcessingStrategy
 	);
 
 	algorithm.solve();
@@ -209,6 +213,8 @@ int main(int argc, char **argv) {
 	delete selectionOperation;
 
 	delete stoppingCriterion;
+
+	delete fitnessProcessingStrategy;
 
 	delete couplingSettings;
 	delete couplingOperation;

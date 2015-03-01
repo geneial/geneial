@@ -49,7 +49,8 @@ public:
 			Coupling::BaseCouplingOperation<FITNESS_TYPE> *couplingOperation,
 			Crossover::BaseCrossoverOperation<FITNESS_TYPE> *crossoverOperation,
 			Replacement::BaseReplacementOperation<FITNESS_TYPE> *replacementOperation,
-			Mutation::BaseMutationOperation<FITNESS_TYPE> *mutationOperation
+			Mutation::BaseMutationOperation<FITNESS_TYPE> *mutationOperation,
+			BaseFitnessProcessingStrategy<FITNESS_TYPE>* fitnessProcessingStrategy
 
 	):
 		_manager(
@@ -64,9 +65,12 @@ public:
 		_crossoverOperation(crossoverOperation),
 		_replacementOperation(replacementOperation),
 		_mutationOperation(mutationOperation)
-		{};
+		{
+		_manager.getPopulation().setProcessingStrategy(fitnessProcessingStrategy);
+		};
 
-	virtual ~BaseGeneticAlgorithm() {};
+	virtual ~BaseGeneticAlgorithm() {
+	};
 
 	virtual void solve();
 

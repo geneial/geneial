@@ -7,8 +7,10 @@
 
 #ifndef BASE_CHROMOSOME_HPP_
 #define BASE_CHROMOSOME_HPP_
-#include <cstring> //memcmp
 #include <geneial/core/population/chromosome/BaseChromosome.h>
+#include <geneial/core/fitness/Fitness.h>
+
+#include <cstring> //memcmp
 
 namespace GeneticLibrary {
 namespace Population {
@@ -28,6 +30,7 @@ const typename Fitness<FITNESS_TYPE>::ptr BaseChromosome<FITNESS_TYPE>::getFitne
 	if(hasFitnessEvaluator() && !hasFitness())
 	{
 		//if we have a fitness evaluator assigned to the chromosome, but no fitness was calculated yet, do so.
+		//_fitness = boost::shared_ptr<Fitness <FITNESS_TYPE> >(new Fitness<FITNESS_TYPE>(1));
 		_fitness = _fitnessEvaluator->evaluate(this->getPtr());
 	}
 
