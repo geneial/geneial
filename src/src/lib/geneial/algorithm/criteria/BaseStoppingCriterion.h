@@ -18,12 +18,22 @@ using namespace GeneticLibrary::Population::Manager;
 
 template <typename FITNESS_TYPE>
 class BaseStoppingCriterion: public Utility::Printable,
-							     public boost::enable_shared_from_this<BaseChromosome <FITNESS_TYPE> >
+							     public boost::enable_shared_from_this<BaseStoppingCriterion <FITNESS_TYPE> >
 {
 public:
 	typedef typename boost::shared_ptr<BaseStoppingCriterion <FITNESS_TYPE> > ptr;
 
 	typedef typename boost::shared_ptr<const BaseStoppingCriterion <FITNESS_TYPE> > const_ptr;
+
+	ptr getPtr()
+    {
+        return this->shared_from_this();
+    }
+
+	const_ptr getConstPtr()
+    {
+        return this->shared_from_this();
+    }
 
 	virtual ~BaseStoppingCriterion(){};
 

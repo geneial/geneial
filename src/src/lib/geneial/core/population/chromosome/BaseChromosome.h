@@ -8,8 +8,8 @@
 #include <geneial/core/fitness/FitnessEvaluator.h>
 
 #include <iostream>
-#include "boost/shared_ptr.hpp"
-#include "boost/enable_shared_from_this.hpp"
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 namespace GeneticLibrary {
 namespace Population {
