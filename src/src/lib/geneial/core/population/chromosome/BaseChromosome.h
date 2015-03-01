@@ -1,10 +1,3 @@
-/*
- * BasicChromome.h
- *
- *  Created on: Nov 26, 2014
- *      Author: bewo
- */
-
 #ifndef BASE_CHROMOSOME_H_
 #define BASE_CHROMOSOME_H_
 

@@ -140,8 +140,25 @@ void printChromosome(MultiValueChromosome<int,double>::ptr chromosomeToPrint)
 	std::cout << std::endl;
 	std::cout << std::endl;
 	std::cout << "Age:" << chromosomeToPrint->getAge();
+	std::cout << " Fitness:" << chromosomeToPrint->getFitness()->get();
 	std::cout << std::endl;
 }
+
+
+class DemoObserver : public BestChromosomeObserver<double>
+{
+public:
+	DemoObserver(){};
+	void updateNewBestChromosome(BaseManager<double> &manager)
+	{
+		MultiValueChromosome<int,double>::ptr mvc = boost::dynamic_pointer_cast<MultiValueChromosome<int,double> >(manager.getHighestFitnessChromosome());
+		printClearScreen();
+		printChromosome(mvc);
+	}
+
+
+
+};
 
 int main(int argc, char **argv) {
 
@@ -199,6 +216,8 @@ int main(int argc, char **argv) {
 			mutationOperation,
 			fitnessProcessingStrategy
 	);
+
+	algorithm.registerObserver(&printObserver);
 
 	algorithm.solve();
 	std::cout << "end." << std::endl;
