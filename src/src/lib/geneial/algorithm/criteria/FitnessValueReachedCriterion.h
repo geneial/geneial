@@ -32,7 +32,7 @@ public:
 
 	virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager)
 	{
-		return !(manager.getPopulation().getHighestFitness() == _desiredFitness);
+		return !(manager.getHighestFitness() == _desiredFitness);
 	}
 
 	virtual void print(std::ostream& os) const

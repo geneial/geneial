@@ -26,7 +26,7 @@ template <typename FITNESS_TYPE>
 class CombinedCriterion : public BaseStoppingCriterion<FITNESS_TYPE>
 {
 public:
-	typedef enum { AND , OR } glue;
+	enum glue { AND , OR, XOR };
 
 	typedef typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion;
 
@@ -43,9 +43,16 @@ public:
 	{
 		bool result = true;
 		for(typename container::iterator it = _criteria.begin();it != _criteria.end();++it){
-			if(it->first == AND){
+			if(it->first == AND)
+			{
 				result &= it->second->wasReached(manager);
-			}else{
+			}
+			else if(it->first == XOR)
+			{
+				result &= !it->second->wasReached(manager);
+			}
+			else
+			{
 				result |= it->second->wasReached(manager);
 			}
 		}
@@ -55,20 +62,28 @@ public:
 	virtual void print(std::ostream& os) const
 	{
 		os << "Combined (";
-		for(typename container::iterator it = _criteria.begin();it != _criteria.end();++it){
-			if(it->first == AND){
+		for(typename container::const_iterator it = _criteria.begin();it != _criteria.end();++it)
+		{
+			if(it->first == AND)
+			{
 				os << "(&&) ";
-			}else{
+			}
+			else if(it->first == XOR)
+			{
+				os << "(^^) ";
+			}
+			else
+			{
 				os << "(||) ";
 			}
-			os << **it;
+			os << *it->second;
 		}
 		os << ")";
 	}
 
 	void add(const glue_criterion_pair newCriterion)
 	{
-		_criteria.insert(newCriterion);
+		_criteria.insert(_criteria.end(),newCriterion);
 	}
 
 	void add(const glue glue, const criterion criterion )
