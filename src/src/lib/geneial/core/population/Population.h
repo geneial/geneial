@@ -101,7 +101,10 @@ public:
 	bool insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
 
 	void removeChromosomeContainer(const chromosome_container &container);
+
 	void removeChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
+
+	void clearChromosomes();
 
 	const BaseFitnessProcessingStrategy<FITNESS_TYPE>*& getProcessingStrategy() const {
 		return processingStrategy;

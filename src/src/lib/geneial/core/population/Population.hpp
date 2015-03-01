@@ -266,8 +266,7 @@ inline typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS
 template<typename FITNESS_TYPE>
 inline void Population<FITNESS_TYPE>::replacePopulation(chromosome_container &replacementPopulation)
 {
-	_fitnessMap.clear();
-	_hashMap.clear();
+	clearChromosomes();
 	insertChromosomeContainer(replacementPopulation);
 }
 
@@ -280,6 +279,14 @@ inline void Population<FITNESS_TYPE>::removeChromosomeContainer(const chromosome
 	  {
 		  removeChromosome(*it);
 	  }
+}
+
+
+template<typename FITNESS_TYPE>
+inline void Population<FITNESS_TYPE>::clearChromosomes()
+{
+	_fitnessMap.clear();
+	_hashMap.clear();
 }
 
 } /* namespace Population */
