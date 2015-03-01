@@ -42,6 +42,8 @@
 
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 
+#include <geneial/core/fitness/SingleThreadedFitnessProcessingStrategy.h>
+
 #include <geneial/config.h>
 
 #include <stdexcept>
@@ -128,7 +130,7 @@ int main(int argc, char **argv) {
 	ReplaceWorstOperation<double> *replacementOperation = new ReplaceWorstOperation<double>(replacementSettings);
 	//ReplaceRandomOperation<double> *replacementOperation = new ReplaceRandomOperation<double>(replacementSettings);
 
-	BaseFitnessProcessingStrategy<double> *fitnessProcessingStrategy = new MultiThreadedFitnessProcessingStrategy<double>(3);
+	BaseFitnessProcessingStrategy<double> *fitnessProcessingStrategy = new SingleThreadedFitnessProcessingStrategy<double>;
 
 	BaseStoppingCriterion<double> *stoppingCriterion = new MaxGenerationCriterion<double>(10000);
 

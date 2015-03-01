@@ -13,15 +13,14 @@ template <typename FITNESS_TYPE>
 class SingleThreadedFitnessProcessingStrategy : public BaseFitnessProcessingStrategy<FITNESS_TYPE>
 {
 public:
-	virtual void ensureHasFitness(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer){
-		for(typename Population<FITNESS_TYPE>::chromosome_container::iterator it = refcontainer.begin(); it != refconainer.end();++it){
-			it->getFitness(); //Will trigger lazy evaluation.
-		}
-	};
+	virtual void ensureHasFitness(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer);
 	virtual ~SingleThreadedFitnessProcessingStrategy(){};
 };
 
 
 }  // namespace GeneticLibrary
+
+#include <geneial/core/fitness/SingleThreadedFitnessProcessingStrategy.hpp>
+
 
 #endif /* SINGLETHREADEDFITNESSPROCESSINGSTRATEGY_H_ */

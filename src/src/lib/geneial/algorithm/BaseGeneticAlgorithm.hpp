@@ -9,7 +9,6 @@
 #define BASEGENETICALGORITHM_HPP_
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
-#include <geneial/core/fitness/MultithreadedFitnessProcessingStrategy.h>
 #include <iterator>
 #include <set>
 
