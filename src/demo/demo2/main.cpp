@@ -13,7 +13,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
-#include <geneial/algorithm/criteria/MaxGenerationCriterion.h>
+
 #include <geneial/core/fitness/Fitness.h>
 #include <geneial/core/fitness/FitnessEvaluator.h>
 #include <geneial/core/population/PopulationSettings.h>
@@ -41,11 +41,17 @@
 #include <geneial/core/operations/crossover/MultiValueChromosomeAverageCrossover.h>
 
 #include <geneial/core/operations/mutation/MutationSettings.h>
-#include <geneial/core/operations/mutation/NonUniformMutationOperation.h>
+#include <geneial/core/operations/mutation/UniformMutationOperation.h>
 
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 
 #include <geneial/core/fitness/MultithreadedFitnessProcessingStrategy.h>
+
+#include <geneial/algorithm/observer/BestChromosomeObserver.h>
+
+#include <geneial/algorithm/criteria/MaxGenerationCriterion.h>
+#include <geneial/algorithm/criteria/CombinedCriterion.h>
+#include <geneial/algorithm/criteria/FitnessValueReachedCriterion.h>
 
 #include <geneial/config.h>
 
@@ -169,29 +175,30 @@ int main(int argc, char **argv) {
 
 	PopulationSettings *populationSettings = new PopulationSettings(60);
 
-	MultiValueBuilderSettings<int,double> *builderSettings = new MultiValueBuilderSettings<int,double>(evaluator,charsPerFigure,128,0);
+	MultiValueBuilderSettings<int,double> *builderSettings = new MultiValueBuilderSettings<int,double>(evaluator,charsPerFigure,128,32);
 
 	MultiIntValueChromosomeFactory<double> *chromosomeFactory = new MultiIntValueChromosomeFactory<double>(builderSettings);
 
-	MutationSettings* mutationSettings = new MutationSettings(0.8,0.1,1);
+	MutationSettings* mutationSettings = new MutationSettings(0.8,0.0,1);
 
 	ChooseRandom<int,double> *mutationChoosingOperation = new ChooseRandom<int,double>(mutationSettings);
+	BaseMutationOperation<double> *mutationOperation = new UniformMutationOperation<int,double>(mutationSettings,mutationChoosingOperation,builderSettings,chromosomeFactory);
 
-	BaseMutationOperation<double> *mutationOperation = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
+//	BaseMutationOperation<double> *mutationOperation = new NonUniformMutationOperation<int,double>(1000000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
 	FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(20,20);
 	//SelectionSettings* selectionSettings = new SelectionSettings(10);
 
-	BaseSelectionOperation<double> *selectionOperation = new FitnessProportionalSelection<double>(selectionSettings);
+//	BaseSelectionOperation<double> *selectionOperation = new FitnessProportionalSelection<double>(selectionSettings);
 //	BaseSelectionOperation<double> *selectionOperation = new RouletteWheelSelection<double>(selectionSettings);
-	//BaseSelectionOperation<double> *selectionOperation = new UniformRandomSelection<double>(selectionSettings);
+	BaseSelectionOperation<double> *selectionOperation = new UniformRandomSelection<double>(selectionSettings);
 
 	CouplingSettings *couplingSettings = new CouplingSettings(20);
 
 	//BaseCouplingOperation<double> *couplingOperation = new SimpleCouplingOperation<double>(couplingSettings);
 	BaseCouplingOperation<double> *couplingOperation = new RandomCouplingOperation<double>(couplingSettings);
 
-	MultiValueChromosomeNPointCrossoverSettings *crossoverSettings = new MultiValueChromosomeNPointCrossoverSettings(1,MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH,1);
+	MultiValueChromosomeNPointCrossoverSettings *crossoverSettings = new MultiValueChromosomeNPointCrossoverSettings(1,MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH,3);
 	BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeNPointCrossover<int,double>(crossoverSettings,builderSettings,chromosomeFactory);
 	//BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeAverageCrossover<int,double>(builderSettings,chromosomeFactory);
 
@@ -203,12 +210,21 @@ int main(int argc, char **argv) {
 
 	BaseFitnessProcessingStrategy<double> *fitnessProcessingStrategy = new MultiThreadedFitnessProcessingStrategy<double>(2);
 
-	BaseStoppingCriterion<double> *stoppingCriterion = new MaxGenerationCriterion<double>(10000);
+	//BaseStoppingCriterion<double> *stoppingCriterion = new MaxGenerationCriterion<double>(100000);
+
+	CombinedCriterion<double> combinedCriterion;
+	combinedCriterion.add(CombinedCriterion<double>::OR,
+			boost::shared_ptr<BaseStoppingCriterion<double> >(new MaxGenerationCriterion<double>(100000)));
+
+	combinedCriterion.add(CombinedCriterion<double>::XOR,
+			boost::shared_ptr<BaseStoppingCriterion<double> >(new FitnessValueReachedCriterion<double>(600)));
+
+	DemoObserver printObserver;
 
 	BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(
 			populationSettings,
 			chromosomeFactory,
-			stoppingCriterion,
+			&combinedCriterion,
 			selectionOperation,
 			couplingOperation,
 			crossoverOperation,
@@ -234,8 +250,6 @@ int main(int argc, char **argv) {
 
 	delete selectionSettings;
 	delete selectionOperation;
-
-	delete stoppingCriterion;
 
 	delete fitnessProcessingStrategy;
 
