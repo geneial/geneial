@@ -139,6 +139,8 @@ void printChromosome(MultiValueChromosome<int,double>::ptr chromosomeToPrint)
 	}
 	std::cout << std::endl;
 	std::cout << std::endl;
+	std::cout << "Age:" << chromosomeToPrint->getAge();
+	std::cout << std::endl;
 }
 
 int main(int argc, char **argv) {

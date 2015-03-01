@@ -195,9 +195,11 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
 		}
 	}
 
-	//THIS IS TEST CODE {{{
-	processingStrategy->ensureHasFitness(container);
-	//}}}
+	//Use processing Strategy if not null, otherwise lazy evaluation will ensure Fitness at insertion
+	if(processingStrategy)
+	{
+		processingStrategy->ensureHasFitness(container);
+	}
 
 	unsigned int i=0;
 	for (typename chromosome_container::const_iterator it = container.begin() ; it != container.end(); ++it)
