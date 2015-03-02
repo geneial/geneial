@@ -22,20 +22,17 @@ protected:
 	MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE> *_settings;
 public:
 	MultiValueChromosomeFactory(MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE> *settings):_settings(settings){};
-	typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome() = 0;
+
+	typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome(bool populateValues = true) = 0;
 
 
-	/* TODO: Lukas                            Why the "&" ?  v
-	const MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>*& getSettings() const {
-			return _settings;
-		}
-
-	*/
-	const MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>* getSettings() const {
+	const MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>* getSettings() const
+	{
 		return _settings;
 	}
 
-	void setSettings(const MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>*& settings) {
+	void setSettings(const MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>*& settings)
+	{
 		_settings = settings;
 	}
 };

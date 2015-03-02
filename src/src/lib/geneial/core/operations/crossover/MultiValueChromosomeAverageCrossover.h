@@ -34,10 +34,9 @@ public:
 		assert(_builderFactory != NULL);
 
 	}
-	;
-	virtual ~MultiValueChromosomeAverageCrossover() {
-	}
-	;
+
+	virtual ~MultiValueChromosomeAverageCrossover() {}
+
 
 	virtual bool inline isSymmetric() const{return true;};
 
@@ -69,21 +68,23 @@ public:
 	doCrossover(typename BaseChromosome<FITNESS_TYPE>::ptr mommy,
 			typename BaseChromosome<FITNESS_TYPE>::ptr daddy);
 
-	MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>* const & getBuilderSettings() const {
+	MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>* const & getBuilderSettings() const
+	{
 		return _builderSettings;
 	}
 
-	void setBuilderSettings(
-			const MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>* & builderSettings) {
+	void setBuilderSettings(const MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>* & builderSettings)
+	{
 		_builderSettings = builderSettings;
 	}
 
-	MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const {
+	MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const
+	{
 		return _builderFactory;
 	}
 
-	void setBuilderFactory(
-			const MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* & builderFactory) {
+	void setBuilderFactory(const MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* & builderFactory)
+	{
 		_builderFactory = builderFactory;
 	}
 

@@ -24,7 +24,8 @@ using namespace GeneticLibrary::Operation::Coupling;
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueChromosomeAverageCrossover<VALUE_TYPE,FITNESS_TYPE>::doCrossover(
 		typename BaseChromosome<FITNESS_TYPE>::ptr mommy,
-		typename BaseChromosome<FITNESS_TYPE>::ptr daddy){
+		typename BaseChromosome<FITNESS_TYPE>::ptr daddy)
+{
 
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::value_container value_container;
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr mvc_ptr;
@@ -41,7 +42,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 
 	mvc_ptr child_candidate =
 			boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(
-					this->getBuilderFactory()->createChromosome()
+					this->getBuilderFactory()->createChromosome(false)
 			);
 	assert(child_candidate);
 

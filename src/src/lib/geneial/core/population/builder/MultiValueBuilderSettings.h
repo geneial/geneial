@@ -28,27 +28,33 @@ public:
 
 	virtual ~MultiValueBuilderSettings() {};
 
-	inline unsigned int getNum() const {
+	inline unsigned int getNum() const
+	{
 		return _num;
 	}
 
-	void setNum(unsigned int num) {
+	void setNum(unsigned int num)
+	{
 		_num = num;
 	}
 
-	inline VALUE_TYPE getRandomMax() const {
+	inline VALUE_TYPE getRandomMax() const
+	{
 		return _random_max;
 	}
 
-	void inline setRandomMax(VALUE_TYPE randomMax) {
+	void inline setRandomMax(VALUE_TYPE randomMax)
+	{
 		_random_max = randomMax;
 	}
 
-	inline VALUE_TYPE getRandomMin() const {
+	inline VALUE_TYPE getRandomMin() const
+	{
 		return _random_min;
 	}
 
-	void setRandomMin(VALUE_TYPE randomMin) {
+	void setRandomMin(VALUE_TYPE randomMin)
+	{
 		_random_min = randomMin;
 	}
 };

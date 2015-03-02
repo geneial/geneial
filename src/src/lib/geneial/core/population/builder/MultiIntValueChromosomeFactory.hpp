@@ -18,7 +18,7 @@ namespace Population {
 namespace Chromosome {
 
 template <typename FITNESS_TYPE>
-typename BaseChromosome<FITNESS_TYPE>::ptr MultiIntValueChromosomeFactory<FITNESS_TYPE>::createChromosome(){
+typename BaseChromosome<FITNESS_TYPE>::ptr MultiIntValueChromosomeFactory<FITNESS_TYPE>::createChromosome(bool populateValues){
 
 	using namespace GeneticLibrary::Utility;
 
@@ -27,13 +27,19 @@ typename BaseChromosome<FITNESS_TYPE>::ptr MultiIntValueChromosomeFactory<FITNES
 
 	new_chromosome->getContainer().reserve(this->_settings->getNum());
 
-	int i = this->_settings->getNum();
-	while(i--){
-		new_chromosome->getContainer().push_back(Random::instance()->generateInt(this->_settings->getRandomMin(),this->_settings->getRandomMax()));
+	if(populateValues)
+	{
+		int i = this->_settings->getNum();
+		while(i--)
+		{
+			new_chromosome->getContainer().push_back(Random::instance()->generateInt(this->_settings->getRandomMin(),this->_settings->getRandomMax()));
+		}
+		assert(new_chromosome->getSize() == this->_settings->getNum());
+
 	}
-	assert(new_chromosome->getSize() == this->_settings->getNum());
 
 	typename BaseChromosome<FITNESS_TYPE>::ptr result = boost::dynamic_pointer_cast<BaseChromosome<FITNESS_TYPE> >(new_chromosome);
+
 	return result;
 }
 

@@ -106,15 +106,13 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 
 	mvc_ptr child_candidate =
 			boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(
-					this->getBuilderFactory()->createChromosome()
+					this->getBuilderFactory()->createChromosome(false)
 			);
 	assert(child_candidate);
 
 	value_container &daddy_container = mvc_daddy->getContainer();
 	value_container &mommy_container = mvc_mommy->getContainer();
 	value_container &child_container = child_candidate->getContainer();
-
-	assert(child_container.size() == mommy_container.size());
 
 	child_container.clear();
 

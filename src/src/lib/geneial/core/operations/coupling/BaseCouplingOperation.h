@@ -42,11 +42,13 @@ public:
 						BaseManager<FITNESS_TYPE> &manager
 				) = 0;
 
-	CouplingSettings* const& getSettings() const {
+	CouplingSettings* const& getSettings() const
+	{
 		return _settings;
 	};
 
-	void setSettings(const CouplingSettings*& settings) {
+	void setSettings(const CouplingSettings*& settings)
+	{
 		_settings = settings;
 	};
 

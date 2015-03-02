@@ -47,7 +47,8 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
 			(
 					typename Population<FITNESS_TYPE>::chromosome_container _chromosomeInputContainer,
 					BaseManager<FITNESS_TYPE> &manager
-			){
+			)
+{
 
 
 
@@ -55,53 +56,62 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr mvc_ptr;
 
 	typename Population<FITNESS_TYPE>::chromosome_container resultset;
-	typename Population<FITNESS_TYPE>::chromosome_container _choosenChromosomeContainer;
-	typename Population<FITNESS_TYPE>::chromosome_container _notChoosenChromosomeContainer;
+	typename Population<FITNESS_TYPE>::chromosome_container choosenChromosomeContainer;
+	typename Population<FITNESS_TYPE>::chromosome_container notChoosenChromosomeContainer;
 
 	unsigned int pointOfMutation = 0;
 	unsigned int mutationCounter = 0;
 
-	_choosenChromosomeContainer = this->getChoosingOperation()->doChoose(_chromosomeInputContainer);
+	choosenChromosomeContainer = this->getChoosingOperation()->doChoose(_chromosomeInputContainer);
 
 	//calculates difference: _notChoosenChromosomeContainer = _choosenChromosomeContainer - _chromosomeInputContainer
 	std::set_difference(_chromosomeInputContainer.begin(),_chromosomeInputContainer.end(),
-				_choosenChromosomeContainer.begin(),_choosenChromosomeContainer.end(),
-				std::inserter(_notChoosenChromosomeContainer,_notChoosenChromosomeContainer.begin()));
+				choosenChromosomeContainer.begin(),choosenChromosomeContainer.end(),
+				std::inserter(notChoosenChromosomeContainer,notChoosenChromosomeContainer.begin()));
 
-	typename Population<FITNESS_TYPE>::chromosome_container::iterator _choosenChromosomeContainer_it;
+	typename Population<FITNESS_TYPE>::chromosome_container::iterator choosenChromosomeContainer_it;
 
 	//only mutate choosen chromosomes
-	for (_choosenChromosomeContainer_it = _choosenChromosomeContainer.begin();
-			_choosenChromosomeContainer_it != _choosenChromosomeContainer.end(); ++_choosenChromosomeContainer_it){
+	for (choosenChromosomeContainer_it = choosenChromosomeContainer.begin();
+			choosenChromosomeContainer_it != choosenChromosomeContainer.end();
+			++choosenChromosomeContainer_it)
+	{
 			mutationCounter = 0;
 
 			//casting mutant as MVC
-			mvc_ptr _mvcMutant
-					= boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(*_choosenChromosomeContainer_it);
-			assert(_mvcMutant);
+			mvc_ptr mvcMutant
+					= boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(*choosenChromosomeContainer_it);
+			assert(mvcMutant);
 
 			//creating a new MVC (to keep things reversible)
-			mvc_ptr _mutatedChromosome =
+			mvc_ptr mutatedChromosome =
 						boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(
-								this->getBuilderFactory()->createChromosome()
+								this->getBuilderFactory()->createChromosome(false)
 						);
-			assert(_mutatedChromosome);
+			assert(mutatedChromosome);
 
 			//getting values
-			value_container &_mutantChromosomeContainer = _mvcMutant->getContainer();
-			value_container &result_container = _mutatedChromosome->getContainer();
+			value_container &mutantChromosomeContainer = mvcMutant->getContainer();
+			value_container &result_container = mutatedChromosome->getContainer();
 			result_container.clear();
 
 			//first target point of mutation
-			if (this->getSettings()->getAmountOfPointsOfMutation()>0){
-						 pointOfMutation = Random::instance()->generateInt(0,this->getBuilderFactory()->getSettings()->getNum()/this->getSettings()->getAmountOfPointsOfMutation());
-						}
+			if (this->getSettings()->getAmountOfPointsOfMutation() > 0)
+			{
+				pointOfMutation = Random::instance()->generateInt(
+						0,
+							this->getBuilderFactory()->getSettings()->getNum()
+							/
+							this->getSettings()->getAmountOfPointsOfMutation()
+							);
+			}
 
 			//iterator for one chromosome (to iterate it's values)
-			typename value_container::iterator mutant_it = _mutantChromosomeContainer.begin();
+			typename value_container::iterator mutant_it = mutantChromosomeContainer.begin();
 
 			//Insinde Chromosome loop
-			for (unsigned int i=0; mutant_it != _mutantChromosomeContainer.end(); i++){
+			for (unsigned int i=0; mutant_it != mutantChromosomeContainer.end(); i++)
+			{
 
 
 				//dicing whether to mutate or not (influeced by propability setting)
@@ -109,17 +119,21 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
 
 				//generate a mutation value to replace an old value
 				VALUE_TYPE random_mutation = Random::instance()->generateDouble(
-						this->getBuilderFactory()->getSettings()->getRandomMax(),
-						this->getBuilderFactory()->getSettings()->getRandomMin()
+						this->getBuilderFactory()->getSettings()->getRandomMin(),
+						this->getBuilderFactory()->getSettings()->getRandomMax()
 					);
 
 				//Check amount of mutation targets in one chromosome (pointsOfMutation)
-				if (this->getSettings()->getAmountOfPointsOfMutation()>0){
+				if (this->getSettings()->getAmountOfPointsOfMutation() > 0)
+				{
 							//pointOfMutation = Position of Mutation Target
 							//Check if current position is a target for mutation.
-							if ((i==pointOfMutation) || (this->getSettings()->getAmountOfPointsOfMutation() >= this->getBuilderFactory()->getSettings()->getNum()) ){
+							if ((i==pointOfMutation)
+								|| (this->getSettings()->getAmountOfPointsOfMutation() >= this->getBuilderFactory()->getSettings()->getNum()) )
+							{
 								//Check if we reached the maximum points of mutation
-								if (this->getSettings()->getAmountOfPointsOfMutation() != mutationCounter){
+								if (this->getSettings()->getAmountOfPointsOfMutation() != mutationCounter)
+								{
 									//add mutation to result_container
 									result_container.push_back (random_mutation);
 									mutationCounter++;
@@ -147,18 +161,21 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
 				}
 
 				//step to next mutant.
-				if (mutant_it != _mutantChromosomeContainer.end()) ++mutant_it;
+				if (mutant_it != mutantChromosomeContainer.end())
+				{
+					++mutant_it;
+				}
 
 			}//inside chromosome loop
 
 			//Age reset
-			_mutatedChromosome->setAge(0);
-			resultset.push_back(_mutatedChromosome);
+			mutatedChromosome->setAge(0);
+			resultset.push_back(mutatedChromosome);
 	}
 
 
-	//add not mutated Chromosomes
-	resultset.insert(resultset.end(),_notChoosenChromosomeContainer.begin(),_notChoosenChromosomeContainer.end());
+	//add not mutated chromosomes
+	resultset.insert(resultset.end(),notChoosenChromosomeContainer.begin(),notChoosenChromosomeContainer.end());
 
 	return resultset;
 

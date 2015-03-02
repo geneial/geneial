@@ -12,7 +12,7 @@ namespace Population {
 namespace Chromosome {
 
 template <typename FITNESS_TYPE>
-typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE>::createChromosome(){
+typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE>::createChromosome(bool populateValues){
 
 	using namespace GeneticLibrary::Utility;
 
@@ -20,39 +20,44 @@ typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiIntValueChromosomeFacto
 	assert(new_chromosome->getSize() == 0);
 
 	new_chromosome->getContainer().reserve(this->_settings->getNum());
+	if(populateValues)
+	{
+		const unsigned int amount = this->_settings->getNum();
 
-	const unsigned int amount = this->_settings->getNum();
+		unsigned int i = amount;
 
-	unsigned int i = amount;
+		int lastVal; //reference to last inserted value
 
-	int lastVal; //reference to last inserted value
-
-	while(i--){
-
-		if(i == amount - 1)
+		while(i--)
 		{
-			if(_settings->hasStart())
+
+			if(i == amount - 1)
 			{
-				lastVal = _settings->getStart();
+				if(_settings->hasStart())
+				{
+					lastVal = _settings->getStart();
+				}
+				else
+				{
+					lastVal = Random::instance()->generateInt(this->_settings->getRandomMin(),this->_settings->getRandomMax());
+				}
 			}
-			else
-			{
-				lastVal = Random::instance()->generateInt(this->_settings->getRandomMin(),this->_settings->getRandomMax());
-			}
+
+			const int val = Random::instance()->generateInt(lastVal - _settings->getEps(),lastVal + _settings->getEps());
+			const int lower_limited = std::max(this->_settings->getRandomMin(),val);
+			const int upper_limited = std::min(this->_settings->getRandomMax(),lower_limited);
+
+			new_chromosome->getContainer().push_back(upper_limited);
+
+			lastVal = upper_limited;
+
 		}
-
-		const int val = Random::instance()->generateInt(lastVal - _settings->getEps(),lastVal + _settings->getEps());
-		const int lower_limited = std::max(this->_settings->getRandomMin(),val);
-		const int upper_limited = std::min(this->_settings->getRandomMax(),lower_limited);
-
-		new_chromosome->getContainer().push_back(upper_limited);
-
-		lastVal = upper_limited;
+		assert(new_chromosome->getSize() == this->_settings->getNum());
 
 	}
-	assert(new_chromosome->getSize() == this->_settings->getNum());
 
 	typename BaseChromosome<FITNESS_TYPE>::ptr result = boost::dynamic_pointer_cast<BaseChromosome<FITNESS_TYPE> >(new_chromosome);
+
 	return result;
 }
 

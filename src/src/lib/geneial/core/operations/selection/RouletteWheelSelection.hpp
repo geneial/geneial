@@ -45,7 +45,7 @@ public:
     }
 };
 
-
+//TODO(bewo): This seems not work with negative Fitness values!
 template <typename FITNESS_TYPE>
 class RouletteWheel {
 private:

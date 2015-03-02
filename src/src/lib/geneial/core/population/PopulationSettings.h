@@ -20,11 +20,13 @@ public:
 	PopulationSettings(int max_chromosomes) :_max_chromosomes(max_chromosomes){};
 	virtual ~PopulationSettings() {};
 
-	unsigned int getMaxChromosomes() const {
+	unsigned int getMaxChromosomes() const
+	{
 		return _max_chromosomes;
 	}
 
-	void setMaxChromosomes(int maxChromosomes) {
+	void setMaxChromosomes(int maxChromosomes)
+	{
 		_max_chromosomes = maxChromosomes;
 	}
 };

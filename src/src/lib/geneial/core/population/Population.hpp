@@ -41,7 +41,6 @@ void Population<FITNESS_TYPE>::print(std::ostream& os) const
 
 
 /**
- *
  * @return The amount of chomosones wich are part of the population.
  */
 template <typename FITNESS_TYPE>
@@ -110,14 +109,17 @@ inline unsigned int Population<FITNESS_TYPE>::removeDuplicates(chromosome_contai
 
 
 template<typename FITNESS_TYPE>
-typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getOldestChromosome(){
+typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getOldestChromosome()
+{
 	typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr oldest;
 	for(typename fitness_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
 	{
 		if (!oldest)
 		{
 			oldest = chrom_it->second;
-		}else{
+		}
+		else
+		{
 			if(oldest->getAge() < chrom_it->second->getAge()){
 				oldest = chrom_it->second;
 			}
@@ -129,15 +131,19 @@ typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>:
 
 
 template<typename FITNESS_TYPE>
-typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getYoungestChromosome(){
+typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getYoungestChromosome()
+{
 	typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr youngest;
 	for(typename fitness_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
 	{
 		if (!youngest)
 		{
 			youngest = chrom_it->second;
-		}else{
-			if(youngest->getAge() > chrom_it->second->getAge()){
+		}
+		else
+		{
+			if(youngest->getAge() > chrom_it->second->getAge())
+			{
 				youngest = chrom_it->second;
 			}
 		}
@@ -190,7 +196,9 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
 		{
 			hashCache.push_back(hashValue);
 			it++;
-		}else{
+		}
+		else
+		{
 			it = container.erase(it);
 		}
 	}
@@ -256,7 +264,9 @@ inline typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS
 	if(it == _hashMap.end()){
 		typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr null_ptr;
 		return (null_ptr);
-	}else{
+	}
+	else
+	{
 		return *it;
 	}
 }

@@ -28,7 +28,8 @@ typename Population<FITNESS_TYPE>::chromosome_container ChooseRandom<VALUE_TYPE,
 	typename Population<FITNESS_TYPE>::chromosome_container chromosomeOutputSet;
 
 	for (chromosomeInputContainer_it = chromosomeInputSet.begin();
-				chromosomeInputContainer_it != chromosomeInputSet.end(); ++chromosomeInputContainer_it){
+				chromosomeInputContainer_it != chromosomeInputSet.end(); ++chromosomeInputContainer_it)
+	{
 
 		//Uses Mutation Settings
 		if (Random::instance()->decision(this->getSettings()->getPropability())){

@@ -26,7 +26,8 @@ template<typename FITNESS_TYPE>
 typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set RandomCouplingOperation<FITNESS_TYPE>::doCopulate(
 		typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &mating_pool,
 		BaseCrossoverOperation<FITNESS_TYPE> *crossoverOperation,
-		BaseManager<FITNESS_TYPE> &manager) {
+		BaseManager<FITNESS_TYPE> &manager)
+{
 
 	typedef typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set offspring_container;
 	typedef typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set children_container;
@@ -39,7 +40,8 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set RandomCouplin
 
 	assert(mating_pool.size()>1);
 
-	while(offspring_left){
+	while(offspring_left)
+	{
 
 		//mating pool size:
 		const unsigned int mating_pool_size = std::distance(mating_pool.begin(), mating_pool.end()) -1;
@@ -60,7 +62,8 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set RandomCouplin
 		//compute crossover
 		children_container children1 = crossoverOperation->doCrossover(*it_mommy,*it_daddy);
 
-		for (typename children_container::iterator it = children1.begin(); offspring_left > 0 && it != children1.end();++it){
+		for (typename children_container::iterator it = children1.begin(); offspring_left > 0 && it != children1.end();++it)
+		{
 			offspring.push_back(*it);
 			offspring_left--;
 		}

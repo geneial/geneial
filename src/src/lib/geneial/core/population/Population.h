@@ -106,12 +106,14 @@ public:
 
 	void clearChromosomes();
 
-	const BaseFitnessProcessingStrategy<FITNESS_TYPE>*& getProcessingStrategy() const {
+	const BaseFitnessProcessingStrategy<FITNESS_TYPE>*& getProcessingStrategy() const
+	{
 		return processingStrategy;
 	}
 
 	void setProcessingStrategy(
-			BaseFitnessProcessingStrategy<FITNESS_TYPE>*& processingStrategy) {
+			BaseFitnessProcessingStrategy<FITNESS_TYPE>*& processingStrategy)
+	{
 		this->processingStrategy = processingStrategy;
 	}
 

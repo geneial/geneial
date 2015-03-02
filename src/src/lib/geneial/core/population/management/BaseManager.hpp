@@ -21,7 +21,8 @@ template <typename FITNESS_TYPE>
 void BaseManager<FITNESS_TYPE>::replenishPopulation ()
 {
 	//if there are less chromosomes than required fill up:
-	while (_population.getSize() < _populationSettings->getMaxChromosomes()){
+	while (_population.getSize() < _populationSettings->getMaxChromosomes())
+	{
 		//build new chromosome
 		typename BaseChromosome<FITNESS_TYPE>::ptr newChromosome = _chromosomeFactory->createChromosome();
 		_population.insertChromosome(newChromosome);

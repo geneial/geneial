@@ -28,7 +28,9 @@ public:
 	virtual ~FixPointCriterion() {};
 
 	FixPointCriterion(FITNESS_TYPE threshold = 0, FITNESS_TYPE windowSize = 10,FITNESS_TYPE minDiff = 1):
-					_threshold(threshold), _windowSize(windowSize), _minDiff(minDiff){
+					 _windowSize(windowSize),
+					 _threshold(threshold),
+					 _minDiff(minDiff){
 		assert(_minDiff <= _windowSize);
 		assert(_minDiff > 0);
 	};
@@ -61,7 +63,7 @@ public:
 protected:
 	void inline updateWindowValues(BaseManager<FITNESS_TYPE> &manager)
 	{
-			const FITNESS_TYPE bestFitness = manager.getPopulation().getHighestFitnessChromosome();
+			const FITNESS_TYPE bestFitness = manager.getHighestFitness();
 			assert(_window.size() <= _windowSize);
 
 			_window.push_front(bestFitness);

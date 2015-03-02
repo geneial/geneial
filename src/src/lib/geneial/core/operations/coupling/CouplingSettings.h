@@ -23,17 +23,20 @@ public:
 	virtual ~CouplingSettings(){};
 
 	CouplingSettings(unsigned int numberOfOffspring):
-		_numberOfOffspring(numberOfOffspring){
+		_numberOfOffspring(numberOfOffspring)
+	{
 		assert(numberOfOffspring >0);
-	};
+	}
 
-	unsigned int getNumberOfOffspring() const {
+	unsigned int getNumberOfOffspring() const
+	{
 		return _numberOfOffspring;
-	};
+	}
 
-	void setNumberOfOffspring(unsigned int numberOfOffspring) {
+	void setNumberOfOffspring(unsigned int numberOfOffspring)
+	{
 		_numberOfOffspring = numberOfOffspring;
-	};
+	}
 
 
 };
