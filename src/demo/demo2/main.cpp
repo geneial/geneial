@@ -236,12 +236,12 @@ int main(int argc, char **argv) {
 	algorithm.registerObserver(&printObserver);
 
 	algorithm.solve();
-	std::cout << "end." << std::endl;
 
 	BaseChromosome<double>::ptr chromosome = algorithm.getHighestFitnessChromosome();
 	MultiValueChromosome<int,double>::ptr mvc = boost::dynamic_pointer_cast<MultiValueChromosome<int,double> >(chromosome);
 	printClearScreen();
 	printChromosome(mvc);
+	std::cout <<  "ended after " << algorithm.getPopulation().getAge() << " generations" << std::endl;
 
 	//normally, this is not necessary because we're exiting here anyway,
 	//but for valgrind's satisfaction, we free stuff nonetheless.
