@@ -1,21 +1,13 @@
-/*
- * BaseStopCriterion.h
- *
- *  Created on: Dec 10, 2014
- *      Author: bewo
- */
-
-#ifndef FITNESS_VALUE_REACHEDCRITERION_H_
-#define FITNESS_VALUE_REACHEDCRITERION_H_
+#ifndef __GENEIAL_FITNESS_VALUE_REACHEDCRITERION_H_
+#define __GENEIAL_FITNESS_VALUE_REACHEDCRITERION_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 
+namespace geneial {
+namespace algorithm {
+namespace stopping_criteria {
 
-namespace GeneticLibrary {
-namespace Algorithm {
-namespace StoppingCriteria {
-
-using namespace GeneticLibrary::Population::Manager;
+using namespace geneial::population::management;
 
 /**
   * @brief checks whether the desired fitness was reached
@@ -42,8 +34,8 @@ public:
 
 };
 
-} /* namespace StoppingCriteria */
-} /* namespace Algorithm */
-} /* namespace GeneticLibrary */
+} /* namespace stopping_criteria */
+} /* namespace algorithm */
+} /* namespace geneial */
 
-#endif /* FITNESS_VALUE_REACHEDCRITERION_H_ */
+#endif /* __GENEIAL_FITNESS_VALUE_REACHEDCRITERION_H_ */

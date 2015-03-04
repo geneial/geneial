@@ -1,10 +1,8 @@
 #include <geneial/utility/Printable.h>
 #include <cassert>
 
-namespace GeneticLibrary {
-namespace Utility {
-
-using namespace GeneticLibrary::Utility;
+namespace geneial {
+namespace utility {
 
 std::ostream& operator<<(std::ostream& os, const Printable& p)
 {
@@ -19,5 +17,5 @@ std::ostream& operator<<(std::ostream& os, const Printable*& p)
 	return os;
 }
 
-}
-}
+} /* namespace utility */
+} /* namespace geneial */

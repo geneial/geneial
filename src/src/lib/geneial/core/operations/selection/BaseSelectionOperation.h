@@ -1,22 +1,14 @@
-/*
- * BaseSelectionOperation.h
- *
- *  Created on: Dec 10, 2014
- *      Author: bewo
- */
-
-#ifndef BASESELECTIONOPERATION_H_
-#define BASESELECTIONOPERATION_H_
+#ifndef __GENEIAL_BASE_SELECTION_OPERATION_H_
+#define __GENEIAL_BASE_SELECTION_OPERATION_H_
 
 #include <geneial/core/operations/selection/SelectionSettings.h>
 
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Selection {
+namespace geneial {
+namespace operation {
+namespace selection {
 
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Population;
+using namespace geneial::population::management;
 
 /**
  * Select a number of parents based on a certain criteria.
@@ -35,20 +27,20 @@ public:
 
 	virtual selection_result_set doSelect( const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager) = 0;
 
-	SelectionSettings* getSettings() const {
+	SelectionSettings* getSettings() const
+	{
 		return _settings;
 	}
 
-	void setSettings(SelectionSettings* settings) {
+	void setSettings(SelectionSettings* settings)
+	{
 		_settings = settings;
 	}
 
 };
 
-} /* namespace Selection */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace selection */
+} /* namespace operation */
+} /* namespace geneial */
 
-
-
-#endif /* BASESELECTIONOPERATION_H_ */
+#endif /* __GENEIAL_BASE_SELECTION_OPERATION_H_ */

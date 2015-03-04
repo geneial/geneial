@@ -1,20 +1,14 @@
-/*
- * BasicChromome.cpp
- *
- *  Created on: Nov 26, 2014
- *      Author: bewo
- */
+#ifndef __GENEIAL_BASE_CHROMOSOME_HPP_
+#define __GENEIAL_BASE_CHROMOSOME_HPP_
 
-#ifndef BASE_CHROMOSOME_HPP_
-#define BASE_CHROMOSOME_HPP_
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include <geneial/core/fitness/Fitness.h>
 
 #include <cstring> //memcmp
 
-namespace GeneticLibrary {
-namespace Population {
-namespace Chromosome {
+namespace geneial {
+namespace population {
+namespace chromosome {
 
 
 template <typename FITNESS_TYPE>
@@ -44,9 +38,12 @@ bool BaseChromosome<FITNESS_TYPE>::hashEquals(typename BaseChromosome<FITNESS_TY
 	const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashA = chromosome->getHash();
 	const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashB = this->getHash();
 
-	if(memcmp((void*) &hashA,(void*) &hashB,sizeof(hashA)) == 0){
+	if(memcmp((void*) &hashA,(void*) &hashB,sizeof(hashA)) == 0)
+	{
 		return true;
-	}else{
+	}
+	else
+	{
 		return false;
 	}
 }
@@ -107,9 +104,9 @@ unsigned int BaseChromosome<FITNESS_TYPE>::getAge() const
 }
 
 
-} /* namespace Chromosome */
-} /* namespace Population */
-} /* namespace GeneticLibrary */
+} /* namespace chromomsome */
+} /* namespace population */
+} /* namespace geneial */
 
 
-#endif /* BASE_CHROMOSOME_HPP_ */
+#endif /* __GENEIAL_BASE_CHROMOSOME_HPP_ */

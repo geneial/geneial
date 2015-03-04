@@ -1,22 +1,14 @@
-/*
- * BaseStopCriterion.h
- *
- *  Created on: Dec 10, 2014
- *      Author: bewo
- */
-
-#ifndef STATEFUL_STOPPING_CRITERION_H_
-#define STATEFUL_STOPPING_CRITERION_H_
+#ifndef __GENEIAL_STATEFUL_STOPPING_CRITERION_H_
+#define __GENEIAL_STATEFUL_STOPPING_CRITERION_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 
+namespace geneial {
+namespace algorithm {
+namespace stopping_criteria {
 
-namespace GeneticLibrary {
-namespace Algorithm {
-namespace StoppingCriteria {
-
-using namespace GeneticLibrary::Population::Manager;
+using namespace geneial::population::management;
 
 //Encapsulates when a StoppingCriterion has a state and makes sure wasReached has no sideeffects
 //and ensures wasStatefully reached is only called once per generation
@@ -49,8 +41,8 @@ private:
 	bool _wasInvoked;
 };
 
-} /* namespace StoppingCriteria */
-} /* namespace Algorithm */
-} /* namespace GeneticLibrary */
+} /* namespace stopping_criteria */
+} /* namespace algorithm */
+} /* namespace geneial */
 
-#endif /* STATEFUL_STOPPING_CRITERION_H_ */
+#endif /* __GENEIAL_STATEFUL_STOPPING_CRITERION_H_ */

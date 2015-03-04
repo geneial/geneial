@@ -1,31 +1,20 @@
-/*
- * FitnessProportionalSelection.h
- *
- *  Created on: Dec 11, 2014
- *      Author: bewo
- */
-
-#ifndef FITNESSPROPORTIONALSELECTION_HPP_
-#define FITNESSPROPORTIONALSELECTION_HPP_
+#ifndef __GENEIAL_FITNESS_PROPORTIONAL_SELECTION_HPP_
+#define __GENEIAL_FITNESS_PROPORTIONAL_SELECTION_HPP_
 
 #include <geneial/core/operations/selection/FitnessProportionalSelection.h>
 #include <geneial/utility/Random.h>
 
 #include <cassert>
 
-
-namespace GeneticLibrary {
-namespace Operation {
-namespace Selection {
-
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Utility;
+namespace geneial {
+namespace operation {
+namespace selection {
 
 template <typename FITNESS_TYPE>
 typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessProportionalSelection<FITNESS_TYPE>::doSelect(
 		const Population<FITNESS_TYPE> &population,
-		BaseManager<FITNESS_TYPE> &manager){
+		BaseManager<FITNESS_TYPE> &manager)
+{
 
 		//shorthands for type mess
 		typedef std::multimap<FITNESS_TYPE, typename BaseChromosome<FITNESS_TYPE>::ptr > map_type;
@@ -39,7 +28,8 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 		//Calculate total sum of fitness
 		FITNESS_TYPE sum(0);
 		for (const_pop_itr it =	population.getFitnessMap().begin();
-				it != population.getFitnessMap().end(); ++it) {
+				it != population.getFitnessMap().end(); ++it)
+		{
 			sum += (it->second)->getFitness()->get();
 		}
 		//TODO (bewo) maybe use a fancy-ass functor instead?
@@ -49,7 +39,8 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 		//Create a multimap with fitness-proportional probability as key
 		map_type sorted_multimap;
 		for (const_pop_itr it = population.getFitnessMap().begin();
-				it != population.getFitnessMap().end(); ++it) {
+				it != population.getFitnessMap().end(); ++it)
+		{
 			FITNESS_TYPE prop_fitness = (it->second)->getFitness()->get() / sum;
 			sorted_multimap.insert(std::pair<FITNESS_TYPE, chrom_ptr_type >(prop_fitness,it->second));
 		}
@@ -60,7 +51,8 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 		//TODO (bewo) OPTIMIZE: using sth like transform(i, j, back_inserter(v), select2nd<MapType::value_type>()); instead ???
 		unsigned int elitism_to_select = _settings->getNumberSelectBest();
 		typename map_type::reverse_iterator crit = sorted_multimap.rbegin();
-		for (;crit != sorted_multimap.rend() && elitism_to_select > 0; ++crit) {
+		for (;crit != sorted_multimap.rend() && elitism_to_select > 0; ++crit)
+		{
 			result.push_back(crit->second);
 			elitism_to_select--;
 		}
@@ -73,13 +65,16 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 
 
 		//now select the remainder based on proportional probability.
-		while(left_select > 0){
+		while(left_select > 0)
+		{
 			//wrap around if necessary.
 			typename map_type::reverse_iterator crit = sorted_multimap.rbegin();
-			 while (crit != sorted_multimap.rend() && left_select > 0) {
+			 while (crit != sorted_multimap.rend() && left_select > 0)
+			 {
 				 chrom_ptr_type chrom = crit->second;
 				 double prob = (crit->first);
-				 if(Random::instance()->decision(prob)){
+				 if(Random::instance()->decision(prob))
+				 {
 					 //Use it.
 					 result.push_back(chrom);
 					 left_select--;
@@ -95,8 +90,8 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 }
 
 
-} /* namespace Selection */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace selection */
+} /* namespace operation */
+} /* namespace geneial */
 
-#endif /* FITNESSPROPORTIONALSELECTION_HPP_ */
+#endif /* __GENEIAL_FITNESS_PROPORTIONAL_SELECTION_HPP_ */

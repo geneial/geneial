@@ -1,12 +1,5 @@
-/*
- * BaseGeneticAlgorithm.h
- *
- *  Created on: Nov 26, 2014
- *      Author: bewo
- */
-
-#ifndef BASEGENETICALGORITHM_H_
-#define BASEGENETICALGORITHM_H_
+#ifndef __GENEIAL_BASE_GENETIC_ALGORITHM_H_
+#define __GENEIAL_BASE_GENETIC_ALGORITHM_H_
 
 #include <geneial/core/population/Population.h>
 #include <geneial/core/population/PopulationSettings.h>
@@ -18,42 +11,54 @@
 #include <geneial/core/operations/replacement/BaseReplacementOperation.h>
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/observer/AlgorithmObserver.h>
+
 #include <map>
 #include <list>
 
-namespace GeneticLibrary {
-namespace Algorithm {
+namespace geneial {
+namespace algorithm {
 
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Operation;
+using namespace geneial::operation;
+using namespace geneial::population;
+using namespace geneial::population::chromosome;
+using namespace geneial::population::management;
 
 template <typename FITNESS_TYPE>
-class BaseGeneticAlgorithm {
+class BaseGeneticAlgorithm
+{
 private:
 	typedef typename std::map<typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent,
 			  std::list<AlgorithmObserver<FITNESS_TYPE>* > > observers_map;
+
 	observers_map _observers;
+
 	BaseManager<FITNESS_TYPE> _manager;
+
 	bool _wasSolved;
 	bool _wasStarted;
-	StoppingCriteria::BaseStoppingCriterion<FITNESS_TYPE> * _stoppingCriterion;
-	Selection::BaseSelectionOperation<FITNESS_TYPE> * _selectionOperation;
-	Coupling::BaseCouplingOperation<FITNESS_TYPE> *_couplingOperation;
-	Crossover::BaseCrossoverOperation<FITNESS_TYPE> *_crossoverOperation;
-	Replacement::BaseReplacementOperation<FITNESS_TYPE> *_replacementOperation;
-	Mutation::BaseMutationOperation<FITNESS_TYPE> *_mutationOperation;
+
+	stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE> * _stoppingCriterion;
+
+	selection::BaseSelectionOperation<FITNESS_TYPE> * _selectionOperation;
+
+	coupling::BaseCouplingOperation<FITNESS_TYPE> *_couplingOperation;
+
+	crossover::BaseCrossoverOperation<FITNESS_TYPE> *_crossoverOperation;
+
+	replacement::BaseReplacementOperation<FITNESS_TYPE> *_replacementOperation;
+
+	mutation::BaseMutationOperation<FITNESS_TYPE> *_mutationOperation;
+
 public:
 	BaseGeneticAlgorithm(
 			PopulationSettings *populationSettings,
 			BaseChromosomeFactory<FITNESS_TYPE> *chromosomeFactory,
-			StoppingCriteria::BaseStoppingCriterion<FITNESS_TYPE> *stoppingCriterion,
-			Selection::BaseSelectionOperation<FITNESS_TYPE> *selectionOperation,
-			Coupling::BaseCouplingOperation<FITNESS_TYPE> *couplingOperation,
-			Crossover::BaseCrossoverOperation<FITNESS_TYPE> *crossoverOperation,
-			Replacement::BaseReplacementOperation<FITNESS_TYPE> *replacementOperation,
-			Mutation::BaseMutationOperation<FITNESS_TYPE> *mutationOperation,
+			stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE> *stoppingCriterion,
+			selection::BaseSelectionOperation<FITNESS_TYPE> *selectionOperation,
+			coupling::BaseCouplingOperation<FITNESS_TYPE> *couplingOperation,
+			crossover::BaseCrossoverOperation<FITNESS_TYPE> *crossoverOperation,
+			replacement::BaseReplacementOperation<FITNESS_TYPE> *replacementOperation,
+			mutation::BaseMutationOperation<FITNESS_TYPE> *mutationOperation,
 			BaseFitnessProcessingStrategy<FITNESS_TYPE>* fitnessProcessingStrategy
 	):
 		_manager(
@@ -72,58 +77,67 @@ public:
 		_manager.getPopulation().setProcessingStrategy(fitnessProcessingStrategy);
 		};
 
-	virtual ~BaseGeneticAlgorithm() {
-	};
+	virtual ~BaseGeneticAlgorithm() {};
 
 	virtual void solve();
 
-	virtual void setInitialPopulation(typename Population<FITNESS_TYPE>::chromosome_container &container){
+	virtual void setInitialPopulation(typename Population<FITNESS_TYPE>::chromosome_container &container)
+	{
 		assert(!_wasStarted);
 		_manager.getPopulation().replacePopulation(container);
 	}
 
 	//Delegates to manager,
 	//*caution*: the user should never directly interact with the manager, rather use this class as facade
-	inline typename BaseChromosome<FITNESS_TYPE>::ptr getHighestFitnessChromosome() const{
+	inline typename BaseChromosome<FITNESS_TYPE>::ptr getHighestFitnessChromosome() const
+	{
 		assert(_wasStarted);
 		return _manager.getHighestFitnessChromosome();
 	}
 
-	inline FITNESS_TYPE getHighestFitness()  const{
+	inline FITNESS_TYPE getHighestFitness() const
+	{
 		assert(_wasStarted);
 		return _manager.getHighestFitness();
 	}
 
 
-	virtual Population<FITNESS_TYPE>& getPopulation(){
+	virtual Population<FITNESS_TYPE>& getPopulation()
+	{
 			return _manager.getPopulation();
 	}
 
-	inline typename BaseChromosome<FITNESS_TYPE>::ptr getLowestFitnessChromosome() const{
+	inline typename BaseChromosome<FITNESS_TYPE>::ptr getLowestFitnessChromosome() const
+	{
 		assert(_wasStarted);
 		return _manager.getLowestFitnessChromosome();
 	}
 
-	inline FITNESS_TYPE getLowestFitness() const{
+	inline FITNESS_TYPE getLowestFitness() const
+	{
 		assert(_wasStarted);
 		return _manager.getLowestFitness();
 	}
 
 
-	inline virtual bool hasBeenSolved() const{
+	inline virtual bool hasBeenSolved() const
+	{
 		return _wasSolved;
 	}
 
-	inline virtual bool hasBeenStarted() const{
+	inline virtual bool hasBeenStarted() const
+	{
 		return _wasStarted;
 	}
 
-	inline virtual bool wasCriteriaReached(){
+	inline virtual bool wasCriteriaReached()
+	{
 		return _stoppingCriterion->wasReached(_manager);
 	}
 
 
-	void inline notifyObservers(typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent event){
+	void inline notifyObservers(typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent event)
+	{
 		typename observers_map::iterator lb = _observers.lower_bound(event);
 
 		if(lb != _observers.end() && !(_observers.key_comp()(event, lb->first)))
@@ -178,9 +192,9 @@ public:
 	}
 };
 
-} /* namespace Algorithm */
-} /* namespace GeneticLibrary */
+} /* namespace algorithm */
+} /* namespace geneial */
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.hpp>
 
-#endif /* BASEGENETICALGORITHM_H_ */
+#endif /* __GENEIAL_BASE_GENETIC_ALGORITHM_H_ */

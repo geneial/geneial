@@ -1,12 +1,5 @@
-/*
- * FitnessProportionalSelection.h
- *
- *  Created on: Dec 11, 2014
- *      Author: bewo
- */
-
-#ifndef FITNESSPROPORTIONALSELECTION_H_
-#define FITNESSPROPORTIONALSELECTION_H_
+#ifndef __GENEIAL_FITNESS_PROPORTIONAL_SELECTION_H_
+#define __GENEIAL_FITNESS_PROPORTIONAL_SELECTION_H_
 
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
 #include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
@@ -15,44 +8,43 @@
 #include <stdexcept>
 
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Selection {
-
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Manager;
+namespace geneial {
+namespace operation {
+namespace selection {
 
 /**
  * Select a number of parents based on a certain criteria.
  */
 template <typename FITNESS_TYPE>
-class FitnessProportionalSelection : public BaseSelectionOperation<FITNESS_TYPE>{
-
-private:
-	FitnessProportionalSelectionSettings* _settings;
-
+class FitnessProportionalSelection : public BaseSelectionOperation<FITNESS_TYPE>
+{
 public:
-	FitnessProportionalSelection(SelectionSettings* settings): BaseSelectionOperation<FITNESS_TYPE>(settings) {
+	FitnessProportionalSelection(SelectionSettings* settings): BaseSelectionOperation<FITNESS_TYPE>(settings)
+	{
 		_settings = dynamic_cast<FitnessProportionalSelectionSettings*>(settings);
-		if(!_settings){
+		if(!_settings)
+		{
 			throw new std::runtime_error("settings must be FitnessProportionalSelectionSettings");
 		}
 
-	};
-	virtual ~FitnessProportionalSelection(){};
+	}
+
+	virtual ~FitnessProportionalSelection() {};
 
 	virtual typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set doSelect(
 			const Population<FITNESS_TYPE> &population,
 			BaseManager<FITNESS_TYPE> &manager);
 
+private:
+	FitnessProportionalSelectionSettings* _settings;
 
 };
 
 
-} /* namespace Selection */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace selection */
+} /* namespace operation */
+} /* namespace geneial */
 
 #include <geneial/core/operations/selection/FitnessProportionalSelection.hpp>
 
-#endif /* FITNESSPROPORTIONALSELECTION_H_ */
+#endif /* __GENEIAL_FITNESS_PROPORTIONAL_SELECTION_H_ */

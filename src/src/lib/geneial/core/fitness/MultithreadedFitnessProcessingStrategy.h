@@ -1,5 +1,5 @@
-#ifndef MULTITHREADEDFITNESSPROCESSINGSTRATEGY_H_
-#define MULTITHREADEDFITNESSPROCESSINGSTRATEGY_H_
+#ifndef __GENEIAL_MULTITHREADED_FITNESS_PROCESSING_STRATEGY_H_
+#define __GENEIAL_MULTITHREADED_FITNESS_PROCESSING_STRATEGY_H_
 
 #include <geneial/core/population/Population.h>
 #include <geneial/core/fitness/BaseFitnessProcessingStrategy.h>
@@ -12,10 +12,10 @@
 #include <cassert>
 
 
-namespace GeneticLibrary {
+namespace geneial {
 
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Chromosome;
+using namespace geneial::population;
+using namespace geneial::population::chromosome;
 
 template <typename FITNESS_TYPE>
 class MultiThreadedFitnessProcessingStrategy : public BaseFitnessProcessingStrategy<FITNESS_TYPE>
@@ -47,11 +47,13 @@ public:
 	virtual void ensureHasFitness(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer);
 
 
-	unsigned int getNumWorkerThreads() const {
+	unsigned int getNumWorkerThreads() const
+	{
 		return _numWorkerThreads;
 	}
 
-	bool isStarted() const {
+	bool isStarted() const
+	{
 		return _started;
 	}
 
@@ -73,8 +75,8 @@ private:
 
 };
 
-}  // namespace GeneticLibrary
+}  /* namespace geneial */
 
 #include <geneial/core/fitness/MultithreadedFitnessProcessingStrategy.hpp>
 
-#endif /* MULTITHREADEDFITNESSPROCESSINGSTRATEGY_H_ */
+#endif /* __GENEIAL_MULTITHREADED_FITNESS_PROCESSING_STRATEGY_H_ */

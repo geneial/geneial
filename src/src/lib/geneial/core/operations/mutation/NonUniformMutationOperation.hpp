@@ -1,12 +1,5 @@
-/*
- * NonUniformMutationOperation.hpp
- *
- *  Created on: Dec 30, 2014
- *      Author: lukas
- */
-
-#ifndef SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_NONUNIFORMMUTATIONOPERATION_HPP_
-#define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_NONUNIFORMMUTATIONOPERATION_HPP_
+#ifndef __GENEIAL_NON_UNIFORM_MUTATION_OPERATION_HPP_
+#define __GENEIAL_NON_UNIFORM_MUTATION_OPERATION_HPP_
 
 #include <geneial/core/population/Population.h>
 #include <geneial/core/operations/mutation/NonUniformMutationOperation.h>
@@ -16,15 +9,10 @@
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
 
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Mutation {
+namespace geneial {
+namespace operation {
+namespace mutation {
 
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Operation::Mutation;
-using namespace GeneticLibrary::Operation::Choosing;
 
 /*
  *  Returns a chromosome container with some new chromosomes which are partially mutated versions of the old ones.
@@ -40,6 +28,8 @@ using namespace GeneticLibrary::Operation::Choosing;
  *  	(X)							 (X)
  *  	(X) <- Mutate this value --> (Y)
  *  	(X)							 (X)
+ *
+ * TODO (bewo): reduce cyclomatic complexity!
  *
  *  */
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
@@ -139,7 +129,6 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
 					);
 				double weightedMutation = ((split)*randomMutation + (1-split)* *mutant_it);
 
-
 				//Check amount of mutation targets in one chromosome (pointsOfMutation)
 				if (this->getSettings()->getAmountOfPointsOfMutation() > 0)
 				{
@@ -150,7 +139,6 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
 						//Check if we reached the maximum points of mutation
 						if (this->getSettings()->getAmountOfPointsOfMutation() != mutationCounter)
 						{
-
 							//add mutation to result_container
 							result_container.push_back (int (weightedMutation));
 							mutationCounter++;
@@ -202,14 +190,8 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
 
 }
 
+} /* namespace mutation */
+} /* namespace operation */
+} /* namespace geneial */
 
-
-} //namespace Mutation
-} //namespace Operation
-} //namespace GeneticLibrary
-
-
-
-
-
-#endif /* SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_NONUNIFORMMUTATIONOPERATION_HPP_ */
+#endif /* __GENEIAL_NON_UNIFORM_MUTATION_OPERATION_HPP_ */

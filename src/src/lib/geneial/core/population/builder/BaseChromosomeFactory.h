@@ -1,19 +1,13 @@
-/*
- * BaseChromosomeFactory.h
- *
- *  Created on: Dec 9, 2014
- *      Author: bewo
- */
+#ifndef __GENEIAL_BASE_CHROMOSOME_FACTORY_H_
+#define __GENEIAL_BASE_CHROMOSOME_FACTORY_H_
 
-#ifndef BASECHROMOSOMEFACTORY_H_
-#define BASECHROMOSOMEFACTORY_H_
-
-namespace GeneticLibrary {
-namespace Population {
-namespace Chromosome {
+namespace geneial {
+namespace population {
+namespace chromosome {
 
 template <typename FITNESS_TYPE>
-class BaseChromosomeFactory {
+class BaseChromosomeFactory
+{
 private:
 public:
 	BaseChromosomeFactory() {};
@@ -21,8 +15,8 @@ public:
 	virtual typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome(bool populateValues = true) = 0;
 };
 
-} /* namespace Chromosome */
-} /* namespace Population */
-} /* namespace GeneticLibrary */
+} /* namespace chromomsome */
+} /* namespace population */
+} /* namespace geneial */
 
-#endif /* BASECHROMOSOMEFACTORY_H_ */
+#endif /* __GENEIAL_BASE_CHROMOSOME_FACTORY_H_ */

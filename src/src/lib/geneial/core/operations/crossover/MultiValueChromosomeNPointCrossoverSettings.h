@@ -1,25 +1,14 @@
-/*
- * MultiValueNPointCrossover.h
- *
- *  Created on: Dec 12, 2014
- *      Author: bewo
- */
-
-#ifndef MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_SETTINGS_H_
-#define MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_SETTINGS_H_
+#ifndef __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_SETTINGS_H_
+#define __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_SETTINGS_H_
 
 #include <cassert>
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Crossover {
+namespace geneial {
+namespace operation {
+namespace crossover {
 
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Operation::Coupling;
-
-class MultiValueChromosomeNPointCrossoverSettings{
-
+class MultiValueChromosomeNPointCrossoverSettings
+{
 public:
 
 	/**
@@ -64,33 +53,36 @@ public:
 		assert(width_setting != RANDOM_MIN_WIDTH || min_width > 1);
 	};
 
-	virtual ~MultiValueChromosomeNPointCrossoverSettings() {
-	};
+	virtual ~MultiValueChromosomeNPointCrossoverSettings() {}
 
-	unsigned int getCrossOverPoints() const {
+	unsigned int getCrossOverPoints() const
+	{
 		return _crossOverPoints;
-	};
+	}
 
-	void setCrossOverPoints(unsigned int crossOverPoints) {
+	void setCrossOverPoints(unsigned int crossOverPoints)
+	{
 		_crossOverPoints = crossOverPoints;
 	}
-	unsigned int getMinWidth() const {
+	unsigned int getMinWidth() const
+	{
 		return _min_width;
 	}
 
-	void setMinWidth(unsigned int minWidth) {
+	void setMinWidth(unsigned int minWidth)
+	{
 		_min_width = minWidth;
 	}
 
-	width_settings getWidthSetting() const {
+	width_settings getWidthSetting() const
+	{
 		return _width_setting;
 	}
 
-	void setWidthSetting(width_settings widthSetting) {
+	void setWidthSetting(width_settings widthSetting)
+	{
 		_width_setting = widthSetting;
 	}
-
-	;
 
 private:
 	unsigned int _crossOverPoints;
@@ -100,8 +92,8 @@ private:
 
 };
 
-} /* namespace Crossover */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace crossover */
+} /* namespace operation */
+} /* namespace geneial */
 
-#endif /* MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_SETTINGS_H_ */
+#endif /* __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_SETTINGS_H_ */

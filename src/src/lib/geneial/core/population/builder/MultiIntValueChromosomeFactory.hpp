@@ -1,26 +1,18 @@
-/*
- * MultiValueChromosomeFactory.h
- *
- *  Created on: Dec 9, 2014
- *      Author: bewo
- */
-
-#ifndef MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_
-#define MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_
+#ifndef __GENEIAL_MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_
+#define __GENEIAL_MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_
 
 #include <geneial/core/population/builder/MultiIntValueChromosomeFactory.h>
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
 #include <geneial/utility/Random.h>
+
 #include <cassert>
 
-namespace GeneticLibrary {
-namespace Population {
-namespace Chromosome {
+namespace geneial {
+namespace population {
+namespace chromosome {
 
 template <typename FITNESS_TYPE>
 typename BaseChromosome<FITNESS_TYPE>::ptr MultiIntValueChromosomeFactory<FITNESS_TYPE>::createChromosome(bool populateValues){
-
-	using namespace GeneticLibrary::Utility;
 
 	typename MultiValueChromosome<int,FITNESS_TYPE>::ptr new_chromosome(new MultiValueChromosome<int,FITNESS_TYPE>(this->_settings->getFitnessEvaluator()));
 	assert(new_chromosome->getSize() == 0);
@@ -43,8 +35,8 @@ typename BaseChromosome<FITNESS_TYPE>::ptr MultiIntValueChromosomeFactory<FITNES
 	return result;
 }
 
-} /* namespace Chromosome */
-} /* namespace Population */
-} /* namespace GeneticLibrary */
+} /* namespace chromomsome */
+} /* namespace population */
+} /* namespace geneial */
 
-#endif /* MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_ */
+#endif /* __GENEIAL_MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_ */

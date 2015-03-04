@@ -1,32 +1,29 @@
-/*
- * BuilderSettings.h
- *
- *  Created on: Dec 9, 2014
- *      Author: bewo
- */
-
-#ifndef MULTI_VALUE_BUILDER_SETTING_H_
-#define MULTI_VALUE_BUILDER_SETTING_H_
+#ifndef __GENEIAL_MULTI_VALUE_BUILDER_SETTING_H_
+#define __GENEIAL_MULTI_VALUE_BUILDER_SETTING_H_
 
 #include <geneial/core/population/builder/BuilderSettings.h>
 
-namespace GeneticLibrary {
-namespace Population {
-namespace Chromosome {
+namespace geneial {
+namespace population {
+namespace chromosome {
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
-class MultiValueBuilderSettings : public BuilderSettings<FITNESS_TYPE> {
+class MultiValueBuilderSettings : public BuilderSettings<FITNESS_TYPE>
+{
 private:
 	VALUE_TYPE _random_max;
+
 	VALUE_TYPE _random_min;
+
 	unsigned int _num;
+
 public:
 	MultiValueBuilderSettings(const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator, unsigned int num, VALUE_TYPE random_max,	VALUE_TYPE random_min): BuilderSettings<FITNESS_TYPE>(fitnessEvaluator),
 	_random_max(random_max),
 	_random_min(random_min),
-	_num(num) {};
+	_num(num) {}
 
-	virtual ~MultiValueBuilderSettings() {};
+	virtual ~MultiValueBuilderSettings() {}
 
 	inline unsigned int getNum() const
 	{
@@ -59,8 +56,8 @@ public:
 	}
 };
 
-} /* namespace Chromosome */
-} /* namespace Population */
-} /* namespace GeneticLibrary */
+} /* namespace chromomsome */
+} /* namespace population */
+} /* namespace geneial */
 
-#endif /* MULTI_VALUE_BUILDER_SETTING_H_ */
+#endif /* __GENEIAL_MULTI_VALUE_BUILDER_SETTING_H_ */

@@ -1,18 +1,11 @@
-/*
- * BaseSelectionOperation.h
- *
- *  Created on: Dec 10, 2014
- *      Author: bewo
- */
-
-#ifndef FITNESS_PROP_SELECTION_SETTINGS_H_
-#define FITNESS_PROP_SELECTION_SETTINGS_H_
+#ifndef __GENEIAL_FITNESS_PROPORTIONAL_SELECTION_SETTINGS_H_
+#define __GENEIAL_FITNESS_PROPORTIONAL_SELECTION_SETTINGS_H_
 
 #include <cassert>
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Selection {
+namespace geneial {
+namespace operation {
+namespace selection {
 
 /**
  * Select a number of parents based on a certain criteria.
@@ -24,25 +17,27 @@ private:
 public:
 	FitnessProportionalSelectionSettings(unsigned int numberOfParents, unsigned int numberSelectBest):
 		SelectionSettings(numberOfParents),
-		_numberSelectBest(numberSelectBest) {
+		_numberSelectBest(numberSelectBest)
+	{
 			assert(numberOfParents>=numberSelectBest);
 	}
-	unsigned int getNumberSelectBest() const {
+
+	unsigned int getNumberSelectBest() const
+	{
 		return _numberSelectBest;
 	}
 
-	void setNumberSelectBest(unsigned int numberSelectBest) {
+	void setNumberSelectBest(unsigned int numberSelectBest)
+	{
 		_numberSelectBest = numberSelectBest;
 	}
 
-	;
-
 };
 
-} /* namespace Selection */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace selection */
+} /* namespace operation */
+} /* namespace geneial */
 
 
 
-#endif /* FITNESS_PROP_SELECTION_SETTINGS_H_ */
+#endif /* __GENEIAL_FITNESS_PROPORTIONAL_SELECTION_SETTINGS_H_ */

@@ -1,15 +1,7 @@
-/*
- * NonUniformMutationOperator.h
- *
- *  Created on: Dec 28, 2014
- *      Author: lukas
- */
-
-#ifndef SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_NONUNIFORMMUTATIONOPERATION_H_
-#define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_NONUNIFORMMUTATIONOPERATION_H_
+#ifndef __GENEIAL_NON_UNIFORM_MUTATION_OPERATION_H_
+#define __GENEIAL_NON_UNIFORM_MUTATION_OPERATION_H_
 
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
-
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
 #include <geneial/core/population/builder/MultiValueChromosomeFactory.h>
 #include <geneial/utility/Random.h>
@@ -17,14 +9,13 @@
 #include <cassert>
 
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Mutation {
-
-using namespace GeneticLibrary::Population::Manager;
+namespace geneial {
+namespace operation {
+namespace mutation {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-class NonUniformMutationOperation: public BaseMutationOperation<FITNESS_TYPE> {
+class NonUniformMutationOperation: public BaseMutationOperation<FITNESS_TYPE>
+{
 
 private:
 	MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *_builderSettings;
@@ -59,10 +50,9 @@ public:
 		assert(_builderSettings != NULL);
 		assert(_builderFactory != NULL);
 	}
-	;
-	virtual ~NonUniformMutationOperation() {
-	}
-	;
+
+	virtual ~NonUniformMutationOperation() {}
+
 	/*
 	 *  Returns a new chromosome which is a partially mutated version of the old one.
 	 *  */
@@ -97,9 +87,11 @@ public:
 	}
 };
 //class
-} // namespace Mutation
-} // namespace Operation
-} // namespace GeneticLibrary
+
+} /* namespace mutation */
+} /* namespace operation */
+} /* namespace geneial */
+
 
 #include <geneial/core/operations/mutation/NonUniformMutationOperation.hpp>
-#endif /* SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_NONUNIFORMMUTATIONOPERATION_H_ */
+#endif /* __GENEIAL_NON_UNIFORM_MUTATION_OPERATION_H_ */

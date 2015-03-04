@@ -1,18 +1,11 @@
-/*
- * BaseSelectionOperation.h
- *
- *  Created on: Dec 10, 2014
- *      Author: bewo
- */
-
-#ifndef SELECTION_SETTINGS_H_
-#define SELECTION_SETTINGS_H_
+#ifndef __GENEIAL_SELECTION_SETTINGS_H_
+#define __GENEIAL_SELECTION_SETTINGS_H_
 
 #include <cassert>
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Selection {
+namespace geneial {
+namespace operation {
+namespace selection {
 
 /**
  * Select a number of parents based on a certain criteria.
@@ -22,27 +15,28 @@ private:
 	unsigned int _numberOfParents;
 
 public:
-	virtual ~SelectionSettings(){};
+	virtual ~SelectionSettings() {};
 
-	unsigned int getNumberOfParents() const {
+	unsigned int getNumberOfParents() const
+	{
 		return _numberOfParents;
 	}
 
-	void setNumberOfParents(unsigned int numberOfParents) {
+	void setNumberOfParents(unsigned int numberOfParents)
+	{
 		_numberOfParents = numberOfParents;
 	}
 
 	SelectionSettings(unsigned int numberOfParents):
-		_numberOfParents(numberOfParents){
+		_numberOfParents(numberOfParents)
+	{
 		assert(_numberOfParents>0);
 	};
 
 };
 
-} /* namespace Selection */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace selection */
+} /* namespace operation */
+} /* namespace geneial */
 
-
-
-#endif /* SELECTION_SETTINGS_H_ */
+#endif /* __GENEIAL_SELECTION_SETTINGS_H_ */

@@ -1,19 +1,13 @@
-/*
- * MultiValueChromosomeAverageCrossover.h
- *
- *  Created on: Dec 12, 2014
- *      Author: bewo
- */
+#ifndef __GENEIAL_MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_H_
+#define __GENEIAL_MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_H_
 
-#ifndef MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_H_
-#define MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_H_
-
-#include <cassert>
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Crossover {
+#include <cassert>
+
+namespace geneial {
+namespace operation {
+namespace crossover {
 
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
@@ -29,7 +23,7 @@ public:
 			) :
 			_builderSettings(builderSettings),
 			_builderFactory(builderFactory)
-			{
+	{
 		assert(_builderSettings != NULL);
 		assert(_builderFactory != NULL);
 
@@ -91,10 +85,10 @@ public:
 };
 
 
-} /* namespace Crossover */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace crossover */
+} /* namespace operation */
+} /* namespace geneial */
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeAverageCrossover.hpp>
 
-#endif /* MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_H_ */
+#endif /* __GENEIAL_MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_H_ */

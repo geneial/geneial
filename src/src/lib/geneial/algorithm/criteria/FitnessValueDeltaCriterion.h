@@ -1,25 +1,18 @@
-/*
- * FitnessDeltaCriterion.h
- *
- *  Created on: Dec 10, 2014
- *      Author: bewo
- */
-
-#ifndef FITNESSDELTACRITERION_H_
-#define FITNESSDELTACRITERION_H_
+#ifndef __GENEIAL_FITNESS_VALUE_DELTA_CRITERION_H_
+#define __GENEIAL_FITNESS_VALUE_DELTA_CRITERION_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 
+namespace geneial {
+namespace algorithm {
+namespace stopping_criteria {
 
-namespace GeneticLibrary {
-namespace Algorithm {
-namespace StoppingCriteria {
-
-using namespace GeneticLibrary::Population::Manager;
+using namespace geneial::population::management;
 
 template <typename FITNESS_TYPE>
-class FitnessValueDeltaCriterion: public BaseStoppingCriterion<FITNESS_TYPE> {
+class FitnessValueDeltaCriterion: public BaseStoppingCriterion<FITNESS_TYPE>
+{
 public:
 	FitnessValueDeltaCriterion(FITNESS_TYPE desiredFitness,FITNESS_TYPE delta):_desiredFitness(desiredFitness),_delta(delta)
 	{
@@ -44,8 +37,8 @@ private:
 	FITNESS_TYPE _delta;
 };
 
-} /* namespace StoppingCriteria */
-} /* namespace Algorithm */
-} /* namespace GeneticLibrary */
+} /* namespace stopping_criteria */
+} /* namespace algorithm */
+} /* namespace geneial */
 
-#endif /* FITNESSDELTACRITERION_H_ */
+#endif /* __GENEIAL_FITNESS_VALUE_DELTA_CRITERION_H_ */

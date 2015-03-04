@@ -23,17 +23,14 @@
 #include <geneial/core/operations/mutation/NonUniformMutationOperation.h>
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 
+using namespace geneial;
+using namespace geneial::population::management;
+using namespace geneial::operation::choosing;
+using namespace geneial::operation::mutation;
 
 
 BOOST_AUTO_TEST_SUITE( UniformMutationOperation )
 
-	using namespace GeneticLibrary;
-	using namespace GeneticLibrary::Algorithm;
-	using namespace GeneticLibrary::Algorithm::StoppingCriteria;
-	using namespace GeneticLibrary::Population;
-	using namespace GeneticLibrary::Population::Chromosome;
-	using namespace GeneticLibrary::Operation::Mutation;
-	using namespace GeneticLibrary::Operation::Choosing;
 
 	class DemoChromosomeEvaluator: public FitnessEvaluator<double>
 	{
@@ -70,8 +67,8 @@ BOOST_AUTO_TEST_CASE( NunUniform_basicMutation )
 	BaseMutationOperation<double> *mutationOperation = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
 	BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
-	GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
-	GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set resultSet;
+	BaseMutationOperation<double>::mutation_result_set inputSet;
+	BaseMutationOperation<double>::mutation_result_set resultSet;
 
 	inputSet.push_back(_newChromosome);
 	resultSet.push_back(_newChromosome);
@@ -95,8 +92,8 @@ BOOST_AUTO_TEST_CASE( NonUniform_Mutation_Propability )
 	BaseMutationOperation<double> *mutationOperation = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
 	BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
-	GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
-	GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set resultSet[10000];
+	BaseMutationOperation<double>::mutation_result_set inputSet;
+	BaseMutationOperation<double>::mutation_result_set resultSet[10000];
 
 	inputSet.push_back(_newChromosome);
 	int mutationCounter = 0;

@@ -1,15 +1,17 @@
-#ifndef UTILITY_TEMPLATE_HPP_
-#define UTILITY_TEMPLATE_HPP_
+#ifndef __GENEIAL_SINGLETON_HPP_
+#define __GENEIAL_SINGLETON_HPP_
 
 template<typename C>
 class singleton {
 public:
-	static C* instance() {
+	static C* instance()
+	{
 		if (!_instance)
 			_instance = new C();
 		return _instance;
 	}
-	virtual ~singleton() {
+	virtual ~singleton()
+	{
 		delete _instance;
 		_instance = 0;
 	}
@@ -21,4 +23,4 @@ protected:
 template<typename C> C* singleton<C>::_instance = 0;
 
 
-#endif /* UTILITY_TEMPLATE_HPP_ */
+#endif /* __GENEIAL_SINGLETON_HPP_ */

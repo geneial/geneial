@@ -1,24 +1,17 @@
-/*
- * PopulationSettings.h
- *
- *  Created on: Dec 10, 2014
- *      Author: bewo
- */
-
-#ifndef POPULATIONSETTINGS_H_
-#define POPULATIONSETTINGS_H_
+#ifndef __GENEIAL_POPULATION_SETTINGS_H_
+#define __GENEIAL_POPULATION_SETTINGS_H_
 
 
-namespace GeneticLibrary {
-namespace Population {
+namespace geneial {
+namespace population {
 
 class PopulationSettings {
 private:
 	unsigned int _max_chromosomes;
 
 public:
-	PopulationSettings(int max_chromosomes) :_max_chromosomes(max_chromosomes){};
-	virtual ~PopulationSettings() {};
+	PopulationSettings(int max_chromosomes) :_max_chromosomes(max_chromosomes) {}
+	virtual ~PopulationSettings() {}
 
 	unsigned int getMaxChromosomes() const
 	{
@@ -31,8 +24,8 @@ public:
 	}
 };
 
-} /* namespace Population */
-} /* namespace GeneticLibrary */
+} /* namespace population */
+} /* namespace geneial */
 
 
-#endif /* POPULATIONSETTINGS_H_ */
+#endif /* __GENEIAL_POPULATION_SETTINGS_H_ */

@@ -1,12 +1,5 @@
-/*
- * SimpleCoupling.h
- *
- *  Created on: Dec 12, 2014
- *      Author: bewo
- */
-
-#ifndef RANDOMCOUPLING_HPP_
-#define RANDOMCOUPLING_HPP_
+#ifndef __GENEIAL_RANDOM_COUPLING_OPERATION_HPP_
+#define __GENEIAL_RANDOM_COUPLING_OPERATION_HPP_
 
 #include <geneial/core/operations/coupling/RandomCouplingOperation.h>
 #include <geneial/utility/Random.h>
@@ -14,13 +7,9 @@
 #include <algorithm>
 #include <iterator>
 
-
-namespace GeneticLibrary {
-namespace Operation {
-namespace Coupling {
-
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Utility;
+namespace geneial {
+namespace operation {
+namespace coupling {
 
 template<typename FITNESS_TYPE>
 typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set RandomCouplingOperation<FITNESS_TYPE>::doCopulate(
@@ -38,7 +27,7 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set RandomCouplin
 
 	unsigned int offspring_left =this->getSettings()->getNumberOfOffspring();
 
-	assert(mating_pool.size()>1);
+	assert(mating_pool.size() > 1);
 
 	while(offspring_left)
 	{
@@ -50,6 +39,7 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set RandomCouplin
 		const unsigned int rnd_mommy = Random::instance()->generateInt(0,mating_pool_size);
 		typename mating_container::iterator it_mommy = mating_pool.begin();
 		std::advance(it_mommy,rnd_mommy);
+
 		//pick a random daddy:
 		unsigned int rnd_daddy;
 		do{
@@ -73,8 +63,8 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set RandomCouplin
 	return offspring;
 }
 
-}
-}
-}
+} /* namespace coupling */
+} /* namespace operation */
+} /* namespace geneial */
 
-#endif /* RANDOMCOUPLING_HPP_ */
+#endif /* __GENEIAL_RANDOM_COUPLING_OPERATION_HPP_ */

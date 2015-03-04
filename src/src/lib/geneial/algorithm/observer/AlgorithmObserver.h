@@ -1,17 +1,15 @@
-#ifndef ALGORITHMOBSERVER_H_
-#define ALGORITHMOBSERVER_H_
+#ifndef __GENEIAL_ALGORITHM_OBSERVER_H_
+#define __GENEIAL_ALGORITHM_OBSERVER_H_
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
 #include <geneial/core/population/management/BaseManager.h>
+
 #include <set>
 
-namespace GeneticLibrary {
-namespace Algorithm {
+namespace geneial {
+namespace algorithm {
 
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Operation;
+using namespace geneial::population::management;
 
 template <typename FITNESS_TYPE>
 class AlgorithmObserver {
@@ -53,7 +51,7 @@ private:
 
 };
 
-} //Algorithm
-} //GeneticLibrary
+} /* namespace algorithm */
+} /* namespace geneial */
 
-#endif /* ALGORITHMOBSERVER_H_ */
+#endif /* __GENEIAL_ALGORITHM_OBSERVER_H_ */
