@@ -51,20 +51,20 @@
 #include <cmath>
 
 
-using namespace GeneticLibrary;
+using namespace geneial;
 
-using namespace GeneticLibrary::Algorithm;
-using namespace GeneticLibrary::Algorithm::StoppingCriteria;
+using namespace geneial::algorithm;
+using namespace geneial::algorithm::stopping_criteria;
 
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Chromosome;
+using namespace geneial::population;
+using namespace geneial::population::chromosome;
 
-using namespace GeneticLibrary::Operation::Selection;
-using namespace GeneticLibrary::Operation::Coupling;
-using namespace GeneticLibrary::Operation::Crossover;
-using namespace GeneticLibrary::Operation::Replacement;
-using namespace GeneticLibrary::Operation::Mutation;
-using namespace GeneticLibrary::Operation::Choosing;
+using namespace geneial::operation::selection;
+using namespace geneial::operation::coupling;
+using namespace geneial::operation::crossover;
+using namespace geneial::operation::replacement;
+using namespace geneial::operation::mutation;
+using namespace geneial::operation::choosing;
 
 double myTargetFunc(double x){
 	//Some Lagrange poly + Manual Tweakage

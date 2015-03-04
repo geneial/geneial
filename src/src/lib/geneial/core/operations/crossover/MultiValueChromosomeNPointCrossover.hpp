@@ -1,12 +1,5 @@
-/*
- * MultiValueNPointCrossover.h
- *
- *  Created on: Dec 12, 2014
- *      Author: bewo
- */
-
-#ifndef MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_HPP_
-#define MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_HPP_
+#ifndef __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_HPP_
+#define __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_HPP_
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
 #include <geneial/utility/Random.h>
@@ -15,16 +8,13 @@
 #include <algorithm>
 #include <iterator>
 
+namespace geneial {
+namespace operation {
+namespace crossover {
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Crossover {
+using namespace geneial::operation::coupling;
 
-using namespace GeneticLibrary::Utility;
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Operation::Coupling;
-
+//TODO (bewo): reduce cyclomatic complexity...
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueChromosomeNPointCrossover<VALUE_TYPE,FITNESS_TYPE>::doCrossover(
 		typename BaseChromosome<FITNESS_TYPE>::ptr mommy,
@@ -33,7 +23,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::value_container value_container;
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr mvc_ptr;
 
-	typename Coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set resultset;
+	typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set resultset;
 
 	mvc_ptr mvc_mommy
 			= boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(mommy);
@@ -46,58 +36,85 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 	const unsigned int crossoverPoints = this->getCrossoverSettings()->getCrossOverPoints();
 	const unsigned int totalWidth = this->getBuilderSettings()->getNum();
 	std::set<unsigned int> crossoverPositions;
-	if(this->getCrossoverSettings()->getWidthSetting() == MultiValueChromosomeNPointCrossoverSettings::EQUIDISTANT_WIDTH){
+	if(this->getCrossoverSettings()->getWidthSetting() == MultiValueChromosomeNPointCrossoverSettings::EQUIDISTANT_WIDTH)
+	{
 
 		const unsigned int equidistantwidth = totalWidth / crossoverPoints;
 
-		for(unsigned int i = 0;i<crossoverPoints-1;i++){
+		for(unsigned int i = 0;i<crossoverPoints-1;i++)
+		{
 			crossoverPositions.insert(i*equidistantwidth);
 		}
 
-	}else if(this->getCrossoverSettings()->getWidthSetting() == MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH
-			|| this->getCrossoverSettings()->getWidthSetting() == MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH	){
+	}
+	else if(this->getCrossoverSettings()->getWidthSetting() == MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH
+			|| this->getCrossoverSettings()->getWidthSetting() == MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH	)
+	{
 
 		unsigned int minWidth;
-		if(this->getCrossoverSettings()->getWidthSetting() == MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH){
+		if(this->getCrossoverSettings()->getWidthSetting() == MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH)
+		{
 			minWidth = 1;
 		}else{
 			minWidth = this->getCrossoverSettings()->getMinWidth();
 		}
 
 
-		for(unsigned int i = 0;i<crossoverPoints;i++){
+		for(unsigned int i = 0;i<crossoverPoints;i++)
+		{
 			//Pick a random number in the interval
 			unsigned int rnd_pos;
 			bool valid;
-			do{
+
+			do
+			{
 				rnd_pos = Random::instance()->generateInt(0,this->getBuilderSettings()->getNum());
 
 				std::set<unsigned int>::iterator itlow=std::lower_bound(crossoverPositions.begin(),crossoverPositions.end(),rnd_pos);
-				if(itlow != crossoverPositions.end()){
+
+				if(itlow != crossoverPositions.end())
+				{
 					std::advance(itlow,-1);
 				}
+
 				std::set<unsigned int>::const_iterator itup=crossoverPositions.upper_bound (rnd_pos);
 				std::set<unsigned int>::const_iterator pos=crossoverPositions.find(rnd_pos);
 
 				valid = true;
 
 				valid &= rnd_pos >= minWidth; //ensure there is enough space on the interval boundaries
-				if(!valid) {continue;}
+				if(!valid)
+				{
+					continue;
+				}
 
 				valid &= rnd_pos <= totalWidth - minWidth;
-				if(!valid) {continue;}
+				if(!valid)
+				{
+					continue;
+				}
 
 				valid &= pos == crossoverPositions.end(); //element is not contained within the set
-				if(!valid) {continue;}
+				if(!valid)
+				{
+					continue;
+				}
 
 				//is the picked element too near to another element already contained?
 				//ensure between two values there is enough width, i.e. either we have a lower or upper neighbor and the distance is correct or not.
 				valid &= itlow == crossoverPositions.end() || (itlow != crossoverPositions.end() && rnd_pos - *itlow >= minWidth);
-				if(!valid) {continue;}
+				if(!valid)
+				{
+					continue;
+				}
 				valid &= itup == crossoverPositions.end() || (itup != crossoverPositions.end() && *itup - rnd_pos >= minWidth);
-				if(!valid) {continue;}
+				if(!valid)
+				{
+					continue;
+				}
 
 			}while(!valid);
+
 			crossoverPositions.insert(rnd_pos);
 		}
 	}
@@ -126,7 +143,8 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 
 	unsigned int i = 0;
 
-	for (; widthIterator != crossoverPositions.end(); ++widthIterator) {
+	for (; widthIterator != crossoverPositions.end(); ++widthIterator)
+	{
 		if (flip) {
 			std::copy(mommy_container.begin() + i, mommy_container.begin()+*widthIterator,target_it);
 		} else {
@@ -142,8 +160,8 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 	return resultset;
 }
 
-} /* namespace Crossover */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace crossover */
+} /* namespace operation */
+} /* namespace geneial */
 
-#endif /* MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_HPP_ */
+#endif /* __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_HPP_ */

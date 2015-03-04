@@ -1,10 +1,10 @@
 #include <geneial/utility/patterns/singleton.hpp>
 
-#ifndef RANDOM_H_
-#define RANDOM_H_
+#ifndef __GENEIAL_RANDOM_H_
+#define __GENEIAL_RANDOM_H_
 
-namespace GeneticLibrary {
-namespace Utility {
+namespace geneial {
+namespace utility {
 
 class Random : public singleton<Random> {
 	 friend class singleton <Random>;
@@ -31,7 +31,7 @@ class Random : public singleton<Random> {
 
 };
 
-} /* namespace Utility */
-} /* namespace GeneticLibrary */
+} /* namespace utility */
+} /* namespace geneial */
 
-#endif /* RANDOM_H_ */
+#endif /* __GENEIAL_RANDOM_H_ */

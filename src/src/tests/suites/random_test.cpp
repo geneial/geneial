@@ -7,7 +7,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <geneial/utility/Random.h>
-using namespace GeneticLibrary::Utility;
+using namespace geneial::utility;
 
 BOOST_AUTO_TEST_SUITE( RandomSuite )
 

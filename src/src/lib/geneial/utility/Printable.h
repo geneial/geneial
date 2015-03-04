@@ -1,13 +1,14 @@
-#ifndef PRINTABLE_H_
-#define PRINTABLE_H_
+#ifndef __GENEIAL_PRINTABLE_H_
+#define __GENEIAL_PRINTABLE_H_
 #include <iostream>
 
-namespace GeneticLibrary {
-namespace Utility {
+namespace geneial {
+namespace utility {
 
 class Printable {
 public:
 	virtual ~Printable() {};
+
 	virtual void print(std::ostream& os) const = 0;
 };
 /**
@@ -20,6 +21,6 @@ std::ostream& operator<<(std::ostream& os, const Printable& p);
 std::ostream& operator<<(std::ostream& os, const Printable*& p);
 
 
-} /* namespace Utility */
-} /* namespace GeneticLibrary */
-#endif /* PRINTABLE_H_ */
+} /* namespace utility */
+} /* namespace geneial */
+#endif /* __GENEIAL_PRINTABLE_H_ */

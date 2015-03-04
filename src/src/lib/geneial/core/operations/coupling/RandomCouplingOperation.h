@@ -1,29 +1,22 @@
-/*
- * RandomCouplingOperation.h
- *
- *  Created on: Dec 12, 2014
- *      Author: bewo
- */
-
-#ifndef SIMPLECOUPLING_H_
-#define SIMPLECOUPLING_H_
+#ifndef __GENEIAL_RANDOM_COUPLING_OPERATION_H_
+#define __GENEIAL_RANDOM_COUPLING_OPERATION_H_
 
 #include <geneial/core/operations/coupling/BaseCouplingOperation.h>
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Coupling {
+namespace geneial {
+namespace operation {
+namespace coupling {
 
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Operation::Selection;
-using namespace GeneticLibrary::Operation::Crossover;
-
+using namespace geneial::operation::selection;
+using namespace geneial::population::management;
 
 /**
  * RandomCouplingOperation will choose parents from the mating pool at random
  */
 template <typename FITNESS_TYPE>
-class RandomCouplingOperation : public BaseCouplingOperation<FITNESS_TYPE> {
+class RandomCouplingOperation : public BaseCouplingOperation<FITNESS_TYPE>
+{
+
 public:
 	RandomCouplingOperation(CouplingSettings *settings): BaseCouplingOperation<FITNESS_TYPE>(settings) {};
 	virtual ~RandomCouplingOperation() {};
@@ -37,10 +30,10 @@ public:
 
 };
 
-} /* namespace Coupling */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace coupling */
+} /* namespace operation */
+} /* namespace geneial */
 
 #include <geneial/core/operations/coupling/RandomCouplingOperation.hpp>
 
-#endif /* SIMPLECOUPLING_H_ */
+#endif /* __GENEIAL_RANDOM_COUPLING_OPERATION_H_ */

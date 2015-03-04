@@ -1,34 +1,24 @@
-/*
- * FitnessProportionalSelection.h
- *
- *  Created on: Dec 11, 2014
- *      Author: bewo
- */
-
-#ifndef ROULETTEWHEELSELECTION_H_
-#define ROULETTEWHEELSELECTION_H_
+#ifndef __GENEIAL_ROULETTE_WHEEL_SELECTION_H_
+#define __GENEIAL_ROULETTE_WHEEL_SELECTION_H_
 
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
 
 #include <map>
 #include <stdexcept>
 
-
-namespace GeneticLibrary {
-namespace Operation {
-namespace Selection {
-
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Manager;
+namespace geneial {
+namespace operation {
+namespace selection {
 
 /**
  * Select a number of parents based on a roulette wheel distribution over the chromosomes fitness
  */
 template <typename FITNESS_TYPE>
-class RouletteWheelSelection : public BaseSelectionOperation<FITNESS_TYPE>{
+class RouletteWheelSelection : public BaseSelectionOperation<FITNESS_TYPE>
+{
 public:
 	RouletteWheelSelection(SelectionSettings* settings): BaseSelectionOperation<FITNESS_TYPE>(settings) {};
-	virtual ~RouletteWheelSelection(){};
+	virtual ~RouletteWheelSelection() {};
 
 	virtual typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set doSelect(
 			const Population<FITNESS_TYPE> &population,
@@ -37,10 +27,10 @@ public:
 };
 
 
-} /* namespace Selection */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace selection */
+} /* namespace operation */
+} /* namespace geneial */
 
 #include <geneial/core/operations/selection/RouletteWheelSelection.hpp>
 
-#endif /* ROULETTEWHEELSELECTION_H_ */
+#endif /* __GENEIAL_ROULETTE_WHEEL_SELECTION_H_ */

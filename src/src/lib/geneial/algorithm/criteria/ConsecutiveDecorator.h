@@ -1,28 +1,22 @@
-/*
- * MaxGenerationCriterion.h
- *
- *  Created on: Dec 10, 2014
- *      Author: bewo
- */
-
-#ifndef CONSECUTIVE_CRITERION_H_
-#define CONSECUTIVE_CRITERION_H_
+#ifndef __GENEIAL_CONSECUTIVE_CRITERION_H_
+#define __GENEIAL_CONSECUTIVE_CRITERION_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
 #include <deque>
 
-namespace GeneticLibrary {
-namespace Algorithm {
-namespace StoppingCriteria {
+namespace geneial {
+namespace algorithm {
+namespace stopping_criteria {
 
-using namespace GeneticLibrary::Population::Manager;
+using namespace geneial::population::management;
 
 /**
  * Decorator that checks whether a given criterion has been reached several times.
  */
 template<typename FITNESS_TYPE>
-class ConsecutiveDecorator: public StatefulStoppingCriterion<FITNESS_TYPE> {
+class ConsecutiveDecorator: public StatefulStoppingCriterion<FITNESS_TYPE>
+{
 
 public:
 	typedef typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion;
@@ -30,7 +24,8 @@ public:
 	ConsecutiveDecorator(unsigned int windowSize, unsigned int consecutiveHits,
 			typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion) :
 			_windowSize(windowSize), _consecutiveHits(
-					consecutiveHits), _criterion(criterion) {
+					consecutiveHits), _criterion(criterion)
+	{
 		assert(windowSize >= 1); //Allow wrapper valuss of 1 here, make it as flexible as possible
 		assert(consecutiveHits > 0);
 		assert(windowSize >= consecutiveHits);
@@ -95,8 +90,8 @@ private:
 
 };
 
-} /* namespace StoppingCriteria */
-} /* namespace Algorithm */
-} /* namespace GeneticLibrary */
+} /* namespace stopping_criteria */
+} /* namespace algorithm */
+} /* namespace geneial */
 
-#endif /* CONSECUTIVE_CRITERION_H_ */
+#endif /* __GENEIAL_CONSECUTIVE_CRITERION_H_ */

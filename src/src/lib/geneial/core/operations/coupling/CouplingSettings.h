@@ -1,18 +1,12 @@
-/*
- * CouplingSettings.h
- *
- *  Created on: Dec 12, 2014
- *      Author: bewo
- */
-
-#ifndef COUPLINGSETTINGS_H_
-#define COUPLINGSETTINGS_H_
+#ifndef __GENEIAL_COUPLING_SETTINGS_H_
+#define __GENEIAL_COUPLING_SETTINGS_H_
 
 #include <cassert>
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Coupling {
+namespace geneial {
+namespace operation {
+namespace coupling {
+
 /**
  * Generic class for coupling options
  */
@@ -41,10 +35,10 @@ public:
 
 };
 
-} /* namespace Coupling */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace coupling */
+} /* namespace operation */
+} /* namespace geneial */
 
 
 
-#endif /* COUPLINGSETTINGS_H_ */
+#endif /* __GENEIAL_COUPLING_SETTINGS_H_ */

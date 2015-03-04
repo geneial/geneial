@@ -1,32 +1,24 @@
-/*
- * BaseStopCriterion.h
- *
- *  Created on: Dec 10, 2014
- *      Author: bewo
- */
-
-#ifndef POPULATION_UNCHANGED_CRITERION_H_
-#define POPULATION_UNCHANGED_CRITERION_H_
+#ifndef __GENEIAL_POPULATION_UNCHANGED_CRITERION_H_
+#define __GENEIAL_POPULATION_UNCHANGED_CRITERION_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
 
+namespace geneial {
+namespace algorithm {
+namespace stopping_criteria {
 
-namespace GeneticLibrary {
-namespace Algorithm {
-namespace StoppingCriteria {
+using namespace geneial::population::management;
 
-using namespace GeneticLibrary::Population::Manager;
-
-//TODO (bewo) Think about this class...
+//TODO (bewo) Think about this class semantics...
 template <typename FITNESS_TYPE>
 class PopulationUnchangedCriterion: StatefulStoppingCriterion<FITNESS_TYPE>
 {
 public:
-
 	PopulationUnchangedCriterion() :
-			_wasEverInvoked(false), _lastGenerationOldestAge(0), _lastGenerationYoungestAge(
-					0){}
+			_wasEverInvoked(false),
+			_lastGenerationOldestAge(0),
+			_lastGenerationYoungestAge(0){}
 
 	virtual ~PopulationUnchangedCriterion(){};
 
@@ -65,8 +57,8 @@ private:
 	unsigned int _lastGenerationYoungestAge;
 };
 
-} /* namespace StoppingCriteria */
-} /* namespace Algorithm */
-} /* namespace GeneticLibrary */
+} /* namespace stopping_criteria */
+} /* namespace algorithm */
+} /* namespace geneial */
 
-#endif /* POPULATION_UNCHANGED_CRITERION_H_ */
+#endif /* __GENEIAL_POPULATION_UNCHANGED_CRITERION_H_ */

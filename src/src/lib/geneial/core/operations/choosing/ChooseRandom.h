@@ -1,22 +1,15 @@
-/*
- * ChooseRandom.h
- *
- *  Created on: Jan 12, 2015
- *      Author: lukas
- */
-
-#ifndef SRC_LIB_GENEIAL_CORE_OPERATIONS_CHOOSERANDOM_H_
-#define SRC_LIB_GENEIAL_CORE_OPERATIONS_CHOOSERANDOM_H_
+#ifndef __GENEIAL_CHOOSE_RANDOM_H_
+#define __GENEIAL_CHOOSE_RANDOM_H_
 
 #include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Choosing {
+namespace geneial {
+namespace operation {
+namespace choosing {
 
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Operation::Mutation;
+using namespace geneial::population;
+using namespace geneial::operation::mutation;
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class ChooseRandom: public BaseChoosingOperation<FITNESS_TYPE> {
@@ -48,10 +41,10 @@ public:
 	}
 };
 
-} //choosing
-} //Op
-} //GenLib
+} /* namespace choosing */
+} /* namespace operation */
+} /* namespace geneial */
 
 #include <geneial/core/operations/choosing/ChooseRandom.hpp>
 
-#endif /* SRC_LIB_GENEIAL_CORE_OPERATIONS_CHOOSERANDOM_H_ */
+#endif /* __GENEIAL_CHOOSE_RANDOM_H_ */

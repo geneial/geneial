@@ -1,23 +1,16 @@
-/*
- * MaxGenerationCriterion.h
- *
- *  Created on: Dec 10, 2014
- *      Author: bewo
- */
-
-#ifndef MAX_GENERATION_CRITERION_H_
-#define MAX_GENERATION_CRITERION_H_
+#ifndef __GENEIAL_MAX_GENERATION_CRITERION_H_
+#define __GENEIAL_MAX_GENERATION_CRITERION_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 #include <geneial/core/population/Population.h>
 
+namespace geneial {
+namespace algorithm {
+namespace stopping_criteria {
 
-namespace GeneticLibrary {
-namespace Algorithm {
-namespace StoppingCriteria {
-
-using namespace GeneticLibrary::Population::Manager;
+using namespace geneial::population;
+using namespace geneial::population::management;
 
 template <typename FITNESS_TYPE>
 class MaxGenerationCriterion: public BaseStoppingCriterion<FITNESS_TYPE> {
@@ -41,8 +34,8 @@ public:
 
 };
 
-} /* namespace StoppingCriteria */
-} /* namespace Algorithm */
-} /* namespace GeneticLibrary */
+} /* namespace stopping_criteria */
+} /* namespace algorithm */
+} /* namespace geneial */
 
-#endif /* MAX_GENERATION_CRITERION_H_ */
+#endif /* __GENEIAL_MAX_GENERATION_CRITERION_H_ */

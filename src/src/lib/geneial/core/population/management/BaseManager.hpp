@@ -1,21 +1,18 @@
-/**
- *  Manager.cpp
- *  Created on: Dec 8, 2014
- *  Manages the population and most of the processes which modify the chromosomes
- *
- */
-#ifndef MANAGER_HPP_
-#define MANAGER_HPP_
+#ifndef __GENEIAL_BASE_MANAGER_HPP_
+#define __GENEIAL_BASE_MANAGER_HPP_
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/core/population/Population.h>
+
 #include <iterator>
 
-namespace GeneticLibrary {
-namespace Population {
-namespace Manager {
+namespace geneial {
+namespace population {
+namespace management {
 
-using namespace Chromosome;
+/**
+ *  Manages the population and most of the processes which modify the chromosomes
+ */
 
 template <typename FITNESS_TYPE>
 void BaseManager<FITNESS_TYPE>::replenishPopulation ()
@@ -60,8 +57,8 @@ FITNESS_TYPE BaseManager<FITNESS_TYPE>::getLowestFitness() const
 	return _population.getFitnessMap().begin()->first;
 }
 
-} /* namespace Manager */
-} /* namespace Population */
-} /* namespace GeneticLibrary */
+} /* namespace manager */
+} /* namespace population */
+} /* namespace geneial */
 
-#endif /* MANAGER_HPP_ */
+#endif /* __GENEIAL_BASE_MANAGER_HPP_ */

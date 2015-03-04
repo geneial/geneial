@@ -1,19 +1,18 @@
-#ifndef BESTCHROMOSOMEOBSERVER_H_
-#define BESTCHROMOSOMEOBSERVER_H_
+#ifndef __GENEIAL_BEST_CHROMOSOME_OBSERVER_H_
+#define __GENEIAL_BEST_CHROMOSOME_OBSERVER_H_
 
 #include <geneial/algorithm/observer/AlgorithmObserver.h>
+
 #include <set>
 
-namespace GeneticLibrary {
-namespace Algorithm {
+namespace geneial {
+namespace algorithm {
 
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Operation;
+using namespace geneial::population::management;
 
 template <typename FITNESS_TYPE>
-class BestChromosomeObserver : public AlgorithmObserver<FITNESS_TYPE> {
+class BestChromosomeObserver : public AlgorithmObserver<FITNESS_TYPE>
+{
 public:
 	BestChromosomeObserver():
 		_foundBest(false)
@@ -37,10 +36,11 @@ public:
 	virtual void updateNewBestChromosome(BaseManager<FITNESS_TYPE> &manager){}
 private:
 	FITNESS_TYPE _best;
+
 	bool _foundBest;
 };
 
-} //Algorithm
-} //GeneticLibrary
+} /* namespace algorithm */
+} /* namespace geneial */
 
-#endif /* BESTCHROMOSOMEOBSERVER_H_ */
+#endif /* __GENEIAL_BEST_CHROMOSOME_OBSERVER_H_ */

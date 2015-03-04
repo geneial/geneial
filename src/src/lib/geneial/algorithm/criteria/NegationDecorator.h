@@ -1,23 +1,15 @@
-/*
- * MaxGenerationCriterion.h
- *
- *  Created on: Dec 10, 2014
- *      Author: bewo
- */
-
-#ifndef NEGATION_DECORTATOR_H_
-#define NEGATION_DECORTATOR_H_
+#ifndef __GENEIAL_NEGATION_DECORTATOR_H_
+#define __GENEIAL_NEGATION_DECORTATOR_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 #include <geneial/core/population/Population.h>
 
+namespace geneial {
+namespace algorithm {
+namespace stopping_criteria {
 
-namespace GeneticLibrary {
-namespace Algorithm {
-namespace StoppingCriteria {
-
-using namespace GeneticLibrary::Population::Manager;
+using namespace geneial::population::management;
 
 /**
  * Decorator that negates a criterion
@@ -57,8 +49,8 @@ private:
 
 };
 
-} /* namespace StoppingCriteria */
-} /* namespace Algorithm */
-} /* namespace GeneticLibrary */
+} /* namespace stopping_criteria */
+} /* namespace algorithm */
+} /* namespace geneial */
 
-#endif /* NEGATION_DECORTATOR_H_ */
+#endif /* __GENEIAL_NEGATION_DECORTATOR_H_ */

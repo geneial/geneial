@@ -1,12 +1,5 @@
-/*
- * UniformRandomSelection.hpp
- *
- *  Created on: Dec 11, 2014
- *      Author: bewo
- */
-
-#ifndef UNIFORM_RANDOM_SELECTION_HPP_
-#define UNIFORM_RANDOM_SELECTION_HPP_
+#ifndef __GENEIAL_UNIFORM_RANDOM_SELECTION_HPP_
+#define __GENEIAL_UNIFORM_RANDOM_SELECTION_HPP_
 
 #include <geneial/core/operations/selection/UniformRandomSelection.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
@@ -15,15 +8,9 @@
 #include <map>
 #include <cassert>
 
-
-namespace GeneticLibrary {
-namespace Operation {
-namespace Selection {
-
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Utility;
+namespace geneial {
+namespace operation {
+namespace selection {
 
 //TODO (bewo) check whether all this will work with negative fitness values
 
@@ -43,23 +30,28 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set UniformRando
 		//TODO (bewo) allow parameter for the best chromosomes to be selected (and skipped here)
 		assert(population.getSize()>=left_select);
 
-		while(left_select > 0){
+		while(left_select > 0)
+		{
 			//TODO (bewo) make this a setting:
 			const bool allowDuplicates = false;
 			const_pop_itr rnditer;
-			do{
+			do
+			{
 				rnditer = population.getFitnessMap().begin();
+
 				std::advance( rnditer, Random::instance()->generateInt(0,population.getFitnessMap().size()-1) );
-			}while(allowDuplicates || std::find(result.begin(), result.end(), rnditer->second)!=result.end());
+
+			}
+			while(allowDuplicates || std::find(result.begin(), result.end(), rnditer->second)!=result.end());
+
 			left_select--;
 			result.push_back(rnditer->second);
 		}
 		return result;
 }
 
+} /* namespace selection */
+} /* namespace operation */
+} /* namespace geneial */
 
-} /* namespace Selection */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
-
-#endif /* UNIFORM_RANDOM_SELECTION_HPP_ */
+#endif /* __GENEIAL_UNIFORM_RANDOM_SELECTION_HPP_ */

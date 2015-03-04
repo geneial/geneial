@@ -1,29 +1,25 @@
-/*
- * BaseFitnessProcessingStrategy.h
- *
- *  Created on: Feb 23, 2015
- *      Author: bewo
- */
-
-#ifndef BASEFITNESSPROCESSINGSTRATEGY_H_
-#define BASEFITNESSPROCESSINGSTRATEGY_H_
+#ifndef __GENEIAL_BASE_FITNESS_PROCESSING_STRATEGY_H_
+#define __GENEIAL_BASE_FITNESS_PROCESSING_STRATEGY_H_
 
 #include <geneial/core/population/Population.h>
 #include <geneial/core/population/ContainerTypes.h>
 
 
-namespace GeneticLibrary {
+namespace geneial {
 
-using namespace GeneticLibrary::Population;
+using namespace geneial::population;
+
 
 template <typename FITNESS_TYPE>
 class BaseFitnessProcessingStrategy
 {
 public:
+
 	virtual void ensureHasFitness(const typename ContainerTypes<FITNESS_TYPE>::chromosome_container &refcontainer) = 0;
+
 	virtual ~BaseFitnessProcessingStrategy(){};
 };
 
-}  // namespace GeneticLibrary
+}  /*namespace geneial*/
 
-#endif /* BASEFITNESSPROCESSINGSTRATEGY_H_ */
+#endif /* __GENEIAL_BASE_FITNESS_PROCESSING_STRATEGY_H_ */

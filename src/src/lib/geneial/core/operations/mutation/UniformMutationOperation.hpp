@@ -1,12 +1,5 @@
-/*
- * UniformMutationOperation.hpp
- *
- *  Created on: Dec 30, 2014
- *      Author: lukas
- */
-
-#ifndef SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_UNIFORMMUTATIONOPERATION_HPP_
-#define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_UNIFORMMUTATIONOPERATION_HPP_
+#ifndef __GENEIAL_UNIFORM_MUTATION_OPERATION_HPP_
+#define __GENEIAL_UNIFORM_MUTATION_OPERATION_HPP_
 
 #include <geneial/core/operations/mutation/UniformMutationOperation.h>
 #include <geneial/core/operations/mutation/MutationSettings.h>
@@ -15,14 +8,9 @@
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
 #include <geneial/core/population/Population.h>
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Mutation {
-
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Operation::Mutation;
-using namespace GeneticLibrary::Operation::Choosing;
+namespace geneial {
+namespace operation {
+namespace mutation {
 
 /*
  *  Returns a chromosome container with some new chromosomes which are partially mutated versions of the old ones.
@@ -181,11 +169,11 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
 
 }
 
-} //namespace Mutation
-} //namespace Operation
-} //namespace GeneticLibrary
+} /* namespace mutation */
+} /* namespace operation */
+} /* namespace geneial */
 
 
 
 
-#endif /* SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_UNIFORMMUTATIONOPERATION_HPP_ */
+#endif /* __GENEIAL_UNIFORM_MUTATION_OPERATION_HPP_ */

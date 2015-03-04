@@ -1,24 +1,17 @@
-/*
- * UniformMutationOperation.h
- *
- *  Created on: Dec 28, 2014
- *      Author: lukas
- */
-#ifndef SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_UNIFORMMUTATIONOPERATION_H_
-#define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_UNIFORMMUTATIONOPERATION_H_
+#ifndef __GENEIAL_UNIFORM_MUTATION_OPERATION_H_
+#define __GENEIAL_UNIFORM_MUTATION_OPERATION_H_
 
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
 
 #include <cassert>
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Mutation {
-
-using namespace GeneticLibrary::Population::Manager;
+namespace geneial {
+namespace operation {
+namespace mutation {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-class UniformMutationOperation: public BaseMutationOperation<FITNESS_TYPE> {
+class UniformMutationOperation: public BaseMutationOperation<FITNESS_TYPE>
+{
 
 private:
 	MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *_builderSettings;
@@ -33,14 +26,14 @@ public:
 			MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *builderFactory) :
 			BaseMutationOperation<FITNESS_TYPE>(settings,choosingOperation),
 					_builderSettings(builderSettings),
-					_builderFactory(builderFactory) {
+					_builderFactory(builderFactory)
+	{
 		assert(_builderSettings != NULL);
 		assert(_builderFactory != NULL);
 	}
-	;
-	virtual ~UniformMutationOperation() {
-	}
-	;
+
+	virtual ~UniformMutationOperation() {}
+
 	/*
 	 *  Returns a new chromosome which is a partially mutated version of the old one.
 	 *  */
@@ -49,15 +42,18 @@ public:
 			BaseManager<FITNESS_TYPE> &manager
 			);
 
-	//TODO lukas copy paste from MultiValueChromosomeAvarageCrossover.h ...
-	MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const {
+	//TODO (lukas): copy paste from MultiValueChromosomeAvarageCrossover.h ...
+	MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const
+	{
 		return _builderFactory;
 	}
+
 }; //class
-}  // namespace Mutation
-}  // namespace Operation
-}  // namespace GeneticLibrary
+
+} /* namespace mutation */
+} /* namespace operation */
+} /* namespace geneial */
 
 #include <geneial/core/operations/mutation/UniformMutationOperation.hpp>
 
-#endif /* SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_UNIFORMMUTATIONOPERATION_H_ */
+#endif /* __GENEIAL_UNIFORM_MUTATION_OPERATION_H_ */

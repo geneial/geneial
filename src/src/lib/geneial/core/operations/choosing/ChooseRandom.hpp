@@ -1,28 +1,19 @@
-/*
- * ChooseRandom.hpp
- *
- *  Created on: Jan 12, 2015
- *      Author: lukas
- */
-
-#ifndef SRC_LIB_GENEIAL_CORE_OPERATIONS_CHOOSERANDOM_HPP_
-#define SRC_LIB_GENEIAL_CORE_OPERATIONS_CHOOSERANDOM_HPP_
+#ifndef __GENEIAL_CHOOSE_RANDOM_HPP_
+#define __GENEIAL_CHOOSE_RANDOM_HPP_
 
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 #include <geneial/core/population/Population.h>
 #include <geneial/utility/Random.h>
 
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Choosing {
-
-using namespace GeneticLibrary::Utility;
-using namespace GeneticLibrary::Population;
+namespace geneial {
+namespace operation {
+namespace choosing {
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 typename Population<FITNESS_TYPE>::chromosome_container ChooseRandom<VALUE_TYPE,FITNESS_TYPE>::doChoose(
-		typename Population<FITNESS_TYPE>::chromosome_container chromosomeInputSet){
+		typename Population<FITNESS_TYPE>::chromosome_container chromosomeInputSet)
+{
 
 	typename Population<FITNESS_TYPE>::chromosome_container::iterator chromosomeInputContainer_it;
 	typename Population<FITNESS_TYPE>::chromosome_container chromosomeOutputSet;
@@ -30,19 +21,17 @@ typename Population<FITNESS_TYPE>::chromosome_container ChooseRandom<VALUE_TYPE,
 	for (chromosomeInputContainer_it = chromosomeInputSet.begin();
 				chromosomeInputContainer_it != chromosomeInputSet.end(); ++chromosomeInputContainer_it)
 	{
-
 		//Uses Mutation Settings
-		if (Random::instance()->decision(this->getSettings()->getPropability())){
+		if (Random::instance()->decision(this->getSettings()->getPropability()))
+		{
 			chromosomeOutputSet.push_back(*chromosomeInputContainer_it);
 		}
 	}
 	return chromosomeOutputSet;
 }
 
-} //Choosing
-} //Op
-} //GenLib
+} /* namespace choosing */
+} /* namespace operation */
+} /* namespace geneial */
 
 #endif
-
-

@@ -1,23 +1,14 @@
-/*
- * MultiValueNPointCrossover.h
- *
- *  Created on: Dec 12, 2014
- *      Author: bewo
- */
-
-#ifndef MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_HPP_
-#define MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_HPP_
+#ifndef __GENEIAL_MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_HPP_
+#define __GENEIAL_MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_HPP_
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeAverageCrossover.h>
 
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Crossover {
+namespace geneial {
+namespace operation {
+namespace crossover {
 
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Operation::Coupling;
+using namespace geneial::operation::coupling;
 
 //TODO (bewo) allow random weighting factor param for one side
 //value = (e.g. 2x ParentA + 1x ParentB) / 3 etc.
@@ -30,7 +21,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::value_container value_container;
 	typedef typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr mvc_ptr;
 
-	typename Coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set resultset;
+	typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set resultset;
 
 	mvc_ptr mvc_mommy
 			= boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(mommy);
@@ -58,7 +49,8 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 	typename value_container::iterator daddy_it = daddy_container.begin();
 	for ( unsigned int i=0;
 			mommy_it != mommy_container.end();
-			++i){
+			++i)
+	{
 			child_container.push_back((*mommy_it + *daddy_it) / 2);
 			//child_container.push_back(std::max(*mommy_it,*daddy_it));
 		++mommy_it;
@@ -69,8 +61,8 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 	return resultset;
 }
 
-} /* namespace Crossover */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace crossover */
+} /* namespace pperation */
+} /* namespace geneial */
 
-#endif /* MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_HPP_ */
+#endif /* __GENEIAL_MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_HPP_ */

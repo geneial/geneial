@@ -1,12 +1,5 @@
-/*
- * FitnessProportionalSelection.h
- *
- *  Created on: Dec 11, 2014
- *      Author: bewo
- */
-
-#ifndef ROULETTEWHEELSELECTION_HPP_
-#define ROULETTEWHEELSELECTION_HPP_
+#ifndef __GENEIAL_ROULETTE_WHEEL_SELECTION_HPP_
+#define __GENEIAL_ROULETTE_WHEEL_SELECTION_HPP_
 
 #include <geneial/core/operations/selection/RouletteWheelSelection.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
@@ -16,53 +9,63 @@
 #include <cassert>
 
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Selection {
-
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Utility;
+namespace geneial {
+namespace operation {
+namespace selection {
 
 //TODO (bewo) check whether all this will work with negative fitness values
 
 template <typename FITNESS_TYPE>
-class RouletteWheelComparator {
+class RouletteWheelComparator
+{
 public:
-    bool operator()(const std::pair<FITNESS_TYPE, FITNESS_TYPE> &a, const std::pair<FITNESS_TYPE, FITNESS_TYPE> &b) {
-        if (b.first == -1) {
+    bool operator()(const std::pair<FITNESS_TYPE, FITNESS_TYPE> &a, const std::pair<FITNESS_TYPE, FITNESS_TYPE> &b)
+    {
+        if (b.first == -1)
+        {
             if (b.second >= a.first && b.second < a.second)
                 return false;
             return (b.second >= a.second);
         }
+
         if (a.first == -1) {
             if (a.second >= b.first && a.second < b.second)
                 return false;
             return (a.second >= b.second);
         }
+
         return a.first < b.first;
     }
 };
 
 //TODO(bewo): This seems not work with negative Fitness values!
 template <typename FITNESS_TYPE>
-class RouletteWheel {
+class RouletteWheel
+{
+
 private:
+
 	typedef typename BaseChromosome<FITNESS_TYPE>::ptr chrom_ptr_type;
+
 	typedef typename Population<FITNESS_TYPE>::fitnessmap_const_it const_pop_itr;
+
 	FITNESS_TYPE _sum;
+
     std::map<std::pair<FITNESS_TYPE, FITNESS_TYPE> , chrom_ptr_type, RouletteWheelComparator<FITNESS_TYPE> > ranges;
+
 public:
-    RouletteWheel(const Population<FITNESS_TYPE> &population) :_sum(0){
+    RouletteWheel(const Population<FITNESS_TYPE> &population) :_sum(0)
+	{
 		for (const_pop_itr it =	population.getFitnessMap().begin();
-				it != population.getFitnessMap().end(); ++it) {
+				it != population.getFitnessMap().end(); ++it)
+		{
 			ranges[std::pair<FITNESS_TYPE, FITNESS_TYPE>(_sum, it->first + _sum)] = it->second;
 			_sum += it->first;
 		}
     }
 
-    chrom_ptr_type spin(FITNESS_TYPE random) {
+    chrom_ptr_type spin(FITNESS_TYPE random)
+    {
         return ranges.find(std::pair<FITNESS_TYPE, FITNESS_TYPE>(-1, random*_sum))->second;
     }
 };
@@ -71,7 +74,8 @@ public:
 template <typename FITNESS_TYPE>
 typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWheelSelection<FITNESS_TYPE>::doSelect(
 		const Population<FITNESS_TYPE> &population,
-		BaseManager<FITNESS_TYPE> &manager){
+		BaseManager<FITNESS_TYPE> &manager)
+{
 
 		//shorthands for type mess
 		typedef typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set result_set;
@@ -90,7 +94,8 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
 			//TODO (bewo) make this a RouletteWheel setting:
 			const bool allowDuplicates = false;
 			chrom_ptr_type ptr;
-			do{
+			do
+			{
 				//TODO (bewo) this is suboptimal:
 				FITNESS_TYPE random = (FITNESS_TYPE) Random::instance()->generateDouble(0.0,1.0);
 				ptr = rouletteWheel.spin(random);
@@ -102,8 +107,9 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
 }
 
 
-} /* namespace Selection */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace selection */
+} /* namespace operation */
+} /* namespace geneial */
 
-#endif /* ROULETTEWHEELSELECTION_HPP_ */
+
+#endif /* __GENEIAL_ROULETTE_WHEEL_SELECTION_HPP_ */

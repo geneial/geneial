@@ -1,28 +1,20 @@
-/*
- * BaseCouplingOperation.h
- *
- *  Created on: Dec 12, 2014
- *      Author: bewo
- */
-
-#ifndef BASECOUPLINGOPERATION_H_
-#define BASECOUPLINGOPERATION_H_
+#ifndef __GENEIAL_BASE_COUPLING_OPERATION_H_
+#define __GENEIAL_BASE_COUPLING_OPERATION_H_
 
 #include <geneial/core/operations/coupling/CouplingSettings.h>
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
-
 #include <geneial/core/population/management/BaseManager.h>
 
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Coupling {
+namespace geneial {
+namespace operation {
+namespace coupling {
 
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Operation::Selection;
-using namespace GeneticLibrary::Operation::Crossover;
+using namespace geneial::operation::selection;
+using namespace geneial::operation::crossover;
+using namespace geneial::population::management;
+
 
 template <typename FITNESS_TYPE>
 class BaseCouplingOperation {
@@ -54,8 +46,8 @@ public:
 
 };
 
-} /* namespace Coupling */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace coupling */
+} /* namespace operation */
+} /* namespace geneial */
 
-#endif /* BASECOUPLINGOPERATION_H_ */
+#endif /* __GENEIAL_BASE_COUPLING_OPERATION_H_ */

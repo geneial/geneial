@@ -1,23 +1,17 @@
-/*
- * BaseStopCriterion.h
- *
- *  Created on: Dec 10, 2014
- *      Author: bewo
- */
-
-#ifndef BASESTOPPINGCRITERION_H_
-#define BASESTOPPINGCRITERION_H_
+#ifndef __GENEIAL_BASE_STOPPING_CRITERION_H_
+#define __GENEIAL_BASE_STOPPING_CRITERION_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 
-namespace GeneticLibrary {
-namespace Algorithm {
-namespace StoppingCriteria {
+namespace geneial {
+namespace algorithm {
+namespace stopping_criteria {
 
-using namespace GeneticLibrary::Population::Manager;
+using namespace geneial::utility;
+using namespace geneial::population::management;
 
 template <typename FITNESS_TYPE>
-class BaseStoppingCriterion: public Utility::Printable,
+class BaseStoppingCriterion: public Printable,
 							     public boost::enable_shared_from_this<BaseStoppingCriterion <FITNESS_TYPE> >
 {
 public:
@@ -45,8 +39,8 @@ public:
 	virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager) = 0;
 };
 
-} /* namespace StoppingCriteria */
-} /* namespace Algorithm */
-} /* namespace GeneticLibrary */
+} /* namespace stopping_criteria */
+} /* namespace algorithm */
+} /* namespace geneial */
 
-#endif /* BASESTOPPINGCRITERION_H_ */
+#endif /* __GENEIAL_BASE_STOPPING_CRITERION_H_ */

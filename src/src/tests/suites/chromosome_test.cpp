@@ -5,14 +5,16 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE chromomsome
 
+#include <geneial/core/population/chromosome/MultiValueChromosome.h>
+#include <geneial/core/population/chromosome/BaseChromosome.h>
+
 #include <boost/test/unit_test.hpp>
 #include <set>
 #include <vector>
 
-#include <geneial/core/population/chromosome/MultiValueChromosome.h>
-#include <geneial/core/population/chromosome/BaseChromosome.h>
-
 #include "mocks/MockMultivalueChromosome.h"
+
+using namespace test_mock;
 
 BOOST_AUTO_TEST_SUITE( ChromosomeTest )
 

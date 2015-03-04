@@ -1,12 +1,5 @@
-/*
- * MultiValueChromosome.h
- *
- *  Created on: Dec 9, 2014
- *      Author: bewo
- */
-
-#ifndef MULTIVALUECHROMOSOME_H_
-#define MULTIVALUECHROMOSOME_H_
+#ifndef __GENEIAL_MULTI_VALUE_CHROMOSOME_H_
+#define __GENEIAL_MULTI_VALUE_CHROMOSOME_H_
 
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include "boost/shared_ptr.hpp"
@@ -16,9 +9,9 @@
 #include <algorithm>
 #include <numeric>
 
-namespace GeneticLibrary {
-namespace Population {
-namespace Chromosome {
+namespace geneial {
+namespace population {
+namespace chromosome {
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 class MultiValueChromosome: public BaseChromosome<FITNESS_TYPE> {
@@ -33,8 +26,8 @@ public:
 	typedef typename boost::shared_ptr<MultiValueChromosome <VALUE_TYPE,FITNESS_TYPE> > ptr;
 	typedef typename boost::shared_ptr<const MultiValueChromosome <VALUE_TYPE,FITNESS_TYPE> > const_ptr;
 
-	MultiValueChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) : BaseChromosome<FITNESS_TYPE>(fitnessEvaluator), _container(){};
-	virtual ~MultiValueChromosome() {};
+	MultiValueChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) : BaseChromosome<FITNESS_TYPE>(fitnessEvaluator), _container(){}
+	virtual ~MultiValueChromosome() {}
 
 	bool equals(typename BaseChromosome<FITNESS_TYPE>::const_ptr chromosome) const;
 
@@ -65,9 +58,9 @@ private:
 
 };
 
-} /* namespace Chromosome */
-} /* namespace Population */
-} /* namespace GeneticLibrary */
+} /* namespace chromomsome */
+} /* namespace population */
+} /* namespace geneial */
 
 #include <geneial/core/population/chromosome/MultiValueChromosome.hpp>
-#endif /* MULTIVALUECHROMOSOME_H_ */
+#endif /* __GENEIAL_MULTI_VALUE_CHROMOSOME_H_ */

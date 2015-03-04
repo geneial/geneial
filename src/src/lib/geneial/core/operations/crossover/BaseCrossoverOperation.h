@@ -1,20 +1,13 @@
-/*
- * BaseCouplingOperation.h
- *
- *  Created on: Dec 12, 2014
- *      Author: bewo
- */
+#ifndef __GENEIAL_BASE_CROSSOVER_OPERATION_H_
+#define __GENEIAL_BASE_CROSSOVER_OPERATION_H_
 
-#ifndef BASECROSSOVEROPERATION_H_
-#define BASECROSSOVEROPERATION_H_
+namespace geneial {
+namespace operation {
+namespace crossover {
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Crossover {
+using namespace geneial::population;
+using namespace geneial::population::chromosome;
 
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Chromosome;
-using namespace GeneticLibrary::Operation::Coupling;
 
 template <typename FITNESS_TYPE>
 class BaseCrossoverOperation {
@@ -30,8 +23,8 @@ public:
 
 };
 
-} /* namespace Crossover */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace crossover */
+} /* namespace operation */
+} /* namespace geneial */
 
-#endif /* BASECROSSOVEROPERATION_H_ */
+#endif /* __GENEIAL_BASE_CROSSOVER_OPERATION_H_ */

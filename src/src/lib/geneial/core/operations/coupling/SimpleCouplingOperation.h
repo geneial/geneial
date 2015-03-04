@@ -1,22 +1,11 @@
-/*
- * SimpleCoupling.h
- *
- *  Created on: Dec 12, 2014
- *      Author: bewo
- */
-
-#ifndef SIMPLECOUPLING_H_
-#define SIMPLECOUPLING_H_
+#ifndef __GENEIAL_SIMPLE_COUPLING_OPERATION_H_
+#define __GENEIAL_SIMPLE_COUPLING_OPERATION_H_
 
 #include <geneial/core/operations/coupling/BaseCouplingOperation.h>
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Coupling {
-
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Operation::Selection;
-using namespace GeneticLibrary::Operation::Crossover;
+namespace geneial {
+namespace operation {
+namespace coupling {
 
 
 /**
@@ -38,10 +27,10 @@ public:
 
 };
 
-} /* namespace Coupling */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace coupling */
+} /* namespace operation */
+} /* namespace geneial */
 
 #include <geneial/core/operations/coupling/SimpleCouplingOperation.hpp>
 
-#endif /* SIMPLECOUPLING_H_ */
+#endif /* __GENEIAL_SIMPLE_COUPLING_OPERATION_H_ */
