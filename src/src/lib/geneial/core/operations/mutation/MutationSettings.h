@@ -39,6 +39,14 @@ public:
 	virtual ~MutationSettings(){};
 
 	MutationSettings(double propability, double amountOfMutation, unsigned int amountOfPointsOfMutation){
+		if (propability > 1)
+		{
+			propability = 1;
+		}
+		if (propability < 0)
+		{
+			propability = 0;
+		}
 		_probability = propability;
 		_amountOfPointsOfMutation = amountOfPointsOfMutation;
 		_amountOfMutation = amountOfMutation;
