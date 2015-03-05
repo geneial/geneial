@@ -127,10 +127,9 @@ BOOST_AUTO_TEST_CASE( basicMutation )
 BOOST_AUTO_TEST_CASE( Mutation_Propability )
 {
 	/*
-	 * Testing Mutation Propability for 10000 Testcases (at 50% Chance of mutation)
+	 * Testing Mutation Propability for 10000 Testcases
 	 * Checking UNIFOM and NONUNIFORM mutation
 	 *
-	 * Test Fails if less than 4850 and more than 5150 Chromosomes are Mutated
 	 */
 
 
@@ -230,28 +229,70 @@ BOOST_AUTO_TEST_CASE ( points_of_mutation )
 
 	BaseManager<double> manager(populationSettings, chromosomeFactory);
 
-	MutationSettings* mutationSettings = new MutationSettings(1,1,5);
-	ChooseRandom<int,double> *mutationChoosingOperation = new ChooseRandom<int,double>(mutationSettings);
-	BaseMutationOperation<double> *mutationOperation_NonUniform = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
-	BaseMutationOperation<double> *mutationOperation_Uniform = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
+	//for (unsigned int pointsOfMutation = 0; pointsOfMutation <= 5; pointsOfMutation++)
+	unsigned int pointsOfMutation = 2;
+	{
+		MutationSettings* mutationSettings = new MutationSettings(1,0.5,pointsOfMutation);
+		ChooseRandom<int,double> *mutationChoosingOperation = new ChooseRandom<int,double>(mutationSettings);
+		BaseMutationOperation<double> *mutationOperation_NonUniform = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
+		BaseMutationOperation<double> *mutationOperation_Uniform = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
-	BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
-	GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
-	GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set resultSet_NonUniform;
-	GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set resultSet_Uniform;
+		BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
+		GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
+		GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set resultSet_NonUniform;
+		GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set resultSet_Uniform;
 
-	inputSet.push_back(_newChromosome);
-	resultSet_NonUniform.push_back(_newChromosome);
-	resultSet_Uniform.push_back(_newChromosome);
+		inputSet.push_back(_newChromosome);
+		resultSet_NonUniform.push_back(_newChromosome);
+		resultSet_Uniform.push_back(_newChromosome);
 
-	resultSet_NonUniform = mutationOperation_NonUniform->doMutate(inputSet,manager);
-	resultSet_Uniform = mutationOperation_Uniform->doMutate(inputSet,manager);
+		resultSet_NonUniform = mutationOperation_NonUniform->doMutate(inputSet,manager);
+		resultSet_Uniform = mutationOperation_Uniform->doMutate(inputSet,manager);
 
-	//TODO Lukas Finish mutation
-	//resultSet_NonUniform.
-	BOOST_CHECK(inputSet != resultSet_NonUniform);
-	BOOST_CHECK(inputSet != resultSet_Uniform);
+		//getting Chromosome from resultSet:
+		MultiValueChromosome<int,double>::ptr mvcMutant_NonUniform = boost::dynamic_pointer_cast<MultiValueChromosome<int,double> >(*resultSet_NonUniform.begin());
+		MultiValueChromosome<int,double>::ptr mvcMutant_Uniform = boost::dynamic_pointer_cast<MultiValueChromosome<int,double> >(*resultSet_Uniform.begin());
+		MultiValueChromosome<int,double>::ptr mvcOriginal = boost::dynamic_pointer_cast<MultiValueChromosome<int,double> >(*inputSet.begin());
 
+		//getting ValueContainer from Chromosome:
+		MultiValueChromosome<int,double>::value_container &mvcMutant_NonUniform_valueContainer = mvcMutant_NonUniform->getContainer();
+		MultiValueChromosome<int,double>::value_container &mvcMutant_Uniform_valueContainer = mvcMutant_Uniform->getContainer();
+		MultiValueChromosome<int,double>::value_container &mvcOriginal_valueContainer = mvcOriginal->getContainer();
+
+		//setting Iterators
+		MultiValueChromosome<int,double>::value_container::iterator original_it = mvcOriginal_valueContainer.begin();
+
+		unsigned int nunUniformdiffCounter = 0;
+
+		for (MultiValueChromosome<int,double>::value_container::iterator nonUniformMutant_it = mvcMutant_NonUniform_valueContainer.begin();
+				nonUniformMutant_it != mvcMutant_NonUniform_valueContainer.end();
+				++nonUniformMutant_it)
+		{
+			//BOOST_TEST_MESSAGE(original_it);
+			if (original_it != nonUniformMutant_it) nunUniformdiffCounter++;
+			++original_it;
+		}
+
+		//TODO: Lukas Alle werte scheinen hier mutiert worden zu sein ?? Checken und ändern.
+		BOOST_TEST_MESSAGE("");
+		BOOST_TEST_MESSAGE("Check if as many points were Mutated as specified in MutationSettings: "<< pointsOfMutation);
+		BOOST_TEST_MESSAGE("NON-UNIFORM: "<< nunUniformdiffCounter);
+		BOOST_CHECK(nunUniformdiffCounter == pointsOfMutation);
+
+		unsigned int uniformdiffCounter = 0;
+		original_it = mvcOriginal_valueContainer.begin();
+		for (MultiValueChromosome<int,double>::value_container::iterator uniformMutant_it = mvcMutant_Uniform_valueContainer.begin();
+				uniformMutant_it != mvcMutant_Uniform_valueContainer.end();
+				++uniformMutant_it)
+		{
+			if (original_it != uniformMutant_it) uniformdiffCounter++;
+			++original_it;
+		}
+
+		BOOST_TEST_MESSAGE("UNIFORM: "<< uniformdiffCounter);
+		BOOST_CHECK(uniformdiffCounter == pointsOfMutation);
+
+	}
 }
 
 BOOST_AUTO_TEST_SUITE_END()
