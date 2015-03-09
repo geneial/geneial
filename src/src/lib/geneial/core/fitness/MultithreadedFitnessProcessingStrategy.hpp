@@ -41,19 +41,26 @@ void MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE>::stopWorkers()
 template <typename FITNESS_TYPE>
 void MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE>::workerTask(unsigned int id)
 {
-	//Wait for any input to become available.
+	//TODO (bewo): From benchmarks it seems this code still has a cache-line / false-sharing problem
+	//see https://www.youtube.com/watch?v=WDIkqP4JbkE
+
+	//Wait until all worker threads have started.
 	while(true)
 	{
+		//Wait for any input to become available.
 		_startBarrier.wait();
 
 		bool queueEmpty = false;
 		std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr >* myThreadq(_threadQueue[id]);
+
 		while(!queueEmpty)
 		{
 
 			typename BaseChromosome<FITNESS_TYPE>::ptr chromosome;
 
-			//Make sure only
+			//Make sure queue is not empty,
+			//NOTE: this is necessary if start barrier was triggered without queue input (e.g., shutdown) , which can happen.
+			//Do not try to be smart and refactor this without knowing what you are doing!
 			queueEmpty = myThreadq->empty();
 
 
@@ -71,9 +78,11 @@ void MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE>::workerTask(unsigned i
 			}
 		}
 
+		//Wait until all worker threads have synchronized.
 		_endBarrier.wait();
 
-		if(_shutdown) {
+		if(_shutdown)
+		{
 			return;
 		}
 	}
