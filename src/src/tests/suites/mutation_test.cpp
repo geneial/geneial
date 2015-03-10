@@ -145,7 +145,7 @@ BOOST_AUTO_TEST_CASE( Mutation_Propability )
 	BaseManager<double> manager(populationSettings, chromosomeFactory);
 
 
-	for (double propability = -0.2; propability <= 1.2; propability = propability + 0.1){
+	for (double propability = 0.0; propability <= 1.0; propability = propability + 0.1){
 
 		BOOST_TEST_MESSAGE("");
 
