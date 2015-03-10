@@ -78,15 +78,15 @@ BOOST_AUTO_TEST_CASE( basicMutation )
 		BaseMutationOperation<double> *mutationOperation_Uniform = new UniformMutationOperation<int,double>(mutationSettings,mutationChoosingOperation,builderSettings,chromosomeFactory);
 
 		BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
-		GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
-		GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set resultSet_NonUniform;
-		GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set resultSet_Uniform;
+		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
+		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_NonUniform;
+		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_Uniform;
 
 		inputSet.push_back(_newChromosome);
 		resultSet_NonUniform.push_back(_newChromosome);
 		resultSet_Uniform.push_back(_newChromosome);
 
-<<<<<<< HEAD
+
 		resultSet_NonUniform = mutationOperation_NonUniform->doMutate(inputSet,manager);
 		resultSet_Uniform = mutationOperation_Uniform->doMutate(inputSet,manager);
 
@@ -95,24 +95,24 @@ BOOST_AUTO_TEST_CASE( basicMutation )
 		BOOST_CHECK(inputSet != resultSet_Uniform);
 	}
 
-	BOOST_TEST_MESSAGE ("");
-	BOOST_TEST_MESSAGE ("Checking Mutation at 0% probability");
+//	BOOST_TEST_MESSAGE ("");
+//	BOOST_TEST_MESSAGE ("Checking Mutation at 0% probability");
 	for (double i = 0; i <= 1; i = i + 0.1)
 		{
 			MutationSettings* mutationSettings = new MutationSettings(0,i,0);
 			ChooseRandom<int,double> *mutationChoosingOperation = new ChooseRandom<int,double>(mutationSettings);
 			BaseMutationOperation<double> *mutationOperation_NonUniform = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 			BaseMutationOperation<double> *mutationOperation_Uniform = new UniformMutationOperation<int,double>(mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
-=======
-	BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
-	BaseMutationOperation<double>::mutation_result_set inputSet;
-	BaseMutationOperation<double>::mutation_result_set resultSet;
->>>>>>> 4a76b35ef50192fc4787a0db502a43430d8b6170
+
+//	BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
+//	BaseMutationOperation<double>::mutation_result_set inputSet;
+//	BaseMutationOperation<double>::mutation_result_set resultSet;
+
 
 			BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
-			GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
-			GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set resultSet_NonUniform;
-			GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set resultSet_Uniform;
+			geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
+			geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_NonUniform;
+			geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_Uniform;
 
 			inputSet.push_back(_newChromosome);
 			resultSet_NonUniform.push_back(_newChromosome);
@@ -145,16 +145,15 @@ BOOST_AUTO_TEST_CASE( Mutation_Propability )
 	BaseManager<double> manager(populationSettings, chromosomeFactory);
 
 
-<<<<<<< HEAD
 	for (double propability = -0.2; propability <= 1.2; propability = propability + 0.1){
 
 		BOOST_TEST_MESSAGE("");
 
-=======
-	BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
-	BaseMutationOperation<double>::mutation_result_set inputSet;
-	BaseMutationOperation<double>::mutation_result_set resultSet[10000];
->>>>>>> 4a76b35ef50192fc4787a0db502a43430d8b6170
+
+//		BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
+//		BaseMutationOperation<double>::mutation_result_set inputSet;
+//		BaseMutationOperation<double>::mutation_result_set resultSet[10000];
+
 
 		MutationSettings* mutationSettings = new MutationSettings(propability,1,5);
 		ChooseRandom<int,double> *mutationChoosingOperation = new ChooseRandom<int,double>(mutationSettings);
@@ -162,9 +161,9 @@ BOOST_AUTO_TEST_CASE( Mutation_Propability )
 		BaseMutationOperation<double> *mutationOperation_Uniform = new UniformMutationOperation<int,double>(mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
 		BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
-		GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
-		GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set resultSet_NonUniform[10000];
-		GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set resultSet_Uniform[10000];
+		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
+		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_NonUniform[10000];
+		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_Uniform[10000];
 
 		inputSet.push_back(_newChromosome);
 
@@ -248,9 +247,9 @@ BOOST_AUTO_TEST_CASE ( points_of_mutation )
 		BaseMutationOperation<double> *mutationOperation_Uniform = new UniformMutationOperation<int,double>(mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
 		BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
-		GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
-		GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set resultSet_NonUniform;
-		GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set resultSet_Uniform;
+		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
+		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_NonUniform;
+		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_Uniform;
 
 		inputSet.push_back(_newChromosome);
 		resultSet_NonUniform.push_back(_newChromosome);
