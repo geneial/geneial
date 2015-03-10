@@ -18,33 +18,16 @@
 #include <geneial/core/operations/mutation/UniformMutationOperation.h>
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 
+#include "mocks/MockFitnessEvaluator.h"
+
 using namespace geneial;
 using namespace geneial::population::management;
 using namespace geneial::operation::choosing;
 using namespace geneial::operation::mutation;
 
+using namespace test_mock;
 
 BOOST_AUTO_TEST_SUITE( __MUTATION_TEST_UniformMutationOperation )
-
-
-	class DemoChromosomeEvaluator: public FitnessEvaluator<double>
-	{
-	public:
-		DemoChromosomeEvaluator(){};
-		Fitness<double>::ptr evaluate(const BaseChromosome<double>::ptr chromosome) const
-		{
-			MultiValueChromosome<int,double>::ptr mvc = boost::dynamic_pointer_cast<MultiValueChromosome<int,double> >(chromosome);
-			if(mvc){
-				//Let the fitness be the sum of all values
-				return boost::shared_ptr<Fitness<double> > (new Fitness<double>(mvc->getSum()));
-			}else{
-				throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
-			}
-
-			boost::shared_ptr<Fitness<double> > ptr(new Fitness<double>(1));
-			return ptr;
-		}
-	};
 
 
 BOOST_AUTO_TEST_CASE( __MUTATION_TESTbasicMutation )
@@ -56,7 +39,7 @@ BOOST_AUTO_TEST_CASE( __MUTATION_TESTbasicMutation )
 	 */
 
 
-	DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
+	MockDoubleFitnessEvaluator::ptr evaluator(new MockDoubleFitnessEvaluator());
 	PopulationSettings *populationSettings = new PopulationSettings(50);
 	ContinousMultiValueBuilderSettings<int,double> *builderSettings = new ContinousMultiValueBuilderSettings<int,double>(evaluator,10,130,0,true,20,5);
 	ContinousMultiIntValueChromosomeFactory<double> *chromosomeFactory = new ContinousMultiIntValueChromosomeFactory<double>(builderSettings);
@@ -71,7 +54,7 @@ BOOST_AUTO_TEST_CASE( __MUTATION_TESTbasicMutation )
 		BaseMutationOperation<double> *mutationOperation_NonUniform = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 		BaseMutationOperation<double> *mutationOperation_Uniform = new UniformMutationOperation<int,double>(mutationSettings,mutationChoosingOperation,builderSettings,chromosomeFactory);
 
-		BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
+		BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(BaseChromosomeFactory<double>::CREATE_VALUES);
 		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
 		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_NonUniform;
 		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_Uniform;
@@ -92,33 +75,33 @@ BOOST_AUTO_TEST_CASE( __MUTATION_TESTbasicMutation )
 //	BOOST_TEST_MESSAGE ("");
 //	BOOST_TEST_MESSAGE ("Checking Mutation at 0% probability");
 	for (double i = 0; i <= 1; i = i + 0.1)
-		{
-			MutationSettings* mutationSettings = new MutationSettings(0,i,0);
-			ChooseRandom<int,double> *mutationChoosingOperation = new ChooseRandom<int,double>(mutationSettings);
-			BaseMutationOperation<double> *mutationOperation_NonUniform = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
-			BaseMutationOperation<double> *mutationOperation_Uniform = new UniformMutationOperation<int,double>(mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
+	{
+		MutationSettings* mutationSettings = new MutationSettings(0,i,0);
+		ChooseRandom<int,double> *mutationChoosingOperation = new ChooseRandom<int,double>(mutationSettings);
+		BaseMutationOperation<double> *mutationOperation_NonUniform = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
+		BaseMutationOperation<double> *mutationOperation_Uniform = new UniformMutationOperation<int,double>(mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
 //	BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
 //	BaseMutationOperation<double>::mutation_result_set inputSet;
 //	BaseMutationOperation<double>::mutation_result_set resultSet;
 
 
-			BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
-			geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
-			geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_NonUniform;
-			geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_Uniform;
+		BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(BaseChromosomeFactory<double>::CREATE_VALUES);
+		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
+		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_NonUniform;
+		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_Uniform;
 
-			inputSet.push_back(_newChromosome);
-			resultSet_NonUniform.push_back(_newChromosome);
-			resultSet_Uniform.push_back(_newChromosome);
+		inputSet.push_back(_newChromosome);
+		resultSet_NonUniform.push_back(_newChromosome);
+		resultSet_Uniform.push_back(_newChromosome);
 
-			resultSet_NonUniform = mutationOperation_NonUniform->doMutate(inputSet,manager);
-			resultSet_Uniform = mutationOperation_Uniform->doMutate(inputSet,manager);
+		resultSet_NonUniform = mutationOperation_NonUniform->doMutate(inputSet,manager);
+		resultSet_Uniform = mutationOperation_Uniform->doMutate(inputSet,manager);
 
-			BOOST_TEST_MESSAGE ("Checking at amount of Mutation = "<< i);
-			BOOST_CHECK(inputSet == resultSet_NonUniform);
-			BOOST_CHECK(inputSet == resultSet_Uniform);
-		}
+		BOOST_TEST_MESSAGE ("Checking at amount of Mutation = "<< i);
+		BOOST_CHECK(inputSet == resultSet_NonUniform);
+		BOOST_CHECK(inputSet == resultSet_Uniform);
+	}
 }
 
 
@@ -131,7 +114,7 @@ BOOST_AUTO_TEST_CASE( __MUTATION_TEST_Mutation_Propability )
 	 */
 
 
-	DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
+	MockDoubleFitnessEvaluator::ptr evaluator(new MockDoubleFitnessEvaluator());
 	PopulationSettings *populationSettings = new PopulationSettings(50);
 	ContinousMultiValueBuilderSettings<int,double> *builderSettings = new ContinousMultiValueBuilderSettings<int,double>(evaluator,10,130,0,true,20,5);
 	ContinousMultiIntValueChromosomeFactory<double> *chromosomeFactory = new ContinousMultiIntValueChromosomeFactory<double>(builderSettings);
@@ -139,7 +122,8 @@ BOOST_AUTO_TEST_CASE( __MUTATION_TEST_Mutation_Propability )
 	BaseManager<double> manager(populationSettings, chromosomeFactory);
 
 
-	for (double propability = 0.0; propability <= 1.0; propability = propability + 0.1){
+	for (double propability = 0.0; propability <= 1.0; propability = propability + 0.1)
+	{
 
 		BOOST_TEST_MESSAGE("");
 
@@ -154,7 +138,7 @@ BOOST_AUTO_TEST_CASE( __MUTATION_TEST_Mutation_Propability )
 		BaseMutationOperation<double> *mutationOperation_NonUniform = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 		BaseMutationOperation<double> *mutationOperation_Uniform = new UniformMutationOperation<int,double>(mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
-		BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
+		BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(BaseChromosomeFactory<double>::CREATE_VALUES);
 		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
 		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_NonUniform[10000];
 		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_Uniform[10000];
@@ -163,7 +147,8 @@ BOOST_AUTO_TEST_CASE( __MUTATION_TEST_Mutation_Propability )
 
 		int mutationCounter_NonUniform = 0;
 		int mutationCounter_Uniform = 0;
-		for (int i = 0; i < 10000; i++){
+		for (int i = 0; i < 10000; i++)
+		{
 			resultSet_NonUniform[i].push_back(_newChromosome);
 			resultSet_NonUniform[i] = mutationOperation_NonUniform->doMutate(inputSet,manager);
 			if (inputSet != resultSet_NonUniform[i]) mutationCounter_NonUniform++;
@@ -225,7 +210,7 @@ BOOST_AUTO_TEST_CASE ( __MUTATION_TEST_points_of_mutation )
 	 * Checking if as many points are mutated as set in Mutation settings
 	 */
 
-	DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
+	MockDoubleFitnessEvaluator::ptr evaluator(new MockDoubleFitnessEvaluator());
 	PopulationSettings *populationSettings = new PopulationSettings(50);
 	ContinousMultiValueBuilderSettings<int,double> *builderSettings = new ContinousMultiValueBuilderSettings<int,double>(evaluator,100,130,0,true,20,5);
 	ContinousMultiIntValueChromosomeFactory<double> *chromosomeFactory = new ContinousMultiIntValueChromosomeFactory<double>(builderSettings);
@@ -240,7 +225,7 @@ BOOST_AUTO_TEST_CASE ( __MUTATION_TEST_points_of_mutation )
 		BaseMutationOperation<double> *mutationOperation_NonUniform = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 		BaseMutationOperation<double> *mutationOperation_Uniform = new UniformMutationOperation<int,double>(mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
-		BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
+		BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(BaseChromosomeFactory<double>::CREATE_VALUES);
 		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
 		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_NonUniform;
 		geneial::operation::mutation::BaseMutationOperation<double>::mutation_result_set resultSet_Uniform;
@@ -294,8 +279,14 @@ BOOST_AUTO_TEST_CASE ( __MUTATION_TEST_points_of_mutation )
 		}
 
 		BOOST_TEST_MESSAGE("UNIFORM: "<< uniformdiffCounter);
-		if (pointsOfMutation != 0) BOOST_CHECK((uniformdiffCounter <= pointsOfMutation+5 && pointsOfMutation <= 100) || (uniformdiffCounter <= 100 && pointsOfMutation > 100));
-		else BOOST_CHECK(uniformdiffCounter >= 90);
+		if (pointsOfMutation != 0)
+		{
+			BOOST_CHECK((uniformdiffCounter <= pointsOfMutation+5 && pointsOfMutation <= 100) || (uniformdiffCounter <= 100 && pointsOfMutation > 100));
+		}
+		else
+		{
+			BOOST_CHECK(uniformdiffCounter >= 90);
+		}
 	}
 }
 

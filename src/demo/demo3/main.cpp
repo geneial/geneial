@@ -198,7 +198,7 @@ public:
 };
 
 int main(int argc, char **argv) {
-	std::cout << "Running GENEIAL demo2 - Version " << GENEIAL_VERSION_MAJOR << "." << GENEIAL_VERSION_MINOR << "("<< GENEIAL_BUILD_TYPE << ")"<< std::endl;
+	std::cout << "Running GENEIAL demo3 - Version " << GENEIAL_VERSION_MAJOR << "." << GENEIAL_VERSION_MINOR << " ("<< GENEIAL_BUILD_TYPE << ")"<< std::endl;
 
 	DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
 

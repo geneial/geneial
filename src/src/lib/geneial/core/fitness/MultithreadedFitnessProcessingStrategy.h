@@ -57,7 +57,6 @@ public:
 		return _started;
 	}
 
-	;
 private:
 
 	boost::barrier _startBarrier;

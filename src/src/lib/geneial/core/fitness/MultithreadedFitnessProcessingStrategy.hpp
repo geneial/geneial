@@ -59,7 +59,7 @@ void MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE>::workerTask(unsigned i
 			typename BaseChromosome<FITNESS_TYPE>::ptr chromosome;
 
 			//Make sure queue is not empty,
-			//NOTE: this is necessary if start barrier was triggered without queue input (e.g., shutdown) , which can happen.
+			//Caution: this is necessary if start barrier was triggered without queue input (e.g., shutdown) , which can happen.
 			//Do not try to be smart and refactor this without knowing what you are doing!
 			queueEmpty = myThreadq->empty();
 

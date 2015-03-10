@@ -29,19 +29,19 @@ file(GLOB_RECURSE TMPL *.hpp)
 #message(STATUS "Building Source Files : ${TMPL}")
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
-message(STATUS "CMAKE_EXE_LINKER1_FLAGS: ${CMAKE_EXE_LINKER_FLAGS}")
+message(STATUS "CMAKE_EXE_LINKER_FLAGS: ${CMAKE_EXE_LINKER_FLAGS}")
 
 
 #Create a static library
 add_library( ${LIB_GENEIAL_STATIC_NAME} STATIC ${SRCS} ${CONFIG_H_IN} ${HDRS} ${TMPL} )
 
-
 #Also create a shared library
 add_library(  ${LIB_GENEIAL_SHARED_NAME} SHARED ${SRCS} ${CONFIG_H_IN} ${HDRS} ${TMPL} )
 
-
+#TODO (bewo): Rather use lib/ here
 install (TARGETS ${LIB_GENEIAL_SHARED_NAME} DESTINATION bin)
 install (TARGETS ${LIB_GENEIAL_STATIC_NAME} DESTINATION bin)
+
 install( DIRECTORY ./ 
             DESTINATION include/${LOWER_PROJECT_NAME}
             FILES_MATCHING
