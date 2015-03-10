@@ -1,9 +1,10 @@
-#ifndef CONTAINER_TYPES_H_
-#define CONTAINER_TYPES_H_
+#ifndef __GENEIAL_CONTAINER_TYPES_H_
+#define __GENEIAL_CONTAINER_TYPES_H_
+
 #include <vector>
 
-namespace GeneticLibrary {
-namespace Population {
+namespace geneial {
+namespace population {
 
 template <typename FITNESS_TYPE>
 class ContainerTypes
@@ -12,10 +13,10 @@ private:
 	ContainerTypes(){};
 public:
 	//A generic container to pass chromomsomes between operations.
-	typedef typename std::vector<typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr> chromosome_container;
+	typedef typename std::vector<typename chromosome::BaseChromosome<FITNESS_TYPE>::ptr> chromosome_container;
 };
 
-} /* namespace Population */
-} /* namespace GeneticLibrary */
+} /* namespace population */
+} /* namespace geneial */
 
-#endif /* CONTAINER_TYPES_H_ */
+#endif /* __GENEIAL_CONTAINER_TYPES_H_ */

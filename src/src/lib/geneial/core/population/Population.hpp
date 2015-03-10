@@ -1,12 +1,5 @@
-/*
- * Population.cpp
- *
- *  Created on: Nov 26, 2014
- *      Author: bewo
- */
-
-#ifndef POPULATION_HPP_
-#define POPULATION_HPP_
+#ifndef __GENEIAL_POPULATION_HPP_
+#define __GENEIAL_POPULATION_HPP_
 
 #include <geneial/core/population/Population.h>
 #include <geneial/core/fitness/Fitness.h>
@@ -16,9 +9,8 @@
 #include <set>
 #include <utility>
 
-
-namespace GeneticLibrary {
-namespace Population {
+namespace geneial {
+namespace population {
 
 template <typename FITNESS_TYPE>
 Population<FITNESS_TYPE>::Population(): _age(0) {}
@@ -91,10 +83,12 @@ inline unsigned int Population<FITNESS_TYPE>::removeDuplicates(chromosome_contai
 	typename chromosome_container::iterator it = toCheck.begin();
 	std::set<typename BaseChromosome<FITNESS_TYPE>::chromsome_hash> tmpHashSet;
 
-	for (; it != toCheck.end();) {
+	for (; it != toCheck.end();)
+	{
 		const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue = (*it)->getHash();
 		//Check whether hash is already contained in the container, or in the population
-		if (tmpHashSet.find(hashValue) != tmpHashSet.end() || hashExists(hashValue)) {
+		if (tmpHashSet.find(hashValue) != tmpHashSet.end() || hashExists(hashValue))
+		{
 			it = toCheck.erase(it);
 			removed++;
 		} else {
@@ -109,9 +103,9 @@ inline unsigned int Population<FITNESS_TYPE>::removeDuplicates(chromosome_contai
 
 
 template<typename FITNESS_TYPE>
-typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getOldestChromosome()
+typename BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getOldestChromosome()
 {
-	typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr oldest;
+	typename BaseChromosome<FITNESS_TYPE>::ptr oldest;
 	for(typename fitness_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
 	{
 		if (!oldest)
@@ -120,7 +114,8 @@ typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>:
 		}
 		else
 		{
-			if(oldest->getAge() < chrom_it->second->getAge()){
+			if(oldest->getAge() < chrom_it->second->getAge())
+			{
 				oldest = chrom_it->second;
 			}
 		}
@@ -131,9 +126,9 @@ typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>:
 
 
 template<typename FITNESS_TYPE>
-typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getYoungestChromosome()
+typename BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getYoungestChromosome()
 {
-	typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr youngest;
+	typename BaseChromosome<FITNESS_TYPE>::ptr youngest;
 	for(typename fitness_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
 	{
 		if (!youngest)
@@ -233,7 +228,8 @@ inline void Population<FITNESS_TYPE>::removeChromosome(typename BaseChromosome<F
 	//we might have multiple chromosomes with the same key, advance until pointer is found
 	for (it=ret.first; it!=ret.second; ++it)
 	{
-		  if(it->second == chromosome){
+		  if(it->second == chromosome)
+		  {
 			  found = true;
 			  break;
 		  }
@@ -251,18 +247,19 @@ inline void Population<FITNESS_TYPE>::removeChromosome(typename BaseChromosome<F
 
 
 template<typename FITNESS_TYPE>
-inline bool Population<FITNESS_TYPE>::hashExists(const typename Chromosome::BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue)
+inline bool Population<FITNESS_TYPE>::hashExists(const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue)
 {
 	return (_hashMap.find(hashValue) != _hashMap.end());
 }
 
 template<typename FITNESS_TYPE>
-inline typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getChromosomeByHash
-	(const typename Chromosome::BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue)
+inline typename BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getChromosomeByHash
+	(const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue)
 {
 	typename hash_map::iterator it = _hashMap.find-(hashValue);
-	if(it == _hashMap.end()){
-		typename Chromosome::BaseChromosome<FITNESS_TYPE>::ptr null_ptr;
+	if(it == _hashMap.end())
+	{
+		typename BaseChromosome<FITNESS_TYPE>::ptr null_ptr;
 		return (null_ptr);
 	}
 	else
@@ -299,7 +296,7 @@ inline void Population<FITNESS_TYPE>::clearChromosomes()
 	_hashMap.clear();
 }
 
-} /* namespace Population */
-} /* namespace GeneticLibrary */
+} /* namespace population */
+} /* namespace geneial */
 
-#endif /* POPULATION_HPP_ */
+#endif /* __GENEIAL_POPULATION_HPP_ */

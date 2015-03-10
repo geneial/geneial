@@ -1,12 +1,5 @@
-/*
- * ReplaceRandomOperation.hpp
- *
- *  Created on: Dec 21, 2014
- *      Author: bewo
- */
-
-#ifndef REPLACERANDOMOPERATION_HPP_
-#define REPLACERANDOMOPERATION_HPP_
+#ifndef __GENEIAL_REPLACE_RANDOM_OPERATION_HPP_
+#define __GENEIAL_REPLACE_RANDOM_OPERATION_HPP_
 
 #include <geneial/core/operations/replacement/BaseReplacementSettings.h>
 #include <geneial/utility/Random.h>
@@ -14,20 +7,17 @@
 #include <algorithm>
 #include <iterator>
 
-
-namespace GeneticLibrary {
-namespace Operation {
-namespace Replacement {
-
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Manager;
-using namespace GeneticLibrary::Utility;
+namespace geneial {
+namespace operation {
+namespace replacement {
 
 template<typename FITNESS_TYPE>
 unsigned int ReplaceRandomOperation<FITNESS_TYPE>::getAmountToReplace(
 		const Population<FITNESS_TYPE> &population,
-		const typename Coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const{
-	switch(this->getSettings()->getMode()){
+		const typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const
+{
+	switch(this->getSettings()->getMode())
+	{
 
 		case BaseReplacementSettings::REPLACE_ALL_OFFSPRING:
 		{
@@ -50,14 +40,16 @@ unsigned int ReplaceRandomOperation<FITNESS_TYPE>::getAmountToReplace(
 template<typename FITNESS_TYPE>
 void ReplaceRandomOperation<FITNESS_TYPE>::doReplace(
 		Population<FITNESS_TYPE> &population,
-		typename Selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
-		typename Coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
-		BaseManager<FITNESS_TYPE> &manager) {
+		typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
+		typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
+		BaseManager<FITNESS_TYPE> &manager)
+{
 
 	unsigned int numberToReplace = getAmountToReplace(population,offspring);
 
 	//Remove random elements from the population w.r.t. elitism
-	while(numberToReplace){
+	while(numberToReplace)
+	{
 		//Ignore the very last chromosomes (elitism):
 		const unsigned int max = population.getFitnessMap().size() - this->getSettings()->getAmountElitism() - 1;
 
@@ -79,8 +71,9 @@ void ReplaceRandomOperation<FITNESS_TYPE>::doReplace(
 
 }
 
-} /* namespace Replacement */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace replacement */
+} /* namespace operation */
+} /* namespace geneial */
 
-#endif /* REPLACERANDOMOPERATION_HPP_ */
+
+#endif /* __GENEIAL_REPLACE_RANDOM_OPERATION_HPP_ */

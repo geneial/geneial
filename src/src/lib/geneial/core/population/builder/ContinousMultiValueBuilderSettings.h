@@ -1,11 +1,11 @@
-#ifndef CONT_MULTI_VALUE_BUILDER_SETTING_H_
-#define CONT_MULTI_VALUE_BUILDER_SETTING_H_
+#ifndef __GENEIAL_CONTINOUS_MULTI_VALUE_BUILDER_SETTING_H_
+#define __GENEIAL_CONTINOUS_MULTI_VALUE_BUILDER_SETTING_H_
 
 #include <geneial/core/population/builder/MultiValueBuilderSettings.h>
 
-namespace GeneticLibrary {
-namespace Population {
-namespace Chromosome {
+namespace geneial {
+namespace population {
+namespace chromosome {
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 class ContinousMultiValueBuilderSettings : public MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE> {
@@ -21,29 +21,29 @@ public:
 		_hasStart(hasStart),
 		_start(start), //Start point for generating ContinousChromomsomes
 		_eps(eps) //Eps derivation from previous point per step
-		{};
+		{}
 
-	virtual ~ContinousMultiValueBuilderSettings() {
-	}
+	virtual ~ContinousMultiValueBuilderSettings() {}
 
-	VALUE_TYPE getEps() const {
+	VALUE_TYPE getEps() const
+	{
 		return _eps;
 	}
 
-	VALUE_TYPE getStart() const {
+	VALUE_TYPE getStart() const
+	{
 		return _start;
 	}
 
-	bool hasStart() const {
+	bool hasStart() const
+	{
 		return _hasStart;
 	}
 
-	;
-
 };
 
-} /* namespace Chromosome */
-} /* namespace Population */
-} /* namespace GeneticLibrary */
+} /* namespace chromomsome */
+} /* namespace population */
+} /* namespace geneial */
 
-#endif /* CONT_MULTI_VALUE_BUILDER_SETTING_H_ */
+#endif /* __GENEIAL_CONTINOUS_MULTI_VALUE_BUILDER_SETTING_H_ */

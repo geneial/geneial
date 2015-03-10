@@ -1,7 +1,5 @@
-#ifndef BASE_CHROMOSOME_H_
-#define BASE_CHROMOSOME_H_
-
-#define CHROMOSOME_AGE_UNITIALIZED (0)
+#ifndef __GENEIAL_BASE_CHROMOSOME_H_
+#define __GENEIAL_BASE_CHROMOSOME_H_
 
 #include <geneial/utility/Printable.h>
 #include <geneial/core/fitness/Fitness.h>
@@ -11,18 +9,23 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
-namespace GeneticLibrary {
-namespace Population {
-namespace Chromosome {
+namespace geneial {
+namespace population {
+namespace chromosome {
+
+using namespace geneial::utility;
 
 /**
  * @brief Abstract superclass for any type of chromosome
  */
 template <typename FITNESS_TYPE>
-class BaseChromosome : public Utility::Printable,
-					   public boost::enable_shared_from_this<BaseChromosome <FITNESS_TYPE> > {
+class BaseChromosome : public Printable,
+					   public boost::enable_shared_from_this<BaseChromosome <FITNESS_TYPE> >
+{
 
 public:
+	static const int CHROMOSOME_AGE_UNITIALIZED = 0;
+
 	typedef unsigned int chromosome_age;
 	typedef std::size_t chromsome_hash;
 
@@ -33,12 +36,12 @@ public:
 	ptr getPtr() //TODO (bewo) constness correct?
     {
         return this->shared_from_this();
-    };
+    }
 
 	const_ptr getConstPtr() //TODO (bewo) constness correct?
     {
         return this->shared_from_this();
-    };
+    }
 
 	/**
 	 *
@@ -46,11 +49,12 @@ public:
 	BaseChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator)
 		: _fitness(),
 		 _fitnessEvaluator(fitnessEvaluator),
-		 _age(CHROMOSOME_AGE_UNITIALIZED) {
+		 _age(CHROMOSOME_AGE_UNITIALIZED)
+	{
 		assert(_fitnessEvaluator);
-	};
+	}
 
-	virtual ~BaseChromosome() {};
+	virtual ~BaseChromosome() {}
 
 
 	virtual bool equals(const_ptr chromosome) const = 0;
@@ -74,7 +78,7 @@ public:
 	bool inline hasFitness() const
 	{
 		return !(_fitness == NULL);
-	};
+	}
 
 	/**
 	 * Gets the fitness value of a Chromosome.
@@ -129,10 +133,10 @@ private:
 	chromosome_age _age;
 };
 
-} /* namespace Chromosome */
-} /* namespace Population */
-} /* namespace GeneticLibrary */
+} /* namespace chromomsome */
+} /* namespace population */
+} /* namespace geneial */
 
 #include <geneial/core/population/chromosome/BaseChromosome.hpp>
 
-#endif /* BASE_CHROMOSOME_H_ */
+#endif /* __GENEIAL_BASE_CHROMOSOME_H_ */

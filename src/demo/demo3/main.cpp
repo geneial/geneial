@@ -51,31 +51,31 @@
 #include <cmath>
 
 
-using namespace GeneticLibrary;
+using namespace geneial;
 
-using namespace GeneticLibrary::Algorithm;
-using namespace GeneticLibrary::Algorithm::StoppingCriteria;
+using namespace geneial::algorithm;
+using namespace geneial::algorithm::stopping_criteria;
 
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Chromosome;
+using namespace geneial::population;
+using namespace geneial::population::chromosome;
 
-using namespace GeneticLibrary::Operation::Selection;
-using namespace GeneticLibrary::Operation::Coupling;
-using namespace GeneticLibrary::Operation::Crossover;
-using namespace GeneticLibrary::Operation::Replacement;
-using namespace GeneticLibrary::Operation::Mutation;
-using namespace GeneticLibrary::Operation::Choosing;
+using namespace geneial::operation::selection;
+using namespace geneial::operation::coupling;
+using namespace geneial::operation::crossover;
+using namespace geneial::operation::replacement;
+using namespace geneial::operation::mutation;
+using namespace geneial::operation::choosing;
 
 double myTargetFunc(double x){
 	//Some Lagrange poly + Manual Tweakage
 	x = 0.55*x + 0.3;
 	const double result =
-			(	84211		* std::pow(x,6)
-				-4829676	* std::pow(x,5)
-				+104637796	* std::pow(x,4)
-				-1070636286 * std::pow(x,3)
-				+5268146305 * std::pow(x,2)
-				-11346283350* x
+			(	84211			* std::pow(x,6)
+				-4829676		* std::pow(x,5)
+				+104637796		* std::pow(x,4)
+				-1070636286 	* std::pow(x,3)
+				+5268146305 	* std::pow(x,2)
+				-11346283350	* x
 				+10783521000 ) /37346400 + (2.10*0.001*x*x*x*(x/2));
 	return result;
 }
@@ -263,12 +263,12 @@ int main(int argc, char **argv) {
 	algorithm.registerObserver(&printObserver);
 
 	algorithm.solve();
-	std::cout << "end." << std::endl;
 
 	BaseChromosome<double>::ptr chromosome = algorithm.getHighestFitnessChromosome();
 	MultiValueChromosome<int,double>::ptr mvc = boost::dynamic_pointer_cast<MultiValueChromosome<int,double> >(chromosome);
 	printClearScreen();
-	//printChromosome(mvc);
+	plot(mvc);
+	std::cout <<  "ended after " << algorithm.getPopulation().getAge() << " generations" << std::endl;
 
 	//normally, this is not necessary because we're exiting here anyway,
 	//but for valgrind's satisfaction, we free stuff nonetheless.

@@ -1,19 +1,12 @@
-/*
- * MultiValueChromosomeFactory.h
- *
- *  Created on: Dec 9, 2014
- *      Author: bewo
- */
-
-#ifndef MULTIVALUECHROMOSOMEFACTORY_H_
-#define MULTIVALUECHROMOSOMEFACTORY_H_
+#ifndef __GENEIAL_MULTI_VALUE_CHROMOSOME_FACTORY_H_
+#define __GENEIAL_MULTI_VALUE_CHROMOSOME_FACTORY_H_
 
 #include <geneial/core/population/builder/BaseChromosomeFactory.h>
 #include <geneial/core/population/builder/MultiValueBuilderSettings.h>
 
-namespace GeneticLibrary {
-namespace Population {
-namespace Chromosome {
+namespace geneial {
+namespace population {
+namespace chromosome {
 
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
@@ -37,8 +30,8 @@ public:
 	}
 };
 
-} /* namespace Chromosome */
-} /* namespace Population */
-} /* namespace GeneticLibrary */
+} /* namespace chromomsome */
+} /* namespace population */
+} /* namespace geneial */
 
-#endif /* MULTIVALUECHROMOSOMEFACTORY_H_ */
+#endif /* __GENEIAL_MULTI_VALUE_CHROMOSOME_FACTORY_H_ */

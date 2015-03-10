@@ -1,27 +1,18 @@
-/*
- * BaseChoosingOperation.h
- *
- *  Created on: Jan 12, 2015
- *      Author: lukas
- */
-
-#ifndef SRC_LIB_GENEIAL_CORE_OPERATIONS_BASECHOOSINGOPERATION_H_
-#define SRC_LIB_GENEIAL_CORE_OPERATIONS_BASECHOOSINGOPERATION_H_
+#ifndef __GENEIAL_BASECHOOSINGOPERATION_H_
+#define __GENEIAL_BASECHOOSINGOPERATION_H_
 
 #include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/population/Population.h>
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Choosing {
+namespace geneial {
+namespace operation {
+namespace choosing {
 
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Operation::Mutation;
+using namespace geneial::population;
 
 template <typename FITNESS_TYPE>
-class BaseChoosingOperation{
-private:
-
+class BaseChoosingOperation
+{
 public:
 	BaseChoosingOperation () {};
 	virtual ~BaseChoosingOperation() {};
@@ -30,10 +21,10 @@ public:
 			typename Population<FITNESS_TYPE>::chromosome_container chromosomeInputSet) = 0;
 };
 
-} //namespace Mutation
-} //namespace Operation
-} //namespace GenLib
+} /* namespace choosing */
+} /* namespace operation */
+} /* namespace geneial */
 
 
 
-#endif /* SRC_LIB_GENEIAL_CORE_OPERATIONS_BASECHOOSINGOPERATION_H_ */
+#endif /* __GENEIAL_BASECHOOSINGOPERATION_H_ */

@@ -1,12 +1,9 @@
-#ifndef MULTITHREADEDFITNESSPROCESSINGSTRATEGY_HPP_
-#define MULTITHREADEDFITNESSPROCESSINGSTRATEGY_HPP_
+#ifndef __GENEIAL_MULTITHREADED_FITNESS_PROCESSING_STRATEGY_HPP_
+#define __GENEIAL_MULTITHREADED_FITNESS_PROCESSING_STRATEGY_HPP_
 
 #include <geneial/core/fitness/MultithreadedFitnessProcessingStrategy.h>
 
-namespace GeneticLibrary {
-
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Chromosome;
+namespace geneial {
 
 
 template <typename FITNESS_TYPE>
@@ -113,6 +110,6 @@ void MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE>::ensureHasFitness(cons
 }
 
 
-}  // namespace GeneticLibrary
+}  /* namespace geneial */
 
-#endif /* MULTITHREADEDFITNESSPROCESSINGSTRATEGY_HPP_ */
+#endif /* __GENEIAL_MULTITHREADED_FITNESS_PROCESSING_STRATEGY_HPP_ */

@@ -1,29 +1,28 @@
-/*
- * Fitness.h
- *
- *  Created on: Dec 8, 2014
- *      Author: bewo
- */
-
-#ifndef FITNESS_H_
-#define FITNESS_H_
+#ifndef __GENEIAL_FITNESS_H_
+#define __GENEIAL_FITNESS_H_
 
 #include <geneial/utility/Printable.h>
-#include "boost/shared_ptr.hpp"
 
-namespace GeneticLibrary {
+#include <boost/shared_ptr.hpp>
+
+namespace geneial {
+
+using namespace geneial::utility;
 
 template <typename FITNESS_TYPE>
-class Fitness : public GeneticLibrary::Utility::Printable
+class Fitness : public Printable
 {
 private:
 	FITNESS_TYPE _value;
 
 public:
+	//TODO (CODECONSISTENCY) (bewo): boost sharedptr shared from this?
 	typedef boost::shared_ptr<Fitness <FITNESS_TYPE> > ptr;
+
 	typedef boost::shared_ptr<const Fitness <FITNESS_TYPE> > const_ptr;
 
 	Fitness() {};
+
 	Fitness(FITNESS_TYPE value): _value(value) {};
 
 	virtual ~Fitness() {};
@@ -32,14 +31,18 @@ public:
 
 	FITNESS_TYPE get() const;
 
-    operator FITNESS_TYPE() const { return get();};
+	//cast operator overload
+    operator FITNESS_TYPE() const
+    {
+    	return get();
+    };
 
     void print(std::ostream&) const;
 };
 
 
-} /* namespace GeneticLibrary */
+} /* namespace geneial */
 
 #include <geneial/core/fitness/Fitness.hpp>
 
-#endif /* FITNESS_H_ */
+#endif /* __GENEIAL_FITNESS_H_ */

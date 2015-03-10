@@ -1,21 +1,15 @@
-/*
- * MultiValueNPointCrossover.h
- *
- *  Created on: Dec 12, 2014
- *      Author: bewo
- */
+#ifndef __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_H_
+#define __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_H_
 
-#ifndef MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_H_
-#define MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_H_
-
-#include <cassert>
 
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossoverSettings.h>
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Crossover {
+#include <cassert>
+
+namespace geneial {
+namespace operation {
+namespace crossover {
 
 //TODO (bewo) allow random crossover width per settings
 
@@ -35,7 +29,7 @@ public:
 			_crossoverSettings(crossoverSettings),
 			_builderSettings(builderSettings),
 			_builderFactory(builderFactory)
-			{
+	{
 		assert(_crossoverSettings != NULL);
 		assert(_builderSettings != NULL);
 		assert(_builderFactory != NULL);
@@ -48,12 +42,12 @@ public:
 				|| _crossoverSettings->getMinWidth() * _crossoverSettings->getCrossOverPoints()  <= this->getBuilderSettings()->getNum());
 
 	}
-	;
-	virtual ~MultiValueChromosomeNPointCrossover() {
-	}
-	;
+	virtual ~MultiValueChromosomeNPointCrossover() {}
 
-	virtual bool inline isSymmetric() const{return false;};
+	virtual bool inline isSymmetric() const
+	{
+		return false;
+	}
 
 
 	/****
@@ -84,40 +78,46 @@ public:
 	doCrossover(typename BaseChromosome<FITNESS_TYPE>::ptr mommy,
 			typename BaseChromosome<FITNESS_TYPE>::ptr daddy);
 
-	MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>* const & getBuilderSettings() const {
+	MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>* const & getBuilderSettings() const
+	{
 		return _builderSettings;
 	}
 
 	void setBuilderSettings(
-			const MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>* & builderSettings) {
+			const MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>* & builderSettings)
+	{
 		_builderSettings = builderSettings;
 	}
 
-	MultiValueChromosomeNPointCrossoverSettings* const & getCrossoverSettings() const {
+	MultiValueChromosomeNPointCrossoverSettings* const & getCrossoverSettings() const
+	{
 		return _crossoverSettings;
 	}
 
 	void setCrossoverSettings(
-			const MultiValueChromosomeNPointCrossoverSettings*  & crossoverSettings) {
+			const MultiValueChromosomeNPointCrossoverSettings*  & crossoverSettings)
+	{
 		_crossoverSettings = crossoverSettings;
 	}
 
-	MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const {
+	MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const
+	{
 		return _builderFactory;
 	}
 
 	void setBuilderFactory(
-			const MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* & builderFactory) {
+			const MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* & builderFactory)
+	{
 		_builderFactory = builderFactory;
 	}
 
 };
 
 
-} /* namespace Crossover */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace crossover */
+} /* namespace operation */
+} /* namespace geneial */
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.hpp>
 
-#endif /* MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_H_ */
+#endif /* __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_H_ */

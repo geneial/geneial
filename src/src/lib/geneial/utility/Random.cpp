@@ -4,12 +4,12 @@
 #include <cstdlib> 		/* RAND_MAX */
 #include <limits>       /* min, max of float, double */
 #include <iostream>
-
-#include <geneial/utility/Random.h>
 #include <cassert>
 
-namespace GeneticLibrary {
-namespace Utility {
+#include <geneial/utility/Random.h>
+
+namespace geneial {
+namespace utility {
 
 //Assures we have positive mod every time. (because in cpp -6 % 5 = -1)
 inline int mymod(int k, int n)
@@ -96,5 +96,5 @@ float Random::generateFloat() const
 			std::numeric_limits<float>::max());
 }
 
-} /* namespace Utility */
-} /* namespace GeneticLibrary */
+} /* namespace utility */
+} /* namespace geneial */

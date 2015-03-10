@@ -1,22 +1,14 @@
-/*
- * FitnessDeltaCriterion.h
- *
- *  Created on: Dec 10, 2014
- *      Author: bewo
- */
-
-#ifndef TRAILING_STOP_CRITERION_H_
-#define TRAILING_STOP_CRITERION_H_
+#ifndef __GENEIAL_TRAILING_STOP_CRITERION_H_
+#define __GENEIAL_TRAILING_STOP_CRITERION_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 
+namespace geneial {
+namespace algorithm {
+namespace stopping_criteria {
 
-namespace GeneticLibrary {
-namespace Algorithm {
-namespace StoppingCriteria {
-
-using namespace GeneticLibrary::Population::Manager;
+using namespace geneial::population::management;
 
 //TODO (bewo) Idea to implement here: -> c.f. TrailingStop in Stock market
 //Trace the best chromosome, when its gets worser as a given threshold abort.
@@ -36,8 +28,8 @@ public:
 	}
 };
 
-} /* namespace StoppingCriteria */
-} /* namespace Algorithm */
-} /* namespace GeneticLibrary */
+} /* namespace stopping_criteria */
+} /* namespace algorithm */
+} /* namespace geneial */
 
-#endif /* TRAILING_STOP_CRITERION_H_ */
+#endif /* __GENEIAL_TRAILING_STOP_CRITERION_H_ */

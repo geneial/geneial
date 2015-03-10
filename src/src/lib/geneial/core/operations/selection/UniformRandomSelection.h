@@ -1,33 +1,24 @@
-/*
- * UniformRandomSelection.h
- *
- *  Created on: Dec 11, 2014
- *      Author: bewo
- */
-
-#ifndef UNIFORM_RANDOM_SELECTION_H_
-#define UNIFORM_RANDOM_SELECTION_H_
+#ifndef __GENEIAL_UNIFORM_RANDOM_SELECTION_H_
+#define __GENEIAL_UNIFORM_RANDOM_SELECTION_H_
 
 #include <geneial/core/operations/selection/UniformRandomSelection.h>
 
 #include <map>
 #include <stdexcept>
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Selection {
-
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Manager;
+namespace geneial {
+namespace operation {
+namespace selection {
 
 /**
  * Select a number of parents based on a roulette wheel distribution over the chromosomes fitness
  */
 template <typename FITNESS_TYPE>
-class UniformRandomSelection : public BaseSelectionOperation<FITNESS_TYPE>{
+class UniformRandomSelection : public BaseSelectionOperation<FITNESS_TYPE>
+{
 public:
 	UniformRandomSelection(SelectionSettings* settings): BaseSelectionOperation<FITNESS_TYPE>(settings) {};
-	virtual ~UniformRandomSelection(){};
+	virtual ~UniformRandomSelection() {};
 
 	virtual typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set doSelect(
 			const Population<FITNESS_TYPE> &population,
@@ -36,10 +27,10 @@ public:
 };
 
 
-} /* namespace Selection */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace selection */
+} /* namespace operation */
+} /* namespace geneial */
 
 #include <geneial/core/operations/selection/UniformRandomSelection.hpp>
 
-#endif /* UNIFORM_RANDOM_SELECTION_H_ */
+#endif /* __GENEIAL_UNIFORM_RANDOM_SELECTION_H_ */

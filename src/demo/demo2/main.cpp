@@ -1,10 +1,3 @@
-/*
- * main.cpp
- *
- *  Created on: Dec 9, 2014
- *      Author: bewo
- */
-
 #include <limits>
 #include <stdio.h>
 #include <stdexcept>
@@ -56,20 +49,20 @@
 #include <geneial/config.h>
 
 
-using namespace GeneticLibrary;
+using namespace geneial;
 
-using namespace GeneticLibrary::Algorithm;
-using namespace GeneticLibrary::Algorithm::StoppingCriteria;
+using namespace geneial::algorithm;
+using namespace geneial::algorithm::stopping_criteria;
 
-using namespace GeneticLibrary::Population;
-using namespace GeneticLibrary::Population::Chromosome;
+using namespace geneial::population;
+using namespace geneial::population::chromosome;
 
-using namespace GeneticLibrary::Operation::Selection;
-using namespace GeneticLibrary::Operation::Coupling;
-using namespace GeneticLibrary::Operation::Crossover;
-using namespace GeneticLibrary::Operation::Replacement;
-using namespace GeneticLibrary::Operation::Mutation;
-using namespace GeneticLibrary::Operation::Choosing;
+using namespace geneial::operation::selection;
+using namespace geneial::operation::coupling;
+using namespace geneial::operation::crossover;
+using namespace geneial::operation::replacement;
+using namespace geneial::operation::mutation;
+using namespace geneial::operation::choosing;
 
 
 const char targetFigure[] =
@@ -236,12 +229,12 @@ int main(int argc, char **argv) {
 	algorithm.registerObserver(&printObserver);
 
 	algorithm.solve();
-	std::cout << "end." << std::endl;
 
 	BaseChromosome<double>::ptr chromosome = algorithm.getHighestFitnessChromosome();
 	MultiValueChromosome<int,double>::ptr mvc = boost::dynamic_pointer_cast<MultiValueChromosome<int,double> >(chromosome);
 	printClearScreen();
 	printChromosome(mvc);
+	std::cout <<  "ended after " << algorithm.getPopulation().getAge() << " generations" << std::endl;
 
 	//normally, this is not necessary because we're exiting here anyway,
 	//but for valgrind's satisfaction, we free stuff nonetheless.

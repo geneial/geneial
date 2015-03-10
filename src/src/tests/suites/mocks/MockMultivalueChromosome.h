@@ -1,10 +1,16 @@
-#ifndef MOCKMULTIVALUECHROMOSOME_H_
-#define MOCKMULTIVALUECHROMOSOME_H_
+#ifndef __GENEIAL_TEST_MOCK_MULTI_VALUE_CHROMOSOME_H_
+#define __GENEIAL_TEST_MOCK_MULTI_VALUE_CHROMOSOME_H_
 
-#include "boost/shared_ptr.hpp"
+#include <boost/shared_ptr.hpp>
+
 #include <geneial/core/fitness/Fitness.h>
 #include <geneial/core/fitness/FitnessEvaluator.h>
+
 #include "MockFitnessEvaluator.h"
+
+namespace test_mock {
+
+using namespace geneial;
 
 template <typename VALUE_TYPE,typename FITNESS_TYPE>
 inline typename BaseChromosome<FITNESS_TYPE>::ptr baseCastMVC(typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr chromosome){
@@ -14,7 +20,7 @@ inline typename BaseChromosome<FITNESS_TYPE>::ptr baseCastMVC(typename MultiValu
 
 MultiValueChromosome<int,double>::const_ptr getMockIntMVC(std::vector<int> values,
 		FitnessEvaluator<double>::ptr ptr_evaluator = boost::shared_ptr<FitnessEvaluator<double> >()){
-	GeneticLibrary::FitnessEvaluator<double>::ptr evaluator = ptr_evaluator;
+	geneial::FitnessEvaluator<double>::ptr evaluator = ptr_evaluator;
 	if(!evaluator){
 		evaluator = FitnessEvaluator<double>::ptr(new MockDoubleFitnessEvaluator());
 	}
@@ -27,7 +33,7 @@ MultiValueChromosome<int,double>::const_ptr getMockIntMVC(std::vector<int> value
 
 MultiValueChromosome<double,double>::const_ptr getMockDoubleMVC(std::vector<double> values,
 		FitnessEvaluator<double>::ptr ptr_evaluator = boost::shared_ptr<FitnessEvaluator<double> >()){
-	GeneticLibrary::FitnessEvaluator<double>::ptr evaluator = ptr_evaluator;
+	geneial::FitnessEvaluator<double>::ptr evaluator = ptr_evaluator;
 	if(!evaluator){
 		evaluator = FitnessEvaluator<double>::ptr(new MockDoubleFitnessEvaluator());
 	}
@@ -38,4 +44,6 @@ MultiValueChromosome<double,double>::const_ptr getMockDoubleMVC(std::vector<doub
 	return new_chromosome;
 }
 
-#endif /* MOCKMULTIVALUECHROMOSOME_H_ */
+} /* namespace test_mock */
+
+#endif /* __GENEIAL_TEST_MOCK_MULTI_VALUE_CHROMOSOME_H_ */

@@ -1,23 +1,17 @@
-/*
- * FitnessDeltaCriterion.h
- *
- *  Created on: Dec 10, 2014
- *      Author: bewo
- */
-
-#ifndef COMBINED_CRITERION_H_
-#define COMBINED_CRITERION_H_
+#ifndef __GENEIAL_COMBINED_CRITERION_H_
+#define __GENEIAL_COMBINED_CRITERION_H_
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
+
 #include <list>
 #include <map>
 
-namespace GeneticLibrary {
-namespace Algorithm {
-namespace StoppingCriteria {
+namespace geneial {
+namespace algorithm {
+namespace stopping_criteria {
 
-using namespace GeneticLibrary::Population::Manager;
+using namespace geneial::population::management;
 
 //Container that holds other Criteria which are connected by a logical condition (and/or), which propagate the condition by visitor pattern or sth.
 //Composite Pattern for hierarchies of criteria
@@ -108,8 +102,8 @@ private:
 
 };
 
-} /* namespace StoppingCriteria */
-} /* namespace Algorithm */
-} /* namespace GeneticLibrary */
+} /* namespace stopping_criteria */
+} /* namespace algorithm */
+} /* namespace geneial */
 
-#endif /* COMBINED_CRITERION_H_ */
+#endif /* __GENEIAL_COMBINED_CRITERION_H_ */

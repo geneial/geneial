@@ -16,16 +16,14 @@
 
 #include "helper/common_casts.h"
 
-using namespace GeneticLibrary::Population::Chromosome;
+using namespace geneial::population::chromosome;
 
 BOOST_AUTO_TEST_SUITE( ContinousMultiValueChromosome )
-
-
 
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 inline void checkContinuity(typename BaseChromosome<FITNESS_TYPE>::ptr chromosomeToCheck,VALUE_TYPE maxDeriv )
 {
-	typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr mvcPtr = TestHelper::convertBaseChromosome<VALUE_TYPE,FITNESS_TYPE>(chromosomeToCheck);
+	typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr mvcPtr = test_helper::convertBaseChromosome<VALUE_TYPE,FITNESS_TYPE>(chromosomeToCheck);
 
 	VALUE_TYPE lastVal = *(mvcPtr->getContainer().begin());
 	for(typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::const_it it = mvcPtr->getContainer().begin();
@@ -40,7 +38,7 @@ inline void checkContinuity(typename BaseChromosome<FITNESS_TYPE>::ptr chromosom
 template <typename VALUE_TYPE, typename FITNESS_TYPE>
 inline void checkLimits(typename BaseChromosome<FITNESS_TYPE>::ptr chromosomeToCheck,VALUE_TYPE lower, VALUE_TYPE upper)
 {
-	typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr mvcPtr = TestHelper::convertBaseChromosome<VALUE_TYPE,FITNESS_TYPE>(chromosomeToCheck);
+	typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr mvcPtr = test_helper::convertBaseChromosome<VALUE_TYPE,FITNESS_TYPE>(chromosomeToCheck);
 
 	for(typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::const_it it = mvcPtr->getContainer().begin();
 			it != mvcPtr->getContainer().end();++it){
@@ -53,7 +51,7 @@ inline void checkLimits(typename BaseChromosome<FITNESS_TYPE>::ptr chromosomeToC
 #define CONTINUITY_FACTORY_SIGNIFICANCE (100);
 BOOST_AUTO_TEST_CASE( Continuity_Factory )
 {
-	const MockDoubleFitnessEvaluator::ptr evaluator(new MockDoubleFitnessEvaluator);
+	const test_mock::MockDoubleFitnessEvaluator::ptr evaluator(new test_mock::MockDoubleFitnessEvaluator);
 
 	int i = CONTINUITY_FACTORY_SIGNIFICANCE;
 	while(i--)

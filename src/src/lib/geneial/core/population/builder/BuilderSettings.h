@@ -1,45 +1,41 @@
-/*
- * BuilderSettings.h
- *
- *  Created on: Dec 9, 2014
- *      Author: bewo
- */
-
-#ifndef BUILDERSETTINGS_H_
-#define BUILDERSETTINGS_H_
+#ifndef __GENEIAL_BUILDER_SETTINGS_H_
+#define __GENEIAL_BUILDER_SETTINGS_H_
 
 #include <geneial/core/fitness/FitnessEvaluator.h>
 
-namespace GeneticLibrary {
-namespace Population {
-namespace Chromosome {
+namespace geneial {
+namespace population {
+namespace chromosome {
 
 template <typename FITNESS_TYPE>
-class BuilderSettings {
+class BuilderSettings
+{
 private:
 	typename FitnessEvaluator<FITNESS_TYPE>::ptr _fitnessEvaluator;
+
 public:
 	BuilderSettings(const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator):
-		_fitnessEvaluator(fitnessEvaluator)
-	{};
+		_fitnessEvaluator(fitnessEvaluator) {}
 
-	virtual ~BuilderSettings() {};
+	virtual ~BuilderSettings() {}
 
 
-	const typename FitnessEvaluator<FITNESS_TYPE>::ptr& getFitnessEvaluator() const {
+	const typename FitnessEvaluator<FITNESS_TYPE>::ptr& getFitnessEvaluator() const
+	{
 		return _fitnessEvaluator;
-	};
+	}
 
 	void setFitnessEvaluator(
-			const typename FitnessEvaluator<FITNESS_TYPE>::ptr& fitnessEvaluator) {
+			const typename FitnessEvaluator<FITNESS_TYPE>::ptr& fitnessEvaluator)
+	{
 		_fitnessEvaluator = fitnessEvaluator;
-	};
+	}
 
 
 };
 
-} /* namespace Chromosome */
-} /* namespace Population */
-} /* namespace GeneticLibrary */
+} /* namespace chromomsome */
+} /* namespace population */
+} /* namespace geneial */
 
-#endif /* BUILDERSETTINGS_H_ */
+#endif /* __GENEIAL_BUILDER_SETTINGS_H_ */

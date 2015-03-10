@@ -1,21 +1,12 @@
-/*
- * SimpleCoupling.h
- *
- *  Created on: Dec 12, 2014
- *      Author: bewo
- */
-
-#ifndef SIMPLECOUPLING_HPP_
-#define SIMPLECOUPLING_HPP_
+#ifndef __GENEIAL_SIMPLE_COUPLING_OPERATION_HPP_
+#define __GENEIAL_SIMPLE_COUPLING_OPERATION_HPP_
 
 #include <geneial/core/operations/coupling/SimpleCouplingOperation.h>
 
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Coupling {
-
-using namespace GeneticLibrary::Population::Chromosome;
+namespace geneial {
+namespace operation {
+namespace coupling {
 
 template<typename FITNESS_TYPE>
 typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplingOperation<FITNESS_TYPE>::doCopulate(
@@ -56,24 +47,31 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
 		chrom_ptr parent1 = *it;
 		it++;
 		//wrap around if necessary
-		if (it == mating_pool.end()) {
+		if (it == mating_pool.end())
+		{
 			it = mating_pool.begin();
 		}
+
 		chrom_ptr parent2 = *it;
 		it++;
-		if (it == mating_pool.end()) {
+		if (it == mating_pool.end())
+		{
 			it = mating_pool.begin();
 		}
 
 		//TODO (bewo) BEAUTIFY: use copy+backinserter and min(vec.size(),offspring_left) ?!
 		children_container children1 = crossoverOperation->doCrossover(parent1,parent2);
-		for (typename children_container::iterator it = children1.begin(); offspring_left > 0 && it != children1.end();++it){
+
+		for (typename children_container::iterator it = children1.begin(); offspring_left > 0 && it != children1.end();++it)
+		{
 			offspring.push_back(*it);
 			offspring_left--;
 		}
-		if(offspring_left && crossoverOperation->isSymmetric()){
+		if(offspring_left && crossoverOperation->isSymmetric())
+		{
 			 children_container children2 = crossoverOperation->doCrossover(parent2,parent1);
-			for (typename children_container::iterator it = children2.begin(); offspring_left > 0 && it != children2.end();++it){
+			for (typename children_container::iterator it = children2.begin(); offspring_left > 0 && it != children2.end();++it)
+			{
 				offspring.push_back(*it);
 				offspring_left--;
 			}
@@ -83,8 +81,8 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
 	return offspring;
 }
 
-}
-}
-}
+} /* namespace coupling */
+} /* namespace operation */
+} /* namespace geneial */
 
-#endif
+#endif /* __GENEIAL_SIMPLE_COUPLING_OPERATION_HPP_ */

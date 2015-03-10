@@ -1,5 +1,5 @@
-#ifndef CONT_MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_
-#define CONT_MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_
+#ifndef __GENEIAL_CONTINOUS_MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_
+#define __GENEIAL_CONTINOUS_MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_
 
 #include <geneial/core/population/builder/ContinousMultiIntValueChromosomeFactory.h>
 #include <geneial/utility/Random.h>
@@ -7,14 +7,14 @@
 #include <algorithm>
 #include <cassert>
 
-namespace GeneticLibrary {
-namespace Population {
-namespace Chromosome {
+namespace geneial {
+namespace population {
+namespace chromosome {
 
 template <typename FITNESS_TYPE>
 typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE>::createChromosome(bool populateValues){
 
-	using namespace GeneticLibrary::Utility;
+	using namespace geneial::utility;
 
 	typename MultiValueChromosome<int,FITNESS_TYPE>::ptr new_chromosome(new MultiValueChromosome<int,FITNESS_TYPE>(this->_settings->getFitnessEvaluator()));
 	assert(new_chromosome->getSize() == 0);
@@ -61,8 +61,8 @@ typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiIntValueChromosomeFacto
 	return result;
 }
 
-} /* namespace Chromosome */
-} /* namespace Population */
-} /* namespace GeneticLibrary */
+} /* namespace chromomsome */
+} /* namespace population */
+} /* namespace geneial */
 
-#endif /* CONT_MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_ */
+#endif /* __GENEIAL_CONTINOUS_MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_ */

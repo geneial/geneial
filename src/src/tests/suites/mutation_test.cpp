@@ -24,17 +24,14 @@
 #include <geneial/core/operations/mutation/UniformMutationOperation.h>
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 
+using namespace geneial;
+using namespace geneial::population::management;
+using namespace geneial::operation::choosing;
+using namespace geneial::operation::mutation;
 
 
 BOOST_AUTO_TEST_SUITE( UniformMutationOperation )
 
-	using namespace GeneticLibrary;
-	using namespace GeneticLibrary::Algorithm;
-	using namespace GeneticLibrary::Algorithm::StoppingCriteria;
-	using namespace GeneticLibrary::Population;
-	using namespace GeneticLibrary::Population::Chromosome;
-	using namespace GeneticLibrary::Operation::Mutation;
-	using namespace GeneticLibrary::Operation::Choosing;
 
 	class DemoChromosomeEvaluator: public FitnessEvaluator<double>
 	{
@@ -89,6 +86,7 @@ BOOST_AUTO_TEST_CASE( basicMutation )
 		resultSet_NonUniform.push_back(_newChromosome);
 		resultSet_Uniform.push_back(_newChromosome);
 
+<<<<<<< HEAD
 		resultSet_NonUniform = mutationOperation_NonUniform->doMutate(inputSet,manager);
 		resultSet_Uniform = mutationOperation_Uniform->doMutate(inputSet,manager);
 
@@ -105,6 +103,11 @@ BOOST_AUTO_TEST_CASE( basicMutation )
 			ChooseRandom<int,double> *mutationChoosingOperation = new ChooseRandom<int,double>(mutationSettings);
 			BaseMutationOperation<double> *mutationOperation_NonUniform = new NonUniformMutationOperation<int,double>(1000,0.2,mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 			BaseMutationOperation<double> *mutationOperation_Uniform = new UniformMutationOperation<int,double>(mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
+=======
+	BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
+	BaseMutationOperation<double>::mutation_result_set inputSet;
+	BaseMutationOperation<double>::mutation_result_set resultSet;
+>>>>>>> 4a76b35ef50192fc4787a0db502a43430d8b6170
 
 			BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
 			GeneticLibrary::Operation::Mutation::BaseMutationOperation<double>::mutation_result_set inputSet;
@@ -142,10 +145,16 @@ BOOST_AUTO_TEST_CASE( Mutation_Propability )
 	BaseManager<double> manager(populationSettings, chromosomeFactory);
 
 
+<<<<<<< HEAD
 	for (double propability = -0.2; propability <= 1.2; propability = propability + 0.1){
 
 		BOOST_TEST_MESSAGE("");
 
+=======
+	BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
+	BaseMutationOperation<double>::mutation_result_set inputSet;
+	BaseMutationOperation<double>::mutation_result_set resultSet[10000];
+>>>>>>> 4a76b35ef50192fc4787a0db502a43430d8b6170
 
 		MutationSettings* mutationSettings = new MutationSettings(propability,1,5);
 		ChooseRandom<int,double> *mutationChoosingOperation = new ChooseRandom<int,double>(mutationSettings);

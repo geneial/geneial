@@ -1,18 +1,11 @@
-/*
- * MutationSettings.h
- *
- *  Created on: Dec 28, 2014
- *      Author: lukas
- */
-
-#ifndef SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_MUTATIONSETTINGS_H_
-#define SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_MUTATIONSETTINGS_H_
+#ifndef __GENEIAL_MUTATION_SETTINGS_H_
+#define __GENEIAL_MUTATION_SETTINGS_H_
 
 #include <cassert>
 
-namespace GeneticLibrary {
-namespace Operation {
-namespace Mutation {
+namespace geneial {
+namespace operation {
+namespace mutation {
 
 class MutationSettings{
 private:
@@ -38,6 +31,7 @@ private:
 public:
 	virtual ~MutationSettings(){};
 
+<<<<<<< HEAD
 	MutationSettings(double propability, double amountOfMutation, unsigned int amountOfPointsOfMutation){
 		if (propability > 1)
 		{
@@ -47,25 +41,29 @@ public:
 		{
 			propability = 0;
 		}
+=======
+	MutationSettings(double propability, double amountOfMutation, unsigned int amountOfPointsOfMutation)
+	{
+>>>>>>> 4a76b35ef50192fc4787a0db502a43430d8b6170
 		_probability = propability;
 		_amountOfPointsOfMutation = amountOfPointsOfMutation;
 		_amountOfMutation = amountOfMutation;
-	};
+	}
 
 	double getPropability() const
 	{
 		return _probability;
-	};
+	}
 
 	double getAmountOfMutation() const
 	{
 		return _amountOfMutation;
-	};
+	}
 
 	unsigned int getAmountOfPointsOfMutation()
 	{
 		return _amountOfPointsOfMutation;
-	};
+	}
 
 	void setAmountOfPointsOfMutation (unsigned int amount)
 	{
@@ -75,7 +73,7 @@ public:
 	void setPropability(double propabilityOfMutation)
 	{
 		_probability = propabilityOfMutation;
-	};
+	}
 /*
 	void setLevelOfMutation(double levelOfMutation){
 		_levelOfMutation = levelOfMutation;
@@ -85,14 +83,14 @@ public:
 	void setAmountOfMutation(double amountOfMutation)
 	{
 		_amountOfMutation = amountOfMutation;
-	};
+	}
 };//Class MutationSettings
 
 
-}//namespace Mutation
-}//namespace Operation
-}//namespace Genetic Library
+} /* namespace mutation */
+} /* namespace operation */
+} /* namespace geneial */
 
 
 
-#endif /* SRC_LIB_GENEIAL_CORE_OPERATIONS_MUTATION_MUTATIONSETTINGS_H_ */
+#endif /* __GENEIAL_MUTATION_SETTINGS_H_ */

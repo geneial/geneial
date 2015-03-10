@@ -1,18 +1,13 @@
-/*
- * MockFitnessEvaluator.h
- *
- *  Created on: Feb 17, 2015
- *      Author: bewo
- */
-
-#ifndef MOCKFITNESSEVALUATOR_H_
-#define MOCKFITNESSEVALUATOR_H_
+#ifndef __GENEIAL_TEST_MOCK_FITNESS_EVALUATOR_H_
+#define __GENEIAL_TEST_MOCK_FITNESS_EVALUATOR_H_
 
 #include <boost/shared_ptr.hpp>
 #include <geneial/core/fitness/Fitness.h>
 #include <geneial/core/fitness/FitnessEvaluator.h>
 
-using namespace GeneticLibrary;
+namespace test_mock {
+
+using namespace geneial;
 
 class MockDoubleFitnessEvaluator: public FitnessEvaluator<double>
 {
@@ -40,5 +35,6 @@ public:
 	virtual ~MockIntFitnessEvaluator(){};
 };
 
+} /* namespace test_mock */
 
-#endif /* MOCKFITNESSEVALUATOR_H_ */
+#endif /* __GENEIAL_TEST_MOCK_FITNESS_EVALUATOR_H_ */

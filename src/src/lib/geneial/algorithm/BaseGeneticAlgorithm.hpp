@@ -1,27 +1,19 @@
-/*
- * BaseGeneticAlgorithm.hpp
- *
- *  Created on: Nov 26, 2014
- *      Author: bewo
- */
-
-#ifndef BASEGENETICALGORITHM_HPP_
-#define BASEGENETICALGORITHM_HPP_
+#ifndef __GENEIAL_BASE_GENETIC_ALGORITHM_HPP_
+#define __GENEIAL_BASE_GENETIC_ALGORITHM_HPP_
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
+
 #include <iterator>
 #include <set>
 
-namespace GeneticLibrary {
-namespace Algorithm {
-
-using namespace GeneticLibrary::Operation;
+namespace geneial {
+namespace algorithm {
 
 template <typename FITNESS_TYPE>
-void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
+void BaseGeneticAlgorithm<FITNESS_TYPE>::solve()
+{
 
 	_wasStarted = true;
-
 
 	//Initialize the first population candidate, take whatever has been inserted and fill it up to max size.
 	_manager.replenishPopulation();
@@ -39,10 +31,10 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 		//std::cout << _manager.getPopulation() << std::endl;
 
 		//Perform a selection of mating candidates based on the given strategy.
-		typename Selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set mating_pool; //<-- TODO (bewo) (use shared_ptr here?)
+		typename selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set mating_pool; //<-- TODO (bewo) (use shared_ptr here?)
 		mating_pool = _selectionOperation->doSelect(_manager.getPopulation(),_manager);
 
-		typename Coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set offspring;
+		typename coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set offspring;
 		offspring = _couplingOperation->doCopulate(mating_pool,_crossoverOperation,_manager);
 		offspring = _mutationOperation->doMutate(offspring,_manager);
 
@@ -66,7 +58,7 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve(){
 }
 
 
-} /* namespace Algorithm */
-} /* namespace GeneticLibrary */
+} /* namespace algorithm */
+} /* namespace geneial */
 
-#endif /* BASEGENETICALGORITHM_HPP_ */
+#endif /* __GENEIAL_BASE_GENETIC_ALGORITHM_HPP_ */

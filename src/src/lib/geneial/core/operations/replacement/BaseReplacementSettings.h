@@ -1,16 +1,9 @@
-/*
- * BaseReplacementSettings.h
- *
- *  Created on: Dec 21, 2014
- *      Author: bewo
- */
+#ifndef __GENEIAL_BASE_REPLACEMENT_SETTINGS_H_
+#define __GENEIAL_BASE_REPLACEMENT_SETTINGS_H_
 
-#ifndef BASEREPLACEMENTSETTINGS_H_
-#define BASEREPLACEMENTSETTINGS_H_
-
-namespace GeneticLibrary {
-namespace Operation {
-namespace Replacement {
+namespace geneial {
+namespace operation {
+namespace replacement {
 
 class BaseReplacementSettings{
 
@@ -61,8 +54,8 @@ private:
 
 };
 
-} /* namespace Replacement */
-} /* namespace Operation */
-} /* namespace GeneticLibrary */
+} /* namespace replacement */
+} /* namespace operation */
+} /* namespace geneial */
 
-#endif /* BASEREPLACEMENTSETTINGS_H_ */
+#endif /* __GENEIAL_BASE_REPLACEMENT_SETTINGS_H_ */
