@@ -12,21 +12,21 @@ namespace population {
 namespace chromosome {
 
 template <typename FITNESS_TYPE>
-typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE>::createChromosome(bool populateValues){
-
+typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE>::createChromosome(typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues)
+{
 	using namespace geneial::utility;
 
 	typename MultiValueChromosome<int,FITNESS_TYPE>::ptr new_chromosome(new MultiValueChromosome<int,FITNESS_TYPE>(this->_settings->getFitnessEvaluator()));
 	assert(new_chromosome->getSize() == 0);
 
 	new_chromosome->getContainer().reserve(this->_settings->getNum());
-	if(populateValues)
+	if(populateValues == BaseChromosomeFactory<FITNESS_TYPE>::CREATE_VALUES)
 	{
 		const unsigned int amount = this->_settings->getNum();
 
 		unsigned int i = amount;
 
-		int lastVal; //reference to last inserted value
+		int lastVal=0; //reference to last inserted value
 
 		while(i--)
 		{

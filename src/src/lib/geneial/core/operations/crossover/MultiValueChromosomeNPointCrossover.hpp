@@ -123,7 +123,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 
 	mvc_ptr child_candidate =
 			boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(
-					this->getBuilderFactory()->createChromosome(false)
+					this->getBuilderFactory()->createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED)
 			);
 	assert(child_candidate);
 

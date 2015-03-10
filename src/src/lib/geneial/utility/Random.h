@@ -1,7 +1,7 @@
-#include <geneial/utility/patterns/singleton.hpp>
-
 #ifndef __GENEIAL_RANDOM_H_
 #define __GENEIAL_RANDOM_H_
+
+#include <geneial/utility/patterns/singleton.hpp>
 
 namespace geneial {
 namespace utility {

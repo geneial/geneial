@@ -17,7 +17,7 @@ private:
 public:
 	ContinousMultiIntValueChromosomeFactory(ContinousMultiValueBuilderSettings<int,FITNESS_TYPE> *settings): MultiIntValueChromosomeFactory<FITNESS_TYPE>(settings),
 	_settings(settings){};
-	typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome(bool populateValues = true);
+	typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome(typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues = BaseChromosomeFactory<FITNESS_TYPE>::CREATE_VALUES);
 };
 
 } /* namespace chromomsome */

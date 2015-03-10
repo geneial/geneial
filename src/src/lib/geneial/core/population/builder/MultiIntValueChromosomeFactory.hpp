@@ -12,14 +12,14 @@ namespace population {
 namespace chromosome {
 
 template <typename FITNESS_TYPE>
-typename BaseChromosome<FITNESS_TYPE>::ptr MultiIntValueChromosomeFactory<FITNESS_TYPE>::createChromosome(bool populateValues){
+typename BaseChromosome<FITNESS_TYPE>::ptr MultiIntValueChromosomeFactory<FITNESS_TYPE>::createChromosome(typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues){
 
 	typename MultiValueChromosome<int,FITNESS_TYPE>::ptr new_chromosome(new MultiValueChromosome<int,FITNESS_TYPE>(this->_settings->getFitnessEvaluator()));
 	assert(new_chromosome->getSize() == 0);
 
 	new_chromosome->getContainer().reserve(this->_settings->getNum());
 
-	if(populateValues)
+	if(populateValues == BaseChromosomeFactory<FITNESS_TYPE>::CREATE_VALUES)
 	{
 		int i = this->_settings->getNum();
 		while(i--)

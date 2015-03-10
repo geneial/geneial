@@ -77,7 +77,7 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
 			//creating a new MVC (to keep things reversible)
 			mvc_ptr _mutatedChromosome =
 						boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(
-								this->getBuilderFactory()->createChromosome(false)
+								this->getBuilderFactory()->createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED)
 						);
 			assert(_mutatedChromosome);
 

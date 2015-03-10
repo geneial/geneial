@@ -16,8 +16,7 @@ protected:
 public:
 	MultiValueChromosomeFactory(MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE> *settings):_settings(settings){};
 
-	typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome(bool populateValues = true) = 0;
-
+	typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome(typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues = BaseChromosomeFactory<FITNESS_TYPE>::CREATE_VALUES) = 0;
 
 	const MultiValueBuilderSettings<VALUE_TYPE,FITNESS_TYPE>* getSettings() const
 	{

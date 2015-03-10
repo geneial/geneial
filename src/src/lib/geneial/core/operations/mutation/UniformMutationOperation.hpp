@@ -11,7 +11,7 @@
 namespace geneial {
 namespace operation {
 namespace mutation {
-
+// TODO(bewo): reduce cc!
 /*
  *  Returns a chromosome container with some new chromosomes which are partially mutated versions of the old ones.
  *
@@ -27,9 +27,8 @@ namespace mutation {
  *  	(X) <- Mutate this value --> (Y)
  *  	(X)							 (X)
  *
- * TODO(bewo) reduce cc!
  *
- *  */
+ **/
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate
 			(
@@ -74,7 +73,7 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
 			//creating a new MVC (to keep things reversible)
 			mvc_ptr mutatedChromosome =
 						boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> >(
-								this->getBuilderFactory()->createChromosome(false)
+								this->getBuilderFactory()->createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED)
 						);
 			assert(mutatedChromosome);
 
@@ -97,13 +96,13 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
 			//iterator for one chromosome (to iterate it's values)
 			typename value_container::iterator mutant_it = mutantChromosomeContainer.begin();
 
-			//Insinde Chromosome loop
+			//Inside chromosome loop
 			for (unsigned int i=0; mutant_it != mutantChromosomeContainer.end(); i++)
 			{
 
 
 				//dicing whether to mutate or not (influeced by propability setting)
-				double value_choise = Random::instance()->generateDouble(0.0,1.0);
+				double value_choice = Random::instance()->generateDouble(0.0,1.0);
 
 				//generate a mutation value to replace an old value
 				VALUE_TYPE random_mutation = Random::instance()->generateDouble(
@@ -141,9 +140,9 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
 							}
 
 				//Target points are not used for mutation
-				} else if(value_choise <= this->getSettings()->getAmountOfMutation()) {
+				} else if(value_choice <= this->getSettings()->getAmountOfMutation()) {
 					result_container.push_back (random_mutation);
-				//In case dicing (value_choise) choose not to mutate the value
+				//In case dicing (value_choice) choose not to mutate the value
 				} else {
 					result_container.push_back (*mutant_it);
 				}

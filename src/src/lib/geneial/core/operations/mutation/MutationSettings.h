@@ -11,18 +11,18 @@ class MutationSettings{
 private:
 
 	/**
-	 * propability that one Chromosome is choosen for mutation
+	 * probability that one chromosome is choosen for mutation
 	 */
 
 	double _probability;
 
 	/**
-	 * _amountOfMutation defines the propability to choose a value in a chromosome.
+	 * _amountOfMutation defines the probability to choose a value in a chromosome.
 	 */
 	double _amountOfMutation;
 
 	/**
-	 * _amountOfPointsOfMutation defines at how many points, Mutation will change a chromosome.
+	 * _amountOfPointsOfMutation defines at how many points, mutation will change a chromosome.
 	 * Does ignore _amountOfMutation.
 	 * 0 Will turn of this feature, and switch to _amountOfMutation
 	 */

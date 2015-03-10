@@ -35,7 +35,9 @@
 #include <geneial/core/operations/crossover/MultiValueChromosomeAverageCrossover.h>
 
 #include <geneial/core/operations/mutation/MutationSettings.h>
-#include <geneial/core/operations/mutation/UniformMutationOperation.h>
+//#include <geneial/core/operations/mutation/UniformMutationOperation.h>
+#include <geneial/core/operations/mutation/SmoothPeakMutationOperation.h>
+
 
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 
@@ -208,10 +210,31 @@ int main(int argc, char **argv) {
 	ContinousMultiIntValueChromosomeFactory<double> *chromosomeFactory = new ContinousMultiIntValueChromosomeFactory<double>(builderSettings);
 
 
-	MutationSettings* mutationSettings = new MutationSettings(0.4,0.0,1);
+	MutationSettings* mutationSettings = new MutationSettings(0.4,0.1,0);
 
 	ChooseRandom<int,double> *mutationChoosingOperation = new ChooseRandom<int,double>(mutationSettings);
-	BaseMutationOperation<double> *mutationOperation = new UniformMutationOperation<int,double>(mutationSettings,mutationChoosingOperation,builderSettings,chromosomeFactory);
+	//BaseMutationOperation<double> *mutationOperation = new UniformMutationOperation<int,double>(mutationSettings,mutationChoosingOperation,builderSettings,chromosomeFactory);
+
+	/*MutationSettings *settings,
+	BaseChoosingOperation<FITNESS_TYPE> *choosingOperation,
+	ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *builderSettings,
+	ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE> *builderFactory,
+	unsigned int maxLeftEps,
+	unsigned int maxRightEps,
+	FITNESS_TYPE maxElevation
+	)
+	*/
+
+	BaseMutationOperation<double> *mutationOperation = new SmoothPeakMutationOperation<int,double>
+		(
+			mutationSettings,
+			mutationChoosingOperation,
+			builderSettings,
+			chromosomeFactory,
+			10, //MAX PEAK TO LEFT
+			10, //MAX PEAK TO RIGHT
+			20 //MAX Elevation to mutate
+		);
 
 	//FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(20,10);
 	SelectionSettings* selectionSettings = new SelectionSettings(20);
