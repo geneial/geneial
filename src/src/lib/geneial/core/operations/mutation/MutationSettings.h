@@ -31,9 +31,10 @@ private:
 public:
 	virtual ~MutationSettings(){};
 
-	MutationSettings(double propability, double amountOfMutation, unsigned int amountOfPointsOfMutation)
-	{
-		_probability = propability;
+
+	MutationSettings(double probability, double amountOfMutation, unsigned int amountOfPointsOfMutation){
+		assert((probability <= 1) && (probability >= 0));
+		_probability = probability;
 		_amountOfPointsOfMutation = amountOfPointsOfMutation;
 		_amountOfMutation = amountOfMutation;
 	}
