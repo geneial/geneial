@@ -24,6 +24,7 @@ private:
 
 public:
 	typedef typename Population<FITNESS_TYPE>::chromosome_container offspring_result_set;
+
 	BaseCouplingOperation(CouplingSettings *settings): _settings(settings)  {};
 	virtual ~BaseCouplingOperation() {};
 

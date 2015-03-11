@@ -27,12 +27,15 @@ using namespace geneial::operation::mutation;
 
 using namespace test_mock;
 
-BOOST_AUTO_TEST_SUITE( __MUTATION_TEST_UniformMutationOperation )
+BOOST_AUTO_TEST_SUITE( TESTSUITE_UniformMutationOperation )
 
+//TODO (bewo): Separate Uniform and Nonuniform into separate testcases
+//TODO (bewo): Use more mock objects / helper here to avoid tedious duplicate gluecode?
 
-BOOST_AUTO_TEST_CASE( __MUTATION_TESTbasicMutation )
+BOOST_AUTO_TEST_CASE( UNIFORM_TEST__basicMutation )
 {
-	/*100% Chance of mutation
+	/*
+	 * 100% Chance of mutation
 	 * Tests if Chromosomes are actually mutated
 	 *
 	 * Test for Uniform and NonUniform Mutation
@@ -105,7 +108,7 @@ BOOST_AUTO_TEST_CASE( __MUTATION_TESTbasicMutation )
 }
 
 
-BOOST_AUTO_TEST_CASE( __MUTATION_TEST_Mutation_Propability )
+BOOST_AUTO_TEST_CASE( UNIFORM_TEST__Mutation_Propability )
 {
 	/*
 	 * Testing Mutation Propability for 10000 Testcases
@@ -121,7 +124,7 @@ BOOST_AUTO_TEST_CASE( __MUTATION_TEST_Mutation_Propability )
 
 	BaseManager<double> manager(populationSettings, chromosomeFactory);
 
-
+	//TODO (bewo): Constantify magic numbers...
 	for (double propability = 0.0; propability <= 1.0; propability = propability + 0.1)
 	{
 
@@ -204,7 +207,7 @@ BOOST_AUTO_TEST_CASE( __MUTATION_TEST_Mutation_Propability )
 	}
 }
 
-BOOST_AUTO_TEST_CASE ( __MUTATION_TEST_points_of_mutation )
+BOOST_AUTO_TEST_CASE ( UNIFORM_TEST__points_of_mutation )
 {
 	/*
 	 * Checking if as many points are mutated as set in Mutation settings
@@ -257,7 +260,10 @@ BOOST_AUTO_TEST_CASE ( __MUTATION_TEST_points_of_mutation )
 				++nonUniformMutant_it)
 		{
 			//BOOST_TEST_MESSAGE(original_it);
-			if (*original_it != *nonUniformMutant_it) nunUniformdiffCounter++;
+			if (*original_it != *nonUniformMutant_it)
+			{
+				nunUniformdiffCounter++;
+			}
 			++original_it;
 		}
 
@@ -265,8 +271,14 @@ BOOST_AUTO_TEST_CASE ( __MUTATION_TEST_points_of_mutation )
 		BOOST_TEST_MESSAGE("Check if as many points were Mutated as specified in MutationSettings: "<< pointsOfMutation);
 		BOOST_TEST_MESSAGE("NON-UNIFORM: "<< nunUniformdiffCounter);
 
-		if (pointsOfMutation != 0) BOOST_CHECK((nunUniformdiffCounter <= pointsOfMutation+5 && pointsOfMutation <= 100) || (nunUniformdiffCounter <= 100 && pointsOfMutation > 100));
-		else BOOST_CHECK(nunUniformdiffCounter >= 90);
+		if (pointsOfMutation != 0)
+		{
+			BOOST_CHECK((nunUniformdiffCounter <= pointsOfMutation+5 && pointsOfMutation <= 100) || (nunUniformdiffCounter <= 100 && pointsOfMutation > 100));
+		}
+		else
+		{
+			BOOST_CHECK(nunUniformdiffCounter >= 90);
+		}
 
 		unsigned int uniformdiffCounter = 0;
 		original_it = mvcOriginal_valueContainer.begin();
@@ -292,3 +304,21 @@ BOOST_AUTO_TEST_CASE ( __MUTATION_TEST_points_of_mutation )
 
 BOOST_AUTO_TEST_SUITE_END()
 
+
+BOOST_AUTO_TEST_SUITE( TESTSUITE_SmoothingMutation )
+
+//Checks whether the smoothing mutation destroys chromosome's smoothness
+BOOST_AUTO_TEST_CASE ( SMOOTHING_TEST__ensure_nonviolated_smoothness )
+{
+
+}
+
+//Test whether mutation generates values above/below minmax
+BOOST_AUTO_TEST_CASE ( SMOOTHING_TEST__ensure_adherence_min_max )
+{
+
+}
+
+//Test Peak at chromosome borders.
+
+BOOST_AUTO_TEST_SUITE_END()

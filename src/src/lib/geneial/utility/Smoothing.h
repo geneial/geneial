@@ -8,7 +8,6 @@ namespace utility {
 
 //Library for some common smoothing operations
 
-template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class Smoothing{
 
 private:
@@ -18,6 +17,7 @@ private:
 public:
 
 	//TODO (bewo): Docs!
+	template<typename VALUE_TYPE, typename FITNESS_TYPE>
 	static void restoreSmoothness(
 			typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr chromosome,
 			VALUE_TYPE maxAbsElevation,
@@ -26,6 +26,7 @@ public:
 			);
 
 	//TODO (bewo): Docs!
+	template<typename VALUE_TYPE, typename FITNESS_TYPE>
 	static void peakAt(
 			unsigned int pos,
 			unsigned int epsLeft,

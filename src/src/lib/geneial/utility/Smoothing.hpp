@@ -7,7 +7,7 @@ namespace geneial {
 namespace utility {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-void Smoothing<VALUE_TYPE, FITNESS_TYPE>::restoreSmoothness(
+void Smoothing::restoreSmoothness(
 		typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr chromosome,
 		VALUE_TYPE maxAbsElevation,
 		VALUE_TYPE min,
@@ -50,7 +50,7 @@ void Smoothing<VALUE_TYPE, FITNESS_TYPE>::restoreSmoothness(
 
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-void Smoothing<VALUE_TYPE, FITNESS_TYPE>::peakAt(unsigned int pos,
+void Smoothing::peakAt(unsigned int pos,
 		unsigned int epsLeft,
 		unsigned int epsRight,
 		VALUE_TYPE elevation,

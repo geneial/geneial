@@ -72,7 +72,7 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
 					}while(positionsToPeak.find(pos) != positionsToPeak.end());
 
 					const int sign = (Random::instance()->generateBit())?-1:1;
-					Smoothing<VALUE_TYPE,FITNESS_TYPE>::peakAt(pos,
+					Smoothing::peakAt<VALUE_TYPE,FITNESS_TYPE>(pos,
 							Random::instance()->generateInt(0,this->_maxLeftEps),
 							Random::instance()->generateInt(0,this->_maxRightEps),
 							sign * Random::instance()->generateInt(1,this->_maxElevation),
@@ -90,7 +90,7 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
 					if(value_choice < this->getSettings()->getAmountOfMutation())
 					{
 						const int sign = (Random::instance()->generateBit())?-1:1;
-						Smoothing<VALUE_TYPE,FITNESS_TYPE>::peakAt( std::distance(mutatedChromosome->getContainer().begin(), it),
+						Smoothing::peakAt<VALUE_TYPE,FITNESS_TYPE>( std::distance(mutatedChromosome->getContainer().begin(), it),
 								Random::instance()->generateInt(0,this->_maxLeftEps),
 								Random::instance()->generateInt(0,this->_maxRightEps),
 								sign * Random::instance()->generateInt(1,this->_maxElevation),
@@ -102,7 +102,7 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
 			}
 
 			//Correct smoothness in mutated chromosome
-			Smoothing<VALUE_TYPE,FITNESS_TYPE>::restoreSmoothness(
+			Smoothing::restoreSmoothness<VALUE_TYPE,FITNESS_TYPE>(
 					mutatedChromosome,
 					this->getBuilderSettings()->getEps(),
 					this->getBuilderSettings()->getRandomMin(),
