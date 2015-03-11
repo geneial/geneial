@@ -29,10 +29,9 @@
 #include <geneial/core/operations/replacement/ReplaceWorstOperation.h>
 #include <geneial/core/operations/replacement/ReplaceRandomOperation.h>
 
-#include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
+#include <geneial/core/operations/crossover/MultiValueChromosomeBlendingCrossover.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossoverSettings.h>
-
-#include <geneial/core/operations/crossover/MultiValueChromosomeAverageCrossover.h>
+#include <geneial/core/operations/crossover/SmoothedMultiValueChromosomeNPointCrossover.h>
 
 #include <geneial/core/operations/mutation/MutationSettings.h>
 //#include <geneial/core/operations/mutation/UniformMutationOperation.h>
@@ -68,7 +67,11 @@ using namespace geneial::operation::replacement;
 using namespace geneial::operation::mutation;
 using namespace geneial::operation::choosing;
 
-double myTargetFunc(double x){
+double myTargetFunc1(double x){
+	return std::sin(x)*std::abs(std::sin(M_PI/2+x*x/2))*30+50;
+}
+
+double myTargetFunc2(double x){
 	//Some Lagrange poly + Manual Tweakage
 	x = 0.55*x + 0.3;
 	const double result =
@@ -97,7 +100,7 @@ void plot(MultiValueChromosome<int,double>::ptr chromosomeToPrint){
 		{
 			char out = ' ';
 
-			const double result = myTargetFunc(x);
+			const double result = myTargetFunc1(x);
 			if( y <= result && result < y+ystep)
 			{
 				out = '+';
@@ -136,8 +139,8 @@ void plot(MultiValueChromosome<int,double>::ptr chromosomeToPrint){
 		std::cout.precision(6);
 		std::cout.setf( std::ios::fixed, std:: ios::floatfield );
 		std::cout.width(1); std::cout << "|"; std::cout.width(15); std::cout << std::right <<  container[i];
-		std::cout.width(1); std::cout << "|"; std::cout.width(15); std::cout << std::right <<  myTargetFunc(i);
-		std::cout.width(1); std::cout << "|"; std::cout.width(15); std::cout << std::right << std::abs(myTargetFunc(i)-container[i]) << "|";
+		std::cout.width(1); std::cout << "|"; std::cout.width(15); std::cout << std::right <<  myTargetFunc1(i);
+		std::cout.width(1); std::cout << "|"; std::cout.width(15); std::cout << std::right << std::abs(myTargetFunc1(i)-container[i]) << "|";
 		std::cout << std::endl;
 	}
 }
@@ -158,7 +161,7 @@ public:
 			int i = 0;
 			for(MultiValueChromosome<int,double>::value_container::const_iterator it = container.begin();it != container.end();++it)
 			{
-				fitness += std::abs(*it - myTargetFunc(i));
+				fitness += std::abs(*it - myTargetFunc1(i));
 				i++;
 			}
 			return boost::shared_ptr<Fitness<double> > (new Fitness<double>(1/fitness));
@@ -205,7 +208,7 @@ int main(int argc, char **argv) {
 
 	PopulationSettings *populationSettings = new PopulationSettings(1000);
 
-	ContinousMultiValueBuilderSettings<int,double> *builderSettings = new ContinousMultiValueBuilderSettings<int,double>(evaluator,30,210,-100,false,0,10);
+	ContinousMultiValueBuilderSettings<int,double> *builderSettings = new ContinousMultiValueBuilderSettings<int,double>(evaluator,30,210,-100,false,0,40);
 
 	ContinousMultiIntValueChromosomeFactory<double> *chromosomeFactory = new ContinousMultiIntValueChromosomeFactory<double>(builderSettings);
 
@@ -213,17 +216,6 @@ int main(int argc, char **argv) {
 	MutationSettings* mutationSettings = new MutationSettings(0.4,0.1,0);
 
 	ChooseRandom<int,double> *mutationChoosingOperation = new ChooseRandom<int,double>(mutationSettings);
-	//BaseMutationOperation<double> *mutationOperation = new UniformMutationOperation<int,double>(mutationSettings,mutationChoosingOperation,builderSettings,chromosomeFactory);
-
-	/*MutationSettings *settings,
-	BaseChoosingOperation<FITNESS_TYPE> *choosingOperation,
-	ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *builderSettings,
-	ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE> *builderFactory,
-	unsigned int maxLeftEps,
-	unsigned int maxRightEps,
-	FITNESS_TYPE maxElevation
-	)
-	*/
 
 	BaseMutationOperation<double> *mutationOperation = new SmoothPeakMutationOperation<int,double>
 		(
@@ -248,9 +240,17 @@ int main(int argc, char **argv) {
 	//BaseCouplingOperation<double> *couplingOperation = new SimpleCouplingOperation<double>(couplingSettings);
 	BaseCouplingOperation<double> *couplingOperation = new RandomCouplingOperation<double>(couplingSettings);
 
-	MultiValueChromosomeNPointCrossoverSettings *crossoverSettings = new MultiValueChromosomeNPointCrossoverSettings(1,MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH,5);
-	BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeNPointCrossover<int,double>(crossoverSettings,builderSettings,chromosomeFactory);
-	//BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeAverageCrossover<int,double>(builderSettings,chromosomeFactory);
+/*	BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeBlendingCrossover<int,double>(
+			builderSettings,
+			chromosomeFactory,
+			MultiValueChromosomeBlendingCrossover<int,double>::INTERPOLATE_RANDOM,
+			MultiValueChromosomeBlendingCrossover<int,double>::RANDOM_AMOUNT,
+			2
+			); */
+
+	MultiValueChromosomeNPointCrossoverSettings *crossoverSettings = new MultiValueChromosomeNPointCrossoverSettings(1,MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH,3);
+	BaseCrossoverOperation<double> *crossoverOperation = new SmoothedMultiValueChromosomeNPointCrossover<int,double>(crossoverSettings,builderSettings,chromosomeFactory);
+
 
 	//BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::replace_offspring_mode::REPLACE_FIXED_NUMBER,20);
 	BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::REPLACE_ALL_OFFSPRING,20,0);
