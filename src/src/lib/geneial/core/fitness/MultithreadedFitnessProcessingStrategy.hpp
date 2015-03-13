@@ -26,15 +26,16 @@ void MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE>::startWorkers()
 template <typename FITNESS_TYPE>
 void MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE>::stopWorkers()
 {
-	_startBarrier.wait();
-	_shutdown = true;
-	_endBarrier.wait();
+	if(_started){
+		_startBarrier.wait();
+		_shutdown = true;
+		_endBarrier.wait();
 
-	for(unsigned int i = 0; i < _numWorkerThreads;i++)
-	{
-		_workerThreads[i]->join();
+		for(unsigned int i = 0; i < _numWorkerThreads;i++)
+		{
+			_workerThreads[i]->join();
+		}
 	}
-
 }
 
 

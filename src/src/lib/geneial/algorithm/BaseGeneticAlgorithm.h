@@ -59,7 +59,7 @@ public:
 			crossover::BaseCrossoverOperation<FITNESS_TYPE> *crossoverOperation,
 			replacement::BaseReplacementOperation<FITNESS_TYPE> *replacementOperation,
 			mutation::BaseMutationOperation<FITNESS_TYPE> *mutationOperation,
-			BaseFitnessProcessingStrategy<FITNESS_TYPE>* fitnessProcessingStrategy
+			BaseFitnessProcessingStrategy<FITNESS_TYPE> *fitnessProcessingStrategy
 	):
 		_manager(
 			populationSettings,
