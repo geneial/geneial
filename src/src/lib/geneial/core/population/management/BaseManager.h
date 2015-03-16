@@ -56,6 +56,13 @@ public:
 		return _population;
 	}
 
+	Population<FITNESS_TYPE>& getPopulation() const
+	{
+		return const_cast<Population<FITNESS_TYPE>&>(_population);
+	}
+
+
+
 	const BaseChromosomeFactory<FITNESS_TYPE>*& getChromosomeFactory() const
 	{
 		return _chromosomeFactory;
