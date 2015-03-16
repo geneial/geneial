@@ -36,7 +36,7 @@
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 
 #include <geneial/core/fitness/SingleThreadedFitnessProcessingStrategy.h>
-#include <geneial/core/fitness/MultithreadedFitnessProcessingStrategy.h>
+#include <geneial/core/fitness/MultiThreadedFitnessProcessingStrategy.h>
 
 #include <geneial/config.h>
 

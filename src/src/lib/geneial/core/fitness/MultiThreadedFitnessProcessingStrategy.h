@@ -76,6 +76,6 @@ private:
 
 }  /* namespace geneial */
 
-#include <geneial/core/fitness/MultithreadedFitnessProcessingStrategy.hpp>
+#include <geneial/core/fitness/MultiThreadedFitnessProcessingStrategy.hpp>
 
 #endif /* __GENEIAL_MULTITHREADED_FITNESS_PROCESSING_STRATEGY_H_ */

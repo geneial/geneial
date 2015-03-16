@@ -40,7 +40,7 @@
 
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 
-#include <geneial/core/fitness/MultithreadedFitnessProcessingStrategy.h>
+#include <geneial/core/fitness/MultiThreadedFitnessProcessingStrategy.h>
 
 #include <geneial/algorithm/observer/BestChromosomeObserver.h>
 

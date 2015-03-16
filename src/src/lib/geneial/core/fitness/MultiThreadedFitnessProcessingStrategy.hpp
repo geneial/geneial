@@ -1,7 +1,7 @@
 #ifndef __GENEIAL_MULTITHREADED_FITNESS_PROCESSING_STRATEGY_HPP_
 #define __GENEIAL_MULTITHREADED_FITNESS_PROCESSING_STRATEGY_HPP_
 
-#include <geneial/core/fitness/MultithreadedFitnessProcessingStrategy.h>
+#include <geneial/core/fitness/MultiThreadedFitnessProcessingStrategy.h>
 
 namespace geneial {
 
