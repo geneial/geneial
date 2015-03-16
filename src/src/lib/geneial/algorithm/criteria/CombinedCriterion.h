@@ -20,7 +20,7 @@ template <typename FITNESS_TYPE>
 class CombinedCriterion : public BaseStoppingCriterion<FITNESS_TYPE>
 {
 public:
-	enum glue { AND , OR, XOR };
+	enum glue {INIT, AND , OR, XOR };
 
 	typedef typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion;
 
@@ -36,8 +36,15 @@ public:
 	virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager)
 	{
 		bool result = true;
+		bool foundInit = false;
 		for(typename container::iterator it = _criteria.begin();it != _criteria.end();++it){
-			if(it->first == AND)
+			if(it->first == INIT)
+			{
+				result = it->second->wasReached(manager);
+				assert(foundInit == false && "INIT type can only be applied once!");
+				foundInit=true;
+			}
+			else if(it->first == AND)
 			{
 				result &= it->second->wasReached(manager);
 			}
@@ -49,6 +56,7 @@ public:
 			{
 				result |= it->second->wasReached(manager);
 			}
+			assert(foundInit == true && "INIT type not found for combined criterion!");
 		}
 		return result;
 	}
