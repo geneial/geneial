@@ -130,15 +130,12 @@ public:
 		return _wasStarted;
 	}
 
-	inline virtual bool wasCriteriaReached()
-	{
-		return _stoppingCriterion->wasReached(_manager);
-	}
+	inline virtual bool wasCriteriaReached();
 
 
 	void inline notifyObservers(typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent event)
 	{
-		typename observers_map::iterator lb = _observers.lower_bound(event);
+		typename observers_map::const_iterator lb = _observers.lower_bound(event);
 
 		if(lb != _observers.end() && !(_observers.key_comp()(event, lb->first)))
 		{

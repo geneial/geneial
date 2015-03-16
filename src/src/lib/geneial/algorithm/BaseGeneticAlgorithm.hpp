@@ -22,9 +22,7 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve()
 
 
 	//Initial check
-	bool wasReached = wasCriteriaReached();
-
-	while(!wasReached)
+	while(!wasCriteriaReached())
 	{
 		_manager.getPopulation().doAge();
 
@@ -46,16 +44,23 @@ void BaseGeneticAlgorithm<FITNESS_TYPE>::solve()
 		_manager.replenishPopulation();
 
 		notifyObservers(AlgorithmObserver<FITNESS_TYPE>::GENERATION_DONE);
-
-		wasReached = wasCriteriaReached();
-		if(wasReached)
-		{
-			notifyObservers(AlgorithmObserver<FITNESS_TYPE>::CRITERIA_REACHED);
-		}
 	}
 	_wasSolved = true;
 
 }
+
+
+template <typename FITNESS_TYPE>
+inline bool BaseGeneticAlgorithm<FITNESS_TYPE>::wasCriteriaReached() //TODO(bewo) Rethink about constness of this
+{
+	const bool wasReached =_stoppingCriterion->wasReached(_manager);
+	if(wasReached)
+	{
+		notifyObservers(AlgorithmObserver<FITNESS_TYPE>::CRITERIA_REACHED);
+	}
+	return wasReached;
+}
+
 
 
 } /* namespace algorithm */
