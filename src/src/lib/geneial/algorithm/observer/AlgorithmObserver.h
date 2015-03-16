@@ -25,7 +25,7 @@ public:
 
 	virtual void updateGeneration(BaseManager<FITNESS_TYPE> &manager){}
 
-	virtual void updateCriteriaReached(BaseManager<FITNESS_TYPE> &manager, BaseStoppingCriterion<FITNESS_TYPE> *criteria){}
+	virtual void updateCriteriaReached(BaseManager<FITNESS_TYPE> &manager, const BaseStoppingCriterion<FITNESS_TYPE> * const criteria){}
 
 	const std::set<ObserveableEvent>& getSubscribedEvents() const
 	{
