@@ -153,7 +153,7 @@ public:
 				{
 					for(typename observers_map::mapped_type::const_iterator it=lb->second.begin();it!=lb->second.end();++it)
 					{
-						(*it)->updateCriteriaReached(_manager);
+						(*it)->updateCriteriaReached(_manager,_stoppingCriterion);
 					}
 					break;
 				}

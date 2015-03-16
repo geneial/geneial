@@ -10,6 +10,7 @@ namespace geneial {
 namespace algorithm {
 
 using namespace geneial::population::management;
+using namespace geneial::algorithm::stopping_criteria;
 
 template <typename FITNESS_TYPE>
 class AlgorithmObserver {
@@ -23,7 +24,8 @@ public:
 
 
 	virtual void updateGeneration(BaseManager<FITNESS_TYPE> &manager){}
-	virtual void updateCriteriaReached(BaseManager<FITNESS_TYPE> &manager){}
+
+	virtual void updateCriteriaReached(BaseManager<FITNESS_TYPE> &manager, BaseStoppingCriterion<FITNESS_TYPE> *criteria){}
 
 	const std::set<ObserveableEvent>& getSubscribedEvents() const
 	{
