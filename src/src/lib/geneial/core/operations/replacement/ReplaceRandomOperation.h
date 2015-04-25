@@ -3,29 +3,36 @@
 
 #include <geneial/core/operations/replacement/BaseReplacementOperation.h>
 
-namespace geneial {
-namespace operation {
-namespace replacement {
+namespace geneial
+{
+namespace operation
+{
+namespace replacement
+{
 
 /**
  * Select a number of parents based on a certain criteria.
  */
-template <typename FITNESS_TYPE>
-class ReplaceRandomOperation : public BaseReplacementOperation<FITNESS_TYPE>
+template<typename FITNESS_TYPE>
+class ReplaceRandomOperation: public BaseReplacementOperation<FITNESS_TYPE>
 {
 private:
-	unsigned int getAmountToReplace(
-			const Population<FITNESS_TYPE> &population,
-			const typename coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const;
+    unsigned int getAmountToReplace(const Population<FITNESS_TYPE> &population,
+            const typename coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const;
 public:
-	ReplaceRandomOperation(BaseReplacementSettings* settings): BaseReplacementOperation<FITNESS_TYPE>(settings){};
-	virtual ~ReplaceRandomOperation() {};
+    ReplaceRandomOperation(BaseReplacementSettings* settings) :
+            BaseReplacementOperation<FITNESS_TYPE>(settings)
+    {
+    }
 
-	void doReplace(
-			Population<FITNESS_TYPE> &population,
-			typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
-			typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
-			BaseManager<FITNESS_TYPE> &manager);
+    virtual ~ReplaceRandomOperation()
+    {
+    }
+
+    void doReplace(Population<FITNESS_TYPE> &population,
+            typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
+            typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
+            BaseManager<FITNESS_TYPE> &manager);
 
 };
 

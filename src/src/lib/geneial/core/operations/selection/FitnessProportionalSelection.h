@@ -7,39 +7,43 @@
 #include <map>
 #include <stdexcept>
 
-
-namespace geneial {
-namespace operation {
-namespace selection {
+namespace geneial
+{
+namespace operation
+{
+namespace selection
+{
 
 /**
  * Select a number of parents based on a certain criteria.
  */
-template <typename FITNESS_TYPE>
-class FitnessProportionalSelection : public BaseSelectionOperation<FITNESS_TYPE>
+template<typename FITNESS_TYPE>
+class FitnessProportionalSelection: public BaseSelectionOperation<FITNESS_TYPE>
 {
 public:
-	FitnessProportionalSelection(SelectionSettings* settings): BaseSelectionOperation<FITNESS_TYPE>(settings)
-	{
-		_settings = dynamic_cast<FitnessProportionalSelectionSettings*>(settings);
-		if(!_settings)
-		{
-			throw new std::runtime_error("settings must be FitnessProportionalSelectionSettings");
-		}
+    FitnessProportionalSelection(SelectionSettings* settings) :
+            BaseSelectionOperation<FITNESS_TYPE>(settings)
+    {
+        _settings = dynamic_cast<FitnessProportionalSelectionSettings*>(settings);
+        if (!_settings)
+        {
+            throw new std::runtime_error("settings must be FitnessProportionalSelectionSettings");
+        }
 
-	}
+    }
 
-	virtual ~FitnessProportionalSelection() {};
+    virtual ~FitnessProportionalSelection()
+    {
+    }
+    ;
 
-	virtual typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set doSelect(
-			const Population<FITNESS_TYPE> &population,
-			BaseManager<FITNESS_TYPE> &manager);
+    virtual typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set doSelect(
+            const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager);
 
 private:
-	FitnessProportionalSelectionSettings* _settings;
+    FitnessProportionalSelectionSettings* _settings;
 
 };
-
 
 } /* namespace selection */
 } /* namespace operation */

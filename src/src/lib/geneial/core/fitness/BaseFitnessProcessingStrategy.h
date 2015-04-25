@@ -4,22 +4,23 @@
 #include <geneial/core/population/Population.h>
 #include <geneial/core/population/ContainerTypes.h>
 
-
-namespace geneial {
+namespace geneial
+{
 
 using namespace geneial::population;
 
-
-template <typename FITNESS_TYPE>
+template<typename FITNESS_TYPE>
 class BaseFitnessProcessingStrategy
 {
 public:
 
-	virtual void ensureHasFitness(const typename ContainerTypes<FITNESS_TYPE>::chromosome_container &refcontainer) = 0;
+    virtual void ensureHasFitness(const typename ContainerTypes<FITNESS_TYPE>::chromosome_container &refcontainer) = 0;
 
-	virtual ~BaseFitnessProcessingStrategy(){};
+    virtual ~BaseFitnessProcessingStrategy()
+    {
+    }
 };
 
-}  /*namespace geneial*/
+} /*namespace geneial*/
 
 #endif /* __GENEIAL_BASE_FITNESS_PROCESSING_STRATEGY_H_ */

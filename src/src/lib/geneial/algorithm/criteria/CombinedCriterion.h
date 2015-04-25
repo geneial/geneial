@@ -7,28 +7,37 @@
 #include <list>
 #include <map>
 
-namespace geneial {
-namespace algorithm {
-namespace stopping_criteria {
+namespace geneial
+{
+namespace algorithm
+{
+namespace stopping_criteria
+{
 
 using namespace geneial::population::management;
 
 //Container that holds other Criteria which are connected by a logical condition (and/or), which propagate the condition by visitor pattern or sth.
 //Composite Pattern for hierarchies of criteria
 //Associativity: left
-template <typename FITNESS_TYPE>
-class CombinedCriterion : public BaseStoppingCriterion<FITNESS_TYPE>
+template<typename FITNESS_TYPE>
+class CombinedCriterion: public BaseStoppingCriterion<FITNESS_TYPE>
 {
 public:
-	enum glue {INIT, AND , OR, XOR };
+    enum glue
+    {
+        INIT, AND, OR, XOR
+    };
 
-	typedef typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion;
+    typedef typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion;
 
-	typedef std::pair<glue,criterion> glue_criterion_pair;
+    typedef std::pair<glue, criterion> glue_criterion_pair;
 
-	typedef std::list<glue_criterion_pair> container;
+    typedef std::list<glue_criterion_pair> container;
 
-	virtual ~CombinedCriterion() {};
+    virtual ~CombinedCriterion()
+    {
+    }
+    ;
 
     /**
      * Returns true if empty.
@@ -37,9 +46,9 @@ public:
     {
         bool result = true;
 
-        assert(std::count_if(_criteria.begin(), _criteria.end(), [value](glue_criterion_pair const &b)
+        assert(std::count_if(_criteria.begin(), _criteria.end(), [](glue_criterion_pair const &b)
         {
-            return b.first == value;
+            return b.first == INIT;
         }) != 1
 
         && "INIT type not found or there are more than one INIT glue for combined criterion!");
@@ -66,52 +75,51 @@ public:
         return result;
     }
 
-	virtual void print(std::ostream& os) const
-	{
-		os << "Combined (";
-		for(typename container::const_iterator it = _criteria.begin();it != _criteria.end();++it)
-		{
-			if(it->first == AND)
-			{
-				os << "(&&) ";
-			}
-			else if(it->first == XOR)
-			{
-				os << "(^^) ";
-			}
-			else
-			{
-				os << "(||) ";
-			}
-			os << *it->second;
-		}
-		os << ")";
-	}
+    virtual void print(std::ostream& os) const
+    {
+        os << "Combined (";
+        for (typename container::const_iterator it = _criteria.begin(); it != _criteria.end(); ++it)
+        {
+            if (it->first == AND)
+            {
+                os << "(&&) ";
+            }
+            else if (it->first == XOR)
+            {
+                os << "(^^) ";
+            }
+            else
+            {
+                os << "(||) ";
+            }
+            os << *it->second;
+        }
+        os << ")";
+    }
 
-	void add(const glue_criterion_pair newCriterion)
-	{
-		_criteria.insert(_criteria.end(),newCriterion);
-	}
+    void add(const glue_criterion_pair newCriterion)
+    {
+        _criteria.insert(_criteria.end(), newCriterion);
+    }
 
-	void add(const glue glue, const criterion criterion )
-	{
-		glue_criterion_pair p(glue,criterion);
-		add(p);
-	}
+    void add(const glue glue, const criterion criterion)
+    {
+        glue_criterion_pair p(glue, criterion);
+        add(p);
+    }
 
-	const container& getCriteria() const
-	{
-		return _criteria;
-	}
+    const container& getCriteria() const
+    {
+        return _criteria;
+    }
 
-	void setCriteria(const container& criteria)
-	{
-		_criteria = criteria;
-	}
+    void setCriteria(const container& criteria)
+    {
+        _criteria = criteria;
+    }
 
 private:
-	container _criteria;
-
+    container _criteria;
 
 };
 

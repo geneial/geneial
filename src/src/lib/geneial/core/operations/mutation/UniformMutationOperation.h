@@ -5,50 +5,52 @@
 
 #include <cassert>
 
-namespace geneial {
-namespace operation {
-namespace mutation {
+namespace geneial
+{
+namespace operation
+{
+namespace mutation
+{
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class UniformMutationOperation: public BaseMutationOperation<FITNESS_TYPE>
 {
 
 private:
-	MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *_builderSettings;
-	MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *_builderFactory;
+    MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *_builderSettings;
+    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *_builderFactory;
 public:
-	/*
-	 * UniformMutationOperation Mutates a chromosome, by replacing some of it's values randomly.
-	 */
-	UniformMutationOperation(MutationSettings *settings,
-			BaseChoosingOperation<FITNESS_TYPE> *choosingOperation,
-			MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *builderSettings,
-			MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *builderFactory) :
-			BaseMutationOperation<FITNESS_TYPE>(settings,choosingOperation),
-					_builderSettings(builderSettings),
-					_builderFactory(builderFactory)
-	{
-		assert(_builderSettings != NULL);
-		assert(_builderFactory != NULL);
-	}
+    /*
+     * UniformMutationOperation Mutates a chromosome, by replacing some of it's values randomly.
+     */
+    UniformMutationOperation(MutationSettings *settings, BaseChoosingOperation<FITNESS_TYPE> *choosingOperation,
+            MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *builderSettings,
+            MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *builderFactory) :
+            BaseMutationOperation<FITNESS_TYPE>(settings, choosingOperation), _builderSettings(builderSettings), _builderFactory(
+                    builderFactory)
+    {
+        assert(_builderSettings != NULL);
+        assert(_builderFactory != NULL);
+    }
 
-	virtual ~UniformMutationOperation() {}
+    virtual ~UniformMutationOperation()
+    {
+    }
 
-	/*
-	 *  Returns a new chromosome which is a partially mutated version of the old one.
-	 *  */
-	virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
-			typename Population<FITNESS_TYPE>::chromosome_container mutants,
-			BaseManager<FITNESS_TYPE> &manager
-			);
+    /*
+     *  Returns a new chromosome which is a partially mutated version of the old one.
+     *  */
+    virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
+            typename Population<FITNESS_TYPE>::chromosome_container mutants, BaseManager<FITNESS_TYPE> &manager);
 
-	//TODO (lukas): copy paste from MultiValueChromosomeAvarageCrossover.h ...
-	MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const
-	{
-		return _builderFactory;
-	}
+    //TODO (lukas): copy paste from MultiValueChromosomeAvarageCrossover.h ...
+    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const
+    {
+        return _builderFactory;
+    }
 
-}; //class
+};
+//class
 
 } /* namespace mutation */
 } /* namespace operation */

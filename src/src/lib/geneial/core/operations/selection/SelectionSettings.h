@@ -3,35 +3,41 @@
 
 #include <cassert>
 
-namespace geneial {
-namespace operation {
-namespace selection {
+namespace geneial
+{
+namespace operation
+{
+namespace selection
+{
 
 /**
  * Select a number of parents based on a certain criteria.
  */
-class SelectionSettings{
+class SelectionSettings
+{
 private:
-	unsigned int _numberOfParents;
+    unsigned int _numberOfParents;
 
 public:
-	virtual ~SelectionSettings() {};
+    virtual ~SelectionSettings()
+    {
+    }
 
-	unsigned int getNumberOfParents() const
-	{
-		return _numberOfParents;
-	}
+    unsigned int getNumberOfParents() const
+    {
+        return _numberOfParents;
+    }
 
-	void setNumberOfParents(unsigned int numberOfParents)
-	{
-		_numberOfParents = numberOfParents;
-	}
+    void setNumberOfParents(unsigned int numberOfParents)
+    {
+        _numberOfParents = numberOfParents;
+    }
 
-	SelectionSettings(unsigned int numberOfParents):
-		_numberOfParents(numberOfParents)
-	{
-		assert(_numberOfParents>0);
-	};
+    SelectionSettings(unsigned int numberOfParents) :
+            _numberOfParents(numberOfParents)
+    {
+        assert(_numberOfParents > 0);
+    }
 
 };
 

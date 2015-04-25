@@ -3,34 +3,38 @@
 
 #include <geneial/core/fitness/FitnessEvaluator.h>
 
-namespace geneial {
-namespace population {
-namespace chromosome {
+namespace geneial
+{
+namespace population
+{
+namespace chromosome
+{
 
-template <typename FITNESS_TYPE>
+template<typename FITNESS_TYPE>
 class BuilderSettings
 {
 private:
-	typename FitnessEvaluator<FITNESS_TYPE>::ptr _fitnessEvaluator;
+    typename FitnessEvaluator<FITNESS_TYPE>::ptr _fitnessEvaluator;
 
 public:
-	BuilderSettings(const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator):
-		_fitnessEvaluator(fitnessEvaluator) {}
+    BuilderSettings(const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) :
+            _fitnessEvaluator(fitnessEvaluator)
+    {
+    }
 
-	virtual ~BuilderSettings() {}
+    virtual ~BuilderSettings()
+    {
+    }
 
+    const typename FitnessEvaluator<FITNESS_TYPE>::ptr& getFitnessEvaluator() const
+    {
+        return _fitnessEvaluator;
+    }
 
-	const typename FitnessEvaluator<FITNESS_TYPE>::ptr& getFitnessEvaluator() const
-	{
-		return _fitnessEvaluator;
-	}
-
-	void setFitnessEvaluator(
-			const typename FitnessEvaluator<FITNESS_TYPE>::ptr& fitnessEvaluator)
-	{
-		_fitnessEvaluator = fitnessEvaluator;
-	}
-
+    void setFitnessEvaluator(const typename FitnessEvaluator<FITNESS_TYPE>::ptr& fitnessEvaluator)
+    {
+        _fitnessEvaluator = fitnessEvaluator;
+    }
 
 };
 

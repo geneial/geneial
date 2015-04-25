@@ -5,47 +5,55 @@
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 #include <geneial/core/population/Population.h>
 
-namespace geneial {
-namespace algorithm {
-namespace stopping_criteria {
+namespace geneial
+{
+namespace algorithm
+{
+namespace stopping_criteria
+{
 
 using namespace geneial::population::management;
 
 /**
  * Decorator that negates a criterion
  */
-template <typename FITNESS_TYPE>
-class NegationDecorator
- : public BaseStoppingCriterion<FITNESS_TYPE> {
+template<typename FITNESS_TYPE>
+class NegationDecorator: public BaseStoppingCriterion<FITNESS_TYPE>
+{
 public:
-	typedef typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion;
+    typedef typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion;
 
-	NegationDecorator(typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion):_criterion(criterion){};
+    NegationDecorator(typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion) :
+            _criterion(criterion)
+    {
+    }
 
-	virtual ~NegationDecorator () {};
+    virtual ~NegationDecorator()
+    {
+    }
 
-	virtual inline bool wasReached(BaseManager<FITNESS_TYPE> &manager)
-	{
-		return !(_criterion->wasReached(manager));
-	}
+    virtual inline bool wasReached(BaseManager<FITNESS_TYPE> &manager)
+    {
+        return !(_criterion->wasReached(manager));
+    }
 
-	virtual void print(std::ostream& os) const
-	{
-		os << "Negated (" << _criterion << ")";
-	}
+    virtual void print(std::ostream& os) const
+    {
+        os << "Negated (" << _criterion << ")";
+    }
 
-	const criterion& getCriterion() const
-	{
-		return _criterion;
-	}
+    const criterion& getCriterion() const
+    {
+        return _criterion;
+    }
 
-	void setCriterion(const criterion& criterion)
-	{
-		_criterion = criterion;
-	}
+    void setCriterion(const criterion& criterion)
+    {
+        _criterion = criterion;
+    }
 
 private:
-	criterion _criterion;
+    criterion _criterion;
 
 };
 

@@ -5,9 +5,12 @@
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
 #include <deque>
 
-namespace geneial {
-namespace algorithm {
-namespace stopping_criteria {
+namespace geneial
+{
+namespace algorithm
+{
+namespace stopping_criteria
+{
 
 using namespace geneial::population::management;
 
@@ -19,74 +22,79 @@ class ConsecutiveDecorator: public StatefulStoppingCriterion<FITNESS_TYPE>
 {
 
 public:
-	typedef typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion;
+    typedef typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion;
 
-	ConsecutiveDecorator(unsigned int windowSize, unsigned int consecutiveHits,
-			typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion) :
-			_windowSize(windowSize), _consecutiveHits(
-					consecutiveHits), _criterion(criterion)
-	{
-		assert(windowSize >= 1); //Allow wrapper valuss of 1 here, make it as flexible as possible
-		assert(consecutiveHits > 0);
-		assert(windowSize >= consecutiveHits);
-	}
+    ConsecutiveDecorator(unsigned int windowSize, unsigned int consecutiveHits,
+            typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion) :
+            _windowSize(windowSize), _consecutiveHits(consecutiveHits), _criterion(criterion)
+    {
+        assert(windowSize >= 1); //Allow wrapper valuss of 1 here, make it as flexible as possible
+        assert(consecutiveHits > 0);
+        assert(windowSize >= consecutiveHits);
+    }
 
-	virtual ~ConsecutiveDecorator() {}
+    virtual ~ConsecutiveDecorator()
+    {
+    }
 
-	virtual bool wasStatefullyReached(BaseManager<FITNESS_TYPE> &manager)
-	{
-		updateWindowValues(manager);
+    virtual bool wasStatefullyReached(BaseManager<FITNESS_TYPE> &manager)
+    {
+        updateWindowValues(manager);
 
-		bool result = false;
+        bool result = false;
 
-		std::deque<bool>::iterator it = _window.begin();
-		//run over deque, count how often the criteria was met.
-		unsigned int count = 0;
-		while (it != _window.end()) {
-			if (*it++) {
-				count++;
-			}
-		}
+        std::deque<bool>::iterator it = _window.begin();
+        //run over deque, count how often the criteria was met.
+        unsigned int count = 0;
+        while (it != _window.end())
+        {
+            if (*it++)
+            {
+                count++;
+            }
+        }
 
-		if (count >= _consecutiveHits) {
-			result = true;
-		}
+        if (count >= _consecutiveHits)
+        {
+            result = true;
+        }
 
-		return result;
-	}
+        return result;
+    }
 
 protected:
-	void inline updateWindowValues(BaseManager<FITNESS_TYPE> &manager)
-	{
-		assert(_window.size() <= _windowSize);
-		_window.push_front(_criterion->wasReached(manager));
+    void inline updateWindowValues(BaseManager<FITNESS_TYPE> &manager)
+    {
+        assert(_window.size() <= _windowSize);
+        _window.push_front(_criterion->wasReached(manager));
 
-		while (_window.size() > _windowSize) {
-			_window.pop_back();
-		}
-		assert(_window.size() <= _windowSize);
-	}
+        while (_window.size() > _windowSize)
+        {
+            _window.pop_back();
+        }
+        assert(_window.size() <= _windowSize);
+    }
 
-	virtual void print(std::ostream& os) const
-	{
-		os << "Consecutive (criterion:" << _criterion << ", win: " << _windowSize << ")";
-	}
+    virtual void print(std::ostream& os) const
+    {
+        os << "Consecutive (criterion:" << _criterion << ", win: " << _windowSize << ")";
+    }
 
-	const criterion& getCriterion() const
-	{
-		return _criterion;
-	}
+    const criterion& getCriterion() const
+    {
+        return _criterion;
+    }
 
-	void setCriterion(const criterion& criterion)
-	{
-		_criterion = criterion;
-	}
+    void setCriterion(const criterion& criterion)
+    {
+        _criterion = criterion;
+    }
 
 private:
-	criterion _criterion;
-	unsigned int _windowSize;
-	unsigned int _consecutiveHits;
-	std::deque<bool> _window;
+    criterion _criterion;
+    unsigned int _windowSize;
+    unsigned int _consecutiveHits;
+    std::deque<bool> _window;
 
 };
 

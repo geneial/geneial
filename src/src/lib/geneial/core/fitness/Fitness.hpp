@@ -2,24 +2,25 @@
 #define __GENEIAL_FITNESS_HPP_
 #include <geneial/core/fitness/Fitness.h>
 
-namespace geneial {
+namespace geneial
+{
 
-template <typename FITNESS_TYPE>
+template<typename FITNESS_TYPE>
 FITNESS_TYPE Fitness<FITNESS_TYPE>::get() const
 {
-  return _value;
+    return _value;
 }
 
-template <typename FITNESS_TYPE>
+template<typename FITNESS_TYPE>
 void Fitness<FITNESS_TYPE>::set(FITNESS_TYPE value)
 {
-  _value = value;
+    _value = value;
 }
 
-template <typename FITNESS_TYPE>
+template<typename FITNESS_TYPE>
 void Fitness<FITNESS_TYPE>::print(std::ostream& os) const
 {
-	os << _value;
+    os << _value;
 }
 
 } /* namespace geneial */

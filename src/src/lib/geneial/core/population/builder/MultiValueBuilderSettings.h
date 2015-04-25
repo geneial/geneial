@@ -3,57 +3,63 @@
 
 #include <geneial/core/population/builder/BuilderSettings.h>
 
-namespace geneial {
-namespace population {
-namespace chromosome {
+namespace geneial
+{
+namespace population
+{
+namespace chromosome
+{
 
-template <typename VALUE_TYPE, typename FITNESS_TYPE>
-class MultiValueBuilderSettings : public BuilderSettings<FITNESS_TYPE>
+template<typename VALUE_TYPE, typename FITNESS_TYPE>
+class MultiValueBuilderSettings: public BuilderSettings<FITNESS_TYPE>
 {
 private:
-	VALUE_TYPE _random_max;
+    VALUE_TYPE _random_max;
 
-	VALUE_TYPE _random_min;
+    VALUE_TYPE _random_min;
 
-	unsigned int _num;
+    unsigned int _num;
 
 public:
-	MultiValueBuilderSettings(const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator, unsigned int num, VALUE_TYPE random_max,	VALUE_TYPE random_min): BuilderSettings<FITNESS_TYPE>(fitnessEvaluator),
-	_random_max(random_max),
-	_random_min(random_min),
-	_num(num) {}
+    MultiValueBuilderSettings(const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator, unsigned int num,
+            VALUE_TYPE random_max, VALUE_TYPE random_min) :
+            BuilderSettings<FITNESS_TYPE>(fitnessEvaluator), _random_max(random_max), _random_min(random_min), _num(num)
+    {
+    }
 
-	virtual ~MultiValueBuilderSettings() {}
+    virtual ~MultiValueBuilderSettings()
+    {
+    }
 
-	inline unsigned int getNum() const
-	{
-		return _num;
-	}
+    inline unsigned int getNum() const
+    {
+        return _num;
+    }
 
-	void setNum(unsigned int num)
-	{
-		_num = num;
-	}
+    void setNum(unsigned int num)
+    {
+        _num = num;
+    }
 
-	inline VALUE_TYPE getRandomMax() const
-	{
-		return _random_max;
-	}
+    inline VALUE_TYPE getRandomMax() const
+    {
+        return _random_max;
+    }
 
-	void inline setRandomMax(VALUE_TYPE randomMax)
-	{
-		_random_max = randomMax;
-	}
+    void inline setRandomMax(VALUE_TYPE randomMax)
+    {
+        _random_max = randomMax;
+    }
 
-	inline VALUE_TYPE getRandomMin() const
-	{
-		return _random_min;
-	}
+    inline VALUE_TYPE getRandomMin() const
+    {
+        return _random_min;
+    }
 
-	void setRandomMin(VALUE_TYPE randomMin)
-	{
-		_random_min = randomMin;
-	}
+    void setRandomMin(VALUE_TYPE randomMin)
+    {
+        _random_min = randomMin;
+    }
 };
 
 } /* namespace chromomsome */

@@ -3,18 +3,27 @@
 
 #include <geneial/core/population/builder/MultiValueChromosomeFactory.h>
 
-namespace geneial {
-namespace population {
-namespace chromosome {
+namespace geneial
+{
+namespace population
+{
+namespace chromosome
+{
 
 //TODO (bewo): Instead of this weird class name rather specialize MultiValueChromosomeFactory for Integers
-template <typename FITNESS_TYPE>
-class MultiIntValueChromosomeFactory : public MultiValueChromosomeFactory<int,FITNESS_TYPE>
+template<typename FITNESS_TYPE>
+class MultiIntValueChromosomeFactory: public MultiValueChromosomeFactory<int, FITNESS_TYPE>
 {
 
 public:
-	MultiIntValueChromosomeFactory(MultiValueBuilderSettings<int,FITNESS_TYPE> *settings): MultiValueChromosomeFactory<int,FITNESS_TYPE>(settings) {};
-	typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome(typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues = BaseChromosomeFactory<FITNESS_TYPE>::CREATE_VALUES);
+    MultiIntValueChromosomeFactory(MultiValueBuilderSettings<int, FITNESS_TYPE> *settings) :
+            MultiValueChromosomeFactory<int, FITNESS_TYPE>(settings)
+    {
+    }
+
+    typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome(
+            typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues = BaseChromosomeFactory<
+                    FITNESS_TYPE>::CREATE_VALUES);
 
 };
 

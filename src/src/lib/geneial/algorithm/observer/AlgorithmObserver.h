@@ -6,50 +6,58 @@
 
 #include <set>
 
-namespace geneial {
-namespace algorithm {
+namespace geneial
+{
+namespace algorithm
+{
 
 using namespace geneial::population::management;
 using namespace geneial::algorithm::stopping_criteria;
 
-template <typename FITNESS_TYPE>
-class AlgorithmObserver {
+template<typename FITNESS_TYPE>
+class AlgorithmObserver
+{
 public:
-	enum ObserveableEvent{
-		GENERATION_DONE,
-		CRITERIA_REACHED
-	};
+    enum ObserveableEvent
+    {
+        GENERATION_DONE, CRITERIA_REACHED
+    };
 
-	virtual ~AlgorithmObserver(){}
+    virtual ~AlgorithmObserver()
+    {
+    }
 
+    virtual void updateGeneration(BaseManager<FITNESS_TYPE> &manager)
+    {
+    }
 
-	virtual void updateGeneration(BaseManager<FITNESS_TYPE> &manager){}
+    virtual void updateCriteriaReached(BaseManager<FITNESS_TYPE> &manager,
+            const BaseStoppingCriterion<FITNESS_TYPE> * const criteria)
+    {
+    }
 
-	virtual void updateCriteriaReached(BaseManager<FITNESS_TYPE> &manager, const BaseStoppingCriterion<FITNESS_TYPE> * const criteria){}
+    const std::set<ObserveableEvent>& getSubscribedEvents() const
+    {
+        return _subscribedEvents;
+    }
 
-	const std::set<ObserveableEvent>& getSubscribedEvents() const
-	{
-		return _subscribedEvents;
-	}
+    void setSubscribedEvents(const std::set<ObserveableEvent>& subscribedEvents)
+    {
+        _subscribedEvents = subscribedEvents;
+    }
 
-	void setSubscribedEvents(
-			const std::set<ObserveableEvent>& subscribedEvents)
-	{
-		_subscribedEvents = subscribedEvents;
-	}
+    void addSubscribedEvent(ObserveableEvent e)
+    {
+        _subscribedEvents.insert(e);
+    }
 
-	void addSubscribedEvent(ObserveableEvent e)
-	{
-		_subscribedEvents.insert(e);
-	}
-
-	void removeSubscribedEvent(ObserveableEvent e)
-	{
-		_subscribedEvents.erase(e);
-	}
+    void removeSubscribedEvent(ObserveableEvent e)
+    {
+        _subscribedEvents.erase(e);
+    }
 
 private:
-	std::set<ObserveableEvent> _subscribedEvents;
+    std::set<ObserveableEvent> _subscribedEvents;
 
 };
 

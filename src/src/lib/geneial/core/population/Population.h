@@ -10,113 +10,109 @@
 #include <map>
 #include <vector>
 
-namespace geneial {
-namespace population {
+namespace geneial
+{
+namespace population
+{
 
-
-template <typename FITNESS_TYPE>
-class Population : public Printable
+template<typename FITNESS_TYPE>
+class Population: public Printable
 {
 public:
 
-	const static int POPULATION_AGE_INITIAL = 0;
+    const static int POPULATION_AGE_INITIAL = 0;
 
-	//TODO(bewo): cleanup this typedef mess
-	typedef unsigned int population_age;
-	typedef unsigned int population_size;
+    //TODO(bewo): cleanup this typedef mess
+    typedef unsigned int population_age;
+    typedef unsigned int population_size;
 
-	//Alias chromomsome container
-	typedef typename ContainerTypes<FITNESS_TYPE>::chromosome_container chromosome_container;
+    //Alias chromomsome container
+    typedef typename ContainerTypes<FITNESS_TYPE>::chromosome_container chromosome_container;
 
-	//A map containing all the chromosomes hash values.
-	typedef typename std::map
-			<typename BaseChromosome<FITNESS_TYPE>::chromsome_hash,
-			 typename BaseChromosome<FITNESS_TYPE>::ptr> hash_map;
+    //A map containing all the chromosomes hash values.
+    typedef typename std::map<typename BaseChromosome<FITNESS_TYPE>::chromsome_hash,
+            typename BaseChromosome<FITNESS_TYPE>::ptr> hash_map;
 
-	typedef typename hash_map::value_type hashmap_value_type;
-	typedef typename hash_map::key_type hashmap_key_type;
+    typedef typename hash_map::value_type hashmap_value_type;
+    typedef typename hash_map::key_type hashmap_key_type;
 
-	typedef typename hash_map::const_iterator hashmap_const_it;
-	typedef typename hash_map::iterator hashmap_it;
+    typedef typename hash_map::const_iterator hashmap_const_it;
+    typedef typename hash_map::iterator hashmap_it;
 
+    //A fitness <-> chromsome map holding the actual population, multiple chromosomes might have same fitness
+    typedef typename std::multimap<FITNESS_TYPE, typename BaseChromosome<FITNESS_TYPE>::ptr> fitness_map;
 
+    typedef typename fitness_map::value_type fitnessmap_value_type;
+    typedef typename fitness_map::key_type fitnessmap_key_type;
 
-	//A fitness <-> chromsome map holding the actual population, multiple chromosomes might have same fitness
-	typedef typename std::multimap<FITNESS_TYPE , typename BaseChromosome<FITNESS_TYPE>::ptr> fitness_map;
+    typedef typename fitness_map::const_iterator fitnessmap_const_it;
+    typedef typename fitness_map::iterator fitnessmap_it;
 
-	typedef typename fitness_map::value_type fitnessmap_value_type;
-	typedef typename fitness_map::key_type fitnessmap_key_type;
+    population_size getSize() const;
 
-	typedef typename fitness_map::const_iterator fitnessmap_const_it;
-	typedef typename fitness_map::iterator fitnessmap_it;
+    Population();
+    virtual ~Population();
+    virtual void print(std::ostream& os) const;
 
+    population_age getAge() const;
+    void setAge(population_age age);
+    void doAge();
 
+    typename BaseChromosome<FITNESS_TYPE>::ptr getOldestChromosome();
 
-	population_size getSize() const;
+    typename BaseChromosome<FITNESS_TYPE>::ptr getYoungestChromosome();
 
-	Population();
-	virtual ~Population();
-	virtual void print(std::ostream& os) const;
+    BaseFitnessProcessingStrategy<FITNESS_TYPE>* processingStrategy;
 
-	population_age getAge() const;
-	void setAge(population_age age);
-	void doAge();
+    const inline fitness_map& getFitnessMap() const
+    {
+        return _fitnessMap;
+    }
 
-	typename BaseChromosome<FITNESS_TYPE>::ptr getOldestChromosome();
+    const inline hash_map& getHashMap() const
+    {
+        return _hashMap;
+    }
 
-	typename BaseChromosome<FITNESS_TYPE>::ptr getYoungestChromosome();
+    bool hashExists(const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash);
 
-	BaseFitnessProcessingStrategy<FITNESS_TYPE>* processingStrategy;
+    unsigned int removeDuplicates(chromosome_container &toCheck);
 
+    typename BaseChromosome<FITNESS_TYPE>::ptr getChromosomeByHash(
+            const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash);
 
-	const inline fitness_map& getFitnessMap() const
-	{
-		return _fitnessMap;
-	}
+    void replacePopulation(chromosome_container &replacementPopulation);
 
-	const inline hash_map& getHashMap() const
-	{
-		return _hashMap;
-	}
+    unsigned int insertChromosomeContainer(chromosome_container &container);
 
-	bool hashExists(const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash);
+    bool insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
 
-	unsigned int removeDuplicates(chromosome_container &toCheck);
+    void removeChromosomeContainer(const chromosome_container &container);
 
-	typename BaseChromosome<FITNESS_TYPE>::ptr getChromosomeByHash(const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash);
+    void removeChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
 
-	void replacePopulation(chromosome_container &replacementPopulation);
+    void clearChromosomes();
 
-	unsigned int insertChromosomeContainer(chromosome_container &container);
+    const BaseFitnessProcessingStrategy<FITNESS_TYPE>*& getProcessingStrategy() const
+    {
+        return processingStrategy;
+    }
 
-	bool insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
-
-	void removeChromosomeContainer(const chromosome_container &container);
-
-	void removeChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
-
-	void clearChromosomes();
-
-	const BaseFitnessProcessingStrategy<FITNESS_TYPE>*& getProcessingStrategy() const
-	{
-		return processingStrategy;
-	}
-
-	void setProcessingStrategy(
-			BaseFitnessProcessingStrategy<FITNESS_TYPE>*& processingStrategy)
-	{
-		this->processingStrategy = processingStrategy;
-	}
+    void setProcessingStrategy(BaseFitnessProcessingStrategy<FITNESS_TYPE>*& processingStrategy)
+    {
+        this->processingStrategy = processingStrategy;
+    }
 
 private:
 
-	void _insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome,typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue);
+    void _insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome,
+            typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue);
 
-	fitness_map _fitnessMap;
+    fitness_map _fitnessMap;
 
-	hash_map _hashMap;
+    hash_map _hashMap;
 
-	population_age _age;
+    population_age _age;
 
 };
 

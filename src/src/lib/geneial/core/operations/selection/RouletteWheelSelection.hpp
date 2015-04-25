@@ -8,14 +8,16 @@
 #include <map>
 #include <cassert>
 
-
-namespace geneial {
-namespace operation {
-namespace selection {
+namespace geneial
+{
+namespace operation
+{
+namespace selection
+{
 
 //TODO (bewo) check whether all this will work with negative fitness values
 
-template <typename FITNESS_TYPE>
+template<typename FITNESS_TYPE>
 class RouletteWheelComparator
 {
 public:
@@ -28,7 +30,8 @@ public:
             return (b.second >= a.second);
         }
 
-        if (a.first == -1) {
+        if (a.first == -1)
+        {
             if (a.second >= b.first && a.second < b.second)
                 return false;
             return (a.second >= b.second);
@@ -39,77 +42,74 @@ public:
 };
 
 //TODO(bewo): This seems not work with negative Fitness values!
-template <typename FITNESS_TYPE>
+template<typename FITNESS_TYPE>
 class RouletteWheel
 {
 
 private:
 
-	typedef typename BaseChromosome<FITNESS_TYPE>::ptr chrom_ptr_type;
+    typedef typename BaseChromosome<FITNESS_TYPE>::ptr chrom_ptr_type;
 
-	typedef typename Population<FITNESS_TYPE>::fitnessmap_const_it const_pop_itr;
+    typedef typename Population<FITNESS_TYPE>::fitnessmap_const_it const_pop_itr;
 
-	FITNESS_TYPE _sum;
+    FITNESS_TYPE _sum;
 
-    std::map<std::pair<FITNESS_TYPE, FITNESS_TYPE> , chrom_ptr_type, RouletteWheelComparator<FITNESS_TYPE> > ranges;
+    std::map<std::pair<FITNESS_TYPE, FITNESS_TYPE>, chrom_ptr_type, RouletteWheelComparator<FITNESS_TYPE> > ranges;
 
 public:
-    RouletteWheel(const Population<FITNESS_TYPE> &population) :_sum(0)
-	{
-		for (const_pop_itr it =	population.getFitnessMap().begin();
-				it != population.getFitnessMap().end(); ++it)
-		{
-			ranges[std::pair<FITNESS_TYPE, FITNESS_TYPE>(_sum, it->first + _sum)] = it->second;
-			_sum += it->first;
-		}
+    RouletteWheel(const Population<FITNESS_TYPE> &population) :
+            _sum(0)
+    {
+        for (const_pop_itr it = population.getFitnessMap().begin(); it != population.getFitnessMap().end(); ++it)
+        {
+            ranges[std::pair<FITNESS_TYPE, FITNESS_TYPE>(_sum, it->first + _sum)] = it->second;
+            _sum += it->first;
+        }
     }
 
     chrom_ptr_type spin(FITNESS_TYPE random)
     {
-        return ranges.find(std::pair<FITNESS_TYPE, FITNESS_TYPE>(-1, random*_sum))->second;
+        return ranges.find(std::pair<FITNESS_TYPE, FITNESS_TYPE>(-1, random * _sum))->second;
     }
 };
 
-
-template <typename FITNESS_TYPE>
+template<typename FITNESS_TYPE>
 typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWheelSelection<FITNESS_TYPE>::doSelect(
-		const Population<FITNESS_TYPE> &population,
-		BaseManager<FITNESS_TYPE> &manager)
+        const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager)
 {
 
-		//shorthands for type mess
-		typedef typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set result_set;
-		typedef typename BaseChromosome<FITNESS_TYPE>::ptr chrom_ptr_type;
+    //shorthands for type mess
+    typedef typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set result_set;
+    typedef typename BaseChromosome<FITNESS_TYPE>::ptr chrom_ptr_type;
 
-		result_set result;
+    result_set result;
 
-		unsigned int left_select = this->getSettings()->getNumberOfParents();
+    unsigned int left_select = this->getSettings()->getNumberOfParents();
 
-		RouletteWheel<FITNESS_TYPE> rouletteWheel(population);
+    RouletteWheel<FITNESS_TYPE> rouletteWheel(population);
 
-		//TODO (bewo) allow parameter for the best chromosomes to be selected (and skipped here)
-		assert(population.getSize()>=left_select);
+    //TODO (bewo) allow parameter for the best chromosomes to be selected (and skipped here)
+    assert(population.getSize() >= left_select);
 
-		while(left_select > 0){
-			//TODO (bewo) make this a RouletteWheel setting:
-			const bool allowDuplicates = false;
-			chrom_ptr_type ptr;
-			do
-			{
-				//TODO (bewo) this is suboptimal:
-				FITNESS_TYPE random = (FITNESS_TYPE) Random::instance()->generateDouble(0.0,1.0);
-				ptr = rouletteWheel.spin(random);
-			}while(allowDuplicates || std::find(result.begin(), result.end(), ptr)!=result.end());
-			left_select--;
-			result.push_back(ptr);
-		}
-		return result;
+    while (left_select > 0)
+    {
+        //TODO (bewo) make this a RouletteWheel setting:
+        const bool allowDuplicates = false;
+        chrom_ptr_type ptr;
+        do
+        {
+            //TODO (bewo) this is suboptimal:
+            FITNESS_TYPE random = (FITNESS_TYPE) Random::instance()->generateDouble(0.0, 1.0);
+            ptr = rouletteWheel.spin(random);
+        } while (allowDuplicates || std::find(result.begin(), result.end(), ptr) != result.end());
+        left_select--;
+        result.push_back(ptr);
+    }
+    return result;
 }
-
 
 } /* namespace selection */
 } /* namespace operation */
 } /* namespace geneial */
-
 
 #endif /* __GENEIAL_ROULETTE_WHEEL_SELECTION_HPP_ */

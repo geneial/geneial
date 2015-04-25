@@ -5,41 +5,48 @@
 
 #include <boost/shared_ptr.hpp>
 
-namespace geneial {
+namespace geneial
+{
 
 using namespace geneial::utility;
 
-template <typename FITNESS_TYPE>
-class Fitness : public Printable
+template<typename FITNESS_TYPE>
+class Fitness: public Printable
 {
 private:
-	FITNESS_TYPE _value;
+    FITNESS_TYPE _value;
 
 public:
-	//TODO (CODECONSISTENCY) (bewo): boost sharedptr shared from this?
-	typedef boost::shared_ptr<Fitness <FITNESS_TYPE> > ptr;
+    //TODO (CODECONSISTENCY) (bewo): boost sharedptr shared from this?
+    typedef boost::shared_ptr<Fitness<FITNESS_TYPE> > ptr;
 
-	typedef boost::shared_ptr<const Fitness <FITNESS_TYPE> > const_ptr;
+    typedef boost::shared_ptr<const Fitness<FITNESS_TYPE> > const_ptr;
 
-	Fitness() {};
+    Fitness()
+    {
+    }
 
-	Fitness(FITNESS_TYPE value): _value(value) {};
+    Fitness(FITNESS_TYPE value) :
+            _value(value)
+    {
+    }
 
-	virtual ~Fitness() {};
+    virtual ~Fitness()
+    {
+    }
 
-	void set(FITNESS_TYPE value);
+    void set(FITNESS_TYPE value);
 
-	FITNESS_TYPE get() const;
+    FITNESS_TYPE get() const;
 
-	//cast operator overload
+    //cast operator overload
     operator FITNESS_TYPE() const
     {
-    	return get();
-    };
+        return get();
+    }
 
     void print(std::ostream&) const;
 };
-
 
 } /* namespace geneial */
 

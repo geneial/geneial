@@ -6,26 +6,33 @@
 #include <map>
 #include <stdexcept>
 
-namespace geneial {
-namespace operation {
-namespace selection {
+namespace geneial
+{
+namespace operation
+{
+namespace selection
+{
 
 /**
  * Select a number of parents based on a roulette wheel distribution over the chromosomes fitness
  */
-template <typename FITNESS_TYPE>
-class UniformRandomSelection : public BaseSelectionOperation<FITNESS_TYPE>
+template<typename FITNESS_TYPE>
+class UniformRandomSelection: public BaseSelectionOperation<FITNESS_TYPE>
 {
 public:
-	UniformRandomSelection(SelectionSettings* settings): BaseSelectionOperation<FITNESS_TYPE>(settings) {};
-	virtual ~UniformRandomSelection() {};
+    UniformRandomSelection(SelectionSettings* settings) :
+            BaseSelectionOperation<FITNESS_TYPE>(settings)
+    {
+    }
 
-	virtual typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set doSelect(
-			const Population<FITNESS_TYPE> &population,
-			BaseManager<FITNESS_TYPE> &manager);
+    virtual ~UniformRandomSelection()
+    {
+    }
+
+    virtual typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set doSelect(
+            const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager);
 
 };
-
 
 } /* namespace selection */
 } /* namespace operation */

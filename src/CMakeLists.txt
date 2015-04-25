@@ -19,7 +19,7 @@ set (LIB_GENEIAL_STATIC_NAME "${LOWER_PROJECT_NAME}${GENEIAL_STATIC_SUFFIX}")
 set (GENEIAL_VERSION_MAJOR 0)
 set (GENEIAL_VERSION_MINOR 1)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -Werror -Wno-unused-parameter")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -Werror -Wno-unused-parameter -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
 
 

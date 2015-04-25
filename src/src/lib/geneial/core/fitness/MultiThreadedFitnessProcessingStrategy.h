@@ -11,70 +11,63 @@
 #include <queue>
 #include <cassert>
 
-
-namespace geneial {
+namespace geneial
+{
 
 using namespace geneial::population;
 using namespace geneial::population::chromosome;
 
-template <typename FITNESS_TYPE>
-class MultiThreadedFitnessProcessingStrategy : public BaseFitnessProcessingStrategy<FITNESS_TYPE>
+template<typename FITNESS_TYPE>
+class MultiThreadedFitnessProcessingStrategy: public BaseFitnessProcessingStrategy<FITNESS_TYPE>
 {
 public:
-	MultiThreadedFitnessProcessingStrategy(unsigned int numWorkerThreads):
-		_startBarrier(numWorkerThreads + 1),
-		_endBarrier(numWorkerThreads + 1),
-		_started(false),
-		_shutdown(false),
-		_numWorkerThreads(numWorkerThreads)
-	{
-		assert(_numWorkerThreads > 0);
-	}
+    MultiThreadedFitnessProcessingStrategy(unsigned int numWorkerThreads) :
+            _startBarrier(numWorkerThreads + 1), _endBarrier(numWorkerThreads + 1), _started(false), _shutdown(false), _numWorkerThreads(
+                    numWorkerThreads)
+    {
+        assert(_numWorkerThreads > 0);
+    }
 
+    virtual ~MultiThreadedFitnessProcessingStrategy()
+    {
+        stopWorkers();
+    }
 
-	virtual ~MultiThreadedFitnessProcessingStrategy()
-	{
-		stopWorkers();
-	}
+    void startWorkers();
 
+    void stopWorkers();
 
-	void startWorkers();
+    void workerTask(unsigned int id);
 
-	void stopWorkers();
+    virtual void ensureHasFitness(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer);
 
-	void workerTask(unsigned int id);
+    unsigned int getNumWorkerThreads() const
+    {
+        return _numWorkerThreads;
+    }
 
-	virtual void ensureHasFitness(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer);
-
-
-	unsigned int getNumWorkerThreads() const
-	{
-		return _numWorkerThreads;
-	}
-
-	bool isStarted() const
-	{
-		return _started;
-	}
+    bool isStarted() const
+    {
+        return _started;
+    }
 
 private:
 
-	boost::barrier _startBarrier;
-	boost::barrier _endBarrier;
+    boost::barrier _startBarrier;
+    boost::barrier _endBarrier;
 
-	bool _started;
-	bool _shutdown;
+    bool _started;
+    bool _shutdown;
 
-	unsigned int _numWorkerThreads;
+    unsigned int _numWorkerThreads;
 
-	std::vector<boost::thread*> _workerThreads;
+    std::vector<boost::thread*> _workerThreads;
 
-	std::vector< std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr >* > _threadQueue;
-
+    std::vector<std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr>*> _threadQueue;
 
 };
 
-}  /* namespace geneial */
+} /* namespace geneial */
 
 #include <geneial/core/fitness/MultiThreadedFitnessProcessingStrategy.hpp>
 

@@ -7,73 +7,71 @@
 #include <algorithm>
 #include <iterator>
 
-namespace geneial {
-namespace operation {
-namespace replacement {
+namespace geneial
+{
+namespace operation
+{
+namespace replacement
+{
 
 template<typename FITNESS_TYPE>
-unsigned int ReplaceRandomOperation<FITNESS_TYPE>::getAmountToReplace(
-		const Population<FITNESS_TYPE> &population,
-		const typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const
+unsigned int ReplaceRandomOperation<FITNESS_TYPE>::getAmountToReplace(const Population<FITNESS_TYPE> &population,
+        const typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const
 {
-	switch(this->getSettings()->getMode())
-	{
+    switch (this->getSettings()->getMode())
+    {
 
-		case BaseReplacementSettings::REPLACE_ALL_OFFSPRING:
-		{
-			return std::min(population.getFitnessMap().size(),offspring.size());
-		}
-		break;
+    case BaseReplacementSettings::REPLACE_ALL_OFFSPRING:
+    {
+        return std::min(population.getFitnessMap().size(), offspring.size());
+    }
+        break;
 
-		case BaseReplacementSettings::REPLACE_FIXED_NUMBER:
-		default:
-		{
-			return std::min(population.getFitnessMap().size(),
-					(typename Population<FITNESS_TYPE>::fitness_map::size_type)
-					this->getSettings()->getAmountToReplace());
-		}
-		break;
-	}
+    case BaseReplacementSettings::REPLACE_FIXED_NUMBER:
+    default:
+    {
+        return std::min(population.getFitnessMap().size(),
+                (typename Population<FITNESS_TYPE>::fitness_map::size_type) this->getSettings()->getAmountToReplace());
+    }
+        break;
+    }
 }
 
-
 template<typename FITNESS_TYPE>
-void ReplaceRandomOperation<FITNESS_TYPE>::doReplace(
-		Population<FITNESS_TYPE> &population,
-		typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
-		typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
-		BaseManager<FITNESS_TYPE> &manager)
+void ReplaceRandomOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &population,
+        typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
+        typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
+        BaseManager<FITNESS_TYPE> &manager)
 {
 
-	unsigned int numberToReplace = getAmountToReplace(population,offspring);
+    unsigned int numberToReplace = getAmountToReplace(population, offspring);
 
-	//Remove random elements from the population w.r.t. elitism
-	while(numberToReplace)
-	{
-		//Ignore the very last chromosomes (elitism):
-		const unsigned int max = population.getFitnessMap().size() - this->getSettings()->getAmountElitism() - 1;
+    //Remove random elements from the population w.r.t. elitism
+    while (numberToReplace)
+    {
+        //Ignore the very last chromosomes (elitism):
+        const unsigned int max = population.getFitnessMap().size() - this->getSettings()->getAmountElitism() - 1;
 
-		//pick a random element to delete:
-		const unsigned int rnd_advance = Random::instance()->generateInt(0,max);
+        //pick a random element to delete:
+        const unsigned int rnd_advance = Random::instance()->generateInt(0, max);
 
-		//construct an iterator
-		typename Population<FITNESS_TYPE>::fitnessmap_it advanced = population.getFitnessMap().begin();
-		std::advance(advanced,rnd_advance);
+        //construct an iterator
+        typename Population<FITNESS_TYPE>::fitnessmap_it advanced = population.getFitnessMap().begin();
+        std::advance(advanced, rnd_advance);
 
-		//remove the element
-		population.getFitnessMap().erase(advanced);
+        //remove the element
+        population.getFitnessMap().erase(advanced);
 
-		numberToReplace--;
-	}
+        numberToReplace--;
+    }
 
-	//Insert all the offspring, parents are ignored here (since they are assumed to be already in the population)
-	population.insertChromosomeContainer(offspring);
+    //Insert all the offspring, parents are ignored here (since they are assumed to be already in the population)
+    population.insertChromosomeContainer(offspring);
 
 }
 
 } /* namespace replacement */
 } /* namespace operation */
 } /* namespace geneial */
-
 
 #endif /* __GENEIAL_REPLACE_RANDOM_OPERATION_HPP_ */

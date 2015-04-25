@@ -15,40 +15,29 @@
 #include <geneial/algorithm/criteria/TrailingStopCriterion.h>
 #include <geneial/algorithm/criteria/FixPointCriterion.h>
 
-
+//TODO(bewo): Write Tests..
 
 BOOST_AUTO_TEST_SUITE( __CRITERIA_TEST_CombinedCriterion )
 BOOST_AUTO_TEST_SUITE_END()
 
-
 BOOST_AUTO_TEST_SUITE( __CRITERIA_TEST_NegationDecorator )
 BOOST_AUTO_TEST_SUITE_END()
-
 
 BOOST_AUTO_TEST_SUITE( __CRITERIA_TEST_ConsecutiveDecorator )
 BOOST_AUTO_TEST_SUITE_END()
 
-
-
-
-
 BOOST_AUTO_TEST_SUITE( __CRITERIA_TEST_FitnessValueDeltaCriterion )
 BOOST_AUTO_TEST_SUITE_END()
-
 
 BOOST_AUTO_TEST_SUITE( __CRITERIA_TEST_FitnessValueReachedCriterion )
 BOOST_AUTO_TEST_SUITE_END()
 
-
 BOOST_AUTO_TEST_SUITE( __CRITERIA_TEST_PopulationUnchangedCriterion )
 BOOST_AUTO_TEST_SUITE_END()
-
 
 BOOST_AUTO_TEST_SUITE( __CRITERIA_TEST_TrailingStopCriterion )
 BOOST_AUTO_TEST_SUITE_END()
 
-
 BOOST_AUTO_TEST_SUITE( __CRITERIA_TEST_FixPointCriterion )
 BOOST_AUTO_TEST_SUITE_END()
-
 
