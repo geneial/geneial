@@ -26,7 +26,7 @@ public:
 
 	virtual inline bool wasReached(BaseManager<FITNESS_TYPE> &manager)
 	{
-		return !(_criterion.wasReached(manager));
+		return !(_criterion->wasReached(manager));
 	}
 
 	virtual void print(std::ostream& os) const

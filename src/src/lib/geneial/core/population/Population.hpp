@@ -221,20 +221,25 @@ inline void Population<FITNESS_TYPE>::removeChromosome(typename BaseChromosome<F
 	const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hash = chromosome->getHash();
 
 
-	std::pair <typename fitness_map::iterator , typename fitness_map::iterator > ret = _fitnessMap.equal_range(fitness);
-	bool found = false;
-	typename fitness_map::iterator it;
-	assert(ret.first != _fitnessMap.end());
-	//we might have multiple chromosomes with the same key, advance until pointer is found
-	for (it=ret.first; it!=ret.second; ++it)
+	const std::pair <typename fitness_map::iterator , typename fitness_map::iterator > range = _fitnessMap.equal_range(fitness);
+	bool candidateFound = false;
+
+	typename fitness_map::iterator it = range.first;
+	assert(range.first != _fitnessMap.end());
+
+	//we might have multiple chromosomes with the same key, advance until pointer is candidateFound
+	while(!candidateFound && it!=range.second)
 	{
-		  if(it->second == chromosome)
-		  {
-			  found = true;
-			  break;
-		  }
+	    if(it->second == chromosome)
+	    {
+	        candidateFound = true;
+	    }
+	    else
+	    {
+	        ++it;
+	    }
 	}
-	assert(found);
+	assert(candidateFound);
 	typename hash_map::iterator hit = _hashMap.find(hash);
 	assert(hit != _hashMap.end());
 
@@ -293,7 +298,7 @@ template<typename FITNESS_TYPE>
 inline void Population<FITNESS_TYPE>::clearChromosomes()
 {
 	_fitnessMap.clear();
-	_hashMap.clear();
+    _hashMap.clear();
 }
 
 } /* namespace population */

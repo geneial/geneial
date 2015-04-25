@@ -176,14 +176,20 @@ public:
 
 void inline printClearScreen()
 {
-	#ifdef WINDOWS
-	  std::system ( "CLS" );
-	#else
-	  // Assume POSIX
-	  std::system ( "clear" );
-	#endif
+#ifdef WINDOWS
+    if(!
+            std::system ( "CLS" ))
+    {
+        assert("Unable to clear Screen");
+    }
+#else
+    // Assume POSIX
+    if (!std::system("clear"))
+    {
+        assert("Unable to clear Screen");
+    }
+#endif
 }
-
 
 class DemoObserver : public BestChromosomeObserver<double>
 {

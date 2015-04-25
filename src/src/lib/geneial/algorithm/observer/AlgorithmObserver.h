@@ -20,7 +20,7 @@ public:
 		CRITERIA_REACHED
 	};
 
-	virtual ~AlgorithmObserver(){};
+	virtual ~AlgorithmObserver(){}
 
 
 	virtual void updateGeneration(BaseManager<FITNESS_TYPE> &manager){}
@@ -45,7 +45,7 @@ public:
 
 	void removeSubscribedEvent(ObserveableEvent e)
 	{
-		_subscribedEvents.remove(e);
+		_subscribedEvents.erase(e);
 	}
 
 private:

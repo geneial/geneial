@@ -24,7 +24,7 @@ public:
 	virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager)
 	{
 		//TODO (bewo) git rid of infty ) (true delta)
-		return !(manager.getPopulation().getHighestFitness() >= _desiredFitness - _delta);
+		return !(manager.getHighestFitness() >= _desiredFitness - _delta);
 	}
 
 	virtual void print(std::ostream& os) const

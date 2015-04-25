@@ -30,36 +30,41 @@ public:
 
 	virtual ~CombinedCriterion() {};
 
-	/**
-	 * Returns true if empty.
-	 */
-	virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager)
-	{
-		bool result = true;
-		bool foundInit = false;
-		for(typename container::iterator it = _criteria.begin();it != _criteria.end();++it){
-			if(it->first == INIT)
-			{
-				result = it->second->wasReached(manager);
-				assert(foundInit == false && "INIT type can only be applied once!");
-				foundInit=true;
-			}
-			else if(it->first == AND)
-			{
-				result &= it->second->wasReached(manager);
-			}
-			else if(it->first == XOR)
-			{
-				result &= !it->second->wasReached(manager);
-			}
-			else
-			{
-				result |= it->second->wasReached(manager);
-			}
-			assert(foundInit == true && "INIT type not found for combined criterion!");
-		}
-		return result;
-	}
+    /**
+     * Returns true if empty.
+     */
+    virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager)
+    {
+        bool result = true;
+
+        assert(std::count_if(_criteria.begin(), _criteria.end(), [value](glue_criterion_pair const &b)
+        {
+            return b.first == value;
+        }) != 1
+
+        && "INIT type not found or there are more than one INIT glue for combined criterion!");
+
+        for (typename container::iterator it = _criteria.begin(); it != _criteria.end(); ++it)
+        {
+            if (it->first == INIT)
+            {
+                result = it->second->wasReached(manager);
+            }
+            else if (it->first == AND)
+            {
+                result &= it->second->wasReached(manager);
+            }
+            else if (it->first == XOR)
+            {
+                result &= !it->second->wasReached(manager);
+            }
+            else
+            {
+                result |= it->second->wasReached(manager);
+            }
+        }
+        return result;
+    }
 
 	virtual void print(std::ostream& os) const
 	{
