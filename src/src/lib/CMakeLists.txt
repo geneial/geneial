@@ -38,13 +38,22 @@ add_library( ${LIB_GENEIAL_STATIC_NAME} STATIC ${SRCS} ${CONFIG_H_IN} ${HDRS} ${
 #Also create a shared library
 add_library(  ${LIB_GENEIAL_SHARED_NAME} SHARED ${SRCS} ${CONFIG_H_IN} ${HDRS} ${TMPL} )
 
-#TODO (bewo): Rather use lib/ here
-install (TARGETS ${LIB_GENEIAL_SHARED_NAME} DESTINATION bin)
-install (TARGETS ${LIB_GENEIAL_STATIC_NAME} DESTINATION bin)
+
+set(LIBDEST "lib")
+set(HEADERDEST "include")
+
+install (TARGETS ${LIB_GENEIAL_SHARED_NAME} DESTINATION ${LIBDEST})
+install (TARGETS ${LIB_GENEIAL_STATIC_NAME} DESTINATION ${LIBDEST})
+
 
 install( DIRECTORY ./ 
-            DESTINATION include/${LOWER_PROJECT_NAME}
+            DESTINATION include
             FILES_MATCHING
                 PATTERN "*.h"
                 PATTERN "*.hpp"
+            )
+            
+#also install the generated config file
+install( FILES ${CMAKE_BINARY_DIR}/generated/geneial/${CONFIG_H}
+            DESTINATION ${HEADERDEST}/geneial/
             )

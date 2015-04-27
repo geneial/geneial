@@ -7,7 +7,7 @@
 #ifndef _GENEIAL_CONFIGURATION_HEADER_GUARD_H_
 #define _GENEIAL_CONFIGURATION_HEADER_GUARD_H_
 
-// the configured options and settings for OASysGL
+// the configured options and settings for Geneials
 #define GENEIAL_VERSION_MAJOR @GENEIAL_VERSION_MAJOR@
 #define GENEIAL_VERSION_MINOR @GENEIAL_VERSION_MINOR@
 
