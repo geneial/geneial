@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_MULTIVALUE_CHROMOSOME_BLENDING_CROSSOVER_HPP_
-#define __GENEIAL_MULTIVALUE_CHROMOSOME_BLENDING_CROSSOVER_HPP_
+#pragma once
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeBlendingCrossover.h>
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
@@ -110,4 +109,3 @@ inline typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set Multi
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_MULTIVALUE_CHROMOSOME_BLENDING_CROSSOVER_HPP_ */

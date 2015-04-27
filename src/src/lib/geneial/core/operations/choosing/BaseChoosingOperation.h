@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_BASECHOOSINGOPERATION_H_
-#define __GENEIAL_BASECHOOSINGOPERATION_H_
+#pragma once
 
 #include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/population/Population.h>
@@ -32,4 +31,3 @@ public:
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_BASECHOOSINGOPERATION_H_ */

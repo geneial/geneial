@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_BUILDER_SETTINGS_H_
-#define __GENEIAL_BUILDER_SETTINGS_H_
+#pragma once
 
 #include <geneial/core/fitness/FitnessEvaluator.h>
 
@@ -42,4 +41,3 @@ public:
 } /* namespace population */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_BUILDER_SETTINGS_H_ */

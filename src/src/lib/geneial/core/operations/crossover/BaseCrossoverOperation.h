@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_BASE_CROSSOVER_OPERATION_H_
-#define __GENEIAL_BASE_CROSSOVER_OPERATION_H_
+#pragma once
 
 namespace geneial
 {
@@ -36,4 +35,3 @@ public:
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_BASE_CROSSOVER_OPERATION_H_ */

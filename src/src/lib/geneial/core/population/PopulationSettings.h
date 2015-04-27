@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_POPULATION_SETTINGS_H_
-#define __GENEIAL_POPULATION_SETTINGS_H_
+#pragma once
 
 namespace geneial
 {
@@ -35,4 +34,3 @@ public:
 } /* namespace population */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_POPULATION_SETTINGS_H_ */

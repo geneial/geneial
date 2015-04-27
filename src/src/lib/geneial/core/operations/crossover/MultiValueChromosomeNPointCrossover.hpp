@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_HPP_
-#define __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_HPP_
+#pragma once
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
 #include <geneial/utility/Random.h>
@@ -174,4 +173,3 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_HPP_ */

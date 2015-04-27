@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_FITNESS_PROPORTIONAL_SELECTION_H_
-#define __GENEIAL_FITNESS_PROPORTIONAL_SELECTION_H_
+#pragma once
 
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
 #include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
@@ -51,4 +50,3 @@ private:
 
 #include <geneial/core/operations/selection/FitnessProportionalSelection.hpp>
 
-#endif /* __GENEIAL_FITNESS_PROPORTIONAL_SELECTION_H_ */

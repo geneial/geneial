@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_POPULATION_HPP_
-#define __GENEIAL_POPULATION_HPP_
+#pragma once
 
 #include <geneial/core/population/Population.h>
 #include <geneial/core/fitness/Fitness.h>
@@ -299,4 +298,3 @@ inline void Population<FITNESS_TYPE>::clearChromosomes()
 } /* namespace population */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_POPULATION_HPP_ */

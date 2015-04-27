@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_
-#define __GENEIAL_MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_
+#pragma once
 
 #include <geneial/core/population/builder/MultiIntValueChromosomeFactory.h>
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
@@ -47,4 +46,3 @@ typename BaseChromosome<FITNESS_TYPE>::ptr MultiIntValueChromosomeFactory<FITNES
 } /* namespace population */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_ */

@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_MULTI_VALUE_CHROMOSOME_H_
-#define __GENEIAL_MULTI_VALUE_CHROMOSOME_H_
+#pragma once
 
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include "boost/shared_ptr.hpp"
@@ -73,4 +72,3 @@ private:
 } /* namespace geneial */
 
 #include <geneial/core/population/chromosome/MultiValueChromosome.hpp>
-#endif /* __GENEIAL_MULTI_VALUE_CHROMOSOME_H_ */

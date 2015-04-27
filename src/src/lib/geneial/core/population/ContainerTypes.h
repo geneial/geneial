@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_CONTAINER_TYPES_H_
-#define __GENEIAL_CONTAINER_TYPES_H_
+#pragma once
 
 #include <vector>
 
@@ -24,4 +23,3 @@ public:
 } /* namespace population */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_CONTAINER_TYPES_H_ */

@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_FITNESS_H_
-#define __GENEIAL_FITNESS_H_
+#pragma once
 
 #include <geneial/utility/Printable.h>
 
@@ -52,4 +51,3 @@ public:
 
 #include <geneial/core/fitness/Fitness.hpp>
 
-#endif /* __GENEIAL_FITNESS_H_ */

@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_BASE_MANAGER_HPP_
-#define __GENEIAL_BASE_MANAGER_HPP_
+#pragma once
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/core/population/Population.h>
@@ -64,4 +63,3 @@ FITNESS_TYPE BaseManager<FITNESS_TYPE>::getLowestFitness() const
 } /* namespace population */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_BASE_MANAGER_HPP_ */

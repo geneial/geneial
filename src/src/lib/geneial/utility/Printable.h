@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_PRINTABLE_H_
-#define __GENEIAL_PRINTABLE_H_
+#pragma once
 #include <iostream>
 
 namespace geneial
@@ -27,4 +26,3 @@ std::ostream& operator<<(std::ostream& os, const Printable*& p);
 
 } /* namespace utility */
 } /* namespace geneial */
-#endif /* __GENEIAL_PRINTABLE_H_ */

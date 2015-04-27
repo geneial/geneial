@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_UNIFORM_RANDOM_SELECTION_H_
-#define __GENEIAL_UNIFORM_RANDOM_SELECTION_H_
+#pragma once
 
 #include <geneial/core/operations/selection/UniformRandomSelection.h>
 
@@ -40,4 +39,3 @@ public:
 
 #include <geneial/core/operations/selection/UniformRandomSelection.hpp>
 
-#endif /* __GENEIAL_UNIFORM_RANDOM_SELECTION_H_ */

@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_SMOOTH_PEAK_MUTATION_OPERATION_HPP_
-#define __GENEIAL_SMOOTH_PEAK_MUTATION_OPERATION_HPP_
+#pragma once
 
 #include <geneial/core/operations/mutation/SmoothPeakMutationOperation.h>
 
@@ -118,4 +117,3 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_SMOOTH_PEAK_MUTATION_OPERATION_HPP_ */

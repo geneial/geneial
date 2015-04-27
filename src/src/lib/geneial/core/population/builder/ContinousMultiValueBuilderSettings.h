@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_CONTINOUS_MULTI_VALUE_BUILDER_SETTING_H_
-#define __GENEIAL_CONTINOUS_MULTI_VALUE_BUILDER_SETTING_H_
+#pragma once
 
 #include <geneial/core/population/builder/MultiValueBuilderSettings.h>
 
@@ -53,4 +52,3 @@ public:
 } /* namespace population */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_CONTINOUS_MULTI_VALUE_BUILDER_SETTING_H_ */

@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_RANDOM_H_
-#define __GENEIAL_RANDOM_H_
+#pragma once
 
 #include <geneial/utility/patterns/singleton.hpp>
 
@@ -37,4 +36,3 @@ protected:
 } /* namespace utility */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_RANDOM_H_ */

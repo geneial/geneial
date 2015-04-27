@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_BASE_CHROMOSOME_HPP_
-#define __GENEIAL_BASE_CHROMOSOME_HPP_
+#pragma once
 
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include <geneial/core/fitness/Fitness.h>
@@ -109,4 +108,3 @@ unsigned int BaseChromosome<FITNESS_TYPE>::getAge() const
 } /* namespace population */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_BASE_CHROMOSOME_HPP_ */

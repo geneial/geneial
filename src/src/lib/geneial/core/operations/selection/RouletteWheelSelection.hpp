@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_ROULETTE_WHEEL_SELECTION_HPP_
-#define __GENEIAL_ROULETTE_WHEEL_SELECTION_HPP_
+#pragma once
 
 #include <geneial/core/operations/selection/RouletteWheelSelection.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
@@ -112,4 +111,3 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_ROULETTE_WHEEL_SELECTION_HPP_ */

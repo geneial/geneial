@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_CHOOSE_RANDOM_H_
-#define __GENEIAL_CHOOSE_RANDOM_H_
+#pragma once
 
 #include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
@@ -54,4 +53,3 @@ public:
 
 #include <geneial/core/operations/choosing/ChooseRandom.hpp>
 
-#endif /* __GENEIAL_CHOOSE_RANDOM_H_ */

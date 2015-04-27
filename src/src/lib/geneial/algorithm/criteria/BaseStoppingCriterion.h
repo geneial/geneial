@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_BASE_STOPPING_CRITERION_H_
-#define __GENEIAL_BASE_STOPPING_CRITERION_H_
+#pragma once
 
 #include <geneial/core/population/management/BaseManager.h>
 
@@ -48,4 +47,3 @@ public:
 } /* namespace algorithm */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_BASE_STOPPING_CRITERION_H_ */

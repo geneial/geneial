@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_RANDOM_COUPLING_OPERATION_H_
-#define __GENEIAL_RANDOM_COUPLING_OPERATION_H_
+#pragma once
 
 #include <geneial/core/operations/coupling/BaseCouplingOperation.h>
 
@@ -42,4 +41,3 @@ public:
 
 #include <geneial/core/operations/coupling/RandomCouplingOperation.hpp>
 
-#endif /* __GENEIAL_RANDOM_COUPLING_OPERATION_H_ */

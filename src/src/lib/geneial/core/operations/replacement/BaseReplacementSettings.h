@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_BASE_REPLACEMENT_SETTINGS_H_
-#define __GENEIAL_BASE_REPLACEMENT_SETTINGS_H_
+#pragma once
 
 namespace geneial
 {
@@ -68,4 +67,3 @@ private:
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_BASE_REPLACEMENT_SETTINGS_H_ */

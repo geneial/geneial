@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_SETTINGS_H_
-#define __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_SETTINGS_H_
+#pragma once
 
 #include <cassert>
 
@@ -103,4 +102,3 @@ private:
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_SETTINGS_H_ */

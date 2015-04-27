@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_UNIFORM_RANDOM_SELECTION_HPP_
-#define __GENEIAL_UNIFORM_RANDOM_SELECTION_HPP_
+#pragma once
 
 #include <geneial/core/operations/selection/UniformRandomSelection.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
@@ -56,4 +55,3 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set UniformRando
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_UNIFORM_RANDOM_SELECTION_HPP_ */

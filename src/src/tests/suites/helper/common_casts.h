@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_TEST_COMMON_CASTS_H_
-#define __GENEIAL_TEST_COMMON_CASTS_H_
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 #include <boost/test/unit_test.hpp>
@@ -24,4 +23,3 @@ inline typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr convertBaseC
 
 } /* namespace test_helper */
 
-#endif /* __GENEIAL_TEST_ */

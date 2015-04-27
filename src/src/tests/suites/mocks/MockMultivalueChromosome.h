@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_TEST_MOCK_MULTI_VALUE_CHROMOSOME_H_
-#define __GENEIAL_TEST_MOCK_MULTI_VALUE_CHROMOSOME_H_
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 
@@ -53,4 +52,3 @@ MultiValueChromosome<double, double>::const_ptr getMockDoubleMVC(std::vector<dou
 
 } /* namespace test_mock */
 
-#endif /* __GENEIAL_TEST_MOCK_MULTI_VALUE_CHROMOSOME_H_ */

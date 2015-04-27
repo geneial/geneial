@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_BASE_REPLACEMENT_OPERATION_H_
-#define __GENEIAL_BASE_REPLACEMENT_OPERATION_H_
+#pragma once
 
 #include <geneial/core/operations/replacement/BaseReplacementSettings.h>
 #include <geneial/core/population/management/BaseManager.h>
@@ -53,4 +52,3 @@ public:
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_BASE_REPLACEMENT_OPERATION_H_ */

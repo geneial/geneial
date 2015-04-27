@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_SELECTION_SETTINGS_H_
-#define __GENEIAL_SELECTION_SETTINGS_H_
+#pragma once
 
 #include <cassert>
 
@@ -45,4 +44,3 @@ public:
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_SELECTION_SETTINGS_H_ */

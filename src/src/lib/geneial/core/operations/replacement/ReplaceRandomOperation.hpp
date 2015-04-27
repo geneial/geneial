@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_REPLACE_RANDOM_OPERATION_HPP_
-#define __GENEIAL_REPLACE_RANDOM_OPERATION_HPP_
+#pragma once
 
 #include <geneial/core/operations/replacement/BaseReplacementSettings.h>
 #include <geneial/utility/Random.h>
@@ -74,4 +73,3 @@ void ReplaceRandomOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &p
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_REPLACE_RANDOM_OPERATION_HPP_ */

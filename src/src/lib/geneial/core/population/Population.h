@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_POPULATION_H_
-#define __GENEIAL_POPULATION_H_
+#pragma once
 
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include <geneial/core/population/ContainerTypes.h>
@@ -121,4 +120,3 @@ private:
 
 #include <geneial/core/population/Population.hpp>
 
-#endif /* __GENEIAL_POPULATION_H_ */

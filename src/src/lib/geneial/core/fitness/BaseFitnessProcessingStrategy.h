@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_BASE_FITNESS_PROCESSING_STRATEGY_H_
-#define __GENEIAL_BASE_FITNESS_PROCESSING_STRATEGY_H_
+#pragma once
 
 #include <geneial/core/population/Population.h>
 #include <geneial/core/population/ContainerTypes.h>
@@ -23,4 +22,3 @@ public:
 
 } /*namespace geneial*/
 
-#endif /* __GENEIAL_BASE_FITNESS_PROCESSING_STRATEGY_H_ */

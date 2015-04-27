@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_SIMPLE_COUPLING_OPERATION_H_
-#define __GENEIAL_SIMPLE_COUPLING_OPERATION_H_
+#pragma once
 
 #include <geneial/core/operations/coupling/BaseCouplingOperation.h>
 
@@ -39,4 +38,3 @@ public:
 
 #include <geneial/core/operations/coupling/SimpleCouplingOperation.hpp>
 
-#endif /* __GENEIAL_SIMPLE_COUPLING_OPERATION_H_ */

@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_BASE_GENETIC_ALGORITHM_HPP_
-#define __GENEIAL_BASE_GENETIC_ALGORITHM_HPP_
+#pragma once
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
 
@@ -65,4 +64,3 @@ inline bool BaseGeneticAlgorithm<FITNESS_TYPE>::wasCriteriaReached() //TODO(bewo
 } /* namespace algorithm */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_BASE_GENETIC_ALGORITHM_HPP_ */

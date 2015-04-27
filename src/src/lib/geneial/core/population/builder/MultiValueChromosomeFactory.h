@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_MULTI_VALUE_CHROMOSOME_FACTORY_H_
-#define __GENEIAL_MULTI_VALUE_CHROMOSOME_FACTORY_H_
+#pragma once
 
 #include <geneial/core/population/builder/BaseChromosomeFactory.h>
 #include <geneial/core/population/builder/MultiValueBuilderSettings.h>
@@ -41,4 +40,3 @@ public:
 } /* namespace population */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_MULTI_VALUE_CHROMOSOME_FACTORY_H_ */

@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_MULTIVALUE_CHROMOSOME_BLENDING_CROSSOVER_H_
-#define __GENEIAL_MULTIVALUE_CHROMOSOME_BLENDING_CROSSOVER_H_
+#pragma once
 
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
 #include <geneial/core/operations/coupling/BaseCouplingOperation.h>
@@ -93,4 +92,3 @@ private:
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeBlendingCrossover.hpp>
 
-#endif /* __GENEIAL_MULTIVALUE_CHROMOSOME_BLENDING_CROSSOVER_H_ */

@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_MULTI_VALUE_CHROMOSOME_HPP_
-#define __GENEIAL_MULTI_VALUE_CHROMOSOME_HPP_
+#pragma once
 
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
 #include <boost/functional/hash.hpp>
@@ -162,4 +161,3 @@ void MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::print(std::ostream& os) con
 } /* namespace population */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_MULTI_VALUE_CHROMOSOME_HPP_ */

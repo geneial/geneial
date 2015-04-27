@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_REPLACE_WORST_OPERATION_H_
-#define __GENEIAL_REPLACE_WORST_OPERATION_H_
+#pragma once
 
 #include <geneial/core/operations/replacement/BaseReplacementOperation.h>
 
@@ -42,4 +41,3 @@ public:
 
 #include <geneial/core/operations/replacement/ReplaceWorstOperation.hpp>
 
-#endif /* __GENEIAL_REPLACE_WORST_OPERATION_H_ */

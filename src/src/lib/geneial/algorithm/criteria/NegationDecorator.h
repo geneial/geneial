@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_NEGATION_DECORTATOR_H_
-#define __GENEIAL_NEGATION_DECORTATOR_H_
+#pragma once
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
@@ -61,4 +60,3 @@ private:
 } /* namespace algorithm */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_NEGATION_DECORTATOR_H_ */

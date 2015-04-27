@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_ALGORITHM_OBSERVER_H_
-#define __GENEIAL_ALGORITHM_OBSERVER_H_
+#pragma once
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
 #include <geneial/core/population/management/BaseManager.h>
@@ -64,4 +63,3 @@ private:
 } /* namespace algorithm */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_ALGORITHM_OBSERVER_H_ */

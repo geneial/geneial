@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_BASE_COUPLING_OPERATION_H_
-#define __GENEIAL_BASE_COUPLING_OPERATION_H_
+#pragma once
 
 #include <geneial/core/operations/coupling/CouplingSettings.h>
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
@@ -56,4 +55,3 @@ public:
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_BASE_COUPLING_OPERATION_H_ */

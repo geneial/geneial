@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_BASE_MANAGER_H_
-#define __GENEIAL_BASE_MANAGER_H_
+#pragma once
 
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include <geneial/core/population/Population.h>
@@ -90,4 +89,3 @@ private:
 
 #include <geneial/core/population/management/BaseManager.hpp>
 
-#endif /* __GENEIAL_BASE_MANAGER_H_ */

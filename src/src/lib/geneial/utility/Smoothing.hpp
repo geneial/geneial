@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_SMOOTHING_HPP_
-#define __GENEIAL_SMOOTHING_HPP_
+#pragma once
 
 #include <geneial/utility/Smoothing.h>
 
@@ -101,4 +100,3 @@ void Smoothing::peakAt(unsigned int pos, unsigned int epsLeft, unsigned int epsR
 } /* namespace utility */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_SMOOTHING_HPP_ */

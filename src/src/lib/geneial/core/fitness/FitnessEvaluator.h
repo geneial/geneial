@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_FITNESS_EVALUATOR_H_
-#define __GENEIAL_FITNESS_EVALUATOR_H_
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
@@ -46,4 +45,3 @@ public:
 
 } /* namespace GeneticLibrary */
 
-#endif /* __GENEIAL_FITNESS_EVALUATOR_H_ */

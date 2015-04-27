@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_BASE_CHROMOSOME_H_
-#define __GENEIAL_BASE_CHROMOSOME_H_
+#pragma once
 
 #include <geneial/utility/Printable.h>
 #include <geneial/core/fitness/Fitness.h>
@@ -135,4 +134,3 @@ private:
 
 #include <geneial/core/population/chromosome/BaseChromosome.hpp>
 
-#endif /* __GENEIAL_BASE_CHROMOSOME_H_ */

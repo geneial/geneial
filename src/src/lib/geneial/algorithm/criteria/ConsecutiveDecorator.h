@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_CONSECUTIVE_CRITERION_H_
-#define __GENEIAL_CONSECUTIVE_CRITERION_H_
+#pragma once
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
@@ -102,4 +101,3 @@ private:
 } /* namespace algorithm */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_CONSECUTIVE_CRITERION_H_ */

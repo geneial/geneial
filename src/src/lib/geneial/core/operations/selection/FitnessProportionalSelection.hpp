@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_FITNESS_PROPORTIONAL_SELECTION_HPP_
-#define __GENEIAL_FITNESS_PROPORTIONAL_SELECTION_HPP_
+#pragma once
 
 #include <geneial/core/operations/selection/FitnessProportionalSelection.h>
 #include <geneial/utility/Random.h>
@@ -93,4 +92,3 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_FITNESS_PROPORTIONAL_SELECTION_HPP_ */

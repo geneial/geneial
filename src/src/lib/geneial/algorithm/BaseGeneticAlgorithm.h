@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_BASE_GENETIC_ALGORITHM_H_
-#define __GENEIAL_BASE_GENETIC_ALGORITHM_H_
+#pragma once
 
 #include <geneial/core/population/Population.h>
 #include <geneial/core/population/PopulationSettings.h>
@@ -187,4 +186,3 @@ public:
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.hpp>
 
-#endif /* __GENEIAL_BASE_GENETIC_ALGORITHM_H_ */

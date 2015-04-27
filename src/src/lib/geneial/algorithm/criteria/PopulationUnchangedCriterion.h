@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_POPULATION_UNCHANGED_CRITERION_H_
-#define __GENEIAL_POPULATION_UNCHANGED_CRITERION_H_
+#pragma once
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
@@ -66,4 +65,3 @@ private:
 } /* namespace algorithm */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_POPULATION_UNCHANGED_CRITERION_H_ */

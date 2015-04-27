@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_BEST_CHROMOSOME_OBSERVER_H_
-#define __GENEIAL_BEST_CHROMOSOME_OBSERVER_H_
+#pragma once
 
 #include <geneial/algorithm/observer/AlgorithmObserver.h>
 
@@ -50,4 +49,3 @@ private:
 } /* namespace algorithm */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_BEST_CHROMOSOME_OBSERVER_H_ */

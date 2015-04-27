@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_NON_UNIFORM_MUTATION_OPERATION_H_
-#define __GENEIAL_NON_UNIFORM_MUTATION_OPERATION_H_
+#pragma once
 
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
@@ -90,4 +89,3 @@ public:
 } /* namespace geneial */
 
 #include <geneial/core/operations/mutation/NonUniformMutationOperation.hpp>
-#endif /* __GENEIAL_NON_UNIFORM_MUTATION_OPERATION_H_ */

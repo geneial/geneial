@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_CONTINOUS_MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_
-#define __GENEIAL_CONTINOUS_MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_
+#pragma once
 
 #include <geneial/core/population/builder/ContinousMultiIntValueChromosomeFactory.h>
 #include <geneial/utility/Random.h>
@@ -73,4 +72,3 @@ typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiIntValueChromosomeFacto
 } /* namespace population */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_CONTINOUS_MULTI_INT_VALUE_CHROMOSOME_FACTORY_HPP_ */

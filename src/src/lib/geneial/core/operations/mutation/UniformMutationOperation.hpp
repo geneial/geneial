@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_UNIFORM_MUTATION_OPERATION_HPP_
-#define __GENEIAL_UNIFORM_MUTATION_OPERATION_HPP_
+#pragma once
 
 #include <geneial/core/operations/mutation/UniformMutationOperation.h>
 #include <geneial/core/operations/mutation/MutationSettings.h>
@@ -169,4 +168,3 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_UNIFORM_MUTATION_OPERATION_HPP_ */

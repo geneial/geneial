@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_SMOOTHING_H_
-#define __GENEIAL_SMOOTHING_H_
+#pragma once
 
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
 
@@ -42,4 +41,3 @@ public:
 
 #include <geneial/utility/Smoothing.hpp>
 
-#endif /* __GENEIAL_SMOOTHING_H_ */

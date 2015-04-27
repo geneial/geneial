@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_H_
-#define __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_H_
+#pragma once
 
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossoverSettings.h>
@@ -117,4 +116,3 @@ public:
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.hpp>
 
-#endif /* __GENEIAL_MULTIVALUE_CHROMOSOME_N_POINT_CROSSOVER_H_ */

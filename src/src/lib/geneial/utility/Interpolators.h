@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_INTERPOLATORS_H_
-#define __GENEIAL_INTERPOLATORS_H_
+#pragma once
 
 namespace geneial {
 namespace utility {
@@ -38,4 +37,3 @@ public:
 #include <geneial/utility/Interpolators.hpp>
 
 
-#endif /* __GENEIAL_INTERPOLATORS_H_ */

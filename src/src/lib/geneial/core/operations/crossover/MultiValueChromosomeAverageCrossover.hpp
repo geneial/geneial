@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_HPP_
-#define __GENEIAL_MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_HPP_
+#pragma once
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeAverageCrossover.h>
 
@@ -61,4 +60,3 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 } /* namespace pperation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_HPP_ */

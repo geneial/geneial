@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_UNIFORM_MUTATION_OPERATION_H_
-#define __GENEIAL_UNIFORM_MUTATION_OPERATION_H_
+#pragma once
 
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
 
@@ -58,4 +57,3 @@ public:
 
 #include <geneial/core/operations/mutation/UniformMutationOperation.hpp>
 
-#endif /* __GENEIAL_UNIFORM_MUTATION_OPERATION_H_ */

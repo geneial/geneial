@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_TEST_CONTINUITY_H_
-#define __GENEIAL_TEST_CONTINUITY_H_
+#pragma once
 
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
 
@@ -41,4 +40,3 @@ inline void checkLimits(typename BaseChromosome<FITNESS_TYPE>::ptr chromosomeToC
 
 } /* namespace test_helper */
 
-#endif /* __GENEIAL_TEST_CONTINUITY_H_ */

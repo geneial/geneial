@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_SIMPLE_COUPLING_OPERATION_HPP_
-#define __GENEIAL_SIMPLE_COUPLING_OPERATION_HPP_
+#pragma once
 
 #include <geneial/core/operations/coupling/SimpleCouplingOperation.h>
 
@@ -88,4 +87,3 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_SIMPLE_COUPLING_OPERATION_HPP_ */

@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_MULTITHREADED_FITNESS_PROCESSING_STRATEGY_HPP_
-#define __GENEIAL_MULTITHREADED_FITNESS_PROCESSING_STRATEGY_HPP_
+#pragma once
 
 #include <geneial/core/fitness/MultiThreadedFitnessProcessingStrategy.h>
 
@@ -118,4 +117,3 @@ void MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE>::ensureHasFitness(
 
 } /* namespace geneial */
 
-#endif /* __GENEIAL_MULTITHREADED_FITNESS_PROCESSING_STRATEGY_HPP_ */

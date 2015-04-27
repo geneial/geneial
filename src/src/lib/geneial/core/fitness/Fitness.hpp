@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_FITNESS_HPP_
-#define __GENEIAL_FITNESS_HPP_
+#pragma once
 #include <geneial/core/fitness/Fitness.h>
 
 namespace geneial
@@ -25,4 +24,3 @@ void Fitness<FITNESS_TYPE>::print(std::ostream& os) const
 
 } /* namespace geneial */
 
-#endif /* __GENEIAL_FITNESS_HPP_ */

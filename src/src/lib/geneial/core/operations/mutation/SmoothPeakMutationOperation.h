@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_SMOOTH_PEAK_MUTATION_OPERATION_H_
-#define __GENEIAL_SMOOTH_PEAK_MUTATION_OPERATION_H_
+#pragma once
 
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
 #include <geneial/core/population/builder/ContinousMultiIntValueChromosomeFactory.h>
@@ -86,4 +85,3 @@ public:
 
 #include <geneial/core/operations/mutation/SmoothPeakMutationOperation.hpp>
 
-#endif /* __GENEIAL_SMOOTH_PEAK_MUTATION_OPERATION_H_ */

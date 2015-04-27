@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_INTERPOLATORS_HPP_
-#define __GENEIAL_INTERPOLATORS_HPP_
+#pragma once
 
 #include <cmath>
 #include <cassert>
@@ -69,4 +68,3 @@ VALUE_TYPE Interpolators::cosineInterpolate(VALUE_TYPE y0, VALUE_TYPE y1, VALUE_
 } /* namespace utility */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_INTERPOLATORS_HPP_ */

@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_H_
-#define __GENEIAL_MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_H_
+#pragma once
 
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
 
@@ -93,4 +92,3 @@ public:
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeAverageCrossover.hpp>
 
-#endif /* __GENEIAL_MULTIVALUE_CHROMOSOME_AVERAGE_CROSSOVER_H_ */

@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_REPLACE_WORST_OPERATION_HPP_
-#define __GENEIAL_REPLACE_WORST_OPERATION_HPP_
+#pragma once
 
 #include <geneial/core/operations/replacement/BaseReplacementSettings.h>
 
@@ -67,4 +66,3 @@ void ReplaceWorstOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &po
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_REPLACE_WORST_OPERATION_HPP_ */

@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_MAX_GENERATION_CRITERION_H_
-#define __GENEIAL_MAX_GENERATION_CRITERION_H_
+#pragma once
 
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
@@ -47,4 +46,3 @@ public:
 } /* namespace algorithm */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_MAX_GENERATION_CRITERION_H_ */

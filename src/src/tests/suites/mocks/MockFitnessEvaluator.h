@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_TEST_MOCK_FITNESS_EVALUATOR_H_
-#define __GENEIAL_TEST_MOCK_FITNESS_EVALUATOR_H_
+#pragma once
 
 #include <boost/shared_ptr.hpp>
 #include <geneial/core/fitness/Fitness.h>
@@ -49,4 +48,3 @@ public:
 
 } /* namespace test_mock */
 
-#endif /* __GENEIAL_TEST_MOCK_FITNESS_EVALUATOR_H_ */

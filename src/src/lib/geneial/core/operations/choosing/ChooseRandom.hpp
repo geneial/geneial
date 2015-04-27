@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_CHOOSE_RANDOM_HPP_
-#define __GENEIAL_CHOOSE_RANDOM_HPP_
+#pragma once
 
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 #include <geneial/core/population/Population.h>
@@ -36,4 +35,3 @@ typename Population<FITNESS_TYPE>::chromosome_container ChooseRandom<VALUE_TYPE,
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif

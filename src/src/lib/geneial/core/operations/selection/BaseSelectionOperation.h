@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_BASE_SELECTION_OPERATION_H_
-#define __GENEIAL_BASE_SELECTION_OPERATION_H_
+#pragma once
 
 #include <geneial/core/operations/selection/SelectionSettings.h>
 
@@ -52,4 +51,3 @@ public:
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_BASE_SELECTION_OPERATION_H_ */

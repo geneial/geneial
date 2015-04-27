@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_SINGLE_THREADED_FITNESS_PROCESSING_STRATEGY_H_
-#define __GENEIAL_SINGLE_THREADED_FITNESS_PROCESSING_STRATEGY_H_
+#pragma once
 
 #include <geneial/core/population/Population.h>
 #include <geneial/core/fitness/BaseFitnessProcessingStrategy.h>
@@ -26,4 +25,3 @@ public:
 
 #include <geneial/core/fitness/SingleThreadedFitnessProcessingStrategy.hpp>
 
-#endif /* __GENEIAL_SINGLE_THREADED_FITNESS_PROCESSING_STRATEGY_H_ */

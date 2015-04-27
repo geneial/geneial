@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_ROULETTE_WHEEL_SELECTION_H_
-#define __GENEIAL_ROULETTE_WHEEL_SELECTION_H_
+#pragma once
 
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
 
@@ -40,4 +39,3 @@ public:
 
 #include <geneial/core/operations/selection/RouletteWheelSelection.hpp>
 
-#endif /* __GENEIAL_ROULETTE_WHEEL_SELECTION_H_ */

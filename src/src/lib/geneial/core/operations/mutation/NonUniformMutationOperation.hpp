@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_NON_UNIFORM_MUTATION_OPERATION_HPP_
-#define __GENEIAL_NON_UNIFORM_MUTATION_OPERATION_HPP_
+#pragma once
 
 #include <geneial/core/population/Population.h>
 #include <geneial/core/operations/mutation/NonUniformMutationOperation.h>
@@ -195,4 +194,3 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
 } /* namespace operation */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_NON_UNIFORM_MUTATION_OPERATION_HPP_ */

@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_FITNESS_VALUE_REACHEDCRITERION_H_
-#define __GENEIAL_FITNESS_VALUE_REACHEDCRITERION_H_
+#pragma once
 
 #include <geneial/core/population/management/BaseManager.h>
 
@@ -47,4 +46,3 @@ public:
 } /* namespace algorithm */
 } /* namespace geneial */
 
-#endif /* __GENEIAL_FITNESS_VALUE_REACHEDCRITERION_H_ */

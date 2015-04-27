@@ -1,5 +1,4 @@
-#ifndef __GENEIAL_SINGLETON_HPP_
-#define __GENEIAL_SINGLETON_HPP_
+#pragma once
 
 template<typename C>
 class singleton
@@ -25,4 +24,3 @@ protected:
 };
 template<typename C> C* singleton<C>::_instance = 0;
 
-#endif /* __GENEIAL_SINGLETON_HPP_ */
