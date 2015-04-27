@@ -14,8 +14,9 @@ namespace population
 {
 
 template<typename FITNESS_TYPE>
-Population<FITNESS_TYPE>::Population() :
-        _age(0)
+Population<FITNESS_TYPE>::Population(BaseFitnessProcessingStrategy<FITNESS_TYPE>& processingStrategy) :
+        _age(0),
+        _processingStrategy(processingStrategy)
 {
 }
 
@@ -199,11 +200,7 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
         }
     }
 
-    //Use processing Strategy if not null, otherwise lazy evaluation will ensure Fitness at insertion
-    if (processingStrategy)
-    {
-        processingStrategy->ensureHasFitness(container);
-    }
+    _processingStrategy->ensureHasFitness(container);
 
     unsigned int i = 0;
     for (typename chromosome_container::const_iterator it = container.begin(); it != container.end(); ++it)
@@ -263,7 +260,7 @@ inline typename BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getC
     typename hash_map::iterator it = _hashMap.find - (hashValue);
     if (it == _hashMap.end())
     {
-        typename BaseChromosome<FITNESS_TYPE>::ptr null_ptr;
+        typename BaseChromosome<FITNESS_TYPE>::ptr null_ptr(nullptr);
         return (null_ptr);
     }
     else

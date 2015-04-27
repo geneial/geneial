@@ -21,10 +21,10 @@ class ConsecutiveDecorator: public StatefulStoppingCriterion<FITNESS_TYPE>
 {
 
 public:
-    typedef typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion;
+    typedef BaseStoppingCriterion<FITNESS_TYPE> criterion;
 
-    ConsecutiveDecorator(unsigned int windowSize, unsigned int consecutiveHits,
-            typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion) :
+    ConsecutiveDecorator(const unsigned int windowSize, const unsigned int consecutiveHits,
+            const criterion & criterion) :
             _windowSize(windowSize), _consecutiveHits(consecutiveHits), _criterion(criterion)
     {
         assert(windowSize >= 1); //Allow wrapper valuss of 1 here, make it as flexible as possible
@@ -90,9 +90,9 @@ protected:
     }
 
 private:
-    criterion _criterion;
-    unsigned int _windowSize;
-    unsigned int _consecutiveHits;
+    const criterion _criterion;
+    const unsigned int _windowSize;
+    const unsigned int _consecutiveHits;
     std::deque<bool> _window;
 
 };

@@ -15,8 +15,8 @@ namespace coupling
 
 template<typename FITNESS_TYPE>
 typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set RandomCouplingOperation<FITNESS_TYPE>::doCopulate(
-        typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &mating_pool,
-        BaseCrossoverOperation<FITNESS_TYPE> *crossoverOperation, BaseManager<FITNESS_TYPE> &manager)
+        const typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &mating_pool,
+        const BaseCrossoverOperation<FITNESS_TYPE> &crossoverOperation, BaseManager<FITNESS_TYPE> &manager)
 {
 
     typedef typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set offspring_container;
@@ -25,7 +25,7 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set RandomCouplin
 
     offspring_container offspring; //A small container for all that little children,we're about to create :-)
 
-    unsigned int offspring_left = this->getSettings()->getNumberOfOffspring();
+    unsigned int offspring_left = this->getSettings().getNumberOfOffspring();
 
     assert(mating_pool.size() > 1);
 
@@ -36,22 +36,22 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set RandomCouplin
         const unsigned int mating_pool_size = std::distance(mating_pool.begin(), mating_pool.end()) - 1;
 
         //pick a random mommy:
-        const unsigned int rnd_mommy = Random::instance()->generateInt(0, mating_pool_size);
-        typename mating_container::iterator it_mommy = mating_pool.begin();
+        const unsigned int rnd_mommy = Random::generate<int>(0, mating_pool_size);
+        typename mating_container::const_iterator it_mommy = mating_pool.begin();
         std::advance(it_mommy, rnd_mommy);
 
         //pick a random daddy:
         unsigned int rnd_daddy;
         do
         {
-            rnd_daddy = Random::instance()->generateInt(0, mating_pool_size);
+            rnd_daddy = Random::generate<int>(0, mating_pool_size);
         } while (rnd_daddy == rnd_mommy);
 
-        typename mating_container::iterator it_daddy = mating_pool.begin();
+        typename mating_container::const_iterator it_daddy = mating_pool.begin();
         std::advance(it_daddy, rnd_daddy);
 
         //compute crossover
-        children_container children1 = crossoverOperation->doCrossover(*it_mommy, *it_daddy);
+        children_container children1 = crossoverOperation.doCrossover(*it_mommy, *it_daddy);
 
         for (typename children_container::iterator it = children1.begin(); offspring_left > 0 && it != children1.end();
                 ++it)

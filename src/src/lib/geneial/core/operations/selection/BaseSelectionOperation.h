@@ -18,12 +18,12 @@ template<typename FITNESS_TYPE>
 class BaseSelectionOperation
 {
 private:
-    SelectionSettings* _settings;
+    const SelectionSettings& _settings;
 
 public:
     typedef typename Population<FITNESS_TYPE>::chromosome_container selection_result_set;
 
-    BaseSelectionOperation(SelectionSettings* settings) :
+    BaseSelectionOperation(SelectionSettings const & settings) :
             _settings(settings)
     {
     }
@@ -35,12 +35,12 @@ public:
     virtual selection_result_set doSelect(const Population<FITNESS_TYPE> &population,
             BaseManager<FITNESS_TYPE> &manager) = 0;
 
-    SelectionSettings* getSettings() const
+    const SelectionSettings& getSettings() const
     {
         return _settings;
     }
 
-    void setSettings(SelectionSettings* settings)
+    void setSettings(const SelectionSettings& settings)
     {
         _settings = settings;
     }

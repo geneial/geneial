@@ -38,7 +38,7 @@ public:
     {
     }
 
-    bool equals(typename BaseChromosome<FITNESS_TYPE>::const_ptr chromosome) const;
+    bool equals(typename BaseChromosome<FITNESS_TYPE>::const_ptr chromosome) const override;
 
     const_it getConstIt() const;
     it getIt() const;
@@ -58,9 +58,9 @@ public:
     value_container getContainer() const;
     void setValueContainer(value_container container);
 
-    virtual void print(std::ostream& os) const;
+    void print(std::ostream& os) const override;
 
-    virtual chromsome_hash getHash() const;
+    chromsome_hash getHash() const override;
 
 private:
     value_container _container;

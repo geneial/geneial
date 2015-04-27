@@ -19,7 +19,7 @@ template<typename FITNESS_TYPE>
 class UniformRandomSelection: public BaseSelectionOperation<FITNESS_TYPE>
 {
 public:
-    UniformRandomSelection(SelectionSettings* settings) :
+    UniformRandomSelection(const SelectionSettings& settings) :
             BaseSelectionOperation<FITNESS_TYPE>(settings)
     {
     }
@@ -29,7 +29,7 @@ public:
     }
 
     virtual typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set doSelect(
-            const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager);
+            const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager) override;
 
 };
 

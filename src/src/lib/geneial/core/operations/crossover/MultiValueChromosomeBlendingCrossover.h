@@ -29,15 +29,13 @@ public:
     };
 
     //TODO (bewo): are settings necessary?
-    MultiValueChromosomeBlendingCrossover(MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *builderSettings,
-            MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *builderFactory, InterpolateBeta interpolationMethod,
-            OffspringMode offspringMode, unsigned int numChilds) :
+    MultiValueChromosomeBlendingCrossover(const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &builderSettings,
+            MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> &builderFactory, const InterpolateBeta interpolationMethod,
+            const OffspringMode offspringMode, const unsigned int numChilds) :
             _builderSettings(builderSettings), _builderFactory(builderFactory), _interpolationMethod(
                     interpolationMethod), _offspringMode(offspringMode), _numChilds(numChilds)
 
     {
-        assert(_builderSettings != NULL);
-        assert(_builderFactory != NULL);
         assert(_numChilds >= 1);
     }
 
@@ -45,20 +43,20 @@ public:
     {
     }
 
-    virtual bool inline isSymmetric() const
+    virtual bool inline isSymmetric() override const
     {
         return false;
     }
 
     virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set
-    doCrossover(typename BaseChromosome<FITNESS_TYPE>::ptr mommy, typename BaseChromosome<FITNESS_TYPE>::ptr daddy);
+    doCrossover(typename BaseChromosome<FITNESS_TYPE>::ptr mommy, typename BaseChromosome<FITNESS_TYPE>::ptr daddy) const override;
 
-    MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderSettings() const
+    MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> const & getBuilderSettings() const
     {
         return _builderSettings;
     }
 
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const
+    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>  & getBuilderFactory() const
     {
         return _builderFactory;
     }
@@ -79,10 +77,10 @@ public:
     }
 
 private:
-    MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> * _builderSettings;
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *_builderFactory;
-    InterpolateBeta _interpolationMethod;
-    OffspringMode _offspringMode;
+    const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> & _builderSettings;
+    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> &_builderFactory;
+    const InterpolateBeta _interpolationMethod;
+    const OffspringMode _offspringMode;
     unsigned int _numChilds;
 };
 

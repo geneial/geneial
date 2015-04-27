@@ -11,46 +11,6 @@ namespace algorithm
 {
 
 template<typename FITNESS_TYPE>
-void BaseGeneticAlgorithm<FITNESS_TYPE>::solve()
-{
-
-    _wasStarted = true;
-
-    //Initialize the first population candidate, take whatever has been inserted and fill it up to max size.
-    _manager.replenishPopulation();
-
-    //	std::cout << _manager.getPopulation() << std::endl;
-
-    //Initial check
-    while (!wasCriteriaReached())
-    {
-        _manager.getPopulation().doAge();
-
-        //std::cout << _manager.getPopulation() << std::endl;
-
-        //Perform a selection of mating candidates based on the given strategy.
-        typename selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set mating_pool; //<-- TODO (bewo) (use shared_ptr here?)
-        mating_pool = _selectionOperation->doSelect(_manager.getPopulation(), _manager);
-
-        typename coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set offspring;
-        offspring = _couplingOperation->doCopulate(mating_pool, _crossoverOperation, _manager);
-        offspring = _mutationOperation->doMutate(offspring, _manager);
-
-        //TODO (bewo): Scaling?
-
-        _replacementOperation->doReplace(_manager.getPopulation(), mating_pool, offspring, _manager);
-
-        //In we had a deficit, fill up population with fresh chromosomes
-        _manager.replenishPopulation();
-
-        notifyObservers(AlgorithmObserver<FITNESS_TYPE>::GENERATION_DONE);
-    }
-
-    _wasSolved = true;
-
-}
-
-template<typename FITNESS_TYPE>
 inline bool BaseGeneticAlgorithm<FITNESS_TYPE>::wasCriteriaReached() //TODO(bewo) Rethink about constness of this
 {
     const bool wasReached = _stoppingCriterion->wasReached(_manager);
@@ -60,6 +20,67 @@ inline bool BaseGeneticAlgorithm<FITNESS_TYPE>::wasCriteriaReached() //TODO(bewo
     }
     return wasReached;
 }
+
+template<typename FITNESS_TYPE>
+inline void BaseGeneticAlgorithm<FITNESS_TYPE>::notifyObservers(typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent event)
+{
+    typename observers_map::const_iterator lb = _observers.lower_bound(event);
+
+    if (lb != _observers.end() && !(_observers.key_comp()(event, lb->first)))
+    {
+        switch (event)
+        {
+        case AlgorithmObserver<FITNESS_TYPE>::GENERATION_DONE:
+        {
+            for (typename observers_map::mapped_type::const_iterator it = lb->second.begin();
+                    it != lb->second.end(); ++it)
+            {
+                (*it)->updateGeneration(_manager);
+            }
+            break;
+        }
+        case AlgorithmObserver<FITNESS_TYPE>::CRITERIA_REACHED:
+        {
+            for (typename observers_map::mapped_type::const_iterator it = lb->second.begin();
+                    it != lb->second.end(); ++it)
+            {
+                (*it)->updateCriteriaReached(_manager, _stoppingCriterion);
+            }
+            break;
+        }
+        }
+    }
+}
+
+template<typename FITNESS_TYPE>
+inline void  BaseGeneticAlgorithm<FITNESS_TYPE>::registerObserver(AlgorithmObserver<FITNESS_TYPE>* observer)
+{
+    typedef std::set<typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent> setType;
+    const setType events = observer->getSubscribedEvents();
+    for (typename setType::const_iterator it = events.begin(); it != events.end(); ++it)
+    {
+
+        typename observers_map::iterator lb = _observers.lower_bound(*it);
+
+        if (lb != _observers.end() && !(_observers.key_comp()(*it, lb->first)))
+        {
+            // key already exists
+            // update lb->second if you care to
+            lb->second.insert(lb->second.begin(), observer);
+        }
+        else
+        {
+            // the key does not exist in the map
+            // add it to the map
+            typename std::list<AlgorithmObserver<FITNESS_TYPE>*> list;
+            list.insert(list.begin(), observer);
+            _observers.insert(lb, typename observers_map::value_type(*it, list));    // Use lb as a hint to insert,
+        }
+
+    }
+
+}
+
 
 } /* namespace algorithm */
 } /* namespace geneial */

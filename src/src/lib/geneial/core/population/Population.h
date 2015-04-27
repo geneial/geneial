@@ -49,7 +49,7 @@ public:
 
     population_size getSize() const;
 
-    Population();
+    Population(BaseFitnessProcessingStrategy<FITNESS_TYPE>& processingStrategy);
     virtual ~Population();
     virtual void print(std::ostream& os) const;
 
@@ -60,8 +60,6 @@ public:
     typename BaseChromosome<FITNESS_TYPE>::ptr getOldestChromosome();
 
     typename BaseChromosome<FITNESS_TYPE>::ptr getYoungestChromosome();
-
-    BaseFitnessProcessingStrategy<FITNESS_TYPE>* processingStrategy;
 
     const inline fitness_map& getFitnessMap() const
     {
@@ -92,14 +90,14 @@ public:
 
     void clearChromosomes();
 
-    const BaseFitnessProcessingStrategy<FITNESS_TYPE>*& getProcessingStrategy() const
+    const BaseFitnessProcessingStrategy<FITNESS_TYPE>& getProcessingStrategy() const
     {
-        return processingStrategy;
+        return _processingStrategy;
     }
 
-    void setProcessingStrategy(BaseFitnessProcessingStrategy<FITNESS_TYPE>*& processingStrategy)
+    void setProcessingStrategy(BaseFitnessProcessingStrategy<FITNESS_TYPE>& processingStrategy)
     {
-        this->processingStrategy = processingStrategy;
+        this->_processingStrategy = processingStrategy;
     }
 
 private:
@@ -112,6 +110,9 @@ private:
     hash_map _hashMap;
 
     population_age _age;
+
+    BaseFitnessProcessingStrategy<FITNESS_TYPE>& _processingStrategy;
+
 
 };
 

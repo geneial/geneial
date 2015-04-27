@@ -103,8 +103,7 @@ public:
 
     void add(const glue glue, const criterion criterion)
     {
-        glue_criterion_pair p(glue, criterion);
-        add(p);
+        add(glue_criterion_pair(glue, criterion));
     }
 
     const container& getCriteria() const

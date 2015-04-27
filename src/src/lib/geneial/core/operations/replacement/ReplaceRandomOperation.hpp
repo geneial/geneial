@@ -17,7 +17,7 @@ template<typename FITNESS_TYPE>
 unsigned int ReplaceRandomOperation<FITNESS_TYPE>::getAmountToReplace(const Population<FITNESS_TYPE> &population,
         const typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const
 {
-    switch (this->getSettings()->getMode())
+    switch (this->getSettings().getMode())
     {
 
     case BaseReplacementSettings::REPLACE_ALL_OFFSPRING:
@@ -30,7 +30,7 @@ unsigned int ReplaceRandomOperation<FITNESS_TYPE>::getAmountToReplace(const Popu
     default:
     {
         return std::min(population.getFitnessMap().size(),
-                (typename Population<FITNESS_TYPE>::fitness_map::size_type) this->getSettings()->getAmountToReplace());
+                (typename Population<FITNESS_TYPE>::fitness_map::size_type) this->getSettings().getAmountToReplace());
     }
         break;
     }
@@ -38,8 +38,8 @@ unsigned int ReplaceRandomOperation<FITNESS_TYPE>::getAmountToReplace(const Popu
 
 template<typename FITNESS_TYPE>
 void ReplaceRandomOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &population,
-        typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
-        typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
+        const typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
+        const typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
         BaseManager<FITNESS_TYPE> &manager)
 {
 
@@ -49,10 +49,10 @@ void ReplaceRandomOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &p
     while (numberToReplace)
     {
         //Ignore the very last chromosomes (elitism):
-        const unsigned int max = population.getFitnessMap().size() - this->getSettings()->getAmountElitism() - 1;
+        const unsigned int max = population.getFitnessMap().size() - this->getSettings().getAmountElitism() - 1;
 
         //pick a random element to delete:
-        const unsigned int rnd_advance = Random::instance()->generateInt(0, max);
+        const unsigned int rnd_advance = Random::generate<int>(0, max);
 
         //construct an iterator
         typename Population<FITNESS_TYPE>::fitnessmap_it advanced = population.getFitnessMap().begin();

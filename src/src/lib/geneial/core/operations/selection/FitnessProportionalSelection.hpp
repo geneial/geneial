@@ -43,11 +43,11 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
         sorted_multimap.insert(std::pair<FITNESS_TYPE, chrom_ptr_type>(prop_fitness, it->second));
     }
 
-    unsigned int left_select = _settings->getNumberOfParents();
+    unsigned int left_select = _settings.getNumberOfParents();
     //First, handle elitism, iterate backwards over the sorted multimap and select the best chromosomes.
 
     //TODO (bewo) OPTIMIZE: using sth like transform(i, j, back_inserter(v), select2nd<MapType::value_type>()); instead ???
-    unsigned int elitism_to_select = _settings->getNumberSelectBest();
+    unsigned int elitism_to_select = _settings.getNumberSelectBest();
     typename map_type::reverse_iterator crit = sorted_multimap.rbegin();
     for (; crit != sorted_multimap.rend() && elitism_to_select > 0; ++crit)
     {
@@ -57,8 +57,8 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
     //Strip the inserted part from the map
     sorted_multimap.erase(crit.base(), sorted_multimap.end());
 
-    assert(result.size() == _settings->getNumberSelectBest());
-    left_select -= _settings->getNumberSelectBest();
+    assert(result.size() == _settings.getNumberSelectBest());
+    left_select -= _settings.getNumberSelectBest();
     assert(left_select <= sorted_multimap.size());
 
     //now select the remainder based on proportional probability.
@@ -70,7 +70,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
         {
             chrom_ptr_type chrom = crit->second;
             double prob = (crit->first);
-            if (Random::instance()->decision(prob))
+            if (Random::decision(prob))
             {
                 //Use it.
                 result.push_back(chrom);

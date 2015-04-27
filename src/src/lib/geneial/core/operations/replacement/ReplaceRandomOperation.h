@@ -19,7 +19,7 @@ private:
     unsigned int getAmountToReplace(const Population<FITNESS_TYPE> &population,
             const typename coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const;
 public:
-    ReplaceRandomOperation(BaseReplacementSettings* settings) :
+    ReplaceRandomOperation(const BaseReplacementSettings& settings) :
             BaseReplacementOperation<FITNESS_TYPE>(settings)
     {
     }
@@ -29,9 +29,9 @@ public:
     }
 
     void doReplace(Population<FITNESS_TYPE> &population,
-            typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
-            typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
-            BaseManager<FITNESS_TYPE> &manager);
+            const typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
+            const typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
+            BaseManager<FITNESS_TYPE> &manager) override;
 
 };
 

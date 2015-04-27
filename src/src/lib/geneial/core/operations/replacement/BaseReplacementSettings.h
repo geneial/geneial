@@ -21,7 +21,7 @@ public:
         REPLACE_ALL_OFFSPRING, REPLACE_FIXED_NUMBER
     } replace_offspring_mode;
 
-    BaseReplacementSettings(replace_offspring_mode mode, unsigned int amountToReplace = 0, unsigned int amountElitism =
+    BaseReplacementSettings(const replace_offspring_mode mode, const unsigned int amountToReplace = 0, const unsigned int amountElitism =
             0) :
             _mode(mode), _amountToReplace(amountToReplace), _amountElitism(amountElitism)
     {
@@ -32,7 +32,7 @@ public:
         return _amountToReplace;
     }
 
-    void setAmountToReplace(unsigned int amountToReplace)
+    void setAmountToReplace(const unsigned int amountToReplace)
     {
         _amountToReplace = amountToReplace;
     }
@@ -42,7 +42,7 @@ public:
         return _mode;
     }
 
-    void setMode(replace_offspring_mode mode)
+    void setMode(const replace_offspring_mode mode)
     {
         _mode = mode;
     }
@@ -52,7 +52,7 @@ public:
         return _amountElitism;
     }
 
-    void setAmountElitism(unsigned int amountElitism)
+    void setAmountElitism(const unsigned int amountElitism)
     {
         _amountElitism = amountElitism;
     }

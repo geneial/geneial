@@ -21,12 +21,12 @@ class BaseCouplingOperation
 {
 
 private:
-    CouplingSettings* _settings;
+    const CouplingSettings& _settings;
 
 public:
     typedef typename Population<FITNESS_TYPE>::chromosome_container offspring_result_set;
 
-    BaseCouplingOperation(CouplingSettings *settings) :
+    BaseCouplingOperation(const CouplingSettings &settings) :
             _settings(settings)
     {
     }
@@ -36,15 +36,15 @@ public:
     }
 
     virtual offspring_result_set doCopulate(
-            typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &mating_pool,
-            BaseCrossoverOperation<FITNESS_TYPE> *crossoverOperation, BaseManager<FITNESS_TYPE> &manager) = 0;
+            const typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &mating_pool,
+            const BaseCrossoverOperation<FITNESS_TYPE> &crossoverOperation, BaseManager<FITNESS_TYPE> &manager) = 0;
 
-    CouplingSettings* const & getSettings() const
+    CouplingSettings const & getSettings() const
     {
         return _settings;
     }
 
-    void setSettings(const CouplingSettings*& settings)
+    void setSettings(const CouplingSettings& settings)
     {
         _settings = settings;
     }

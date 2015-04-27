@@ -22,12 +22,12 @@ class BaseManager
 {
 
 public:
-    BaseManager<FITNESS_TYPE>(PopulationSettings *populationSettings,
-            BaseChromosomeFactory<FITNESS_TYPE> *chromosomeFactory) :
-            _population(), _chromosomeFactory(chromosomeFactory), _populationSettings(populationSettings)
+    BaseManager<FITNESS_TYPE>(const PopulationSettings &populationSettings,
+            BaseChromosomeFactory<FITNESS_TYPE> &chromosomeFactory,
+            BaseFitnessProcessingStrategy<FITNESS_TYPE> &fitnessProcessingStrategy
+            ) :
+            _population(fitnessProcessingStrategy), _chromosomeFactory(chromosomeFactory), _populationSettings(populationSettings)
     {
-        assert(_chromosomeFactory != NULL);
-        assert(_populationSettings != NULL);
     }
 
     void replacePopulation(typename Population<FITNESS_TYPE>::chromosome_container replacementPopulation);
@@ -77,9 +77,9 @@ public:
 private:
     Population<FITNESS_TYPE> _population;
 
-    BaseChromosomeFactory<FITNESS_TYPE> *_chromosomeFactory;
+    BaseChromosomeFactory<FITNESS_TYPE> &_chromosomeFactory;
 
-    PopulationSettings *_populationSettings;
+    const PopulationSettings &_populationSettings;
 
 };
 

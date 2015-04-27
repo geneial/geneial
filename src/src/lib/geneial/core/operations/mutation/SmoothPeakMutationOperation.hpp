@@ -42,7 +42,7 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
 
         //creating a new MVC (to keep things reversible)
         mvc_ptr mutatedChromosome = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
-                this->getBuilderFactory()->createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
+                this->_builderFactory.createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
         assert(mutatedChromosome);
 
         //getting values
@@ -56,24 +56,24 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
         //We have two choices here:
         // A) Mutate a fixed amount of given points (getAmountOfPointsOfMutation > 0)
         // B) Mutate every point based on a predetermined probability
-        if (this->getSettings()->getAmountOfPointsOfMutation() > 0)
+        if (this->_settings.getAmountOfPointsOfMutation() > 0)
         {
 
             std::set<unsigned int> positionsToPeak;
 
             //We have an predetermined amount of points for introducing peaks...
-            for (unsigned int i = this->getSettings()->getAmountOfPointsOfMutation(); i > 0; i--)
+            for (unsigned int i = this->_settings.getAmountOfPointsOfMutation(); i > 0; i--)
             {
                 unsigned int pos;
                 do
                 {
-                    pos = Random::instance()->generateInt(0, this->getBuilderSettings()->getNum() - 1);
+                    pos = Random::generate<int>(0, this->_builderSettings.getNum() - 1);
                 } while (positionsToPeak.find(pos) != positionsToPeak.end());
 
-                const int sign = (Random::instance()->generateBit()) ? -1 : 1;
-                Smoothing::peakAt<VALUE_TYPE, FITNESS_TYPE>(pos, Random::instance()->generateInt(0, this->_maxLeftEps),
-                        Random::instance()->generateInt(0, this->_maxRightEps),
-                        sign * Random::instance()->generateInt(1, this->_maxElevation), mutatedChromosome);
+                const int sign = (Random::generateBit()) ? -1 : 1;
+                Smoothing::peakAt<VALUE_TYPE, FITNESS_TYPE>(pos, Random::generate<int>(0, this->_maxLeftEps),
+                        Random::generate<int>(0, this->_maxRightEps),
+                        sign * Random::generate<int>(1, this->_maxElevation), mutatedChromosome);
             }
         }
         else
@@ -83,23 +83,23 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
             for (typename value_container::iterator it = mutatedChromosome->getContainer().begin();
                     it != mutatedChromosome->getContainer().end(); ++it)
             {
-                const double value_choice = Random::instance()->generateDouble(0.0, 1.0);
-                if (value_choice < this->getSettings()->getAmountOfMutation())
+                const double value_choice = Random::generate<int>(0.0, 1.0);
+                if (value_choice < this->_settings.getAmountOfMutation())
                 {
-                    const int sign = (Random::instance()->generateBit()) ? -1 : 1;
+                    const int sign = (Random::generateBit()) ? -1 : 1;
                     Smoothing::peakAt<VALUE_TYPE, FITNESS_TYPE>(
                             std::distance(mutatedChromosome->getContainer().begin(), it),
-                            Random::instance()->generateInt(0, this->_maxLeftEps),
-                            Random::instance()->generateInt(0, this->_maxRightEps),
-                            sign * Random::instance()->generateInt(1, this->_maxElevation), mutatedChromosome);
+                            Random::generate<int>(0, this->_maxLeftEps),
+                            Random::generate<int>(0, this->_maxRightEps),
+                            sign * Random::generate<int>(1, this->_maxElevation), mutatedChromosome);
                 }
             }
 
         }
 
         //Correct smoothness in mutated chromosome
-        Smoothing::restoreSmoothness<VALUE_TYPE, FITNESS_TYPE>(mutatedChromosome, this->getBuilderSettings()->getEps(),
-                this->getBuilderSettings()->getRandomMin(), this->getBuilderSettings()->getRandomMax());
+        Smoothing::restoreSmoothness<VALUE_TYPE, FITNESS_TYPE>(mutatedChromosome, this->_builderSettings.getEps(),
+                this->_builderSettings.getRandomMin(), this->_builderSettings.getRandomMax());
 
         //Age reset
         mutatedChromosome->setAge(0);

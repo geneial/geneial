@@ -13,7 +13,7 @@ BOOST_AUTO_TEST_SUITE( RandomSuite )
 
 BOOST_AUTO_TEST_CASE( valid_values_ranges_bool )
 {
-    bool myRandBool = Random::instance()->generateBit();
+    bool myRandBool = Random::generateBit();
     BOOST_CHECK(myRandBool == true || myRandBool == false);
 }
 
@@ -22,71 +22,71 @@ BOOST_AUTO_TEST_CASE( valid_values_ranges_int )
 {
     for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
     {
-        const int result = Random::instance()->generateInt(0, 100);
+        const int result = Random::generate<int>(0, 100);
         BOOST_CHECK(result >= 0 && result <= 100);
     }
 
     for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
     {
-        const int result = Random::instance()->generateInt(-100, 0);
+        const int result = Random::generate<int>(-100, 0);
         BOOST_CHECK(result >= -100 && result <= 0);
     }
 
     for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
     {
-        const int result = Random::instance()->generateInt(-100, 100);
+        const int result = Random::generate<int>(-100, 100);
         BOOST_CHECK(result >= -100 && result <= 100);
     }
 
     for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
     {
-        const float result = Random::instance()->generateFloat(0, 100);
+        const float result = Random::generate<float>(0, 100);
         BOOST_CHECK(result >= 0 && result <= 100);
     }
 
     for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
     {
-        const float result = Random::instance()->generateFloat(-100, 0);
+        const float result = Random::generate<float>(-100, 0);
         BOOST_CHECK(result >= -100 && result <= 0);
     }
 
     for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
     {
-        const float result = Random::instance()->generateFloat(-100, 100);
+        const float result = Random::generate<float>(-100, 100);
         BOOST_CHECK(result >= -100 && result <= 100);
     }
 
     for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
     {
-        const double result = Random::instance()->generateDouble(0, 100);
+        const double result = Random::generate<double>(0, 100);
         BOOST_CHECK(result >= 0 && result <= 100);
     }
 
     for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
     {
-        const double result = Random::instance()->generateDouble(-100, 0);
+        const double result = Random::generate<double>(-100, 0);
         BOOST_CHECK(result >= -100 && result <= 0);
     }
 
     for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
     {
-        const double result = Random::instance()->generateDouble(-100, 100);
+        const double result = Random::generate<double>(-100, 100);
         BOOST_CHECK(result >= -100 && result <= 100);
     }
 }
 
 BOOST_AUTO_TEST_CASE( difference )
 {
-    double myRand1D = Random::instance()->generateDouble();
-    double myRand2D = Random::instance()->generateDouble();
+    double myRand1D = Random::generate<double>();
+    double myRand2D = Random::generate<double>();
     BOOST_CHECK(myRand1D != myRand2D);
 
-    float myRand1F = Random::instance()->generateFloat();
-    float myRand2F = Random::instance()->generateFloat();
+    float myRand1F = Random::generate<float>();
+    float myRand2F = Random::generate<float>();
     BOOST_CHECK(myRand1F != myRand2F);
 
-    int myRand1I = Random::instance()->generateInt();
-    int myRand2I = Random::instance()->generateInt();
+    int myRand1I = Random::generate<int>();
+    int myRand2I = Random::generate<int>();
     BOOST_CHECK(myRand1I != myRand2I);
 }
 
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE( int_uniform )
 
     for (int i = 1; i < TEST_INT_UNIFORM_RUNS; i++)
     {
-        occurrences[Random::instance()->generateInt(0, TEST_INT_UNIFORM_SLOTS - 1)]++;
+        occurrences[Random::generate(0, TEST_INT_UNIFORM_SLOTS - 1)]++;
     }
 
     BOOST_TEST_MESSAGE("Int Distribution: ");
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE( double_uniform )
 
     for (int i = 1; i < TEST_DOUBLE_UNIFORM_RUNS; i++)
     {
-        const int val = (int) Random::instance()->generateDouble(0,
+        const int val = (int) Random::generate<int>(0,
                 TEST_DOUBLE_UNIFORM_SLOTS - TEST_DOUBLE_BOUND_TOLERANCE);
         occurrences[val]++;
     }

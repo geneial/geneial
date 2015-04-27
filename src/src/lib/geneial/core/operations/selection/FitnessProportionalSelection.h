@@ -20,27 +20,21 @@ template<typename FITNESS_TYPE>
 class FitnessProportionalSelection: public BaseSelectionOperation<FITNESS_TYPE>
 {
 public:
-    FitnessProportionalSelection(SelectionSettings* settings) :
-            BaseSelectionOperation<FITNESS_TYPE>(settings)
+    FitnessProportionalSelection(const FitnessProportionalSelectionSettings &settings) :
+            BaseSelectionOperation<FITNESS_TYPE>(settings), _settings(settings)
     {
-        _settings = dynamic_cast<FitnessProportionalSelectionSettings*>(settings);
-        if (!_settings)
-        {
-            throw new std::runtime_error("settings must be FitnessProportionalSelectionSettings");
-        }
 
     }
 
     virtual ~FitnessProportionalSelection()
     {
     }
-    ;
 
     virtual typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set doSelect(
-            const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager);
+            const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager) override;
 
 private:
-    FitnessProportionalSelectionSettings* _settings;
+    const FitnessProportionalSelectionSettings& _settings;
 
 };
 

@@ -16,12 +16,12 @@ template<typename FITNESS_TYPE>
 unsigned int ReplaceWorstOperation<FITNESS_TYPE>::getAmountToReplace(const Population<FITNESS_TYPE> &population,
         const typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const
 {
-    switch (this->getSettings()->getMode())
+    switch (this->getSettings().getMode())
     {
 
     case BaseReplacementSettings::REPLACE_ALL_OFFSPRING:
     {
-        return std::min(population.getFitnessMap().size() - this->getSettings()->getAmountElitism() - 1,
+        return std::min(population.getFitnessMap().size() - this->getSettings().getAmountElitism() - 1,
                 offspring.size());
     }
         break;
@@ -30,7 +30,7 @@ unsigned int ReplaceWorstOperation<FITNESS_TYPE>::getAmountToReplace(const Popul
     default:
     {
         return std::min(population.getFitnessMap().size() - 1,
-                (typename Population<FITNESS_TYPE>::fitness_map::size_type) this->getSettings()->getAmountToReplace());
+                (typename Population<FITNESS_TYPE>::fitness_map::size_type) this->getSettings().getAmountToReplace());
     }
         break;
     }
@@ -38,8 +38,8 @@ unsigned int ReplaceWorstOperation<FITNESS_TYPE>::getAmountToReplace(const Popul
 
 template<typename FITNESS_TYPE>
 void ReplaceWorstOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &population,
-        typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
-        typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
+        const typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
+        const typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
         BaseManager<FITNESS_TYPE> &manager)
 {
 

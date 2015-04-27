@@ -50,8 +50,8 @@ public:
         RANDOM_WIDTH, RANDOM_MIN_WIDTH, EQUIDISTANT_WIDTH
     } width_settings;
 
-    MultiValueChromosomeNPointCrossoverSettings(unsigned int crossOverPoints, width_settings width_setting,
-            unsigned int min_width = 1) :
+    MultiValueChromosomeNPointCrossoverSettings(const unsigned int crossOverPoints, const width_settings width_setting,
+            const unsigned int min_width = 1) :
             _crossOverPoints(crossOverPoints), _width_setting(width_setting), _min_width(min_width)
     {
         assert(crossOverPoints > 0);
@@ -67,7 +67,7 @@ public:
         return _crossOverPoints;
     }
 
-    void setCrossOverPoints(unsigned int crossOverPoints)
+    void setCrossOverPoints(const unsigned int crossOverPoints)
     {
         _crossOverPoints = crossOverPoints;
     }
@@ -76,7 +76,7 @@ public:
         return _min_width;
     }
 
-    void setMinWidth(unsigned int minWidth)
+    void setMinWidth(const unsigned int minWidth)
     {
         _min_width = minWidth;
     }
@@ -86,7 +86,7 @@ public:
         return _width_setting;
     }
 
-    void setWidthSetting(width_settings widthSetting)
+    void setWidthSetting(const width_settings widthSetting)
     {
         _width_setting = widthSetting;
     }

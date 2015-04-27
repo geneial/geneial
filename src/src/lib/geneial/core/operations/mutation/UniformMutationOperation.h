@@ -16,20 +16,18 @@ class UniformMutationOperation: public BaseMutationOperation<FITNESS_TYPE>
 {
 
 private:
-    MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *_builderSettings;
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *_builderFactory;
+    const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &_builderSettings;
+    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> &_builderFactory;
 public:
     /*
      * UniformMutationOperation Mutates a chromosome, by replacing some of it's values randomly.
      */
-    UniformMutationOperation(MutationSettings *settings, BaseChoosingOperation<FITNESS_TYPE> *choosingOperation,
-            MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *builderSettings,
-            MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *builderFactory) :
+    UniformMutationOperation(const MutationSettings &settings, const BaseChoosingOperation<FITNESS_TYPE> &choosingOperation,
+            const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &builderSettings,
+            MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> &builderFactory) :
             BaseMutationOperation<FITNESS_TYPE>(settings, choosingOperation), _builderSettings(builderSettings), _builderFactory(
                     builderFactory)
     {
-        assert(_builderSettings != NULL);
-        assert(_builderFactory != NULL);
     }
 
     virtual ~UniformMutationOperation()
@@ -40,10 +38,10 @@ public:
      *  Returns a new chromosome which is a partially mutated version of the old one.
      *  */
     virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
-            typename Population<FITNESS_TYPE>::chromosome_container mutants, BaseManager<FITNESS_TYPE> &manager);
+            typename Population<FITNESS_TYPE>::chromosome_container mutants, BaseManager<FITNESS_TYPE> &manager) override;
 
     //TODO (lukas): copy paste from MultiValueChromosomeAvarageCrossover.h ...
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const
+    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> & getBuilderFactory() const
     {
         return _builderFactory;
     }

@@ -54,7 +54,7 @@ public:
         return _amountOfMutation;
     }
 
-    unsigned int getAmountOfPointsOfMutation()
+    unsigned int getAmountOfPointsOfMutation() const
     {
         return _amountOfPointsOfMutation;
     }

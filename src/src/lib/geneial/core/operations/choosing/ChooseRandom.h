@@ -17,10 +17,10 @@ template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class ChooseRandom: public BaseChoosingOperation<FITNESS_TYPE>
 {
 private:
-    MutationSettings *_settings;
+    const MutationSettings &_settings;
 
 public:
-    ChooseRandom(MutationSettings *settings) :
+    ChooseRandom(const MutationSettings &settings) :
             BaseChoosingOperation<FITNESS_TYPE>(), _settings(settings)
     {
     }
@@ -34,14 +34,14 @@ public:
      */
 
     virtual typename Population<FITNESS_TYPE>::chromosome_container doChoose(
-            typename Population<FITNESS_TYPE>::chromosome_container chromosomeInputSet);
+            typename Population<FITNESS_TYPE>::chromosome_container chromosomeInputSet) const override;
 
-    const MutationSettings* getSettings()
+    const MutationSettings& getSettings() const
     {
         return _settings;
     }
 
-    void setSettings(const MutationSettings*& settings)
+    void setSettings(const MutationSettings& settings)
     {
         _settings = settings;
     }

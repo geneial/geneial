@@ -40,7 +40,7 @@ inline typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set Multi
     }
     else
     {
-        chromosomesToGenerate = Random::instance()->generateInt(1, _numChilds);
+        chromosomesToGenerate = Random::generate(1, _numChilds);
     }
 
     for (unsigned int i = 0; i < chromosomesToGenerate; i++)
@@ -49,25 +49,25 @@ inline typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set Multi
 
         if (_interpolationMethod == INTERPOLATE_RANDOM)
         {
-            interpolationMethod = (InterpolateBeta) (INTERPOLATE_RANDOM + Random::instance()->generateInt(1, 3));
+            interpolationMethod = (InterpolateBeta) (INTERPOLATE_RANDOM + Random::generate(1, 3));
         }
 
-        const double beta1 = Random::instance()->generateDouble(0.0, 1.0);
-        const double beta2 = Random::instance()->generateDouble(0.0, 1.0);
+        const double beta1 = Random::generate(0.0, 1.0);
+        const double beta2 = Random::generate(0.0, 1.0);
 
         mvc_ptr child_candidate = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
-                this->getBuilderFactory()->createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
+                this->getBuilderFactory().createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
 
         assert(child_candidate);
 
-        const unsigned int containerSize = this->getBuilderSettings()->getNum();
+        const unsigned int containerSize = this->getBuilderSettings().getNum();
 
-        value_container &daddy_container = mvc_daddy->getContainer();
-        value_container &mommy_container = mvc_mommy->getContainer();
+        const value_container &daddy_container = mvc_daddy->getContainer();
+        const value_container &mommy_container = mvc_mommy->getContainer();
         value_container &child_container = child_candidate->getContainer();
 
-        typename value_container::iterator mommy_it = mommy_container.begin();
-        typename value_container::iterator daddy_it = daddy_container.begin();
+        typename value_container::const_it mommy_it = mommy_container.begin();
+        typename value_container::const_it daddy_it = daddy_container.begin();
         for (unsigned int i = 0; mommy_it != mommy_container.end(); ++i)
         {
             double targetBeta;

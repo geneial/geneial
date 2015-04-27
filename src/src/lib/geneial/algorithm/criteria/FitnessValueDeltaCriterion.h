@@ -16,7 +16,7 @@ template<typename FITNESS_TYPE>
 class FitnessValueDeltaCriterion: public BaseStoppingCriterion<FITNESS_TYPE>
 {
 public:
-    FitnessValueDeltaCriterion(FITNESS_TYPE desiredFitness, FITNESS_TYPE delta) :
+    FitnessValueDeltaCriterion(const FITNESS_TYPE desiredFitness, const FITNESS_TYPE delta) :
             _desiredFitness(desiredFitness), _delta(delta)
     {
         assert(_delta <= _desiredFitness);
@@ -38,8 +38,8 @@ public:
     }
 
 private:
-    FITNESS_TYPE _desiredFitness;
-    FITNESS_TYPE _delta;
+    const FITNESS_TYPE _desiredFitness;
+    const FITNESS_TYPE _delta;
 };
 
 } /* namespace stopping_criteria */

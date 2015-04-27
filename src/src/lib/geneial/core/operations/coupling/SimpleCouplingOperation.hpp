@@ -11,8 +11,8 @@ namespace coupling
 
 template<typename FITNESS_TYPE>
 typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplingOperation<FITNESS_TYPE>::doCopulate(
-        typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &mating_pool,
-        BaseCrossoverOperation<FITNESS_TYPE> *crossoverOperation, BaseManager<FITNESS_TYPE> &manager)
+        const typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &mating_pool,
+        const BaseCrossoverOperation<FITNESS_TYPE> &crossoverOperation, BaseManager<FITNESS_TYPE> &manager)
 {
 
     typedef typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set offspring_container;
@@ -22,7 +22,7 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
 
     offspring_container offspring; //A small container for all the little children :-)
 
-    unsigned int offspring_left = this->getSettings()->getNumberOfOffspring();
+    unsigned int offspring_left = this.getSettings().getNumberOfOffspring();
 
     assert(mating_pool.size() > 1);
     //iterate over mating candidates and create a pairwise mapping.
@@ -60,7 +60,7 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
         }
 
         //TODO (bewo) BEAUTIFY: use copy+backinserter and min(vec.size(),offspring_left) ?!
-        children_container children1 = crossoverOperation->doCrossover(parent1, parent2);
+        children_container children1 = crossoverOperation.doCrossover(parent1, parent2);
 
         for (typename children_container::iterator it = children1.begin(); offspring_left > 0 && it != children1.end();
                 ++it)
@@ -68,9 +68,9 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
             offspring.push_back(*it);
             offspring_left--;
         }
-        if (offspring_left && crossoverOperation->isSymmetric())
+        if (offspring_left && crossoverOperation.isSymmetric())
         {
-            children_container children2 = crossoverOperation->doCrossover(parent2, parent1);
+            children_container children2 = crossoverOperation.doCrossover(parent2, parent1);
             for (typename children_container::iterator it = children2.begin();
                     offspring_left > 0 && it != children2.end(); ++it)
             {

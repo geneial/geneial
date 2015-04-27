@@ -18,10 +18,10 @@ template<typename FITNESS_TYPE>
 class MaxGenerationCriterion: public BaseStoppingCriterion<FITNESS_TYPE>
 {
 private:
-    typename Population<FITNESS_TYPE>::population_age _max;
+    const typename Population<FITNESS_TYPE>::population_age _max;
 
 public:
-    MaxGenerationCriterion(long num_max_iterations) :
+    MaxGenerationCriterion(const long num_max_iterations) :
             _max(num_max_iterations)
     {
     }

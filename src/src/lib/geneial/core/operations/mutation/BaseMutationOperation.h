@@ -18,12 +18,12 @@ using namespace geneial::population::management;
 template<typename FITNESS_TYPE>
 class BaseMutationOperation
 {
-private:
-    MutationSettings* _settings;
-    BaseChoosingOperation<FITNESS_TYPE>* _choosingOperation;
+protected:
+    const MutationSettings& _settings;
+    const BaseChoosingOperation<FITNESS_TYPE>& _choosingOperation;
 public:
     //Constructor
-    BaseMutationOperation(MutationSettings *settings, BaseChoosingOperation<FITNESS_TYPE> *choosingOperation) :
+    BaseMutationOperation(const MutationSettings &settings, const BaseChoosingOperation<FITNESS_TYPE> &choosingOperation) :
             _settings(settings), _choosingOperation(choosingOperation)
     {
     }
@@ -37,17 +37,17 @@ public:
     virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
             typename Population<FITNESS_TYPE>::chromosome_container mutants, BaseManager<FITNESS_TYPE> &manager) = 0;
 
-    MutationSettings* const & getSettings() const
+    MutationSettings const & getSettings() const
     {
         return _settings;
     }
 
-    void setSettings(const MutationSettings*& settings)
+    void setSettings(const MutationSettings& settings)
     {
         _settings = settings;
     }
 
-    BaseChoosingOperation<FITNESS_TYPE>* getChoosingOperation() const
+    BaseChoosingOperation<FITNESS_TYPE> const & getChoosingOperation() const
     {
         return _choosingOperation;
     }

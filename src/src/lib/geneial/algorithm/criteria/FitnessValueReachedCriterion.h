@@ -18,10 +18,10 @@ template<typename FITNESS_TYPE>
 class FitnessValueReachedCriterion: public BaseStoppingCriterion<FITNESS_TYPE>
 {
 private:
-    FITNESS_TYPE _desiredFitness;
+    const FITNESS_TYPE _desiredFitness;
 
 public:
-    FitnessValueReachedCriterion(FITNESS_TYPE desiredFitness) :
+    FitnessValueReachedCriterion(const FITNESS_TYPE desiredFitness) :
             _desiredFitness(desiredFitness)
     {
     }

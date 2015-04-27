@@ -18,11 +18,11 @@ using namespace geneial::population::management;
 template<typename FITNESS_TYPE>
 class BaseReplacementOperation
 {
-private:
-    BaseReplacementSettings * _settings;
+protected:
+    const BaseReplacementSettings & _settings;
 
 public:
-    BaseReplacementOperation(BaseReplacementSettings* settings) :
+    BaseReplacementOperation(const BaseReplacementSettings& settings) :
             _settings(settings)
     {
     }
@@ -32,16 +32,16 @@ public:
     }
 
     virtual void doReplace(Population<FITNESS_TYPE> &population,
-            typename selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
-            typename coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
+            const typename selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
+            const typename coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
             BaseManager<FITNESS_TYPE> &manager) = 0;
 
-    BaseReplacementSettings* getSettings() const
+    BaseReplacementSettings& getSettings() const
     {
         return _settings;
     }
 
-    void setSettings(BaseReplacementSettings* settings)
+    void setSettings(const BaseReplacementSettings& settings)
     {
         _settings = settings;
     }

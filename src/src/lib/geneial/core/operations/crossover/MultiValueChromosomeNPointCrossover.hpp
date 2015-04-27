@@ -18,9 +18,10 @@ using namespace geneial::operation::coupling;
 
 //TODO (bewo): reduce cyclomatic complexity...
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueChromosomeNPointCrossover<VALUE_TYPE,
-        FITNESS_TYPE>::doCrossover(typename BaseChromosome<FITNESS_TYPE>::ptr mommy,
-        typename BaseChromosome<FITNESS_TYPE>::ptr daddy)
+typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set
+    MultiValueChromosomeNPointCrossover<VALUE_TYPE,FITNESS_TYPE>::doCrossover(
+        typename BaseChromosome<FITNESS_TYPE>::ptr mommy,
+        typename BaseChromosome<FITNESS_TYPE>::ptr daddy) const
 {
 
     typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::value_container value_container;
@@ -34,10 +35,10 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
     mvc_ptr mvc_daddy = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(daddy);
     assert(mvc_daddy);
 
-    const unsigned int crossoverPoints = this->getCrossoverSettings()->getCrossOverPoints();
-    const unsigned int totalWidth = this->getBuilderSettings()->getNum();
+    const unsigned int crossoverPoints = this->getCrossoverSettings().getCrossOverPoints();
+    const unsigned int totalWidth = this->getBuilderSettings().getNum();
     std::set<unsigned int> crossoverPositions;
-    if (this->getCrossoverSettings()->getWidthSetting()
+    if (this->getCrossoverSettings().getWidthSetting()
             == MultiValueChromosomeNPointCrossoverSettings::EQUIDISTANT_WIDTH)
     {
 
@@ -49,21 +50,21 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
         }
 
     }
-    else if (this->getCrossoverSettings()->getWidthSetting()
+    else if (this->getCrossoverSettings().getWidthSetting()
             == MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH
-            || this->getCrossoverSettings()->getWidthSetting()
+            || this->getCrossoverSettings().getWidthSetting()
                     == MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH)
     {
 
         unsigned int minWidth;
-        if (this->getCrossoverSettings()->getWidthSetting()
+        if (this->getCrossoverSettings().getWidthSetting()
                 == MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH)
         {
             minWidth = 1;
         }
         else
         {
-            minWidth = this->getCrossoverSettings()->getMinWidth();
+            minWidth = this->getCrossoverSettings().getMinWidth();
         }
 
         for (unsigned int i = 0; i < crossoverPoints; i++)
@@ -74,7 +75,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 
             do
             {
-                rnd_pos = Random::instance()->generateInt(0, this->getBuilderSettings()->getNum());
+                rnd_pos = Random::generate<int>(0, this->getBuilderSettings().getNum());
 
                 std::set<unsigned int>::iterator itlow = std::lower_bound(crossoverPositions.begin(),
                         crossoverPositions.end(), rnd_pos);
@@ -130,11 +131,11 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
     assert(crossoverPositions.size() == crossoverPoints);
 
     mvc_ptr child_candidate = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
-            this->getBuilderFactory()->createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
+            this->getBuilderFactory().createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
     assert(child_candidate);
 
-    value_container &daddy_container = mvc_daddy->getContainer();
-    value_container &mommy_container = mvc_mommy->getContainer();
+    const value_container &daddy_container = mvc_daddy->getContainer();
+    const value_container &mommy_container = mvc_mommy->getContainer();
     value_container &child_container = child_candidate->getContainer();
 
     child_container.clear();

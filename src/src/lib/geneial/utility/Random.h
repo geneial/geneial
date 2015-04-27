@@ -7,32 +7,32 @@ namespace geneial
 namespace utility
 {
 
-class Random: public singleton<Random>
+class Random
 {
-    friend class singleton<Random> ;
 public:
-    bool generateBit() const;
+    static inline bool generateBit();
 
-    bool decision(const double probability) const;
+    static inline bool decision(const double probability);
 
-    int generateInt() const;
-    int generateInt(const int min, const int max) const;
+    template<typename T>
+    static inline T generate(const T min,const T max);
 
-    double generateDouble() const;
-    double generateDouble(const double min, const double max) const;
-
-    float generateFloat() const;
-    float generateFloat(const float min, const float max) const;
+    template<typename T>
+    static inline T generate();
 
     virtual ~Random()
     {
     }
 
+    void static initialize();
 protected:
-    Random();
+    static bool sInitialized;
+    static inline void checkInitialized();
+    Random(){}
 
 };
-
+bool Random::sInitialized = false;
 } /* namespace utility */
 } /* namespace geneial */
 
+#include <geneial/utility/Random.hpp>

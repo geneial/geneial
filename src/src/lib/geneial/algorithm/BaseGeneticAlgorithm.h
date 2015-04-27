@@ -27,7 +27,7 @@ using namespace geneial::population::management;
 template<typename FITNESS_TYPE>
 class BaseGeneticAlgorithm
 {
-private:
+protected:
     typedef typename std::map<typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent,
             std::list<AlgorithmObserver<FITNESS_TYPE>*> > observers_map;
 
@@ -38,31 +38,32 @@ private:
     bool _wasSolved;
     bool _wasStarted;
 
-    stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE> * _stoppingCriterion;
+    stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE> & _stoppingCriterion;
 
-    selection::BaseSelectionOperation<FITNESS_TYPE> * _selectionOperation;
+    selection::BaseSelectionOperation<FITNESS_TYPE> & _selectionOperation;
 
-    coupling::BaseCouplingOperation<FITNESS_TYPE> *_couplingOperation;
+    coupling::BaseCouplingOperation<FITNESS_TYPE> &_couplingOperation;
 
-    crossover::BaseCrossoverOperation<FITNESS_TYPE> *_crossoverOperation;
+    crossover::BaseCrossoverOperation<FITNESS_TYPE> &_crossoverOperation;
 
-    replacement::BaseReplacementOperation<FITNESS_TYPE> *_replacementOperation;
+    replacement::BaseReplacementOperation<FITNESS_TYPE> &_replacementOperation;
 
-    mutation::BaseMutationOperation<FITNESS_TYPE> *_mutationOperation;
+    mutation::BaseMutationOperation<FITNESS_TYPE> &_mutationOperation;
 
 public:
-    BaseGeneticAlgorithm(PopulationSettings *populationSettings, BaseChromosomeFactory<FITNESS_TYPE> *chromosomeFactory,
-            stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE> *stoppingCriterion,
-            selection::BaseSelectionOperation<FITNESS_TYPE> *selectionOperation,
-            coupling::BaseCouplingOperation<FITNESS_TYPE> *couplingOperation,
-            crossover::BaseCrossoverOperation<FITNESS_TYPE> *crossoverOperation,
-            replacement::BaseReplacementOperation<FITNESS_TYPE> *replacementOperation,
-            mutation::BaseMutationOperation<FITNESS_TYPE> *mutationOperation,
-            BaseFitnessProcessingStrategy<FITNESS_TYPE> *fitnessProcessingStrategy) :
-            _manager(populationSettings, chromosomeFactory), _wasSolved(false), _wasStarted(false), _stoppingCriterion(
-                    stoppingCriterion), _selectionOperation(selectionOperation), _couplingOperation(couplingOperation), _crossoverOperation(
-                    crossoverOperation), _replacementOperation(replacementOperation), _mutationOperation(
-                    mutationOperation)
+    BaseGeneticAlgorithm(const PopulationSettings &populationSettings,
+            BaseChromosomeFactory<FITNESS_TYPE> &chromosomeFactory,
+            stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE> &stoppingCriterion,
+            selection::BaseSelectionOperation<FITNESS_TYPE> &selectionOperation,
+            coupling::BaseCouplingOperation<FITNESS_TYPE> &couplingOperation,
+            crossover::BaseCrossoverOperation<FITNESS_TYPE> &crossoverOperation,
+            replacement::BaseReplacementOperation<FITNESS_TYPE> &replacementOperation,
+            mutation::BaseMutationOperation<FITNESS_TYPE> &mutationOperation,
+            BaseFitnessProcessingStrategy<FITNESS_TYPE> &fitnessProcessingStrategy) :
+            _manager(populationSettings, chromosomeFactory, fitnessProcessingStrategy), _wasSolved(false), _wasStarted(
+                    false), _stoppingCriterion(stoppingCriterion), _selectionOperation(selectionOperation), _couplingOperation(
+                    couplingOperation), _crossoverOperation(crossoverOperation), _replacementOperation(
+                    replacementOperation), _mutationOperation(mutationOperation)
     {
         _manager.getPopulation().setProcessingStrategy(fitnessProcessingStrategy);
     }
@@ -71,7 +72,7 @@ public:
     {
     }
 
-    virtual void solve();
+    virtual void solve() = 0;
 
     virtual void setInitialPopulation(typename Population<FITNESS_TYPE>::chromosome_container &container)
     {
@@ -122,63 +123,9 @@ public:
 
     inline virtual bool wasCriteriaReached();
 
-    void inline notifyObservers(typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent event)
-    {
-        typename observers_map::const_iterator lb = _observers.lower_bound(event);
+    inline virtual void notifyObservers(typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent event);
 
-        if (lb != _observers.end() && !(_observers.key_comp()(event, lb->first)))
-        {
-            switch (event)
-            {
-            case AlgorithmObserver<FITNESS_TYPE>::GENERATION_DONE:
-            {
-                for (typename observers_map::mapped_type::const_iterator it = lb->second.begin();
-                        it != lb->second.end(); ++it)
-                {
-                    (*it)->updateGeneration(_manager);
-                }
-                break;
-            }
-            case AlgorithmObserver<FITNESS_TYPE>::CRITERIA_REACHED:
-            {
-                for (typename observers_map::mapped_type::const_iterator it = lb->second.begin();
-                        it != lb->second.end(); ++it)
-                {
-                    (*it)->updateCriteriaReached(_manager, _stoppingCriterion);
-                }
-                break;
-            }
-            }
-        }
-    }
-
-    void registerObserver(AlgorithmObserver<FITNESS_TYPE>* observer)
-    {
-        typedef std::set<typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent> setType;
-        const setType events = observer->getSubscribedEvents();
-        for (typename setType::const_iterator it = events.begin(); it != events.end(); ++it)
-        {
-
-            typename observers_map::iterator lb = _observers.lower_bound(*it);
-
-            if (lb != _observers.end() && !(_observers.key_comp()(*it, lb->first)))
-            {
-                // key already exists
-                // update lb->second if you care to
-                lb->second.insert(lb->second.begin(), observer);
-            }
-            else
-            {
-                // the key does not exist in the map
-                // add it to the map
-                typename std::list<AlgorithmObserver<FITNESS_TYPE>*> list;
-                list.insert(list.begin(), observer);
-                _observers.insert(lb, typename observers_map::value_type(*it, list));    // Use lb as a hint to insert,
-            }
-
-        }
-
-    }
+    inline virtual void registerObserver(AlgorithmObserver<FITNESS_TYPE>* observer);
 };
 
 } /* namespace algorithm */

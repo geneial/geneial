@@ -13,7 +13,7 @@ class SingleThreadedFitnessProcessingStrategy: public BaseFitnessProcessingStrat
 {
 public:
 
-    virtual void ensureHasFitness(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer);
+    virtual void ensureHasFitness(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer) override;
 
     virtual ~SingleThreadedFitnessProcessingStrategy()
     {

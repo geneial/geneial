@@ -38,7 +38,7 @@ public:
 
     void workerTask(unsigned int id);
 
-    virtual void ensureHasFitness(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer);
+    virtual void ensureHasFitness(const typename Population<FITNESS_TYPE>::chromosome_container &refcontainer) override;
 
     unsigned int getNumWorkerThreads() const
     {

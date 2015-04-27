@@ -1,14 +1,16 @@
 #include "boost/shared_ptr.hpp"
 
-#include <geneial/algorithm/BaseGeneticAlgorithm.h>
+#include <geneial/algorithm/SteadyStateAlgorithm.h>
 #include <geneial/algorithm/criteria/MaxGenerationCriterion.h>
 #include <geneial/algorithm/criteria/NegationDecorator.h>
+
 #include <geneial/core/fitness/Fitness.h>
 #include <geneial/core/fitness/FitnessEvaluator.h>
+
 #include <geneial/core/population/PopulationSettings.h>
 
 #include <geneial/core/population/builder/ContinousMultiValueBuilderSettings.h>
-#include <geneial/core/population/builder/ContinousMultiIntValueChromosomeFactory.h>
+#include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.h>
 
 //#include <geneial/core/operations/selection/FitnessProportionalSelection.h>
 //#include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
@@ -89,90 +91,59 @@ public:
 int main(int argc, char **argv)
 {
 
-    std::cout << "Running GENEIAL demo1 - Version " << GENEIAL_VERSION_MAJOR << "." << GENEIAL_VERSION_MINOR << " ("
-            << GENEIAL_BUILD_TYPE << ")" << std::endl;
+    std::cout << "Running GENEIAL demo1 - Version "
+            << GENEIAL_VERSION_MAJOR
+            << "." << GENEIAL_VERSION_MINOR
+            << " ("
+                << GENEIAL_BUILD_TYPE << ")"
+            << std::endl;
 
     DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
 
     //TODO (bewo): write reasonable example demo
 
-    PopulationSettings *populationSettings = new PopulationSettings(50);
+    PopulationSettings populationSettings;
+    populationSettings.setMaxChromosomes(50);
 
-    ContinousMultiValueBuilderSettings<int, double> *builderSettings = new ContinousMultiValueBuilderSettings<int,
-            double>(evaluator, 10, 130, 0, true, 20, 5);
+    ContinousMultiValueBuilderSettings<int, double> builderSettings(evaluator, 10, 130, 0, true, 20, 5);
 
-    ContinousMultiIntValueChromosomeFactory<double> *chromosomeFactory = new ContinousMultiIntValueChromosomeFactory<
-            double>(builderSettings);
+    ContinousMultiValueChromosomeFactory<int,double> chromosomeFactory(builderSettings);
 
-    MutationSettings* mutationSettings = new MutationSettings(0.1, 0.1, 5);
+    MutationSettings mutationSettings(0.1, 0.1, 5);
 
-    ChooseRandom<int, double> *mutationChoosingOperation = new ChooseRandom<int, double>(mutationSettings);
+    ChooseRandom<int, double> mutationChoosingOperation(mutationSettings);
 
-    BaseMutationOperation<double> *mutationOperation = new NonUniformMutationOperation<int, double>(1000, 0.2,
+    NonUniformMutationOperation<int, double> mutationOperation(1000, 0.2,
             mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
-    //FitnessProportionalSelectionSettings* selectionSettings = new FitnessProportionalSelectionSettings(20,10);
-    SelectionSettings* selectionSettings = new SelectionSettings(10);
+    SelectionSettings selectionSettings(10);
 
-    //BaseSelectionOperation<double> *selectionOperation = new FitnessProportionalSelection<double>(selectionSettings);
-    BaseSelectionOperation<double> *selectionOperation = new RouletteWheelSelection<double>(selectionSettings);
-    //BaseSelectionOperation<double> *selectionOperation = new UniformRandomSelection<double>(selectionSettings);
+    RouletteWheelSelection<double> selectionOperation(selectionSettings);
 
-    CouplingSettings *couplingSettings = new CouplingSettings(20);
+    CouplingSettings couplingSettings(20);
 
-    //BaseCouplingOperation<double> *couplingOperation = new SimpleCouplingOperation<double>(couplingSettings);
-    BaseCouplingOperation<double> *couplingOperation = new RandomCouplingOperation<double>(couplingSettings);
+    RandomCouplingOperation<double> couplingOperation(couplingSettings);
 
-    MultiValueChromosomeNPointCrossoverSettings *crossoverSettings = new MultiValueChromosomeNPointCrossoverSettings(1,
-            MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH, 1);
-    BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeNPointCrossover<int, double>(
-            crossoverSettings, builderSettings, chromosomeFactory);
-    //BaseCrossoverOperation<double> *crossoverOperation = new MultiValueChromosomeAverageCrossover<int,double>(builderSettings,chromosomeFactory);
+    MultiValueChromosomeNPointCrossoverSettings crossoverSettings (1, MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH, 1);
 
-    //BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(BaseReplacementSettings::replace_offspring_mode::REPLACE_FIXED_NUMBER,20);
-    BaseReplacementSettings *replacementSettings = new BaseReplacementSettings(
-            BaseReplacementSettings::REPLACE_ALL_OFFSPRING, 5, 2);
+    MultiValueChromosomeNPointCrossover<int, double> crossoverOperation(crossoverSettings, builderSettings, chromosomeFactory);
 
-    ReplaceWorstOperation<double> *replacementOperation = new ReplaceWorstOperation<double>(replacementSettings);
-    //ReplaceRandomOperation<double> *replacementOperation = new ReplaceRandomOperation<double>(replacementSettings);
+    BaseReplacementSettings replacementSettings(BaseReplacementSettings::REPLACE_ALL_OFFSPRING, 5, 2);
 
-    BaseFitnessProcessingStrategy<double> *fitnessProcessingStrategy = new SingleThreadedFitnessProcessingStrategy<
-            double>;
-    //BaseFitnessProcessingStrategy<double> *fitnessProcessingStrategy = new MultiThreadedFitnessProcessingStrategy<double>(1);
+    ReplaceWorstOperation<double> replacementOperation(replacementSettings);
 
-    BaseStoppingCriterion<double> *stoppingCriterion = new MaxGenerationCriterion<double>(10000);
+    SingleThreadedFitnessProcessingStrategy<double> fitnessProcessingStrategy;
 
-    BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(populationSettings, chromosomeFactory,
+    MaxGenerationCriterion<double> stoppingCriterion(10000);
+
+    SteadyStateAlgorithm<double> algorithm(populationSettings, chromosomeFactory,
             stoppingCriterion, selectionOperation, couplingOperation, crossoverOperation, replacementOperation,
             mutationOperation, fitnessProcessingStrategy);
 
     algorithm.solve();
+
     std::cout << *algorithm.getHighestFitnessChromosome() << std::endl;
+
     std::cout << "end." << std::endl;
-
-    //normally, this is not necessary because we're exiting here anyway,
-    //but for valgrind's satisfaction, we free stuff nonetheless.
-    delete populationSettings;
-    delete chromosomeFactory;
-
-    delete selectionSettings;
-    delete selectionOperation;
-
-    delete stoppingCriterion;
-
-    delete fitnessProcessingStrategy;
-
-    delete couplingSettings;
-    delete couplingOperation;
-
-    delete crossoverSettings;
-    delete crossoverOperation;
-
-    delete replacementSettings;
-    delete replacementOperation;
-
-    delete mutationSettings;
-    delete mutationChoosingOperation;
-    delete mutationOperation;
 
 }

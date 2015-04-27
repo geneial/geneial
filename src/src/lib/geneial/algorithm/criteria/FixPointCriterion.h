@@ -21,7 +21,7 @@ class FixPointCriterion : public StatefulStoppingCriterion<FITNESS_TYPE>
 public:
 	virtual ~FixPointCriterion() {};
 
-	FixPointCriterion(FITNESS_TYPE threshold = 0, FITNESS_TYPE windowSize = 10,FITNESS_TYPE minDiff = 1):
+	FixPointCriterion(const FITNESS_TYPE threshold = 0, const FITNESS_TYPE windowSize = 10, const FITNESS_TYPE minDiff = 1):
 					 _windowSize(windowSize),
 					 _threshold(threshold),
 					 _minDiff(minDiff)

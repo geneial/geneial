@@ -19,8 +19,8 @@ class SmoothPeakMutationOperation: public BaseMutationOperation<FITNESS_TYPE>
 {
 
 private:
-    ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *_builderSettings;
-    ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE> *_builderFactory;
+    const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &_builderSettings;
+    const ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE> &_builderFactory;
 
     unsigned int _maxLeftEps;
     unsigned int _maxRightEps;
@@ -30,15 +30,16 @@ public:
     /*
      * UniformMutationOperation Mutates a chromosome, by replacing some of it's values randomly.
      */
-    SmoothPeakMutationOperation(MutationSettings *settings, BaseChoosingOperation<FITNESS_TYPE> *choosingOperation,
-            ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *builderSettings,
-            ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE> *builderFactory, unsigned int maxLeftEps,
+    SmoothPeakMutationOperation(
+            const MutationSettings &settings,
+            const BaseChoosingOperation<FITNESS_TYPE> &choosingOperation,
+            const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &builderSettings,
+            const ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE> &builderFactory,
+            unsigned int maxLeftEps,
             unsigned int maxRightEps, FITNESS_TYPE maxElevation) :
             BaseMutationOperation<FITNESS_TYPE>(settings, choosingOperation), _builderSettings(builderSettings), _builderFactory(
                     builderFactory), _maxLeftEps(maxLeftEps), _maxRightEps(maxRightEps), _maxElevation(maxElevation)
     {
-        assert(_builderSettings != NULL);
-        assert(_builderFactory != NULL);
         //TODO (bewo): Make some assertions regarding eps and builder here
     }
 
@@ -50,14 +51,14 @@ public:
      *  Returns a new chromosome which is a partially mutated version of the old one.
      *  */
     virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
-            typename Population<FITNESS_TYPE>::chromosome_container mutants, BaseManager<FITNESS_TYPE> &manager);
+            typename Population<FITNESS_TYPE>::chromosome_container mutants, BaseManager<FITNESS_TYPE> &manager) override;
 
-    ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE>* const & getBuilderFactory() const
+    ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE> & getBuilderFactory() const
     {
         return _builderFactory;
     }
 
-    ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderSettings() const
+    ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> & getBuilderSettings() const
     {
         return _builderSettings;
     }

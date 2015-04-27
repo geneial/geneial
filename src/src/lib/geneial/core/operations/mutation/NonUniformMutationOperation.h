@@ -19,8 +19,8 @@ class NonUniformMutationOperation: public BaseMutationOperation<FITNESS_TYPE>
 {
 
 private:
-    MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *_builderSettings;
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *_builderFactory;
+    const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &_builderSettings;
+    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> &_builderFactory;
 
     double _minimumModification;
     unsigned int _affectedGenerations;
@@ -35,16 +35,13 @@ public:
      */
 
     NonUniformMutationOperation(unsigned int affectedGenerations, double minimumModification,
-            MutationSettings *settings, BaseChoosingOperation<FITNESS_TYPE> *choosingOperation,
-            MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *builderSettings,
-            MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *builderFactory) :
+            const MutationSettings &settings, const BaseChoosingOperation<FITNESS_TYPE> &choosingOperation,
+            const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &builderSettings,
+            MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> &builderFactory) :
             BaseMutationOperation<FITNESS_TYPE>(settings, choosingOperation), _builderSettings(builderSettings), _builderFactory(
                     builderFactory), _minimumModification(minimumModification), _affectedGenerations(
                     affectedGenerations)
     {
-        //assert(minimumModification <= 1 && minimumModification >= 0);
-        assert(_builderSettings != NULL);
-        assert(_builderFactory != NULL);
     }
 
     virtual ~NonUniformMutationOperation()
@@ -55,9 +52,9 @@ public:
      *  Returns a new chromosome which is a partially mutated version of the old one.
      *  */
     virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
-            typename Population<FITNESS_TYPE>::chromosome_container mutants, BaseManager<FITNESS_TYPE> &manager);
+            typename Population<FITNESS_TYPE>::chromosome_container mutants, BaseManager<FITNESS_TYPE> &manager) override;
 
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const
+    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> & getBuilderFactory() const
     {
         return _builderFactory;
     }

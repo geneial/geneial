@@ -15,24 +15,21 @@ template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class MultiValueChromosomeAverageCrossover: public BaseCrossoverOperation<FITNESS_TYPE>
 {
 private:
-    MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> * _builderSettings;
+    const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> * _builderSettings;
     MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *_builderFactory;
 
 public:
-    MultiValueChromosomeAverageCrossover(MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *builderSettings,
-            MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *builderFactory) :
+    MultiValueChromosomeAverageCrossover(const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &builderSettings,
+            MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> &builderFactory) :
             _builderSettings(builderSettings), _builderFactory(builderFactory)
     {
-        assert(_builderSettings != NULL);
-        assert(_builderFactory != NULL);
-
     }
 
     virtual ~MultiValueChromosomeAverageCrossover()
     {
     }
 
-    virtual bool inline isSymmetric() const
+    bool inline isSymmetric() const override
     {
         return true;
     }
@@ -62,24 +59,24 @@ public:
      *
      */
     virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set
-    doCrossover(typename BaseChromosome<FITNESS_TYPE>::ptr mommy, typename BaseChromosome<FITNESS_TYPE>::ptr daddy);
+    doCrossover(typename BaseChromosome<FITNESS_TYPE>::ptr mommy, typename BaseChromosome<FITNESS_TYPE>::ptr daddy) const override;
 
-    MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderSettings() const
+    const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> & getBuilderSettings() const
     {
         return _builderSettings;
     }
 
-    void setBuilderSettings(const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>* & builderSettings)
+    void setBuilderSettings(const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> & builderSettings)
     {
         _builderSettings = builderSettings;
     }
 
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const
+    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> & getBuilderFactory() const
     {
         return _builderFactory;
     }
 
-    void setBuilderFactory(const MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* & builderFactory)
+    void setBuilderFactory(MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> & builderFactory)
     {
         _builderFactory = builderFactory;
     }

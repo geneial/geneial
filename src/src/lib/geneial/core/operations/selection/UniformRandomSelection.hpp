@@ -27,7 +27,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set UniformRando
 
     result_set result;
 
-    unsigned int left_select = this->getSettings()->getNumberOfParents();
+    unsigned int left_select = this->getSettings().getNumberOfParents();
 
     //TODO (bewo) allow parameter for the best chromosomes to be selected (and skipped here)
     assert(population.getSize() >= left_select);
@@ -41,7 +41,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set UniformRando
         {
             rnditer = population.getFitnessMap().begin();
 
-            std::advance(rnditer, Random::instance()->generateInt(0, population.getFitnessMap().size() - 1));
+            std::advance(rnditer, Random::generate<int>(0, population.getFitnessMap().size() - 1));
 
         } while (allowDuplicates || std::find(result.begin(), result.end(), rnditer->second) != result.end());
 
