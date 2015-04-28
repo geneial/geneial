@@ -20,7 +20,7 @@ class MultiValueChromosomeNPointCrossover: public BaseCrossoverOperation<FITNESS
 private:
     const MultiValueChromosomeNPointCrossoverSettings _crossoverSettings;
     const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> _builderSettings;
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> _builderFactory;
+    mutable MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> _builderFactory;
 
 public:
     MultiValueChromosomeNPointCrossover(const MultiValueChromosomeNPointCrossoverSettings &crossoverSettings,
@@ -94,7 +94,7 @@ public:
         _crossoverSettings = crossoverSettings;
     }
 
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> & getBuilderFactory()
+    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> & getBuilderFactory() const
     {
         return _builderFactory;
     }

@@ -2,7 +2,6 @@
 
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include <geneial/core/population/ContainerTypes.h>
-#include <geneial/core/fitness/BaseFitnessProcessingStrategy.h>
 #include <geneial/utility/Printable.h>
 
 #include <iostream>
@@ -49,7 +48,7 @@ public:
 
     population_size getSize() const;
 
-    Population(BaseFitnessProcessingStrategy<FITNESS_TYPE>& processingStrategy);
+    Population();
     virtual ~Population();
     virtual void print(std::ostream& os) const;
 
@@ -90,16 +89,6 @@ public:
 
     void clearChromosomes();
 
-    const BaseFitnessProcessingStrategy<FITNESS_TYPE>& getProcessingStrategy() const
-    {
-        return _processingStrategy;
-    }
-
-    void setProcessingStrategy(BaseFitnessProcessingStrategy<FITNESS_TYPE>& processingStrategy)
-    {
-        this->_processingStrategy = processingStrategy;
-    }
-
 private:
 
     void _insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome,
@@ -110,9 +99,6 @@ private:
     hash_map _hashMap;
 
     population_age _age;
-
-    BaseFitnessProcessingStrategy<FITNESS_TYPE>& _processingStrategy;
-
 
 };
 

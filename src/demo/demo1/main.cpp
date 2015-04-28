@@ -37,13 +37,12 @@
 
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 
-#include <geneial/core/fitness/SingleThreadedFitnessProcessingStrategy.h>
-#include <geneial/core/fitness/MultiThreadedFitnessProcessingStrategy.h>
-
 #include <geneial/config.h>
 
 #include <stdexcept>
 #include <cassert>
+
+#include <unistd.h>
 
 using namespace geneial;
 
@@ -59,8 +58,6 @@ using namespace geneial::operation::crossover;
 using namespace geneial::operation::replacement;
 using namespace geneial::operation::mutation;
 using namespace geneial::operation::choosing;
-
-#include <unistd.h>
 
 class DemoChromosomeEvaluator: public FitnessEvaluator<double>
 {
@@ -100,11 +97,6 @@ int main(int argc, char **argv)
 
     DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
 
-    //TODO (bewo): write reasonable example demo
-
-    PopulationSettings populationSettings;
-    populationSettings.setMaxChromosomes(50);
-
     ContinousMultiValueBuilderSettings<int, double> builderSettings(evaluator, 10, 130, 0, true, 20, 5);
 
     ContinousMultiValueChromosomeFactory<int,double> chromosomeFactory(builderSettings);
@@ -132,13 +124,11 @@ int main(int argc, char **argv)
 
     ReplaceWorstOperation<double> replacementOperation(replacementSettings);
 
-    SingleThreadedFitnessProcessingStrategy<double> fitnessProcessingStrategy;
+    MaxGenerationCriterion<double> stoppingCriterion(100000);
 
-    MaxGenerationCriterion<double> stoppingCriterion(10000);
-
-    SteadyStateAlgorithm<double> algorithm(populationSettings, chromosomeFactory,
+    SteadyStateAlgorithm<double> algorithm(
             stoppingCriterion, selectionOperation, couplingOperation, crossoverOperation, replacementOperation,
-            mutationOperation, fitnessProcessingStrategy);
+            mutationOperation, chromosomeFactory);
 
     algorithm.solve();
 

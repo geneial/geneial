@@ -31,7 +31,7 @@ public:
     }
 
     virtual void updateCriteriaReached(BaseManager<FITNESS_TYPE> &manager,
-            const BaseStoppingCriterion<FITNESS_TYPE> * const criteria)
+            const BaseStoppingCriterion<FITNESS_TYPE>& criteria)
     {
     }
 

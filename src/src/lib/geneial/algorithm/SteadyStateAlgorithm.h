@@ -12,26 +12,23 @@ class SteadyStateAlgorithm: public BaseGeneticAlgorithm<FITNESS_TYPE>
 {
 public:
 
-    SteadyStateAlgorithm(const PopulationSettings &populationSettings,
-            BaseChromosomeFactory<FITNESS_TYPE> &chromosomeFactory,
-            stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE> &stoppingCriterion,
+    SteadyStateAlgorithm(stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE> &stoppingCriterion,
             selection::BaseSelectionOperation<FITNESS_TYPE> &selectionOperation,
             coupling::BaseCouplingOperation<FITNESS_TYPE> &couplingOperation,
             crossover::BaseCrossoverOperation<FITNESS_TYPE> &crossoverOperation,
             replacement::BaseReplacementOperation<FITNESS_TYPE> &replacementOperation,
             mutation::BaseMutationOperation<FITNESS_TYPE> &mutationOperation,
-            BaseFitnessProcessingStrategy<FITNESS_TYPE> &fitnessProcessingStrategy) :
-            BaseGeneticAlgorithm<FITNESS_TYPE>(populationSettings, chromosomeFactory, stoppingCriterion,
-                    selectionOperation, couplingOperation, crossoverOperation, replacementOperation, mutationOperation,
-                    fitnessProcessingStrategy)
+            BaseChromosomeFactory<FITNESS_TYPE> &chromosomeFactory) :
+            BaseGeneticAlgorithm<FITNESS_TYPE>(stoppingCriterion, selectionOperation, couplingOperation,
+                    crossoverOperation, replacementOperation, mutationOperation, chromosomeFactory)
     {
     }
+
     virtual void solve() override;
 
     virtual ~SteadyStateAlgorithm()
     {
     }
-    ;
 };
 
 }

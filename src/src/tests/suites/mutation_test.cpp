@@ -44,12 +44,9 @@ BOOST_AUTO_TEST_CASE( UNIFORM_TEST__basicMutation )
      */
 
     MockDoubleFitnessEvaluator::ptr evaluator(new MockDoubleFitnessEvaluator());
-    PopulationSettings populationSettings(50);
     ContinousMultiValueBuilderSettings<int, double> builderSettings (evaluator, 10, 130, 0, true, 20, 5);
     ContinousMultiValueChromosomeFactory<int, double> chromosomeFactory(builderSettings);
-
-    SingleThreadedFitnessProcessingStrategy<double> fitnessStrategy;
-    BaseManager<double> manager(populationSettings, chromosomeFactory, fitnessStrategy);
+    BaseManager<double> manager(chromosomeFactory);
 
     BOOST_TEST_MESSAGE("Checking Mutation at 100% probability");
     for (double i = 0; i <= 1; i = i + 0.1)
@@ -115,13 +112,10 @@ BOOST_AUTO_TEST_CASE( UNIFORM_TEST__Mutation_probability )
      */
 
     MockDoubleFitnessEvaluator::ptr evaluator(new MockDoubleFitnessEvaluator());
-    PopulationSettings populationSettings(50);
 
     ContinousMultiValueBuilderSettings<int, double> builderSettings(evaluator, 10, 130, 0, true, 20, 5);
     ContinousMultiValueChromosomeFactory<int, double> chromosomeFactory(builderSettings);
-
-    SingleThreadedFitnessProcessingStrategy<double> fitnessStrategy;
-    BaseManager<double> manager(populationSettings, chromosomeFactory, fitnessStrategy);
+    BaseManager<double> manager(chromosomeFactory);
 
     //TODO (bewo): Constantify magic numbers...
     for (double probability = 0.0; probability <= 1.0; probability = probability + 0.1)
@@ -215,11 +209,9 @@ BOOST_AUTO_TEST_CASE ( UNIFORM_TEST__points_of_mutation )
      */
 
     MockDoubleFitnessEvaluator::ptr evaluator(new MockDoubleFitnessEvaluator());
-    PopulationSettings populationSettings(50);
     ContinousMultiValueBuilderSettings<int, double> builderSettings (evaluator, 100, 130, 0, true, 20, 5);
     ContinousMultiValueChromosomeFactory<int, double> chromosomeFactory (builderSettings);
-    SingleThreadedFitnessProcessingStrategy<double> fitnessStrategy;
-    BaseManager<double> manager(populationSettings, chromosomeFactory, fitnessStrategy);
+    BaseManager<double> manager(chromosomeFactory);
 
     for (unsigned int pointsOfMutation = 0; pointsOfMutation <= 102; pointsOfMutation++)
     {

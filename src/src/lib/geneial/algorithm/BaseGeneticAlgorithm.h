@@ -51,21 +51,26 @@ protected:
     mutation::BaseMutationOperation<FITNESS_TYPE> &_mutationOperation;
 
 public:
-    BaseGeneticAlgorithm(const PopulationSettings &populationSettings,
-            BaseChromosomeFactory<FITNESS_TYPE> &chromosomeFactory,
+
+    BaseGeneticAlgorithm(
             stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE> &stoppingCriterion,
             selection::BaseSelectionOperation<FITNESS_TYPE> &selectionOperation,
             coupling::BaseCouplingOperation<FITNESS_TYPE> &couplingOperation,
             crossover::BaseCrossoverOperation<FITNESS_TYPE> &crossoverOperation,
             replacement::BaseReplacementOperation<FITNESS_TYPE> &replacementOperation,
             mutation::BaseMutationOperation<FITNESS_TYPE> &mutationOperation,
-            BaseFitnessProcessingStrategy<FITNESS_TYPE> &fitnessProcessingStrategy) :
-            _manager(populationSettings, chromosomeFactory, fitnessProcessingStrategy), _wasSolved(false), _wasStarted(
-                    false), _stoppingCriterion(stoppingCriterion), _selectionOperation(selectionOperation), _couplingOperation(
-                    couplingOperation), _crossoverOperation(crossoverOperation), _replacementOperation(
-                    replacementOperation), _mutationOperation(mutationOperation)
+            BaseChromosomeFactory<FITNESS_TYPE> &chromosomeFactory):
+
+            _manager(chromosomeFactory),
+            _wasSolved(false),
+            _wasStarted(false),
+            _stoppingCriterion(stoppingCriterion),
+            _selectionOperation(selectionOperation),
+            _couplingOperation(couplingOperation),
+            _crossoverOperation(crossoverOperation),
+            _replacementOperation(replacementOperation),
+            _mutationOperation(mutationOperation)
     {
-        _manager.getPopulation().setProcessingStrategy(fitnessProcessingStrategy);
     }
 
     virtual ~BaseGeneticAlgorithm()
@@ -119,6 +124,16 @@ public:
     inline virtual bool hasBeenStarted() const
     {
         return _wasStarted;
+    }
+
+    inline virtual PopulationSettings& getPopulationSettings()
+    {
+        return _manager.getPopulationSettings();
+    }
+
+    inline void setPopulationSettings(PopulationSettings& populationSettings)
+    {
+        _manager.setPopulationSettings(populationSettings);
     }
 
     inline virtual bool wasCriteriaReached();

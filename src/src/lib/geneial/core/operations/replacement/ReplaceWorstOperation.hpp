@@ -39,7 +39,7 @@ unsigned int ReplaceWorstOperation<FITNESS_TYPE>::getAmountToReplace(const Popul
 template<typename FITNESS_TYPE>
 void ReplaceWorstOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &population,
         const typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
-        const typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
+        typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
         BaseManager<FITNESS_TYPE> &manager)
 {
 

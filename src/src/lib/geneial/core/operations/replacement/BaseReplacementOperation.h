@@ -33,10 +33,10 @@ public:
 
     virtual void doReplace(Population<FITNESS_TYPE> &population,
             const typename selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
-            const typename coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
+            typename coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
             BaseManager<FITNESS_TYPE> &manager) = 0;
 
-    BaseReplacementSettings& getSettings() const
+    const BaseReplacementSettings& getSettings() const
     {
         return _settings;
     }

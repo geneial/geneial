@@ -8,15 +8,15 @@
 #include <set>
 #include <utility>
 
+
 namespace geneial
 {
 namespace population
 {
 
 template<typename FITNESS_TYPE>
-Population<FITNESS_TYPE>::Population(BaseFitnessProcessingStrategy<FITNESS_TYPE>& processingStrategy) :
-        _age(0),
-        _processingStrategy(processingStrategy)
+Population<FITNESS_TYPE>::Population() :
+        _age(0)
 {
 }
 
@@ -199,8 +199,6 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
             it = container.erase(it);
         }
     }
-
-    _processingStrategy->ensureHasFitness(container);
 
     unsigned int i = 0;
     for (typename chromosome_container::const_iterator it = container.begin(); it != container.end(); ++it)

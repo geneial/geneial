@@ -22,12 +22,10 @@ class BaseManager
 {
 
 public:
-    BaseManager<FITNESS_TYPE>(const PopulationSettings &populationSettings,
-            BaseChromosomeFactory<FITNESS_TYPE> &chromosomeFactory,
-            BaseFitnessProcessingStrategy<FITNESS_TYPE> &fitnessProcessingStrategy
-            ) :
-            _population(fitnessProcessingStrategy), _chromosomeFactory(chromosomeFactory), _populationSettings(populationSettings)
+    BaseManager<FITNESS_TYPE>(BaseChromosomeFactory<FITNESS_TYPE> &chromosomeFactory) :
+        _population(),_chromosomeFactory(chromosomeFactory), _populationSettings()
     {
+
     }
 
     void replacePopulation(typename Population<FITNESS_TYPE>::chromosome_container replacementPopulation);
@@ -55,22 +53,22 @@ public:
         return const_cast<Population<FITNESS_TYPE>&>(_population);
     }
 
-    const BaseChromosomeFactory<FITNESS_TYPE>*& getChromosomeFactory() const
+    BaseChromosomeFactory<FITNESS_TYPE>& getChromosomeFactory() const
     {
         return _chromosomeFactory;
     }
 
-    void setChromosomeFactory(const BaseChromosomeFactory<FITNESS_TYPE>*& chromosomeFactory)
+    void setChromosomeFactory(BaseChromosomeFactory<FITNESS_TYPE>*& chromosomeFactory)
     {
         _chromosomeFactory = chromosomeFactory;
     }
 
-    const PopulationSettings*& getPopulationSettings() const
+    PopulationSettings& getPopulationSettings()
     {
         return _populationSettings;
     }
 
-    void setPopulationSettings(const PopulationSettings*& populationSettings)
+    void setPopulationSettings(PopulationSettings& populationSettings)
     {
         _populationSettings = populationSettings;
     }
@@ -79,7 +77,7 @@ private:
 
     BaseChromosomeFactory<FITNESS_TYPE> &_chromosomeFactory;
 
-    const PopulationSettings &_populationSettings;
+    PopulationSettings _populationSettings;
 
 };
 

@@ -10,6 +10,7 @@ namespace selection
 {
 
 using namespace geneial::population::management;
+using namespace geneial::population;
 
 /**
  * Select a number of parents based on a certain criteria.
