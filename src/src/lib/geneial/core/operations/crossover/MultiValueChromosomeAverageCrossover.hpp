@@ -38,8 +38,6 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
     value_container &mommy_container = mvc_mommy->getContainer();
     value_container &child_container = child_candidate->getContainer();
 
-    child_container.clear();
-
     assert(daddy_container.size() == mommy_container.size());
 
     typename value_container::iterator mommy_it = mommy_container.begin();

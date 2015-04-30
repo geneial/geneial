@@ -75,7 +75,6 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
         //getting values
         value_container &mutantChromosomeContainer = mvcMutant->getContainer();
         value_container &result_container = mutatedChromosome->getContainer();
-        result_container.clear();
 
         //first target point of mutation
         if (this->_settings.getAmountOfPointsOfMutation() > 0)
