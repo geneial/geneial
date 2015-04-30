@@ -13,21 +13,23 @@ namespace choosing
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename Population<FITNESS_TYPE>::chromosome_container ChooseRandom<VALUE_TYPE, FITNESS_TYPE>::doChoose(
-        typename Population<FITNESS_TYPE>::chromosome_container chromosomeInputSet) const
+        const typename Population<FITNESS_TYPE>::chromosome_container &chromosomeInputSet) const
 {
 
-    typename Population<FITNESS_TYPE>::chromosome_container::iterator chromosomeInputContainer_it;
     typename Population<FITNESS_TYPE>::chromosome_container chromosomeOutputSet;
 
-    for (chromosomeInputContainer_it = chromosomeInputSet.begin();
-            chromosomeInputContainer_it != chromosomeInputSet.end(); ++chromosomeInputContainer_it)
+    //Reserve upper limit i.e. the input size, so we avoid resizing later.
+    chromosomeOutputSet.reserve(chromosomeInputSet.size());
+
+    //Iterate over all chromosomes in set and decide whether to keep it or not.
+    for (auto chromosome : chromosomeInputSet)
     {
-        //Uses Mutation Settings
         if (Random::decision(this->getSettings().getPropability()))
         {
-            chromosomeOutputSet.push_back(*chromosomeInputContainer_it);
+            chromosomeOutputSet.push_back(chromosome);
         }
     }
+
     return chromosomeOutputSet;
 }
 

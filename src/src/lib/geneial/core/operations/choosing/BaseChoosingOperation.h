@@ -24,7 +24,7 @@ public:
     }
 
     virtual typename Population<FITNESS_TYPE>::chromosome_container doChoose(
-            typename Population<FITNESS_TYPE>::chromosome_container chromosomeInputSet) const = 0;
+            const typename Population<FITNESS_TYPE>::chromosome_container &chromosomeInputSet) const = 0;
 };
 
 } /* namespace choosing */
