@@ -157,9 +157,24 @@ The demos are also compiled by either running the all-encompassing `make` or the
 
 ##99.TODOs
 * http://choorucode.com/2015/01/08/how-to-use-cpplint-in-eclipse-cdt/
+
+* check for vector reserves
+* [c11] use auto to improve readability
+* [c11] use constexpr
+* [c11] use foreach
+* [c11] use shared ptr instead of boosts
+* [consistency] check for ++i instead of prefered i++
+* use references where it makes sense
+* [c11] use override whenever makes sense
+* write documentation
+
+* remove all but geneial namespace
 * scaling
 * multithreading 
-* unit tests for like everything except random :)
 * write demo programs
 * write code documentation
 * profit / world domination
+
+
+
+
