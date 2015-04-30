@@ -21,7 +21,7 @@ virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set Smoo
             it != result.end(); ++it)
     {
         Smoothing::restoreSmoothness<VALUE_TYPE, FITNESS_TYPE>(
-                boost::dynamic_pointer_cast < MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> > (*it),
+                std::dynamic_pointer_cast < MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> > (*it),
                 _builderSettings.getEps(), _builderSettings.getRandomMin(), _builderSettings.getRandomMax());
 
     }

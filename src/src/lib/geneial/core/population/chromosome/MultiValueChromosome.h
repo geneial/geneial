@@ -1,12 +1,12 @@
 #pragma once
 
 #include <geneial/core/population/chromosome/BaseChromosome.h>
-#include "boost/shared_ptr.hpp"
 
 #include <cassert>
 #include <vector>
 #include <algorithm>
 #include <numeric>
+#include <memory>
 
 namespace geneial
 {
@@ -26,8 +26,8 @@ public:
     typedef typename value_container::const_iterator const_it;
     typedef typename value_container::iterator it;
 
-    typedef typename boost::shared_ptr<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> > ptr;
-    typedef typename boost::shared_ptr<const MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> > const_ptr;
+    typedef typename std::shared_ptr<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> > ptr;
+    typedef typename std::shared_ptr<const MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> > const_ptr;
 
     MultiValueChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) :
             BaseChromosome<FITNESS_TYPE>(fitnessEvaluator), _container()

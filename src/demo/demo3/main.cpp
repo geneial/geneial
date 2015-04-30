@@ -3,8 +3,6 @@
 #include <stdexcept>
 #include <cassert>
 
-#include <boost/shared_ptr.hpp>
-
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
 
 #include <geneial/core/fitness/Fitness.h>
@@ -177,7 +175,7 @@ public:
     Fitness<double>::ptr evaluate(const BaseChromosome<double>::ptr chromosome) const
     {
         double fitness = 1;
-        MultiValueChromosome<int, double>::ptr mvc = boost::dynamic_pointer_cast<MultiValueChromosome<int, double> >(
+        MultiValueChromosome<int, double>::ptr mvc = std::dynamic_pointer_cast<MultiValueChromosome<int, double> >(
                 chromosome);
         if (mvc)
         {
@@ -190,14 +188,14 @@ public:
                 fitness += std::abs(*it - myTargetFunc1(i));
                 i++;
             }
-            return boost::shared_ptr<Fitness<double> >(new Fitness<double>(1 / fitness));
+            return std::shared_ptr<Fitness<double> >(new Fitness<double>(1 / fitness));
         }
         else
         {
             throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
         }
 
-        boost::shared_ptr<Fitness<double> > ptr(new Fitness<double>(0));
+        std::shared_ptr<Fitness<double> > ptr(new Fitness<double>(0));
         return ptr;
     }
 };
@@ -228,7 +226,7 @@ public:
     ;
     void updateNewBestChromosome(BaseManager<double> &manager)
     {
-        MultiValueChromosome<int, double>::ptr mvc = boost::dynamic_pointer_cast<MultiValueChromosome<int, double> >(
+        MultiValueChromosome<int, double>::ptr mvc = std::dynamic_pointer_cast<MultiValueChromosome<int, double> >(
                 manager.getHighestFitnessChromosome());
         printClearScreen();
         plot(mvc);
@@ -300,9 +298,9 @@ int main(int argc, char **argv)
 
     CombinedCriterion<double> combinedCriterion;
     combinedCriterion.add(CombinedCriterion<double>::AND,
-            boost::shared_ptr<BaseStoppingCriterion<double> >(new MaxGenerationCriterion<double>(100000)));
+            std::shared_ptr<BaseStoppingCriterion<double> >(new MaxGenerationCriterion<double>(100000)));
     combinedCriterion.add(CombinedCriterion<double>::OR,
-            boost::shared_ptr<BaseStoppingCriterion<double> >(new FixPointCriterion<double>(0, 1000, 1000)));
+            std::shared_ptr<BaseStoppingCriterion<double> >(new FixPointCriterion<double>(0, 1000, 1000)));
 
     DemoObserver printObserver;
 
@@ -315,7 +313,7 @@ int main(int argc, char **argv)
     algorithm.solve();
 
     BaseChromosome<double>::ptr chromosome = algorithm.getHighestFitnessChromosome();
-    MultiValueChromosome<int, double>::ptr mvc = boost::dynamic_pointer_cast<MultiValueChromosome<int, double> >(
+    MultiValueChromosome<int, double>::ptr mvc = std::dynamic_pointer_cast<MultiValueChromosome<int, double> >(
             chromosome);
     printClearScreen();
     plot(mvc);

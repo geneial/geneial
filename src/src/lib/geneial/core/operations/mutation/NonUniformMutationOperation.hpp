@@ -64,12 +64,12 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
     {
         mutationCounter = 0;
         //casting mutant as MVC
-        mvc_ptr _mvcMutant(boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
+        mvc_ptr _mvcMutant(std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
                 chosenChromosome));
 
         assert(_mvcMutant);
 
-        mvc_ptr _mutatedChromosome = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
+        mvc_ptr _mutatedChromosome = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
                 this->_builderFactory.createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
         assert(_mutatedChromosome);
 

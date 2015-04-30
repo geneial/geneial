@@ -53,28 +53,28 @@ inline void BaseGeneticAlgorithm<FITNESS_TYPE>::notifyObservers(typename Algorit
 }
 
 template<typename FITNESS_TYPE>
-inline void  BaseGeneticAlgorithm<FITNESS_TYPE>::registerObserver(AlgorithmObserver<FITNESS_TYPE>* observer)
+inline void  BaseGeneticAlgorithm<FITNESS_TYPE>::registerObserver(std::shared_ptr<AlgorithmObserver<FITNESS_TYPE>> observer)
 {
     typedef std::set<typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent> setType;
     const setType events = observer->getSubscribedEvents();
-    for (typename setType::const_iterator it = events.begin(); it != events.end(); ++it)
+    for (auto it :events)
     {
 
-        typename observers_map::iterator lb = _observers.lower_bound(*it);
+        typename observers_map::iterator lb = _observers.lower_bound(it);
 
-        if (lb != _observers.end() && !(_observers.key_comp()(*it, lb->first)))
+        if (lb != _observers.end() && !(_observers.key_comp()(it, lb->first)))
         {
             // key already exists
             // update lb->second if you care to
-            lb->second.insert(lb->second.begin(), observer);
+            lb->second.push_back(observer);
         }
         else
         {
             // the key does not exist in the map
             // add it to the map
-            typename std::list<AlgorithmObserver<FITNESS_TYPE>*> list;
-            list.insert(list.begin(), observer);
-            _observers.insert(lb, typename observers_map::value_type(*it, list));    // Use lb as a hint to insert,
+            typename std::vector<std::shared_ptr<AlgorithmObserver<FITNESS_TYPE>>> list;
+            list.push_back(observer);
+            _observers.insert(lb, typename observers_map::value_type(it, list));    // Use lb as a hint to insert,
         }
 
     }

@@ -11,6 +11,7 @@
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/observer/AlgorithmObserver.h>
 
+#include <memory>
 #include <map>
 #include <list>
 
@@ -29,7 +30,7 @@ class BaseGeneticAlgorithm
 {
 protected:
     typedef typename std::map<typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent,
-            std::list<AlgorithmObserver<FITNESS_TYPE>*> > observers_map;
+            std::vector<std::shared_ptr<AlgorithmObserver<FITNESS_TYPE>>>> observers_map;
 
     observers_map _observers;
 
@@ -140,7 +141,7 @@ public:
 
     inline virtual void notifyObservers(typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent event);
 
-    inline virtual void registerObserver(AlgorithmObserver<FITNESS_TYPE>* observer);
+    inline virtual void registerObserver(std::shared_ptr<AlgorithmObserver<FITNESS_TYPE>> observer);
 };
 
 } /* namespace algorithm */

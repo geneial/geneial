@@ -24,13 +24,13 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 
     typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set resultset;
 
-    mvc_ptr mvc_mommy = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(mommy);
+    mvc_ptr mvc_mommy = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(mommy);
     assert(mvc_mommy);
 
-    mvc_ptr mvc_daddy = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(daddy);
+    mvc_ptr mvc_daddy = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(daddy);
     assert(mvc_daddy);
 
-    mvc_ptr child_candidate = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
+    mvc_ptr child_candidate = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
             this->getBuilderFactory().createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
     assert(child_candidate);
 

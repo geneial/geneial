@@ -1,5 +1,3 @@
-#include "boost/shared_ptr.hpp"
-
 #include <geneial/algorithm/SteadyStateAlgorithm.h>
 #include <geneial/algorithm/criteria/MaxGenerationCriterion.h>
 #include <geneial/algorithm/criteria/NegationDecorator.h>
@@ -12,8 +10,8 @@
 #include <geneial/core/population/builder/ContinousMultiValueBuilderSettings.h>
 #include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.h>
 
-//#include <geneial/core/operations/selection/FitnessProportionalSelection.h>
-//#include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
+#include <geneial/core/operations/selection/FitnessProportionalSelection.h>
+#include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
 
 #include <geneial/core/operations/selection/SelectionSettings.h>
 #include <geneial/core/operations/selection/RouletteWheelSelection.h>
@@ -41,6 +39,7 @@
 
 #include <stdexcept>
 #include <cassert>
+#include <memory>
 
 #include <unistd.h>
 
@@ -65,22 +64,22 @@ public:
     DemoChromosomeEvaluator()
     {
     }
-    ;
+
     Fitness<double>::ptr evaluate(const BaseChromosome<double>::ptr chromosome) const
     {
-        MultiValueChromosome<int, double>::ptr mvc = boost::dynamic_pointer_cast<MultiValueChromosome<int, double> >(
+        MultiValueChromosome<int, double>::ptr mvc = std::dynamic_pointer_cast<MultiValueChromosome<int, double>>(
                 chromosome);
         if (mvc)
         {
             //Let the fitness be the sum of all values
-            return boost::shared_ptr<Fitness<double> >(new Fitness<double>(mvc->getSum()));
+            return std::shared_ptr<Fitness<double>>(new Fitness<double>(mvc->getSum()));
         }
         else
         {
             throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
         }
 
-        boost::shared_ptr<Fitness<double> > ptr(new Fitness<double>(1));
+        std::shared_ptr<Fitness<double>> ptr(new Fitness<double>(1));
         return ptr;
     }
 };
@@ -108,9 +107,9 @@ int main(int argc, char **argv)
     NonUniformMutationOperation<int, double> mutationOperation(1000, 0.2,
             mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
-    SelectionSettings selectionSettings(10);
+    FitnessProportionalSelectionSettings selectionSettings(5,5);
 
-    RouletteWheelSelection<double> selectionOperation(selectionSettings);
+    FitnessProportionalSelection<double> selectionOperation(selectionSettings);
 
     CouplingSettings couplingSettings(20);
 

@@ -5,8 +5,8 @@
 #include <geneial/core/fitness/FitnessEvaluator.h>
 
 #include <iostream>
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
+#include <memory>
+#include <cassert>
 
 namespace geneial
 {
@@ -21,7 +21,7 @@ using namespace geneial::utility;
  * @brief Abstract superclass for any type of chromosome
  */
 template<typename FITNESS_TYPE>
-class BaseChromosome: public Printable, public boost::enable_shared_from_this<BaseChromosome<FITNESS_TYPE> >
+class BaseChromosome: public Printable, public std::enable_shared_from_this<BaseChromosome<FITNESS_TYPE> >
 {
 
 public:
@@ -30,8 +30,8 @@ public:
     typedef unsigned int chromosome_age;
     typedef std::size_t chromsome_hash;
 
-    typedef typename boost::shared_ptr<BaseChromosome<FITNESS_TYPE> > ptr;
-    typedef typename boost::shared_ptr<const BaseChromosome<FITNESS_TYPE> > const_ptr;
+    typedef typename std::shared_ptr<BaseChromosome<FITNESS_TYPE> > ptr;
+    typedef typename std::shared_ptr<const BaseChromosome<FITNESS_TYPE> > const_ptr;
 
     ptr getPtr() //TODO (bewo) constness correct?
     {

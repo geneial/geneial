@@ -2,7 +2,7 @@
 
 #include <geneial/utility/Printable.h>
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace geneial
 {
@@ -17,9 +17,9 @@ private:
 
 public:
     //TODO (CODECONSISTENCY) (bewo): boost sharedptr shared from this?
-    typedef boost::shared_ptr<Fitness<FITNESS_TYPE> > ptr;
+    typedef std::shared_ptr<Fitness<FITNESS_TYPE> > ptr;
 
-    typedef boost::shared_ptr<const Fitness<FITNESS_TYPE> > const_ptr;
+    typedef std::shared_ptr<const Fitness<FITNESS_TYPE> > const_ptr;
 
     Fitness()
     {

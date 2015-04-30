@@ -25,10 +25,10 @@ inline typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set Multi
 
     typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set resultset;
 
-    const mvc_ptr mvc_mommy = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(mommy);
+    const mvc_ptr mvc_mommy = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(mommy);
     assert(mvc_mommy);
 
-    const mvc_ptr mvc_daddy = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(daddy);
+    const mvc_ptr mvc_daddy = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(daddy);
     assert(mvc_daddy);
 
     //Determine the amount of chromosomes to generate

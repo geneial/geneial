@@ -36,12 +36,12 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
             choosenChromosomeContainer_it != choosenChromosomeContainer.end(); ++choosenChromosomeContainer_it)
     {
         //casting mutant to MVC
-        mvc_ptr mvcMutant = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
+        mvc_ptr mvcMutant = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
                 *choosenChromosomeContainer_it);
         assert(mvcMutant);
 
         //creating a new MVC (to keep things reversible)
-        mvc_ptr mutatedChromosome = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
+        mvc_ptr mutatedChromosome = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
                 this->_builderFactory.createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
         assert(mutatedChromosome);
 

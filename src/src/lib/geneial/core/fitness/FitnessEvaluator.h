@@ -1,7 +1,8 @@
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
+
+#include <memory>
 
 //Forward Declaration for BaseChromosome (due to circular inclusion)
 namespace geneial
@@ -25,9 +26,9 @@ template<typename FITNESS_TYPE>
 class FitnessEvaluator
 {
 public:
-    typedef boost::shared_ptr<FitnessEvaluator<FITNESS_TYPE> > ptr;
+    typedef std::shared_ptr<FitnessEvaluator<FITNESS_TYPE> > ptr;
 
-    typedef boost::shared_ptr<const FitnessEvaluator<FITNESS_TYPE> > const_ptr;
+    typedef std::shared_ptr<const FitnessEvaluator<FITNESS_TYPE> > const_ptr;
 
     //TODO (CODECONSISTENCY) (bewo): shared from this?
 

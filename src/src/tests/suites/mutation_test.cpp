@@ -1,7 +1,6 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE operations/mutation
 
-#include "boost/shared_ptr.hpp"
 #include <boost/test/unit_test.hpp>
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
@@ -21,6 +20,8 @@
 #include <geneial/core/fitness/SingleThreadedFitnessProcessingStrategy.h>
 
 #include "mocks/MockFitnessEvaluator.h"
+
+#include <memory>
 
 using namespace geneial;
 using namespace geneial::population::management;
@@ -238,13 +239,13 @@ BOOST_AUTO_TEST_CASE ( UNIFORM_TEST__points_of_mutation )
         resultSet_Uniform = mutationOperation_Uniform.doMutate(inputSet, manager);
 
         //getting Chromosome from resultSet:
-        MultiValueChromosome<int, double>::ptr mvcMutant_NonUniform = boost::dynamic_pointer_cast<
+        MultiValueChromosome<int, double>::ptr mvcMutant_NonUniform = std::dynamic_pointer_cast<
                 MultiValueChromosome<int, double> >(*resultSet_NonUniform.begin());
 
-        MultiValueChromosome<int, double>::ptr mvcMutant_Uniform = boost::dynamic_pointer_cast<
+        MultiValueChromosome<int, double>::ptr mvcMutant_Uniform = std::dynamic_pointer_cast<
                 MultiValueChromosome<int, double> >(*resultSet_Uniform.begin());
 
-        MultiValueChromosome<int, double>::ptr mvcOriginal = boost::dynamic_pointer_cast<
+        MultiValueChromosome<int, double>::ptr mvcOriginal = std::dynamic_pointer_cast<
                 MultiValueChromosome<int, double> >(*inputSet.begin());
 
         //getting ValueContainer from Chromosome:

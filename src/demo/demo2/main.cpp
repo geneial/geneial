@@ -1,10 +1,3 @@
-#include <limits>
-#include <stdio.h>
-#include <stdexcept>
-#include <cassert>
-
-#include <boost/shared_ptr.hpp>
-
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
 
 #include <geneial/core/fitness/Fitness.h>
@@ -48,6 +41,11 @@
 
 #include <geneial/config.h>
 
+#include <limits>
+#include <stdio.h>
+#include <stdexcept>
+#include <cassert>
+
 using namespace geneial;
 
 using namespace geneial::algorithm;
@@ -66,20 +64,20 @@ using namespace geneial::operation::choosing;
 const char targetFigure[] =
 //0123456789|123456789|123456789|123456789
 
-                "              OOOOOOOOOOO               "//01
-                "          OOOOOOOOOOOOOOOOOOO           "//02
-                "       OOOOOO  OOOOOOOOO  OOOOOO        "//03
-                "     OOOOOO      OOOOO      OOOOOO      "//04
-                "   OOOOOOOO  #   OOOOO  #   OOOOOOOO    "//05
-                "  OOOOOOOOOO    OOOOOOO    OOOOOOOOOO   "//06
-                " OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO  "//07
-                " OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO  "//08
-                " OOOO  OOOOOOOOOOOOOOOOOOOOOOOOO  OOOO  "//09
-                "  OOOO  OOOOOOOOOOOOOOOOOOOOOOO  OOOO   "//10
-                "   OOOO   OOOOOOOOOOOOOOOOOOOO  OOOO    "//11
-                "     OOOOO   OOOOOOOOOOOOOOO   OOOO     "//12
-                "       OOOOOO   OOOOOOOOO   OOOOOO      "//13
-                "         OOOOOO         OOOOOO          "//14
+                "              OOOOOOOOOOO               " //01
+                "          OOOOOOOOOOOOOOOOOOO           " //02
+                "       OOOOOO  OOOOOOOOO  OOOOOO        " //03
+                "     OOOOOO      OOOOO      OOOOOO      " //04
+                "   OOOOOOOO  #   OOOOO  #   OOOOOOOO    " //05
+                "  OOOOOOOOOO    OOOOOOO    OOOOOOOOOO   " //06
+                " OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO  " //07
+                " OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO  " //08
+                " OOOO  OOOOOOOOOOOOOOOOOOOOOOOOO  OOOO  " //09
+                "  OOOO  OOOOOOOOOOOOOOOOOOOOOOO  OOOO   " //10
+                "   OOOO   OOOOOOOOOOOOOOOOOOOO  OOOO    " //11
+                "     OOOOO   OOOOOOOOOOOOOOO   OOOO     " //12
+                "       OOOOOO   OOOOOOOOO   OOOOOO      " //13
+                "         OOOOOO         OOOOOO          " //14
                 "              OOOOOOOOOOOO              ";//15
 const int lineBreakAfter = 40;
 const int charsPerFigure = sizeof(targetFigure) - 1;
@@ -92,7 +90,7 @@ public:
     ;
     Fitness<double>::ptr evaluate(const BaseChromosome<double>::ptr chromosome) const
     {
-        MultiValueChromosome<int, double>::ptr mvc = boost::dynamic_pointer_cast<MultiValueChromosome<int, double> >(
+        MultiValueChromosome<int, double>::ptr mvc = std::dynamic_pointer_cast<MultiValueChromosome<int, double> >(
                 chromosome);
         if (mvc)
         {
@@ -100,20 +98,20 @@ public:
             assert(charsPerFigure == mvc->getContainer().size());
             for (int i = 0; i < charsPerFigure; i++)
             {
-                if (targetFigure[i] == (char) mvc->getContainer()[i])
+                if (targetFigure[i] == static_cast<char>(mvc->getContainer()[i]))
                 {
                     ++fitness;
                 }
             }
             //Let the fitness be the sum of all values
-            return boost::shared_ptr<Fitness<double> >(new Fitness<double>(fitness));
+            return std::shared_ptr<Fitness<double> >(new Fitness<double>(fitness));
         }
         else
         {
             throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
         }
 
-        boost::shared_ptr<Fitness<double> > ptr(new Fitness<double>(0));
+        std::shared_ptr<Fitness<double> > ptr(new Fitness<double>(0));
         return ptr;
     }
 };
@@ -230,10 +228,10 @@ int main(int argc, char **argv)
 
     CombinedCriterion<double> combinedCriterion;
     combinedCriterion.add(CombinedCriterion<double>::OR,
-            boost::shared_ptr<BaseStoppingCriterion<double> >(new MaxGenerationCriterion<double>(100000)));
+            std::shared_ptr<BaseStoppingCriterion<double> >(new MaxGenerationCriterion<double>(100000)));
 
     combinedCriterion.add(CombinedCriterion<double>::XOR,
-            boost::shared_ptr<BaseStoppingCriterion<double> >(new FitnessValueReachedCriterion<double>(600)));
+            std::shared_ptr<BaseStoppingCriterion<double> >(new FitnessValueReachedCriterion<double>(600)));
 
     DemoObserver printObserver;
 
