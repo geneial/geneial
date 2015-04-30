@@ -34,7 +34,7 @@ namespace mutation
  *  */
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate(
-        typename Population<FITNESS_TYPE>::chromosome_container _chromosomeInputContainer,
+        const typename Population<FITNESS_TYPE>::chromosome_container &_chromosomeInputContainer,
         BaseManager<FITNESS_TYPE> &manager)
 {
 
@@ -50,24 +50,23 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
     double split = 0;
     double value_choice = 0;
 
+
     choosenChromosomeContainer = this->getChoosingOperation().doChoose(_chromosomeInputContainer);
 
     //calculates difference: _notChoosenChromosomeContainer = _choosenChromosomeContainer - _chromosomeInputContainer
+    //TODO(bewo): Think about cbegin/cend here...
     std::set_difference(_chromosomeInputContainer.begin(), _chromosomeInputContainer.end(),
             choosenChromosomeContainer.begin(), choosenChromosomeContainer.end(),
             std::inserter(notChoosenChromosomeContainer, notChoosenChromosomeContainer.begin()));
 
-    typename Population<FITNESS_TYPE>::chromosome_container::iterator _choosenChromosomeContainer_it;
-
     //only mutate choosen chromosomes
-    for (_choosenChromosomeContainer_it = choosenChromosomeContainer.begin();
-            _choosenChromosomeContainer_it != choosenChromosomeContainer.end(); ++_choosenChromosomeContainer_it)
+    for (auto chosenChromosome : choosenChromosomeContainer)
     {
         mutationCounter = 0;
-
         //casting mutant as MVC
-        mvc_ptr _mvcMutant = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
-                *_choosenChromosomeContainer_it);
+        mvc_ptr _mvcMutant(boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
+                chosenChromosome));
+
         assert(_mvcMutant);
 
         mvc_ptr _mutatedChromosome = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(

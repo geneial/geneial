@@ -15,7 +15,7 @@ namespace utility
 {
 
 //Assures we have positive mod every time. (because in cpp -6 % 5 = -1)
-inline int mymod(int k, int n)
+inline int mymod(int k, const int n)
 {
     return ((k %= n) < 0) ? k + n : k;
 }
@@ -37,6 +37,17 @@ inline int Random::generate(const int min, const int max)
         sign *= -(rand() % 2);
     }
     const int result = mymod(sign * rand(), (max - min + 1)) + min;
+    return result;
+}
+
+
+
+template<>
+inline unsigned int Random::generate(const unsigned int min, const unsigned int max)
+{
+    checkInitialized();
+    assert(min <= max);
+    const unsigned int result = mymod(rand(), (max - min + 1)) + min;
     return result;
 }
 
@@ -62,6 +73,8 @@ inline double Random::generate(const double min, const double max)
     const double random = min + (rand() / div);
     return random;
 }
+
+
 
 template<>
 inline double Random::generate()

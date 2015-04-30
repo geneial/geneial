@@ -5,6 +5,7 @@
 
 #include <cassert>
 #include <iostream>
+#include <algorithm>
 #include <set>
 #include <utility>
 
@@ -31,11 +32,9 @@ void Population<FITNESS_TYPE>::print(std::ostream& os) const
     os << "Population: Age (" << _age << "), #Chromosomes (" << _fitnessMap.size() << "):" << std::endl;
     os << "  Chromosomes" << std::endl;
 
-    //TODO (bewo) maybe use outstream iterator instead here.
-    for (typename fitness_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
-    {
-        os << *(chrom_it->second);
-    }
+    std::for_each (_fitnessMap.cbegin(), _fitnessMap.cend(), [&os](const typename Population<FITNESS_TYPE>::fitnessmap_value_type &c){
+        os << *(c.second);
+    });
 }
 
 /**
@@ -65,10 +64,12 @@ void Population<FITNESS_TYPE>::setAge(unsigned int age)
 template<typename FITNESS_TYPE>
 void Population<FITNESS_TYPE>::doAge()
 {
-    for (typename fitness_map::iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
-    {
-        chrom_it->second->doAge();
-    }
+    //For each Chromosome increment age
+    std::for_each (_hashMap.cbegin(), _hashMap.cend(), [](const typename Population<FITNESS_TYPE>::hashmap_value_type &c){
+        c.second->doAge();
+    });
+
+    //Age the population itself
     ++_age;
 }
 
@@ -84,10 +85,9 @@ template<typename FITNESS_TYPE>
 inline unsigned int Population<FITNESS_TYPE>::removeDuplicates(chromosome_container &toCheck)
 {
     unsigned int removed = 0;
-    typename chromosome_container::iterator it = toCheck.begin();
     std::set<typename BaseChromosome<FITNESS_TYPE>::chromsome_hash> tmpHashSet;
 
-    for (; it != toCheck.end();)
+    for (auto it = toCheck.begin(); it != toCheck.end();)
     {
         const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue = (*it)->getHash();
         //Check whether hash is already contained in the container, or in the population
@@ -110,17 +110,17 @@ template<typename FITNESS_TYPE>
 typename BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getOldestChromosome()
 {
     typename BaseChromosome<FITNESS_TYPE>::ptr oldest;
-    for (typename fitness_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
+    for (auto fmv : _fitnessMap)
     {
         if (!oldest)
         {
-            oldest = chrom_it->second;
+            oldest = fmv.second;
         }
         else
         {
-            if (oldest->getAge() < chrom_it->second->getAge())
+            if (oldest->getAge() < fmv.second->getAge())
             {
-                oldest = chrom_it->second;
+                oldest = fmv;
             }
         }
     }
@@ -131,17 +131,17 @@ template<typename FITNESS_TYPE>
 typename BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getYoungestChromosome()
 {
     typename BaseChromosome<FITNESS_TYPE>::ptr youngest;
-    for (typename fitness_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
+    for (auto fmv : _fitnessMap)
     {
         if (!youngest)
         {
-            youngest = chrom_it->second;
+            youngest = fmv.second;
         }
         else
         {
-            if (youngest->getAge() > chrom_it->second->getAge())
+            if (youngest->getAge() > fmv.second->getAge())
             {
-                youngest = chrom_it->second;
+                youngest = fmv.second;
             }
         }
     }
@@ -153,7 +153,6 @@ inline bool Population<FITNESS_TYPE>::insertChromosome(typename BaseChromosome<F
 {
     //Insert into hash map
     typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue = chromosome->getHash();
-
     if (!hashExists(hashValue))
     {
         _insertChromosome(chromosome, hashValue);
@@ -277,9 +276,9 @@ inline void Population<FITNESS_TYPE>::replacePopulation(chromosome_container &re
 template<typename FITNESS_TYPE>
 inline void Population<FITNESS_TYPE>::removeChromosomeContainer(const chromosome_container &container)
 {
-    for (typename chromosome_container::const_iterator it = container.begin(); it != container.end(); ++it)
+    for(auto chromosomomeToRemove: container)
     {
-        removeChromosome(*it);
+        removeChromosome(chromosomomeToRemove);
     }
 }
 

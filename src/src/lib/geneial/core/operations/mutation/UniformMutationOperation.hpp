@@ -33,7 +33,7 @@ namespace mutation
  **/
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate(
-        typename Population<FITNESS_TYPE>::chromosome_container _chromosomeInputContainer,
+        const typename Population<FITNESS_TYPE>::chromosome_container &_chromosomeInputContainer,
         BaseManager<FITNESS_TYPE> &manager)
 {
 

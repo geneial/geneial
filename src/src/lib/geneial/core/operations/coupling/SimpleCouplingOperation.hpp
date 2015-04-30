@@ -20,9 +20,11 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
     typedef typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set mating_container;
     typedef typename BaseChromosome<FITNESS_TYPE>::ptr chrom_ptr;
 
-    offspring_container offspring; //A small container for all the little children :-)
-
     unsigned int offspring_left = this.getSettings().getNumberOfOffspring();
+
+    offspring_container offspring; //A small container for all the little children :-)
+    offspring.reserve(offspring_left);
+
 
     assert(mating_pool.size() > 1);
     //iterate over mating candidates and create a pairwise mapping.
@@ -41,7 +43,7 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
      *  Parent2 \/ Child8
      *  Parent3 /
      */
-    for (typename mating_container::iterator it = mating_pool.begin(); offspring_left > 0;)
+    for (typename mating_container::const_iterator it = mating_pool.begin(); offspring_left > 0;)
     {
         //TODO (bewo) REFACTOR: research cyclic iterators to avoid all those ugly case distinctions
         chrom_ptr parent1 = *it;
@@ -59,24 +61,22 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
             it = mating_pool.begin();
         }
 
-        //TODO (bewo) BEAUTIFY: use copy+backinserter and min(vec.size(),offspring_left) ?!
-        children_container children1 = crossoverOperation.doCrossover(parent1, parent2);
+        auto backInserter = std::back_inserter(offspring);
+        const children_container children = crossoverOperation.doCrossover(parent1, parent2);
 
-        for (typename children_container::iterator it = children1.begin(); offspring_left > 0 && it != children1.end();
-                ++it)
+        const typename children_container::size_type toCopy = std::min<typename children_container::size_type>(children.size(),offspring_left);
+        std::copy_n(children.begin(), toCopy, backInserter);
+
+        offspring_left -= toCopy;
+
+        if (offspring_left > 0 && !crossoverOperation.isSymmetric())
         {
-            offspring.push_back(*it);
-            offspring_left--;
-        }
-        if (offspring_left && crossoverOperation.isSymmetric())
-        {
-            children_container children2 = crossoverOperation.doCrossover(parent2, parent1);
-            for (typename children_container::iterator it = children2.begin();
-                    offspring_left > 0 && it != children2.end(); ++it)
-            {
-                offspring.push_back(*it);
-                offspring_left--;
-            }
+            const children_container assymetricChildren = crossoverOperation.doCrossover(parent2, parent1);
+
+            const typename children_container::size_type assymetricToCopy = std::min<typename children_container::size_type>(assymetricChildren.size(),offspring_left);
+            std::copy_n(assymetricToCopy.begin(),toCopy, backInserter));
+            offspring_left -= toCopy;
+
         }
     }
 

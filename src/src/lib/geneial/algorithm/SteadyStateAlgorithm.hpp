@@ -23,14 +23,12 @@ void SteadyStateAlgorithm<FITNESS_TYPE>::solve()
     {
         this->_manager.getPopulation().doAge();
 
-        //std::cout << _manager.getPopulation() << std::endl;
-
         //Perform a selection of mating candidates based on the given strategy.
         typename selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set mating_pool;
         mating_pool = this->_selectionOperation.doSelect(this->_manager.getPopulation(), this->_manager);
 
-        typename coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set offspring;
-        offspring = this->_couplingOperation.doCopulate(mating_pool, this->_crossoverOperation, this->_manager);
+        auto offspring(this->_couplingOperation.doCopulate(mating_pool, this->_crossoverOperation, this->_manager));
+
         offspring = this->_mutationOperation.doMutate(offspring, this->_manager);
 
         //TODO (bewo): Scaling?

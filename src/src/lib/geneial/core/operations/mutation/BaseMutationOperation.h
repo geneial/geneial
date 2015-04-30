@@ -35,7 +35,7 @@ public:
 
     typedef typename Population<FITNESS_TYPE>::chromosome_container mutation_result_set;
     virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
-            typename Population<FITNESS_TYPE>::chromosome_container mutants, BaseManager<FITNESS_TYPE> &manager) = 0;
+            const typename Population<FITNESS_TYPE>::chromosome_container &mutants, BaseManager<FITNESS_TYPE> &manager) = 0;
 
     MutationSettings const & getSettings() const
     {

@@ -29,7 +29,6 @@ typename Population<FITNESS_TYPE>::chromosome_container ChooseRandom<VALUE_TYPE,
             chromosomeOutputSet.push_back(chromosome);
         }
     }
-
     return chromosomeOutputSet;
 }
 

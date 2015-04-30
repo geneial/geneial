@@ -38,7 +38,7 @@ public:
      *  Returns a new chromosome which is a partially mutated version of the old one.
      *  */
     virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
-            typename Population<FITNESS_TYPE>::chromosome_container mutants, BaseManager<FITNESS_TYPE> &manager) override;
+            const typename Population<FITNESS_TYPE>::chromosome_container &mutants, BaseManager<FITNESS_TYPE> &manager) override;
 
     //TODO (lukas): copy paste from MultiValueChromosomeAvarageCrossover.h ...
     MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> & getBuilderFactory() const

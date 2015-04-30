@@ -49,9 +49,17 @@ public:
         _settings = settings;
     }
 
+protected:
+   typename offspring_result_set::size_type copyUnlessMaximumReached(
+            offspring_result_set &dest,
+            const typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set &input,
+            const typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set::size_type limit) const;
+
 };
 
 } /* namespace coupling */
 } /* namespace operation */
 } /* namespace geneial */
 
+
+#include <geneial/core/operations/coupling/BaseCouplingOperation.hpp>
