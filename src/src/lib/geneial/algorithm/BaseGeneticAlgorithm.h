@@ -37,6 +37,7 @@ protected:
     BaseManager<FITNESS_TYPE> _manager;
 
     bool _wasSolved;
+
     bool _wasStarted;
 
     stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE> & _stoppingCriterion;

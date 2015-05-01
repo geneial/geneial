@@ -68,11 +68,6 @@ public:
     {
         _probability = propabilityOfMutation;
     }
-    /*
-     void setLevelOfMutation(double levelOfMutation){
-     _levelOfMutation = levelOfMutation;
-     };
-     */
 
     void setAmountOfMutation(double amountOfMutation)
     {

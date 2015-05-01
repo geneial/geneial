@@ -28,7 +28,7 @@ public:
 	{
 		assert(_minDiff <= _windowSize);
 		assert(_minDiff > 0);
-	};
+	}
 
 	virtual void print(std::ostream& os) const
 	{

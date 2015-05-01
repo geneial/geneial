@@ -24,6 +24,7 @@ private:
 
     double _minimumModification;
     unsigned int _affectedGenerations;
+
 public:
     /*
      * NonUniformMutationOperation Mutates a chromosome, by modificating some of it's values with weight w.

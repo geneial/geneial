@@ -36,7 +36,6 @@ public:
     virtual ~CombinedCriterion()
     {
     }
-    ;
 
     /**
      * Returns true if empty.

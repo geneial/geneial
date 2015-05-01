@@ -24,6 +24,7 @@ public:
             BaseChoosingOperation<FITNESS_TYPE>(), _settings(settings)
     {
     }
+
     virtual ~ChooseRandom()
     {
     }
@@ -32,7 +33,6 @@ public:
      * Chooses from an chromosomeContainer Random values. The propability that a Chromosome is choosen and therefore part of the
      * resultset is defined in MutationSettings.
      */
-
     virtual typename Population<FITNESS_TYPE>::chromosome_container doChoose(
             const typename Population<FITNESS_TYPE>::chromosome_container &chromosomeInputSet) const override;
 

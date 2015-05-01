@@ -30,8 +30,42 @@ public:
     typedef typename std::shared_ptr<const MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> > const_ptr;
 
     MultiValueChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) :
-            BaseChromosome<FITNESS_TYPE>(fitnessEvaluator), _container()
+                BaseChromosome<FITNESS_TYPE>(fitnessEvaluator), _container()
+        {
+        }
+
+
+    /**
+     * Copy Constructor
+     * @param other the other ctor to copy from
+     */
+    MultiValueChromosome(const MultiValueChromosome& other) :
+            BaseChromosome<FITNESS_TYPE>(other._fitnessEvaluator), _container(other._container),
+            _cacheValid(other._cacheValid), _hashCache(other._hashCache)
     {
+    }
+
+    /**
+     * RValue Ctor
+     * @param other
+     */
+    MultiValueChromosome(MultiValueChromosome&& other) :
+            BaseChromosome<FITNESS_TYPE>(other._fitnessEvaluator), _container(),
+            _cacheValid(other._cacheValid), _hashCache(other._hashCache)
+    {
+        swap(other);
+    }
+
+    /**
+     * Swaps the contents of the other Multi Value Chromosome
+     * @param other
+     */
+    void swap(MultiValueChromosome& other)
+    {
+        std::swap(other._container,_container);
+        std::swap(other._fitnessEvaluator,this->_fitnessEvaluator);
+        std::swap(other._cacheValid,_cacheValid);
+        std::swap(other._hashCache,_hashCache);
     }
 
     virtual ~MultiValueChromosome()
@@ -55,15 +89,29 @@ public:
     //TODO (bewo) : provide further convenience methods at this point.
 
     value_container& getContainer();
-    value_container getContainer() const;
-    void setValueContainer(value_container container);
+
+    const value_container& getContainer() const;
+
+    void setValueContainer(const value_container& container);
+
+    void setValueContainer(value_container&& container);
+
+
 
     void print(std::ostream& os) const override;
 
     chromsome_hash getHash() const override;
 
+    bool inline hasCache() const;
+
+    void inline invalidateHashCache();
+
 private:
     value_container _container;
+
+    mutable bool _cacheValid;
+
+    mutable chromsome_hash _hashCache;
 
 };
 

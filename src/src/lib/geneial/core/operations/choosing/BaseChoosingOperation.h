@@ -19,6 +19,7 @@ public:
     BaseChoosingOperation()
     {
     }
+
     virtual ~BaseChoosingOperation()
     {
     }

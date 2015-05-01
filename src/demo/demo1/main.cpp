@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 
     DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
 
-    ContinousMultiValueBuilderSettings<int, double> builderSettings(evaluator, 10, 130, 0, true, 20, 5);
+    ContinousMultiValueBuilderSettings<int, double> builderSettings(evaluator, 200, 130, 0, true, 20, 5);
 
     ContinousMultiValueChromosomeFactory<int,double> chromosomeFactory(builderSettings);
 
