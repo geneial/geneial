@@ -87,12 +87,9 @@ private:
     PopulationSettings _populationSettings;
 
 };
-template<typename FITNESS_TYPE>
-
 
 } /* namespace manager */
 } /* namespace population */
 } /* namespace geneial */
 
 #include <geneial/core/population/management/BaseManager.hpp>
-

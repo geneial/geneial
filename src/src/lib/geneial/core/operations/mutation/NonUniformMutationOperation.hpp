@@ -43,8 +43,6 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
     typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::value_container value_container;
     typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr mvc_ptr;
 
-    typename Population<FITNESS_TYPE>::chromosome_container resultset;
-    typename Population<FITNESS_TYPE>::chromosome_container choosenChromosomeContainer;
     typename Population<FITNESS_TYPE>::chromosome_container notChoosenChromosomeContainer;
 
     unsigned int pointOfMutation = 0;
@@ -53,13 +51,19 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
     double value_choice = 0;
 
 
-    choosenChromosomeContainer = this->getChoosingOperation().doChoose(_chromosomeInputContainer);
+    auto choosenChromosomeContainer(this->getChoosingOperation().doChoose(_chromosomeInputContainer));
 
     //calculates difference: _notChoosenChromosomeContainer = _choosenChromosomeContainer - _chromosomeInputContainer
     //TODO(bewo): Think about cbegin/cend here...
     std::set_difference(_chromosomeInputContainer.begin(), _chromosomeInputContainer.end(),
             choosenChromosomeContainer.begin(), choosenChromosomeContainer.end(),
             std::inserter(notChoosenChromosomeContainer, notChoosenChromosomeContainer.begin()));
+
+    typename Population<FITNESS_TYPE>::chromosome_container resultset;
+
+    //choosen container is an upper bound..
+    resultset.reserve(choosenChromosomeContainer.size());
+
 
     //only mutate choosen chromosomes
     for (const auto& chosenChromosome : choosenChromosomeContainer)
