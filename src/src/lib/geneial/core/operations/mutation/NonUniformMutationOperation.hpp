@@ -62,11 +62,11 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
             std::inserter(notChoosenChromosomeContainer, notChoosenChromosomeContainer.begin()));
 
     //only mutate choosen chromosomes
-    for (auto chosenChromosome : choosenChromosomeContainer)
+    for (const auto& chosenChromosome : choosenChromosomeContainer)
     {
         mutationCounter = 0;
         //casting mutant as MVC
-        mvc_ptr _mvcMutant(std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
+        const mvc_ptr _mvcMutant(std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
                 chosenChromosome));
 
         assert(_mvcMutant);

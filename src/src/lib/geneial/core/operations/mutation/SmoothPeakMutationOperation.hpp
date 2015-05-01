@@ -32,12 +32,11 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
     typename Population<FITNESS_TYPE>::chromosome_container::iterator choosenChromosomeContainer_it;
 
     //only mutate choosen chromosomes
-    for (choosenChromosomeContainer_it = choosenChromosomeContainer.begin();
-            choosenChromosomeContainer_it != choosenChromosomeContainer.end(); ++choosenChromosomeContainer_it)
+    for (const auto &chosenChromosome : choosenChromosomeContainer)
     {
         //casting mutant to MVC
-        mvc_ptr mvcMutant = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
-                *choosenChromosomeContainer_it);
+        const mvc_ptr mvcMutant = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
+                *chosenChromosome);
         assert(mvcMutant);
 
         //creating a new MVC (to keep things reversible)
@@ -80,8 +79,7 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
         {
 
             //Iterate the chromosome's value
-            for (typename value_container::iterator it = mutatedChromosome->getContainer().begin();
-                    it != mutatedChromosome->getContainer().end(); ++it)
+            for (const auto &it : mutatedChromosome->getContainer())
             {
                 const double value_choice = Random::generate<int>(0.0, 1.0);
                 if (value_choice < this->_settings.getAmountOfMutation())

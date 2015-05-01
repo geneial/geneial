@@ -12,11 +12,12 @@ void Smoothing::restoreSmoothness(typename MultiValueChromosome<VALUE_TYPE, FITN
         VALUE_TYPE maxAbsElevation, VALUE_TYPE min, VALUE_TYPE max)
 {
     typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::value_container value_container;
-    typename value_container::iterator it = chromosome->getContainer().begin();
-    VALUE_TYPE lastVal = *it;
-    for (; it != chromosome->getContainer().end(); ++it)
+
+    VALUE_TYPE lastVal = *(chromosome->getContainer().begin());
+
+    for (auto& it: chromosome->getContainer())
     {
-        const VALUE_TYPE currentValue = *it;
+        const VALUE_TYPE currentValue = it;
 
         if (std::abs(-lastVal) < maxAbsElevation)
         {
@@ -30,14 +31,14 @@ void Smoothing::restoreSmoothness(typename MultiValueChromosome<VALUE_TYPE, FITN
             if (currentValue < lastVal)
             {
                 //Case descending
-                *it = std::max(lastVal - maxAbsElevation, min);
-                lastVal = *it;
+                it = std::max(lastVal - maxAbsElevation, min);
+                lastVal = it;
             }
             else
             {
                 //Case ascending
-                *it = std::min(lastVal + maxAbsElevation, max);
-                lastVal = *it;
+                it = std::min(lastVal + maxAbsElevation, max);
+                lastVal = it;
             }
 
         }

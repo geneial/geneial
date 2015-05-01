@@ -45,26 +45,46 @@ void ReplaceWorstOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &po
         typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
         BaseManager<FITNESS_TYPE> &manager)
 {
-
     unsigned int numberToReplace = getAmountToReplace(population, offspring); //this also takes care of elitism!
 
-    //remove the worst n chromosomes to replace (assuming worst is at the very beginning)
-    typename Population<FITNESS_TYPE>::fitnessmap_const_it advanced = population.getFitnessMap().cbegin();
-    std::advance(advanced, numberToReplace);
-
-    typename Population<FITNESS_TYPE>::chromosome_container toRemove;
-    toRemove.reserve(numberToReplace);
-
-    std::transform(
-            population.getFitnessMap().cbegin(),
-            advanced, std::back_inserter(toRemove),
-            [](decltype(*advanced)& p){ return p.second; }
-    );
-
-    population.removeChromosomeContainer(toRemove);
-
     //Insert all the offspring, parents are ignored here (since they are assumed to be already in the population)
-    population.insertChromosomeContainer(offspring);
+
+    unsigned int actualOffspringInserted = 0;
+    for(const auto& newOffspring: offspring)
+    {
+        actualOffspringInserted += static_cast<unsigned int>(population.insertChromosome(newOffspring));
+        if(actualOffspringInserted >= numberToReplace)
+        {
+            break;
+        }
+    }
+    //we might have a deficit at this point if offsprings were already contained.
+
+    //remove the worst chromosomes to replace (assuming worst is at the very beginning)
+    typename Population<FITNESS_TYPE>::fitnessmap_const_it advanced = population.getFitnessMap().cbegin();
+
+    const unsigned int worstChromosomesToRemove = population.getSize() - manager.getPopulationSettings().getMaxChromosomes();
+    if(worstChromosomesToRemove != 0)
+    {
+        std::advance(advanced, worstChromosomesToRemove);
+
+        typename Population<FITNESS_TYPE>::chromosome_container toRemove;
+        toRemove.reserve(numberToReplace);
+
+        std::transform(
+                population.getFitnessMap().cbegin(),
+                advanced, std::back_inserter(toRemove),
+                [](decltype(*advanced)& p){ return p.second; }
+        );
+        population.removeChromosomeContainer(toRemove);
+    }
+    else
+    {
+        //TODO(bewo) else log this case, if this occurs frequently this is
+        //an indicator of some saturation or misconfiguration in the GA
+         //static int noop = 0;
+        //std::cout << "Noop Replacement" << noop++ << std::endl;
+    }
 
 }
 

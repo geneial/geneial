@@ -57,7 +57,7 @@ inline void  BaseGeneticAlgorithm<FITNESS_TYPE>::registerObserver(std::shared_pt
 {
     typedef std::set<typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent> setType;
     const setType events = observer->getSubscribedEvents();
-    for (auto it :events)
+    for (const auto &it :events)
     {
 
         typename observers_map::iterator lb = _observers.lower_bound(it);

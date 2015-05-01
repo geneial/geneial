@@ -55,7 +55,7 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
             std::inserter(notChoosenChromosomeContainer, notChoosenChromosomeContainer.begin()));
 
     //only mutate choosen chromosomes
-    for (auto chromosome : choosenChromosomeContainer)
+    for (const auto& chromosome : choosenChromosomeContainer)
     {
         mutationCounter = 0;
 

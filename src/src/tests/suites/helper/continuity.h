@@ -14,12 +14,12 @@ inline void checkContinuity(typename BaseChromosome<FITNESS_TYPE>::ptr chromosom
             FITNESS_TYPE>(chromosomeToCheck);
 
     VALUE_TYPE lastVal = *(mvcPtr->getContainer().begin());
-    for (typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_it it = mvcPtr->getContainer().begin();
-            it != mvcPtr->getContainer().end(); ++it)
+
+    for(const auto& it : mvcPtr->getContainer())
     {
-        VALUE_TYPE val = std::abs(lastVal - *it);
+        VALUE_TYPE val = std::abs(lastVal - it);
         BOOST_CHECK(val <= maxDeriv);
-        lastVal = *it;
+        lastVal = it;
     }
 }
 
@@ -30,11 +30,10 @@ inline void checkLimits(typename BaseChromosome<FITNESS_TYPE>::ptr chromosomeToC
     typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr mvcPtr = test_helper::convertBaseChromosome<VALUE_TYPE,
             FITNESS_TYPE>(chromosomeToCheck);
 
-    for (typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_it it = mvcPtr->getContainer().begin();
-            it != mvcPtr->getContainer().end(); ++it)
+    for(const auto& it : mvcPtr->getContainer())
     {
-        BOOST_CHECK(*it >= lower);
-        BOOST_CHECK(*it <= upper);
+        BOOST_CHECK(it >= lower);
+        BOOST_CHECK(it <= upper);
     }
 }
 

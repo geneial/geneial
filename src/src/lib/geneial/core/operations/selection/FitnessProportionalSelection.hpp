@@ -37,7 +37,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 
     //Create a multimap with fitness-proportional probability as key
     map_type sorted_multimap;
-    for (auto it : population.getFitnessMap())
+    for (const auto& it : population.getFitnessMap())
     {
         FITNESS_TYPE prop_fitness = (it.second)->getFitness()->get() / sum;
         sorted_multimap.insert(std::pair<FITNESS_TYPE, chrom_ptr_type>(prop_fitness, it.second));

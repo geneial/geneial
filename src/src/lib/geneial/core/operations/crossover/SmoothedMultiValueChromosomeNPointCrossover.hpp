@@ -17,11 +17,10 @@ virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set Smoo
     typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set result = MultiValueChromosomeNPointCrossover<
             VALUE_TYPE, FITNESS_TYPE>::doCrossover(mommy, daddy);
 
-    for (typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set::iterator it = result.begin();
-            it != result.end(); ++it)
+    for (const auto& chromosome : result){
     {
         Smoothing::restoreSmoothness<VALUE_TYPE, FITNESS_TYPE>(
-                std::dynamic_pointer_cast < MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> > (*it),
+                std::dynamic_pointer_cast < MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> > chromosome,
                 _builderSettings.getEps(), _builderSettings.getRandomMin(), _builderSettings.getRandomMax());
 
     }

@@ -22,7 +22,7 @@ typename Population<FITNESS_TYPE>::chromosome_container ChooseRandom<VALUE_TYPE,
     chromosomeOutputSet.reserve(chromosomeInputSet.size());
 
     //Iterate over all chromosomes in set and decide whether to keep it or not.
-    for (auto chromosome : chromosomeInputSet)
+    for (const auto &chromosome : chromosomeInputSet)
     {
         if (Random::decision(this->getSettings().getPropability()))
         {

@@ -54,23 +54,23 @@ public:
 
         && "INIT type not found or there are more than one INIT glue for combined criterion!");
 
-        for (typename container::iterator it = _criteria.begin(); it != _criteria.end(); ++it)
+        for (const auto &criterionPair : _criteria)
         {
-            if (it->first == INIT)
+            if (criterionPair.first == INIT)
             {
-                result = it->second->wasReached(manager);
+                result = criterionPair.second->wasReached(manager);
             }
-            else if (it->first == AND)
+            else if (criterionPair.first == AND)
             {
-                result &= it->second->wasReached(manager);
+                result &= criterionPair.second->wasReached(manager);
             }
-            else if (it->first == XOR)
+            else if (criterionPair.first == XOR)
             {
-                result &= !it->second->wasReached(manager);
+                result &= !criterionPair.second->wasReached(manager);
             }
             else
             {
-                result |= it->second->wasReached(manager);
+                result |= criterionPair.second->wasReached(manager);
             }
         }
         return result;
@@ -79,13 +79,13 @@ public:
     virtual void print(std::ostream& os) const
     {
         os << "Combined (";
-        for (typename container::const_iterator it = _criteria.begin(); it != _criteria.end(); ++it)
+        for (const auto &criterionPair : _criteria)
         {
-            if (it->first == AND)
+            if (criterionPair.first == AND)
             {
                 os << "(&&) ";
             }
-            else if (it->first == XOR)
+            else if (criterionPair.first == XOR)
             {
                 os << "(^^) ";
             }
@@ -93,7 +93,7 @@ public:
             {
                 os << "(||) ";
             }
-            os << *it->second;
+            os << criterionPair.second;
         }
         os << ")";
     }

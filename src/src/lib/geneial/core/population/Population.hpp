@@ -110,7 +110,7 @@ template<typename FITNESS_TYPE>
 typename BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getOldestChromosome()
 {
     typename BaseChromosome<FITNESS_TYPE>::ptr oldest;
-    for (auto fmv : _fitnessMap)
+    for (const auto& fmv : _fitnessMap)
     {
         if (!oldest)
         {
@@ -131,7 +131,7 @@ template<typename FITNESS_TYPE>
 typename BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getYoungestChromosome()
 {
     typename BaseChromosome<FITNESS_TYPE>::ptr youngest;
-    for (auto fmv : _fitnessMap)
+    for (const auto& fmv : _fitnessMap)
     {
         if (!youngest)
         {
@@ -200,11 +200,14 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
     }
 
     unsigned int i = 0;
-    for (typename chromosome_container::const_iterator it = container.begin(); it != container.end(); ++it)
-    {
-        this->_insertChromosome(*it, hashCache[i]);
-        i++;
-    }
+    std::for_each(container.cbegin(),container.cend(),
+            [&i,this,&hashCache]
+            (const typename chromosome_container::value_type &it)
+            {
+            this->_insertChromosome(it, hashCache[i]);
+            ++i;
+            }
+    );
     return hashCache.size(); //TODO (bewo): This is a safe world assumption
 }
 
@@ -276,7 +279,7 @@ inline void Population<FITNESS_TYPE>::replacePopulation(chromosome_container &re
 template<typename FITNESS_TYPE>
 inline void Population<FITNESS_TYPE>::removeChromosomeContainer(const chromosome_container &container)
 {
-    for(auto chromosomomeToRemove: container)
+    for(const auto& chromosomomeToRemove: container)
     {
         removeChromosome(chromosomomeToRemove);
     }

@@ -40,8 +40,9 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 
     assert(daddy_container.size() == mommy_container.size());
 
-    typename value_container::iterator mommy_it = mommy_container.begin();
-    typename value_container::iterator daddy_it = daddy_container.begin();
+    typename value_container::const_iterator mommy_it(mommy_container.cbegin());
+    typename value_container::const_iterator daddy_it(daddy_container.cbegin());
+
     for (unsigned int i = 0; mommy_it != mommy_container.end(); ++i)
     {
         child_container.push_back((*mommy_it + *daddy_it) / 2);

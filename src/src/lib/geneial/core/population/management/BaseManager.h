@@ -25,8 +25,15 @@ public:
     BaseManager<FITNESS_TYPE>(BaseChromosomeFactory<FITNESS_TYPE> &chromosomeFactory) :
         _population(),_chromosomeFactory(chromosomeFactory), _populationSettings()
     {
-
     }
+
+    virtual ~BaseManager<FITNESS_TYPE>()
+    {
+    }
+
+
+    static long int amountRepl;
+
 
     void replacePopulation(typename Population<FITNESS_TYPE>::chromosome_container replacementPopulation);
 
@@ -80,6 +87,8 @@ private:
     PopulationSettings _populationSettings;
 
 };
+template<typename FITNESS_TYPE>
+
 
 } /* namespace manager */
 } /* namespace population */

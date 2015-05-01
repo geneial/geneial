@@ -59,10 +59,10 @@ public:
     RouletteWheel(const Population<FITNESS_TYPE> &population) :
             _sum(0)
     {
-        for (const_pop_itr it = population.getFitnessMap().begin(); it != population.getFitnessMap().end(); ++it)
+        for (const auto &it : population.getFitnessMap())
         {
-            ranges[std::pair<FITNESS_TYPE, FITNESS_TYPE>(_sum, it->first + _sum)] = it->second;
-            _sum += it->first;
+            ranges[std::pair<FITNESS_TYPE, FITNESS_TYPE>(_sum, it.first + _sum)] = it.second;
+            _sum += it.first;
         }
     }
 
