@@ -22,7 +22,7 @@ protected:
     const BaseReplacementSettings & _settings;
 
 public:
-    BaseReplacementOperation(const BaseReplacementSettings& settings) :
+    explicit BaseReplacementOperation(const BaseReplacementSettings& settings) :
             _settings(settings)
     {
     }

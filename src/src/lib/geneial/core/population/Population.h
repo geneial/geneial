@@ -49,11 +49,15 @@ public:
     population_size getSize() const;
 
     Population();
+
     virtual ~Population();
+
     virtual void print(std::ostream& os) const;
 
     population_age getAge() const;
+
     void setAge(population_age age);
+
     void doAge();
 
     typename BaseChromosome<FITNESS_TYPE>::ptr getOldestChromosome();

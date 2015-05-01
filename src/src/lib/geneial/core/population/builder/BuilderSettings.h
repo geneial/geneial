@@ -16,7 +16,7 @@ private:
     typename FitnessEvaluator<FITNESS_TYPE>::ptr _fitnessEvaluator;
 
 public:
-    BuilderSettings(const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) :
+    explicit BuilderSettings(const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) :
             _fitnessEvaluator(fitnessEvaluator)
     {
     }

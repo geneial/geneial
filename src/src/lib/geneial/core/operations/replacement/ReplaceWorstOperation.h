@@ -19,7 +19,7 @@ private:
     unsigned int getAmountToReplace(const Population<FITNESS_TYPE> &population,
             const typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const;
 public:
-    ReplaceWorstOperation(const BaseReplacementSettings& settings) :
+    explicit ReplaceWorstOperation(const BaseReplacementSettings& settings) :
             BaseReplacementOperation<FITNESS_TYPE>(settings)
     {
     }

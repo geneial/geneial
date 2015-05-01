@@ -46,7 +46,7 @@ public:
     /**
      *
      */
-    BaseChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) :
+    explicit BaseChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) :
             _fitness(), _fitnessEvaluator(fitnessEvaluator), _age(CHROMOSOME_AGE_UNITIALIZED)
     {
         assert(_fitnessEvaluator);

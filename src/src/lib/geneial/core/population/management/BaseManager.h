@@ -22,7 +22,7 @@ class BaseManager
 {
 
 public:
-    BaseManager<FITNESS_TYPE>(BaseChromosomeFactory<FITNESS_TYPE> &chromosomeFactory) :
+    explicit BaseManager<FITNESS_TYPE>(BaseChromosomeFactory<FITNESS_TYPE> &chromosomeFactory) :
         _population(),_chromosomeFactory(chromosomeFactory), _populationSettings()
     {
     }
@@ -85,6 +85,8 @@ private:
     BaseChromosomeFactory<FITNESS_TYPE> &_chromosomeFactory;
 
     PopulationSettings _populationSettings;
+
+//    ExecutionManager_executionManager;
 
 };
 

@@ -29,10 +29,10 @@ public:
     typedef typename std::shared_ptr<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> > ptr;
     typedef typename std::shared_ptr<const MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> > const_ptr;
 
-    MultiValueChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) :
-                BaseChromosome<FITNESS_TYPE>(fitnessEvaluator), _container()
-        {
-        }
+    explicit MultiValueChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) :
+            BaseChromosome<FITNESS_TYPE>(fitnessEvaluator), _container()
+    {
+    }
 
 
     /**

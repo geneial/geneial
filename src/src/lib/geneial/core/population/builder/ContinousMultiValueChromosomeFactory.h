@@ -16,7 +16,7 @@ class ContinousMultiValueChromosomeFactory: public MultiValueChromosomeFactory<V
 private:
     const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &_settings;
 public:
-    ContinousMultiValueChromosomeFactory(const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &settings) :
+    explicit ContinousMultiValueChromosomeFactory(const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &settings) :
         MultiValueChromosomeFactory<VALUE_TYPE,FITNESS_TYPE>(settings), _settings(settings)
     {
     }

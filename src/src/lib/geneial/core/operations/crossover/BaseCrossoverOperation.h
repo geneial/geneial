@@ -27,6 +27,7 @@ public:
     doCrossover(typename BaseChromosome<FITNESS_TYPE>::ptr mommy, typename BaseChromosome<FITNESS_TYPE>::ptr daddy) const = 0;
 
     //Is the order of mommy for and daddy for doCrossover() relevant?, true if yes.
+    //TODO(bewo): Think about encoding this property via inheritance?
     virtual bool inline isSymmetric() const = 0;
 
 };

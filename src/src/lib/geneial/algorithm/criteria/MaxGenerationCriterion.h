@@ -21,7 +21,7 @@ private:
     const typename Population<FITNESS_TYPE>::population_age _max;
 
 public:
-    MaxGenerationCriterion(const long num_max_iterations) :
+    explicit MaxGenerationCriterion(const long num_max_iterations) :
             _max(num_max_iterations)
     {
     }

@@ -21,7 +21,7 @@ private:
     const FITNESS_TYPE _desiredFitness;
 
 public:
-    FitnessValueReachedCriterion(const FITNESS_TYPE desiredFitness) :
+    explicit FitnessValueReachedCriterion(const FITNESS_TYPE desiredFitness) :
             _desiredFitness(desiredFitness)
     {
     }

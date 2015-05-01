@@ -11,7 +11,7 @@ private:
     unsigned int _max_chromosomes;
 
 public:
-    PopulationSettings(int max_chromosomes = 100) :
+    explicit PopulationSettings(int max_chromosomes = 100) :
             _max_chromosomes(max_chromosomes)
     {
     }

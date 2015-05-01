@@ -21,7 +21,7 @@ public:
     {
     }
 
-    CouplingSettings(unsigned int numberOfOffspring) :
+    explicit CouplingSettings(unsigned int numberOfOffspring) :
             _numberOfOffspring(numberOfOffspring)
     {
         assert(numberOfOffspring > 0);

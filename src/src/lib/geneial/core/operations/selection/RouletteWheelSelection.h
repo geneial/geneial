@@ -19,7 +19,7 @@ template<typename FITNESS_TYPE>
 class RouletteWheelSelection: public BaseSelectionOperation<FITNESS_TYPE>
 {
 public:
-    RouletteWheelSelection(const SelectionSettings& settings) :
+    explicit RouletteWheelSelection(const SelectionSettings& settings) :
             BaseSelectionOperation<FITNESS_TYPE>(settings)
     {
     }

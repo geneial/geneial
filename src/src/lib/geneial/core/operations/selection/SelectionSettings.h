@@ -32,7 +32,7 @@ public:
         _numberOfParents = numberOfParents;
     }
 
-    SelectionSettings(unsigned int numberOfParents) :
+    explicit SelectionSettings(unsigned int numberOfParents) :
             _numberOfParents(numberOfParents)
     {
         assert(_numberOfParents > 0);

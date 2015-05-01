@@ -25,7 +25,7 @@ public:
     {
     }
 
-    Fitness(FITNESS_TYPE value) :
+    explicit Fitness(FITNESS_TYPE value) :
             _value(value)
     {
     }

@@ -20,7 +20,7 @@ template<typename FITNESS_TYPE>
 class FitnessProportionalSelection: public BaseSelectionOperation<FITNESS_TYPE>
 {
 public:
-    FitnessProportionalSelection(const FitnessProportionalSelectionSettings &settings) :
+    explicit FitnessProportionalSelection(const FitnessProportionalSelectionSettings &settings) :
             BaseSelectionOperation<FITNESS_TYPE>(settings), _settings(settings)
     {
 

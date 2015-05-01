@@ -24,7 +24,7 @@ private:
 public:
     typedef typename Population<FITNESS_TYPE>::chromosome_container selection_result_set;
 
-    BaseSelectionOperation(SelectionSettings const & settings) :
+    explicit BaseSelectionOperation(SelectionSettings const & settings) :
             _settings(settings)
     {
     }

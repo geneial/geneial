@@ -19,7 +19,7 @@ template<typename FITNESS_TYPE>
 class UniformRandomSelection: public BaseSelectionOperation<FITNESS_TYPE>
 {
 public:
-    UniformRandomSelection(const SelectionSettings& settings) :
+    explicit UniformRandomSelection(const SelectionSettings& settings) :
             BaseSelectionOperation<FITNESS_TYPE>(settings)
     {
     }

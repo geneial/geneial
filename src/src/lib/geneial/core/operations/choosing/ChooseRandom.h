@@ -20,7 +20,7 @@ private:
     const MutationSettings &_settings;
 
 public:
-    ChooseRandom(const MutationSettings &settings) :
+    explicit ChooseRandom(const MutationSettings &settings) :
             BaseChoosingOperation<FITNESS_TYPE>(), _settings(settings)
     {
     }

@@ -11,9 +11,9 @@ template<typename FITNESS_TYPE>
 class ContainerTypes
 {
 private:
-    ContainerTypes()
-    {
-    }
+    ContainerTypes() = delete;
+    ContainerTypes(const ContainerTypes& type) = delete;
+    ContainerTypes(const ContainerTypes&& type)=delete;
 
 public:
     //A generic container to pass chromomsomes between operations.

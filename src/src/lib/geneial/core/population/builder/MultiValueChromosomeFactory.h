@@ -17,7 +17,7 @@ protected:
     const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &_settings;
 
 public:
-    MultiValueChromosomeFactory(const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &settings) :
+    explicit MultiValueChromosomeFactory(const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &settings) :
         BaseChromosomeFactory<FITNESS_TYPE>(),
         _settings(settings)
     {

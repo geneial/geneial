@@ -26,7 +26,7 @@ private:
 public:
     typedef typename Population<FITNESS_TYPE>::chromosome_container offspring_result_set;
 
-    BaseCouplingOperation(const CouplingSettings &settings) :
+    explicit BaseCouplingOperation(const CouplingSettings &settings) :
             _settings(settings)
     {
     }
