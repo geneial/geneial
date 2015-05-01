@@ -19,8 +19,28 @@ set (LIB_GENEIAL_STATIC_NAME "${LOWER_PROJECT_NAME}${GENEIAL_STATIC_SUFFIX}")
 set (GENEIAL_VERSION_MAJOR 0)
 set (GENEIAL_VERSION_MINOR 2)
 
+
+#tested for clang 3.6
+#c.f., http://clang.llvm.org/docs/UsersManual.html#controlling-code-generation
+#newer versions of clang might support more sanatization.
+
+set (CLANG_SANATIZERS "address") #memory error detector. Slowdown: 2x
+
+#set (CLANG_SANATIZERS "${CLANG_SANATIZERS},thread") 
+set (CLANG_SANATIZERS "${CLANG_SANATIZERS},undefined") #undefined behavior checks,  small runtime cost 
+set (CLANG_SANATIZERS "${CLANG_SANATIZERS},bool") 
+#set (CLANG_SANATIZERS "${CLANG_SANATIZERS},float-divide-by-zero")
+set (CLANG_SANATIZERS "${CLANG_SANATIZERS},unreachable")
+#set (CLANG_SANATIZERS "${CLANG_SANATIZERS},float-cast-overflow")
+set (CLANG_SANATIZERS "${CLANG_SANATIZERS},return")
+#set (CLANG_SANATIZERS "${CLANG_SANATIZERS},memory")
+#set (CLANG_SANATIZERS "${CLANG_SANATIZERS},bounds")
+#set (CLANG_SANATIZERS "${CLANG_SANATIZERS},integer")
+set (CLANG_SANATIZEEXTRA "-fsanitize=${CLANG_SANATIZERS} -Wthread-safety")
+
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -Werror -Wno-unused-parameter -std=c++11")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g ${CLANG_SANATIZEEXTRA}")
 
 
 # TODO (bewo) make this switchable!
