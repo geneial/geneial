@@ -53,7 +53,7 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set RandomCouplin
 
 
         //compute crossover
-        const children_container children = crossoverOperation.doCrossover(*it_mommy, *it_daddy);
+        const children_container children(crossoverOperation.doCrossover(*it_mommy, *it_daddy));
         offspring_left -= this->copyUnlessMaximumReached(offspring,children,offspring_left);
     }
 

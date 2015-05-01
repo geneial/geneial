@@ -7,6 +7,8 @@
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 namespace geneial
 {
 namespace operation
@@ -73,7 +75,7 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
                 this->_builderFactory.createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
         assert(_mutatedChromosome);
 
-        value_container &_mutantChromosomeContainer = _mvcMutant->getContainer();
+        const value_container &_mutantChromosomeContainer = _mvcMutant->getContainer();
         value_container &result_container = _mutatedChromosome->getContainer();
 
         //first target point of mutation
@@ -85,10 +87,10 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
         }
 
         //iterator for one chromosome (to iterate it's values)
-        typename value_container::iterator mutant_it = _mutantChromosomeContainer.begin();
+        typename value_container::const_iterator mutant_it = _mutantChromosomeContainer.cbegin();
 
         //Insinde Chromosome loop
-        for (unsigned int i = 0; mutant_it != _mutantChromosomeContainer.end(); i++)
+        for (unsigned int i = 0; mutant_it != _mutantChromosomeContainer.cend(); i++)
         {
 
             //dicing whether to mutate or not (influeced by propability setting)
@@ -167,7 +169,7 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
             }
 
             //step to next mutant.
-            if (mutant_it != _mutantChromosomeContainer.end())
+            if (mutant_it != _mutantChromosomeContainer.cend())
             {
                 ++mutant_it;
             }

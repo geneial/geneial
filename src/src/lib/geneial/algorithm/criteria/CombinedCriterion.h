@@ -37,6 +37,9 @@ public:
     {
     }
 
+
+    //TODO (bewo): Constructor and initializer list
+
     /**
      * Returns true if empty.
      */

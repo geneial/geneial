@@ -46,7 +46,7 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
     for (typename mating_container::const_iterator it = mating_pool.begin(); offspring_left > 0;)
     {
         //TODO (bewo) REFACTOR: research cyclic iterators to avoid all those ugly case distinctions
-        chrom_ptr parent1 = *it;
+        chrom_ptr parent1(*it);
         it++;
         //wrap around if necessary
         if (it == mating_pool.end())
@@ -54,29 +54,20 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
             it = mating_pool.begin();
         }
 
-        chrom_ptr parent2 = *it;
+        chrom_ptr parent2(*it);
         it++;
         if (it == mating_pool.end())
         {
             it = mating_pool.begin();
         }
 
-        auto backInserter = std::back_inserter(offspring);
-        const children_container children = crossoverOperation.doCrossover(parent1, parent2);
-
-        const typename children_container::size_type toCopy = std::min<typename children_container::size_type>(children.size(),offspring_left);
-        std::copy_n(children.begin(), toCopy, backInserter);
-
-        offspring_left -= toCopy;
+        const children_container children(crossoverOperation.doCrossover(parent1, parent2));
+        offspring_left -= this->copyUnlessMaximumReached(offspring,children,offspring_left);
 
         if (offspring_left > 0 && !crossoverOperation.isSymmetric())
         {
-            const children_container assymetricChildren = crossoverOperation.doCrossover(parent2, parent1);
-
-            const typename children_container::size_type assymetricToCopy = std::min<typename children_container::size_type>(assymetricChildren.size(),offspring_left);
-            std::copy_n(assymetricToCopy.begin(),toCopy, backInserter));
-            offspring_left -= toCopy;
-
+            const children_container assymetricChildren(crossoverOperation.doCrossover(parent2, parent1));
+            offspring_left -= this->copyUnlessMaximumReached(offspring,assymetricChildren,offspring_left);
         }
     }
 

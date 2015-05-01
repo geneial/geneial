@@ -54,17 +54,14 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
             choosenChromosomeContainer.begin(), choosenChromosomeContainer.end(),
             std::inserter(notChoosenChromosomeContainer, notChoosenChromosomeContainer.begin()));
 
-    typename Population<FITNESS_TYPE>::chromosome_container::iterator choosenChromosomeContainer_it;
-
     //only mutate choosen chromosomes
-    for (choosenChromosomeContainer_it = choosenChromosomeContainer.begin();
-            choosenChromosomeContainer_it != choosenChromosomeContainer.end(); ++choosenChromosomeContainer_it)
+    for (auto chromosome : choosenChromosomeContainer)
     {
         mutationCounter = 0;
 
         //casting mutant as MVC
         mvc_ptr mvcMutant = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
-                *choosenChromosomeContainer_it);
+                chromosome);
         assert(mvcMutant);
 
         //creating a new MVC (to keep things reversible)
@@ -73,7 +70,7 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
         assert(mutatedChromosome);
 
         //getting values
-        value_container &mutantChromosomeContainer = mvcMutant->getContainer();
+        const value_container &mutantChromosomeContainer = mvcMutant->getContainer();
         value_container &result_container = mutatedChromosome->getContainer();
 
         //first target point of mutation
@@ -85,10 +82,10 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
         }
 
         //iterator for one chromosome (to iterate it's values)
-        typename value_container::iterator mutant_it = mutantChromosomeContainer.begin();
+        typename value_container::const_iterator mutant_it = mutantChromosomeContainer.cbegin();
 
         //Inside chromosome loop
-        for (unsigned int i = 0; mutant_it != mutantChromosomeContainer.end(); i++)
+        for (unsigned int i = 0; mutant_it != mutantChromosomeContainer.cend(); i++)
         {
 
             //dicing whether to mutate or not (influeced by propability setting)
@@ -144,7 +141,7 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
             }
 
             //step to next mutant.
-            if (mutant_it != mutantChromosomeContainer.end())
+            if (mutant_it != mutantChromosomeContainer.cend())
             {
                 ++mutant_it;
             }
