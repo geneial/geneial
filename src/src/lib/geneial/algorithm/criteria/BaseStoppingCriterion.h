@@ -20,7 +20,6 @@ public:
     virtual ~BaseStoppingCriterion()
     {
     }
-    ;
 
     virtual void print(std::ostream& os) const = 0;
 

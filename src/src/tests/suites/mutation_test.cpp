@@ -17,8 +17,6 @@
 #include <geneial/core/operations/mutation/UniformMutationOperation.h>
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 
-#include <geneial/core/fitness/SingleThreadedFitnessProcessingStrategy.h>
-
 #include "mocks/MockFitnessEvaluator.h"
 
 #include <memory>

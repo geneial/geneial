@@ -39,7 +39,7 @@ set (CLANG_SANATIZERS "${CLANG_SANATIZERS},return")
 set (CLANG_SANATIZEEXTRA "-fsanitize=${CLANG_SANATIZERS} -Wthread-safety")
 
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -Werror -Wno-unused-parameter -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pedantic-errors -Wextra -Werror -Wno-unused-parameter -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g ${CLANG_SANATIZEEXTRA}")
 
 
