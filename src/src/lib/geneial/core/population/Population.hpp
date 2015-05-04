@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <set>
 #include <utility>
+#include <memory>
 
 
 namespace geneial
@@ -16,8 +17,9 @@ namespace population
 {
 
 template<typename FITNESS_TYPE>
-Population<FITNESS_TYPE>::Population() :
-        _age(0)
+Population<FITNESS_TYPE>::Population(management::BaseManager<FITNESS_TYPE>& manager) :
+        _age(0),
+        _manager(manager)
 {
 }
 
@@ -149,7 +151,7 @@ typename BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getYoungest
 }
 
 template<typename FITNESS_TYPE>
-inline bool Population<FITNESS_TYPE>::insertChromosome(typename BaseChromosome<FITNESS_TYPE>::ptr chromosome)
+inline bool Population<FITNESS_TYPE>::insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr& chromosome)
 {
     //Insert into hash map
     typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue = chromosome->getHash();
@@ -165,12 +167,12 @@ inline bool Population<FITNESS_TYPE>::insertChromosome(typename BaseChromosome<F
 }
 
 template<typename FITNESS_TYPE>
-inline void Population<FITNESS_TYPE>::_insertChromosome(typename BaseChromosome<FITNESS_TYPE>::ptr chromosome,
+inline void Population<FITNESS_TYPE>::_insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr& chromosome,
         typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue)
 {
     assert(chromosome);
     //Insert into fitness map
-    fitnessmap_value_type fitness_map_value(chromosome->getFitness()->get(), chromosome);
+    fitnessmap_value_type fitness_map_value(chromosome->getFitness().get(), chromosome);
     _fitnessMap.insert(fitness_map_value);
 
     hashmap_value_type hash_map_value(hashValue, chromosome);
@@ -199,6 +201,18 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
         }
     }
 
+    for (auto& chromosome : container)
+    {
+        if (chromosome->hasFitness())
+        {
+            getManager().getExecutionManager().addTask([&chromosome]
+            {
+                chromosome->getFitness().get();
+           });
+        }
+    }
+    getManager().getExecutionManager().waitForTasks();
+
     unsigned int i = 0;
     std::for_each(container.cbegin(),container.cend(),
             [&i,this,&hashCache]
@@ -212,9 +226,9 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
 }
 
 template<typename FITNESS_TYPE>
-inline void Population<FITNESS_TYPE>::removeChromosome(typename BaseChromosome<FITNESS_TYPE>::ptr chromosome)
+inline void Population<FITNESS_TYPE>::removeChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr &chromosome)
 {
-    const FITNESS_TYPE fitness = chromosome->getFitness()->get();
+    const FITNESS_TYPE fitness = chromosome->getFitness().get();
     const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hash = chromosome->getHash();
 
     const std::pair<typename fitness_map::iterator, typename fitness_map::iterator> range = _fitnessMap.equal_range(

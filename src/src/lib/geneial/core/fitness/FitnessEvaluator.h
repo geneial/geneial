@@ -23,14 +23,23 @@ namespace geneial
 using namespace geneial::population::chromosome;
 
 template<typename FITNESS_TYPE>
-class FitnessEvaluator
+class FitnessEvaluator : public std::enable_shared_from_this<FitnessEvaluator<FITNESS_TYPE>>
 {
 public:
-    typedef std::shared_ptr<FitnessEvaluator<FITNESS_TYPE> > ptr;
+    using ptr = std::shared_ptr<FitnessEvaluator<FITNESS_TYPE>>;
 
-    typedef std::shared_ptr<const FitnessEvaluator<FITNESS_TYPE> > const_ptr;
+    using const_ptr = std::shared_ptr<const FitnessEvaluator<FITNESS_TYPE>>;
 
-    //TODO (CODECONSISTENCY) (bewo): shared from this?
+    ptr getPtr()
+    {
+        return this->shared_from_this();
+    }
+
+    const_ptr getConstPtr()
+    {
+        return this->shared_from_this();
+    }
+
 
     FitnessEvaluator()
     {
@@ -40,8 +49,8 @@ public:
     {
     }
 
-    virtual typename Fitness<FITNESS_TYPE>::ptr evaluate(
-            const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome) const = 0;
+    virtual std::unique_ptr<Fitness<FITNESS_TYPE>> evaluate(
+            const BaseChromosome<FITNESS_TYPE>& chromosome) const = 0;
 };
 
 } /* namespace GeneticLibrary */

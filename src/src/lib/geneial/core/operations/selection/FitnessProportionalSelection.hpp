@@ -29,7 +29,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
     FITNESS_TYPE sum = std::accumulate(population.getFitnessMap().cbegin(), population.getFitnessMap().cend(), 0,
             [](FITNESS_TYPE total, const typename Population<FITNESS_TYPE>::fitness_map::value_type& mapdata)
             {
-                total += (mapdata.second)->getFitness()->get();
+                total += (mapdata.second)->getFitness().get();
                 return total;
             });
 
@@ -39,7 +39,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
     map_type sorted_multimap;
     for (const auto& it : population.getFitnessMap())
     {
-        FITNESS_TYPE prop_fitness = (it.second)->getFitness()->get() / sum;
+        const FITNESS_TYPE prop_fitness = (it.second)->getFitness().get() / sum;
         sorted_multimap.insert(std::pair<FITNESS_TYPE, chrom_ptr_type>(prop_fitness, it.second));
     }
 

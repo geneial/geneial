@@ -16,19 +16,20 @@ using namespace geneial::operation::coupling;
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 inline typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueChromosomeBlendingCrossover<
-        VALUE_TYPE, FITNESS_TYPE>::doCrossover(typename BaseChromosome<FITNESS_TYPE>::ptr mommy,
-        typename BaseChromosome<FITNESS_TYPE>::ptr daddy)
+        VALUE_TYPE, FITNESS_TYPE>::doCrossover(const typename BaseChromosome<FITNESS_TYPE>::const_ptr &mommy,
+        const typename BaseChromosome<FITNESS_TYPE>::const_ptr &daddy)
 {
     //Cast Chromosomes, shorthands for necessary data structures...
     typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::value_container value_container;
+    typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr mvc_cptr;
     typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr mvc_ptr;
 
     typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set resultset;
 
-    const mvc_ptr mvc_mommy = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(mommy);
+    const mvc_cptr mvc_mommy = std::dynamic_pointer_cast<const MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(mommy);
     assert(mvc_mommy);
 
-    const mvc_ptr mvc_daddy = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(daddy);
+    const mvc_cptr mvc_daddy = std::dynamic_pointer_cast<const MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(daddy);
     assert(mvc_daddy);
 
     //Determine the amount of chromosomes to generate

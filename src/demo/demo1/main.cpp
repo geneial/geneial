@@ -40,6 +40,8 @@
 #include <stdexcept>
 #include <cassert>
 #include <memory>
+#include <chrono>
+#include <thread>
 
 #include <unistd.h>
 
@@ -65,29 +67,28 @@ public:
     {
     }
 
-    Fitness<double>::ptr evaluate(const BaseChromosome<double>::ptr chromosome) const
+    std::unique_ptr<Fitness<double>> evaluate(const BaseChromosome<double>& chromosome) const
     {
-        MultiValueChromosome<int, double>::ptr mvc = std::dynamic_pointer_cast<MultiValueChromosome<int, double>>(
-                chromosome);
-        if (mvc)
+        try
         {
-            //Let the fitness be the sum of all values
-            return std::shared_ptr<Fitness<double>>(new Fitness<double>(mvc->getSum()));
+            const MultiValueChromosome<int, double>& mvc = dynamic_cast<const MultiValueChromosome<int, double>&>(chromosome);
+            return std::move(std::unique_ptr<Fitness<double>>(new Fitness<double>(mvc.getSum())));
         }
-        else
+        catch(std::bad_cast)
         {
             throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
         }
-
-        std::shared_ptr<Fitness<double>> ptr(new Fitness<double>(1));
-        return ptr;
+        std::unique_ptr<Fitness<double>> ptr(new Fitness<double>(1));
+        return std::move(ptr);
     }
 };
 
 int main(int argc, char **argv)
 {
 
-    std::cout << "Running GENEIAL demo1 - Version "
+    std::cout
+            //<< "\x1b[0m\x1b[35;1m\x1b[41;1m"
+            << "Running GENEIAL demo1 - Version "
             << GENEIAL_VERSION_MAJOR
             << "." << GENEIAL_VERSION_MINOR
             << " ("
@@ -96,7 +97,7 @@ int main(int argc, char **argv)
 
     DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
 
-    ContinousMultiValueBuilderSettings<int, double> builderSettings(evaluator, 200, 130, 0, true, 20, 5);
+    ContinousMultiValueBuilderSettings<int, double> builderSettings(evaluator, 20, 130, 0, true, 20, 5);
 
     ContinousMultiValueChromosomeFactory<int,double> chromosomeFactory(builderSettings);
 
@@ -107,9 +108,14 @@ int main(int argc, char **argv)
     NonUniformMutationOperation<int, double> mutationOperation(1000, 0.2,
             mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
-    FitnessProportionalSelectionSettings selectionSettings(5,5);
+//    FitnessProportionalSelectionSettings selectionSettings(5,5);
 
-    FitnessProportionalSelection<double> selectionOperation(selectionSettings);
+//    FitnessProportionalSelection<double> selectionOperation(selectionSettings);
+
+
+
+    RouletteWheelSelection<double> selectionOperation(SelectionSettings(5));
+
 
     CouplingSettings couplingSettings(20);
 
@@ -128,6 +134,10 @@ int main(int argc, char **argv)
     SteadyStateAlgorithm<double> algorithm(
             stoppingCriterion, selectionOperation, couplingOperation, crossoverOperation, replacementOperation,
             mutationOperation, chromosomeFactory);
+
+    algorithm.getPopulationSettings().setMaxChromosomes(1000);
+
+    algorithm.setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager(1))));
 
     algorithm.solve();
 

@@ -23,22 +23,61 @@ using namespace geneial::utility;
 template<typename FITNESS_TYPE>
 class BaseChromosome: public Printable, public std::enable_shared_from_this<BaseChromosome<FITNESS_TYPE> >
 {
+    template<typename T> class Optional
+    {
+        T mValue;
+        bool mHasValue;
+
+    public:
+
+        Optional() :
+                mHasValue(false)
+        {
+        }
+
+        Optional(T &&v) :
+                mValue(std::move(v)), mHasValue(true)
+        {
+        }
+
+        inline void set(T const &&v)
+        {
+            mValue = std::move(v);
+            mHasValue = true;
+        }
+
+        //Note this does not call the dtor right away
+        inline void clear()
+        {
+            mHasValue = false;\
+        }
+
+        inline T const &get() const
+        {
+            return mValue;
+        }
+
+        inline bool is_initialized() const
+        {
+            return mHasValue;
+        }
+    };
 
 public:
     static const int CHROMOSOME_AGE_UNITIALIZED = 0;
 
-    typedef unsigned int chromosome_age;
-    typedef std::size_t chromsome_hash;
+    using chromosome_age = unsigned int;
+    using chromsome_hash = std::size_t;
 
-    typedef typename std::shared_ptr<BaseChromosome<FITNESS_TYPE> > ptr;
-    typedef typename std::shared_ptr<const BaseChromosome<FITNESS_TYPE> > const_ptr;
+    using ptr = std::shared_ptr<BaseChromosome<FITNESS_TYPE>>;
+    using const_ptr =std::shared_ptr<const BaseChromosome<FITNESS_TYPE>>;
 
-    ptr getPtr() //TODO (bewo) constness correct?
+    ptr getPtr()
     {
         return this->shared_from_this();
     }
 
-    const_ptr getConstPtr() //TODO (bewo) constness correct?
+    const_ptr getConstPtr()
     {
         return this->shared_from_this();
     }
@@ -56,7 +95,7 @@ public:
     {
     }
 
-    virtual bool equals(const_ptr chromosome) const = 0;
+    virtual bool equals(const BaseChromosome<FITNESS_TYPE> &chromosome) const = 0;
 
     /**
      * Used to 'age' a chromosome. Increments the age of a chromosome by one
@@ -75,20 +114,15 @@ public:
 
     bool inline hasFitness() const
     {
-        return !(_fitness == NULL);
+        //Note (bewo) cast to bool will yield to boost::optional evaluation
+        return _fitness.is_initialized();
     }
 
     /**
      * Gets the fitness value of a Chromosome.
      * Calls the fitness evaluator, if chromosome has no fitness yet.
      */
-    const typename Fitness<FITNESS_TYPE>::ptr getFitness();
-
-    /**
-     * Gets the fitness value of a Chromosome.
-     * Does not evaluate the fitness.
-     */
-    const typename Fitness<FITNESS_TYPE>::ptr getFitness() const;
+    const Fitness<FITNESS_TYPE>& getFitness() const;
 
     /**
      * If the chromosome was modified from outside and it's "cached" fitness can no no longer be
@@ -103,12 +137,7 @@ public:
     /**
      * Sets fitness of a chromosome
      */
-    void setFitness(const typename Fitness<FITNESS_TYPE>::ptr& fitness);
-
-    bool inline hasFitnessEvaluator() const
-    {
-        return !(_fitnessEvaluator == NULL);
-    }
+    void setFitness(typename std::unique_ptr<Fitness<FITNESS_TYPE>> fitness);
 
     const typename FitnessEvaluator<FITNESS_TYPE>::ptr getFitnessEvaluator() const;
 
@@ -117,18 +146,21 @@ public:
     virtual chromsome_hash getHash() const = 0;
 
 protected:
-    virtual bool hashEquals(const_ptr chromosome) const;
+
+    virtual bool hashEquals(const BaseChromosome<FITNESS_TYPE> &chromosome) const;
+
     virtual void printHash(std::ostream& os) const;
 
 private:
-    typename Fitness<FITNESS_TYPE>::ptr _fitness;
+    mutable Optional<typename std::unique_ptr<Fitness<FITNESS_TYPE>>>_fitness;
 
     typename FitnessEvaluator<FITNESS_TYPE>::ptr _fitnessEvaluator;
 
     chromosome_age _age;
 };
 
-} /* namespace chromomsome */
+}
+/* namespace chromomsome */
 } /* namespace population */
 } /* namespace geneial */
 

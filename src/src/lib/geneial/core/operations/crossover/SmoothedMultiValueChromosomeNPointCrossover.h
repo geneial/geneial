@@ -43,7 +43,7 @@ public:
     }
 
     virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set doCrossover(
-            typename BaseChromosome<FITNESS_TYPE>::ptr mommy, typename BaseChromosome<FITNESS_TYPE>::ptr daddy) const override;
+            const typename BaseChromosome<FITNESS_TYPE>::const_ptr &mommy, const typename BaseChromosome<FITNESS_TYPE>::const_ptr &daddy) const override;
 };
 
 } /* namespace crossover */

@@ -15,6 +15,7 @@ namespace selection
 {
 
 //TODO (bewo) check whether all this will work with negative fitness values
+//TODO (bewo) This is not very efficient for large populations.
 
 template<typename FITNESS_TYPE>
 class RouletteWheelComparator
@@ -110,4 +111,3 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
 } /* namespace selection */
 } /* namespace operation */
 } /* namespace geneial */
-

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <geneial/core/operations/selection/SelectionSettings.h>
+#include <geneial/core/population/management/BaseManager.h>
+#include <geneial/core/population/Population.h>
 
 namespace geneial
 {

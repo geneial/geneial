@@ -57,7 +57,7 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
     //TODO(bewo): Think about cbegin/cend here...
     std::set_difference(_chromosomeInputContainer.begin(), _chromosomeInputContainer.end(),
             choosenChromosomeContainer.begin(), choosenChromosomeContainer.end(),
-            std::inserter(notChoosenChromosomeContainer, notChoosenChromosomeContainer.begin()));
+            std::back_inserter(notChoosenChromosomeContainer));
 
     typename Population<FITNESS_TYPE>::chromosome_container resultset;
 

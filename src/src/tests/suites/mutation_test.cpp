@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE( UNIFORM_TEST__basicMutation )
      * Test for Uniform and NonUniform Mutation
      */
 
-    MockDoubleFitnessEvaluator::ptr evaluator(new MockDoubleFitnessEvaluator());
+    MockFitnessEvaluator<double>::ptr evaluator(new MockFitnessEvaluator<double>());
     ContinousMultiValueBuilderSettings<int, double> builderSettings (evaluator, 10, 130, 0, true, 20, 5);
     ContinousMultiValueChromosomeFactory<int, double> chromosomeFactory(builderSettings);
     BaseManager<double> manager(chromosomeFactory);
@@ -110,8 +110,7 @@ BOOST_AUTO_TEST_CASE( UNIFORM_TEST__Mutation_probability )
      *
      */
 
-    MockDoubleFitnessEvaluator::ptr evaluator(new MockDoubleFitnessEvaluator());
-
+    MockFitnessEvaluator<double>::ptr evaluator(new MockFitnessEvaluator<double>());
     ContinousMultiValueBuilderSettings<int, double> builderSettings(evaluator, 10, 130, 0, true, 20, 5);
     ContinousMultiValueChromosomeFactory<int, double> chromosomeFactory(builderSettings);
     BaseManager<double> manager(chromosomeFactory);
@@ -207,7 +206,7 @@ BOOST_AUTO_TEST_CASE ( UNIFORM_TEST__points_of_mutation )
      * Checking if as many points are mutated as set in Mutation settings
      */
 
-    MockDoubleFitnessEvaluator::ptr evaluator(new MockDoubleFitnessEvaluator());
+    MockFitnessEvaluator<double>::ptr evaluator(new MockFitnessEvaluator<double>());
     ContinousMultiValueBuilderSettings<int, double> builderSettings (evaluator, 100, 130, 0, true, 20, 5);
     ContinousMultiValueChromosomeFactory<int, double> chromosomeFactory (builderSettings);
     BaseManager<double> manager(chromosomeFactory);

@@ -4,6 +4,7 @@
 #include <geneial/core/population/Population.h>
 #include <geneial/core/population/PopulationSettings.h>
 #include <geneial/core/population/builder/BaseChromosomeFactory.h>
+#include <geneial/utility/ExecutionManager.h>
 
 #include <cassert>
 
@@ -18,22 +19,19 @@ namespace management
  * Manages the population and most of the processes which modify the chromosomes
  */
 template<typename FITNESS_TYPE>
-class BaseManager
+class BaseManager : public std::enable_shared_from_this<BaseManager<FITNESS_TYPE> >
 {
 
 public:
     explicit BaseManager<FITNESS_TYPE>(BaseChromosomeFactory<FITNESS_TYPE> &chromosomeFactory) :
-        _population(),_chromosomeFactory(chromosomeFactory), _populationSettings()
+        _population(*this),
+        _chromosomeFactory(chromosomeFactory), _populationSettings(), _executionManager(new SequentialExecutionManager())
     {
     }
 
     virtual ~BaseManager<FITNESS_TYPE>()
     {
     }
-
-
-    static long int amountRepl;
-
 
     void replacePopulation(typename Population<FITNESS_TYPE>::chromosome_container replacementPopulation);
 
@@ -79,6 +77,17 @@ public:
     {
         _populationSettings = populationSettings;
     }
+
+    BaseExecutionManager& getExecutionManager() const
+    {
+        return *_executionManager;
+    }
+
+    void setExecutionManager(std::unique_ptr<BaseExecutionManager> executionManager)
+    {
+        _executionManager = std::move(executionManager);
+    }
+
 private:
     Population<FITNESS_TYPE> _population;
 
@@ -86,7 +95,7 @@ private:
 
     PopulationSettings _populationSettings;
 
-//    ExecutionManager_executionManager;
+    std::unique_ptr<BaseExecutionManager> _executionManager;
 
 };
 

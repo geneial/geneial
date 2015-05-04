@@ -143,6 +143,19 @@ public:
     inline virtual void notifyObservers(typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent event);
 
     inline virtual void registerObserver(std::shared_ptr<AlgorithmObserver<FITNESS_TYPE>> observer);
+
+
+    BaseExecutionManager& getExecutionManager() const
+    {
+        return _manager.getExecutionManager();
+    }
+
+    void setExecutionManager(std::unique_ptr<BaseExecutionManager> executionManager)
+    {
+        _manager.setExecutionManager(std::move(executionManager));
+    }
+
+
 };
 
 } /* namespace algorithm */

@@ -27,7 +27,7 @@ MultiValueChromosome<int, double>::const_ptr getMockIntMVC(std::vector<int> valu
     geneial::FitnessEvaluator<double>::ptr evaluator = ptr_evaluator;
     if (!evaluator)
     {
-        evaluator = FitnessEvaluator<double>::ptr(new MockDoubleFitnessEvaluator());
+        evaluator = FitnessEvaluator<double>::ptr(new MockFitnessEvaluator<double>());
     }
     MultiValueChromosome<int, double>::ptr new_chromosome(new MultiValueChromosome<int, double>(evaluator));
     new_chromosome->getContainer().reserve(values.size());
@@ -41,7 +41,7 @@ MultiValueChromosome<double, double>::const_ptr getMockDoubleMVC(std::vector<dou
     geneial::FitnessEvaluator<double>::ptr evaluator = ptr_evaluator;
     if (!evaluator)
     {
-        evaluator = FitnessEvaluator<double>::ptr(new MockDoubleFitnessEvaluator());
+        evaluator = FitnessEvaluator<double>::ptr(new MockFitnessEvaluator<double>());
     }
 
     MultiValueChromosome<double, double>::ptr new_chromosome(new MultiValueChromosome<double, double>(evaluator));

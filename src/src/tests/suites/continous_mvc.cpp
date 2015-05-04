@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_SUITE( ContinousMultiValueChromosome )
 #define CONTINUITY_FACTORY_SIGNIFICANCE (100);
 BOOST_AUTO_TEST_CASE( Continuity_Factory )
 {
-    const test_mock::MockDoubleFitnessEvaluator::ptr evaluator(new test_mock::MockDoubleFitnessEvaluator);
+    const test_mock::MockFitnessEvaluator<double>::ptr evaluator(new test_mock::MockFitnessEvaluator<double>);
 
     int i = CONTINUITY_FACTORY_SIGNIFICANCE
     ;

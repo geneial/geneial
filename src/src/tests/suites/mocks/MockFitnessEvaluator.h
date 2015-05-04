@@ -10,42 +10,28 @@ namespace test_mock
 
 using namespace geneial;
 
-class MockDoubleFitnessEvaluator: public FitnessEvaluator<double>
+template<typename T>
+class MockFitnessEvaluator: public FitnessEvaluator<double>
 {
 public:
-    typedef std::shared_ptr<MockDoubleFitnessEvaluator> ptr;
-    typedef std::shared_ptr<const MockDoubleFitnessEvaluator> const_ptr;
-    MockDoubleFitnessEvaluator() :
-            FitnessEvaluator()
+
+    constexpr const static T MOCK_VALUE = 1;
+
+    using ptr = std::shared_ptr<MockFitnessEvaluator>;
+    using const_ptr = std::shared_ptr<const MockFitnessEvaluator>;
+
+    MockFitnessEvaluator() : FitnessEvaluator()
     {
     }
-    Fitness<double>::ptr evaluate(const BaseChromosome<double>::ptr chromosome) const
+
+    std::unique_ptr<Fitness<T>> evaluate(const BaseChromosome<T>& chromosome) const
     {
-        std::shared_ptr<Fitness<double> > ptr(new Fitness<double>(1));
-        return ptr;
+        return std::move(std::unique_ptr<Fitness<T>>(new Fitness<T>(MOCK_VALUE)));
     }
-    virtual ~MockDoubleFitnessEvaluator()
+
+    virtual ~MockFitnessEvaluator()
     {
     }
 };
-
-class MockIntFitnessEvaluator: public FitnessEvaluator<int>
-{
-public:
-    typedef std::shared_ptr<MockIntFitnessEvaluator> ptr;
-    typedef std::shared_ptr<const MockIntFitnessEvaluator> const_ptr;
-    MockIntFitnessEvaluator()
-    {
-    }
-    Fitness<int>::ptr evaluate(const BaseChromosome<int>::ptr chromosome) const
-    {
-        std::shared_ptr<Fitness<int> > ptr(new Fitness<int>(1));
-        return ptr;
-    }
-    virtual ~MockIntFitnessEvaluator()
-    {
-    }
-};
-
 } /* namespace test_mock */
 

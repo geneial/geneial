@@ -15,7 +15,7 @@ namespace chromosome
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 bool MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::equals(
-        typename BaseChromosome<FITNESS_TYPE>::const_ptr chromosome) const
+        const BaseChromosome<FITNESS_TYPE> &chromosome) const
 {
     return this->hashEquals(chromosome);
 }
@@ -147,7 +147,7 @@ void MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::print(std::ostream& os) con
     os << "Fitness: ";
     if (this->hasFitness())
     {
-        os << *this->getFitness();
+        os << this->getFitness();
     }
     else
     {

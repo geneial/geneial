@@ -7,11 +7,18 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <memory>
 
 namespace geneial
 {
 namespace population
 {
+
+namespace management
+{
+template<typename FITNESS_TYPE>
+class BaseManager;
+}
 
 template<typename FITNESS_TYPE>
 class Population: public Printable
@@ -48,7 +55,11 @@ public:
 
     population_size getSize() const;
 
-    Population();
+    Population(management::BaseManager<FITNESS_TYPE>& manager);
+
+    //TODO(bewo) Population(Population &other);
+
+    //TODO(bewo) Population(Population &&other);
 
     virtual ~Population();
 
@@ -85,17 +96,22 @@ public:
 
     unsigned int insertChromosomeContainer(chromosome_container &container);
 
-    bool insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
+    bool insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr &chromosome);
 
     void removeChromosomeContainer(const chromosome_container &container);
 
-    void removeChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome);
+    void removeChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr &chromosome);
 
     void clearChromosomes();
 
+    const management::BaseManager<FITNESS_TYPE>& getManager() const
+    {
+        return _manager;
+    }
+
 private:
 
-    void _insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr chromosome,
+    void _insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr &chromosome,
             typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue);
 
     fitness_map _fitnessMap;
@@ -103,6 +119,8 @@ private:
     hash_map _hashMap;
 
     population_age _age;
+
+    management::BaseManager<FITNESS_TYPE>& _manager;
 
 };
 

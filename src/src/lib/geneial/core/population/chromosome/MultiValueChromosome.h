@@ -72,7 +72,7 @@ public:
     {
     }
 
-    bool equals(typename BaseChromosome<FITNESS_TYPE>::const_ptr chromosome) const override;
+    bool equals(const BaseChromosome<FITNESS_TYPE> &chromosome) const override;
 
     const_it getConstIt() const;
     it getIt() const;
