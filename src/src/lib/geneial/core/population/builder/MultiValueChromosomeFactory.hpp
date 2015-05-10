@@ -35,10 +35,7 @@ typename BaseChromosome<FITNESS_TYPE>::ptr MultiValueChromosomeFactory<VALUE_TYP
 
     }
 
-    typename BaseChromosome<FITNESS_TYPE>::ptr result = std::dynamic_pointer_cast<BaseChromosome<FITNESS_TYPE> >(
-            new_chromosome);
-
-    return result;
+    return new_chromosome;
 }
 
 } /* namespace chromomsome */
