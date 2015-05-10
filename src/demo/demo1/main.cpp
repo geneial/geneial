@@ -135,7 +135,7 @@ int main(int argc, char **argv)
             stoppingCriterion, selectionOperation, couplingOperation, crossoverOperation, replacementOperation,
             mutationOperation, chromosomeFactory);
 
-    algorithm.getPopulationSettings().setMaxChromosomes(1000);
+    algorithm.getPopulationSettings().setMaxChromosomes(100);
 
     algorithm.setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager(1))));
 

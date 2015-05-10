@@ -5,6 +5,7 @@
 #include <geneial/utility/Random.h>
 
 #include <map>
+#include <unordered_map>
 #include <cassert>
 
 namespace geneial
@@ -14,34 +15,9 @@ namespace operation
 namespace selection
 {
 
-//TODO (bewo) check whether all this will work with negative fitness values
-//TODO (bewo) This is not very efficient for large populations.
+//TODO (bewo): This is not very efficient for large populations.
+//TODO (bewo): This seems not to work with negative Fitness values!
 
-template<typename FITNESS_TYPE>
-class RouletteWheelComparator
-{
-public:
-    bool operator()(const std::pair<FITNESS_TYPE, FITNESS_TYPE> &a, const std::pair<FITNESS_TYPE, FITNESS_TYPE> &b)
-    {
-        if (b.first == -1)
-        {
-            if (b.second >= a.first && b.second < a.second)
-                return false;
-            return (b.second >= a.second);
-        }
-
-        if (a.first == -1)
-        {
-            if (a.second >= b.first && a.second < b.second)
-                return false;
-            return (a.second >= b.second);
-        }
-
-        return a.first < b.first;
-    }
-};
-
-//TODO(bewo): This seems not work with negative Fitness values!
 template<typename FITNESS_TYPE>
 class RouletteWheel
 {
@@ -54,22 +30,26 @@ private:
 
     FITNESS_TYPE _sum;
 
-    std::map<std::pair<FITNESS_TYPE, FITNESS_TYPE>, chrom_ptr_type, RouletteWheelComparator<FITNESS_TYPE> > ranges;
+    std::map<FITNESS_TYPE, chrom_ptr_type> _ranges;
 
 public:
+    //minimal place on the wheel
+    constexpr const static FITNESS_TYPE CONST_INC_BY = 1;
+
     RouletteWheel(const Population<FITNESS_TYPE> &population) :
             _sum(0)
     {
+        auto hint = _ranges.end();
         for (const auto &it : population.getFitnessMap())
         {
-            ranges[std::pair<FITNESS_TYPE, FITNESS_TYPE>(_sum, it.first + _sum)] = it.second;
-            _sum += it.first;
+            _sum += CONST_INC_BY + it.first;
+            hint = _ranges.emplace_hint(hint,_sum,it.second);
         }
     }
 
     chrom_ptr_type spin(FITNESS_TYPE random)
     {
-        return ranges.find(std::pair<FITNESS_TYPE, FITNESS_TYPE>(-1, random * _sum))->second;
+        return _ranges.lower_bound(random * _sum)->second;
     }
 };
 
