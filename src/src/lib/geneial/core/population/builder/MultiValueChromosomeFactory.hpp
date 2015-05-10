@@ -35,7 +35,7 @@ typename BaseChromosome<FITNESS_TYPE>::ptr MultiValueChromosomeFactory<VALUE_TYP
 
     }
 
-    return new_chromosome;
+    return std::move(new_chromosome);
 }
 
 } /* namespace chromomsome */

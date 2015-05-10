@@ -4,9 +4,10 @@
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include <geneial/utility/Random.h>
 
-#include <map>
-#include <unordered_map>
+#include <vector>
+#include <algorithm>
 #include <cassert>
+#include <utility>
 
 namespace geneial
 {
@@ -30,7 +31,32 @@ private:
 
     FITNESS_TYPE _sum;
 
-    std::map<FITNESS_TYPE, chrom_ptr_type> _ranges;
+    //NOTE (bewo): Benchmarked this against a map, however the RBTree and all the mallocs are very costly, hence vector.
+    std::vector<std::pair<FITNESS_TYPE, chrom_ptr_type>> _ranges;
+
+    struct RouletteWheelComparator
+    {
+        bool operator()(const std::pair<FITNESS_TYPE, chrom_ptr_type>& v1,
+                const std::pair<FITNESS_TYPE, chrom_ptr_type>& v2) const
+        {
+            return v1.first < v2.first;
+        }
+
+        bool operator()(const std::pair<FITNESS_TYPE, chrom_ptr_type>& v1, const FITNESS_TYPE v2) const
+        {
+            return v1.first < v2;
+        }
+
+        bool operator()(const FITNESS_TYPE v1, const FITNESS_TYPE v2) const
+        {
+            return v1 < v2;
+        }
+
+        bool operator()(const FITNESS_TYPE v1, const std::pair<FITNESS_TYPE, chrom_ptr_type>& v2) const
+        {
+            return v1 < v2.first;
+        }
+    };
 
 public:
     //minimal place on the wheel
@@ -39,17 +65,17 @@ public:
     RouletteWheel(const Population<FITNESS_TYPE> &population) :
             _sum(0)
     {
-        auto hint = _ranges.end();
+        _ranges.reserve(population.getSize());
         for (const auto &it : population.getFitnessMap())
         {
             _sum += CONST_INC_BY + it.first;
-            hint = _ranges.emplace_hint(hint,_sum,it.second);
+            _ranges.push_back(std::pair<FITNESS_TYPE, chrom_ptr_type>(_sum, it.second));
         }
     }
 
     chrom_ptr_type spin(FITNESS_TYPE random)
     {
-        return _ranges.lower_bound(random * _sum)->second;
+        return std::lower_bound(_ranges.begin(), _ranges.end(), random * _sum, RouletteWheelComparator())->second;
     }
 };
 

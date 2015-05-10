@@ -62,7 +62,7 @@ typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiValueChromosomeFactory<
 
     }
 
-    return new_chromosome;
+    return std::move(new_chromosome);
 }
 
 } /* namespace chromomsome */

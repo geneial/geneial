@@ -62,10 +62,11 @@ public:
      */
     void swap(MultiValueChromosome& other)
     {
-        std::swap(other._container,_container);
-        std::swap(other._fitnessEvaluator,this->_fitnessEvaluator);
-        std::swap(other._cacheValid,_cacheValid);
-        std::swap(other._hashCache,_hashCache);
+        using std::swap;
+        swap(other._container,_container);
+        swap(other._fitnessEvaluator,this->_fitnessEvaluator);
+        swap(other._cacheValid,_cacheValid);
+        swap(other._hashCache,_hashCache);
     }
 
     virtual ~MultiValueChromosome()
