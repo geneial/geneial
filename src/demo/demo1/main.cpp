@@ -28,8 +28,6 @@
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossoverSettings.h>
 
-#include <geneial/core/operations/crossover/MultiValueChromosomeAverageCrossover.h>
-
 #include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/operations/mutation/NonUniformMutationOperation.h>
 
@@ -135,7 +133,7 @@ int main(int argc, char **argv)
             stoppingCriterion, selectionOperation, couplingOperation, crossoverOperation, replacementOperation,
             mutationOperation, chromosomeFactory);
 
-    algorithm.getPopulationSettings().setMaxChromosomes(100);
+    algorithm.getPopulationSettings().setMaxChromosomes(10000);
 
     algorithm.setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager(1))));
 
