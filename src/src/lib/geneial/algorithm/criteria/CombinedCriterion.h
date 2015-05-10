@@ -3,8 +3,8 @@
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 
-#include <list>
-#include <map>
+#include <vector>
+#include <utility>
 
 namespace geneial
 {
@@ -31,7 +31,7 @@ public:
 
     typedef std::pair<glue, criterion> glue_criterion_pair;
 
-    typedef std::list<glue_criterion_pair> container;
+    typedef std::vector<glue_criterion_pair> container;
 
     virtual ~CombinedCriterion()
     {
@@ -100,7 +100,7 @@ public:
 
     void add(const glue_criterion_pair newCriterion)
     {
-        _criteria.insert(_criteria.end(), newCriterion);
+        _criteria.push_back(newCriterion);
     }
 
     void add(const glue glue, const criterion criterion)
