@@ -1,0 +1,33 @@
+#include "Ackley.h"
+
+#include <vector>
+#include <numeric>
+#include <cmath>
+
+namespace Ackley
+{
+double compute(const std::vector<double>& coordinates)
+{
+    constexpr double C_PI = 3.14159265358979323846;
+    constexpr const double a = 20;
+    constexpr const double b = 0.2;
+    constexpr const double c = 2 * C_PI;
+    const double d = static_cast<double>(coordinates.size());
+
+    const double squareparts = std::accumulate(coordinates.begin(), coordinates.end(), 0.0, [](double a, double b)
+    {
+        return a + std::pow(b,2);
+    });
+
+    const double cosparts = std::accumulate(coordinates.begin(), coordinates.end(), 0.0, [c](double a, double b)
+    {
+        return a + cos(c*b);
+    });
+
+    const double value = -a * exp(-b * sqrt((1.0 / d) * squareparts)) - exp((1.0 / d) * cosparts) + a + exp(1);
+
+    return value;
+
+}
+}
+
