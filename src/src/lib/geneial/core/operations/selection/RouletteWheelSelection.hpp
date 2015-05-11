@@ -17,7 +17,6 @@ namespace selection
 {
 
 //TODO (bewo): This is not very efficient for large populations.
-//TODO (bewo): This seems not to work with negative Fitness values!
 
 template<typename FITNESS_TYPE>
 class RouletteWheel
@@ -65,10 +64,34 @@ public:
     RouletteWheel(const Population<FITNESS_TYPE> &population) :
             _sum(0)
     {
+
         _ranges.reserve(population.getSize());
+
+        //Worst value:
+        const FITNESS_TYPE worstFitness = population.getFitnessMap().cbegin()->first;
+        FITNESS_TYPE positiveTranslation = 0;
+
+        if(worstFitness <= 0)
+        {
+            positiveTranslation = std::abs(worstFitness);
+        }
+
         for (const auto &it : population.getFitnessMap())
         {
-            _sum += CONST_INC_BY + it.first;
+            _sum += CONST_INC_BY;
+
+            if(it.first < 0)
+            {
+                _sum += std::abs(it.first);
+            }
+            else
+            {
+                //In case we had negative fitness values in the population,
+                //we offset of the positive fitness values by the amount of the worst negative fitness,
+                //so that the positive fitness values have higher probability than the negative ones.
+                _sum += positiveTranslation + it.first;
+            }
+
             _ranges.push_back(std::pair<FITNESS_TYPE, chrom_ptr_type>(_sum, it.second));
         }
     }
@@ -105,7 +128,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
         do
         {
             //TODO (bewo) this is suboptimal for ints..
-            FITNESS_TYPE random = (FITNESS_TYPE) Random::generate<FITNESS_TYPE>(0.0, 1.0);
+            const FITNESS_TYPE random = (FITNESS_TYPE) Random::generate<FITNESS_TYPE>(0.0, 1.0);
             ptr = rouletteWheel.spin(random);
         } while (allowDuplicates || std::find(result.begin(), result.end(), ptr) != result.end());
         left_select--;

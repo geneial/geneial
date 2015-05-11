@@ -43,9 +43,8 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set
             == MultiValueChromosomeNPointCrossoverSettings::EQUIDISTANT_WIDTH)
     {
 
-        const unsigned int equidistantwidth = totalWidth / crossoverPoints;
-
-        for (unsigned int i = 0; i < crossoverPoints - 1; i++)
+        const unsigned int equidistantwidth = totalWidth / (crossoverPoints + 1);
+        for (unsigned int i = 0; i < crossoverPoints; i++)
         {
             crossoverPositions.insert(i * equidistantwidth);
         }

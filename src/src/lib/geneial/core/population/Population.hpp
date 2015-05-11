@@ -18,6 +18,7 @@ namespace population
 
 template<typename FITNESS_TYPE>
 Population<FITNESS_TYPE>::Population(management::BaseManager<FITNESS_TYPE>& manager) :
+        _fitnessMap(),
         _age(0),
         _manager(manager)
 {
@@ -40,7 +41,7 @@ void Population<FITNESS_TYPE>::print(std::ostream& os) const
 }
 
 /**
- * @return The amount of chomosones wich are part of the population.
+ * @return The amount of chomosones which are currently within the population.
  */
 template<typename FITNESS_TYPE>
 typename Population<FITNESS_TYPE>::population_size Population<FITNESS_TYPE>::getSize() const
