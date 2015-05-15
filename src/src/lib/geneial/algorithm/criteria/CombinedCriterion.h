@@ -45,35 +45,33 @@ public:
      */
     virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager)
     {
-        bool result = true;
+        bool accumulatedResult = true;
 
         assert(std::count_if(_criteria.begin(), _criteria.end(), [](glue_criterion_pair const &b)
         {
             return b.first == INIT;
-        }) != 1
-
-        && "INIT type not found or there are more than one INIT glue for combined criterion!");
+        }) == 1 && "INIT type not found or there are more than one INIT glue for combined criterion!");
 
         for (const auto &criterionPair : _criteria)
         {
             if (criterionPair.first == INIT)
             {
-                result = criterionPair.second->wasReached(manager);
+                accumulatedResult = criterionPair.second->wasReached(manager);
             }
             else if (criterionPair.first == AND)
             {
-                result &= criterionPair.second->wasReached(manager);
+                accumulatedResult &= criterionPair.second->wasReached(manager);
             }
             else if (criterionPair.first == XOR)
             {
-                result &= !criterionPair.second->wasReached(manager);
+                accumulatedResult &= !criterionPair.second->wasReached(manager);
             }
             else
             {
-                result |= criterionPair.second->wasReached(manager);
+                accumulatedResult |= criterionPair.second->wasReached(manager);
             }
         }
-        return result;
+        return accumulatedResult;
     }
 
     virtual void print(std::ostream& os) const
