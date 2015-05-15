@@ -98,7 +98,7 @@ template<>
 inline float Random::generate()
 {
     checkInitialized();
-    return (std::numeric_limits<float>::min(), std::numeric_limits<float>::max());
+    return Random::generate(std::numeric_limits<float>::min(), std::numeric_limits<float>::max());
 
 }
 

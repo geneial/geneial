@@ -13,7 +13,7 @@ class ContainerTypes
 private:
     ContainerTypes() = delete;
     ContainerTypes(const ContainerTypes& type) = delete;
-    ContainerTypes(const ContainerTypes&& type)=delete;
+    ContainerTypes(const ContainerTypes&& type) = delete;
 
 public:
     //A generic container to pass chromomsomes between operations.
@@ -22,4 +22,3 @@ public:
 
 } /* namespace population */
 } /* namespace geneial */
-

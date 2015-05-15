@@ -15,9 +15,13 @@
 #include <geneial/algorithm/criteria/TrailingStopCriterion.h>
 #include <geneial/algorithm/criteria/FixPointCriterion.h>
 
-//TODO(bewo): Write Tests..
+//TODO(bewo): Write this tests..
 
 BOOST_AUTO_TEST_SUITE( __CRITERIA_TEST_CombinedCriterion )
+BOOST_AUTO_TEST_CASE( Continuity_Factory )
+{
+    BOOST_CHECK(1==1); //alibi
+}
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE( __CRITERIA_TEST_NegationDecorator )

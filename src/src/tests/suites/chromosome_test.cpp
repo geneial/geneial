@@ -1,7 +1,3 @@
-/*
- *  Created on: Nov 26, 2014
- *      Author: Benedikt Wolters
- */
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE chromomsome
 

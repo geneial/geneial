@@ -1,7 +1,3 @@
-/*
- *  Created on: Nov 26, 2014
- *      Author: Benedikt Wolters
- */
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE utility/random
 #include <boost/test/unit_test.hpp>
@@ -83,6 +79,7 @@ BOOST_AUTO_TEST_CASE( difference )
 
     float myRand1F = Random::generate<float>();
     float myRand2F = Random::generate<float>();
+    std::cout << myRand1F << " - " << myRand2F;
     BOOST_CHECK(myRand1F != myRand2F);
 
     int myRand1I = Random::generate<int>();
