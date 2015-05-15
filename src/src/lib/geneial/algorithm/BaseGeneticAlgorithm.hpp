@@ -32,19 +32,17 @@ inline void BaseGeneticAlgorithm<FITNESS_TYPE>::notifyObservers(typename Algorit
         {
         case AlgorithmObserver<FITNESS_TYPE>::GENERATION_DONE:
         {
-            for (typename observers_map::mapped_type::const_iterator it = lb->second.begin();
-                    it != lb->second.end(); ++it)
+            for (const auto& it : lb->second)
             {
-                (*it)->updateGeneration(_manager);
+                it->updateGeneration(_manager);
             }
             break;
         }
         case AlgorithmObserver<FITNESS_TYPE>::CRITERIA_REACHED:
         {
-            for (typename observers_map::mapped_type::const_iterator it = lb->second.begin();
-                    it != lb->second.end(); ++it)
+            for (const auto& it : lb->second)
             {
-                (*it)->updateCriteriaReached(_manager, _stoppingCriterion);
+                it->updateCriteriaReached(_manager, _stoppingCriterion);
             }
             break;
         }
