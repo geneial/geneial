@@ -83,7 +83,7 @@ public:
                     dynamic_cast<const MultiValueChromosome<int, double>&>(chromosome);
 
             double fitness = 0;
-            assert(charsPerFigure == mvc->getContainer().size());
+            assert(charsPerFigure == mvc.getContainer().size());
             for (int i = 0; i < charsPerFigure; i++)
             {
                 if (targetFigure[i] == static_cast<char>(mvc.getContainer()[i]))
