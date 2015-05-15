@@ -13,8 +13,8 @@ void MultiThreadedFitnessProcessingStrategy<FITNESS_TYPE>::startWorkers()
 
     for (unsigned int i = 0; i < _numWorkerThreads; i++)
     {
-        boost::thread* workerThread = new boost::thread(
-                boost::bind(&MultiThreadedFitnessProcessingStrategy::workerTask, this, i));
+        std::thread* workerThread = new std::thread(
+                std::bind(&MultiThreadedFitnessProcessingStrategy::workerTask, this, i));
         _threadQueue.push_back(new std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr>());
         _workerThreads.push_back(workerThread);
     }

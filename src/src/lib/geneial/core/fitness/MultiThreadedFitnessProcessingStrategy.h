@@ -4,7 +4,9 @@
 #include <geneial/core/fitness/BaseFitnessProcessingStrategy.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 
-#include <boost/thread.hpp>
+#include <thread>
+
+#include <boost/thread/barrier.hpp>
 
 #include <vector>
 #include <queue>
@@ -60,7 +62,7 @@ private:
 
     unsigned int _numWorkerThreads;
 
-    std::vector<boost::thread*> _workerThreads;
+    std::vector<std::thread*> _workerThreads;
 
     std::vector<std::queue<typename BaseChromosome<FITNESS_TYPE>::ptr>*> _threadQueue;
 
