@@ -4,9 +4,7 @@
 #include <numeric>
 #include <cmath>
 
-namespace Ackley
-{
-double compute(const std::vector<double>& coordinates)
+double Ackley::compute(const std::vector<double>& coordinates) const
 {
     constexpr double C_PI = 3.14159265358979323846;
     constexpr const double a = 20;
@@ -27,7 +25,5 @@ double compute(const std::vector<double>& coordinates)
     const double value = -a * exp(-b * sqrt((1.0 / d) * squareparts)) - exp((1.0 / d) * cosparts) + a + exp(1);
 
     return value;
-
-}
 }
 

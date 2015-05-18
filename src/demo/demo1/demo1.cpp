@@ -103,7 +103,7 @@ int main(int argc, char **argv)
 
     ChooseRandom<int, double> mutationChoosingOperation(mutationSettings);
 
-    NonUniformMutationOperation<int, double> mutationOperation(1000, 0.2,
+    NonUniformMutationOperation<int, double> mutationOperation(1, 0.2,
             mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
 
 //    FitnessProportionalSelectionSettings selectionSettings(5,5);
@@ -130,10 +130,15 @@ int main(int argc, char **argv)
     MaxGenerationCriterion<double> stoppingCriterion(100000);
 
     SteadyStateAlgorithm<double> algorithm(
-            stoppingCriterion, selectionOperation, couplingOperation, crossoverOperation, replacementOperation,
-            mutationOperation, chromosomeFactory);
+            std::make_shared<MaxGenerationCriterion<double>>(stoppingCriterion),
+            std::make_shared<RouletteWheelSelection<double>>(selectionOperation),
+            std::make_shared<RandomCouplingOperation<double>>(couplingOperation),
+            std::make_shared<MultiValueChromosomeNPointCrossover<int, double>>(crossoverOperation),
+            std::make_shared<ReplaceWorstOperation<double>>(replacementOperation),
+            std::make_shared<NonUniformMutationOperation<int, double>>(mutationOperation),
+            std::make_shared<ContinousMultiValueChromosomeFactory<int,double>>(chromosomeFactory));
 
-    algorithm.getPopulationSettings().setMaxChromosomes(10000);
+    algorithm.getPopulationSettings().setMaxChromosomes(100);
 
     algorithm.setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager(1))));
 

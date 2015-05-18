@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE( UNIFORM_TEST__basicMutation )
     MockFitnessEvaluator<double>::ptr evaluator(new MockFitnessEvaluator<double>());
     ContinousMultiValueBuilderSettings<int, double> builderSettings (evaluator, 10, 130, 0, true, 20, 5);
     ContinousMultiValueChromosomeFactory<int, double> chromosomeFactory(builderSettings);
-    BaseManager<double> manager(chromosomeFactory);
+    BaseManager<double> manager(std::make_shared<ContinousMultiValueChromosomeFactory<int, double>>(chromosomeFactory));
 
     BOOST_TEST_MESSAGE("Checking Mutation at 100% probability");
     for (double i = 0; i <= 1; i = i + 0.1)
@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE( UNIFORM_TEST__Mutation_probability )
     MockFitnessEvaluator<double>::ptr evaluator(new MockFitnessEvaluator<double>());
     ContinousMultiValueBuilderSettings<int, double> builderSettings(evaluator, 10, 130, 0, true, 20, 5);
     ContinousMultiValueChromosomeFactory<int, double> chromosomeFactory(builderSettings);
-    BaseManager<double> manager(chromosomeFactory);
+    BaseManager<double> manager(std::make_shared<ContinousMultiValueChromosomeFactory<int, double>>(chromosomeFactory));
 
     //TODO (bewo): Constantify magic numbers...
     for (double probability = 0.0; probability <= 1.0; probability = probability + 0.1)
@@ -209,7 +209,7 @@ BOOST_AUTO_TEST_CASE ( UNIFORM_TEST__points_of_mutation )
     MockFitnessEvaluator<double>::ptr evaluator(new MockFitnessEvaluator<double>());
     ContinousMultiValueBuilderSettings<int, double> builderSettings (evaluator, 100, 130, 0, true, 20, 5);
     ContinousMultiValueChromosomeFactory<int, double> chromosomeFactory (builderSettings);
-    BaseManager<double> manager(chromosomeFactory);
+    BaseManager<double> manager(std::make_shared<ContinousMultiValueChromosomeFactory<int, double>>(chromosomeFactory));
 
     for (unsigned int pointsOfMutation = 0; pointsOfMutation <= 102; pointsOfMutation++)
     {

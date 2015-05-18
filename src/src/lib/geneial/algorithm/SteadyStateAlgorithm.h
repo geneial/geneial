@@ -12,13 +12,14 @@ class SteadyStateAlgorithm: public BaseGeneticAlgorithm<FITNESS_TYPE>
 {
 public:
 
-    SteadyStateAlgorithm(stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE> &stoppingCriterion,
-            selection::BaseSelectionOperation<FITNESS_TYPE> &selectionOperation,
-            coupling::BaseCouplingOperation<FITNESS_TYPE> &couplingOperation,
-            crossover::BaseCrossoverOperation<FITNESS_TYPE> &crossoverOperation,
-            replacement::BaseReplacementOperation<FITNESS_TYPE> &replacementOperation,
-            mutation::BaseMutationOperation<FITNESS_TYPE> &mutationOperation,
-            BaseChromosomeFactory<FITNESS_TYPE> &chromosomeFactory) :
+    SteadyStateAlgorithm(
+            std::shared_ptr<stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE>> stoppingCriterion,
+            std::shared_ptr<selection::BaseSelectionOperation<FITNESS_TYPE>> selectionOperation,
+            std::shared_ptr<coupling::BaseCouplingOperation<FITNESS_TYPE>> couplingOperation,
+            std::shared_ptr<crossover::BaseCrossoverOperation<FITNESS_TYPE>> crossoverOperation,
+            std::shared_ptr<replacement::BaseReplacementOperation<FITNESS_TYPE>> replacementOperation,
+            std::shared_ptr<mutation::BaseMutationOperation<FITNESS_TYPE>> mutationOperation,
+            std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> chromosomeFactory) :
             BaseGeneticAlgorithm<FITNESS_TYPE>(stoppingCriterion, selectionOperation, couplingOperation,
                     crossoverOperation, replacementOperation, mutationOperation, chromosomeFactory)
     {

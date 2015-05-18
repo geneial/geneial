@@ -19,7 +19,6 @@ void SteadyStateAlgorithm<FITNESS_TYPE>::solve()
     this->_manager.replenishPopulation();
 
     //  std::cout << _manager.getPopulation() << std::endl;
-
     long double aging = 0;
 
     long double selection = 0;
@@ -55,23 +54,23 @@ void SteadyStateAlgorithm<FITNESS_TYPE>::solve()
 
         boost::posix_time::ptime beforeSelection = boost::posix_time::microsec_clock::local_time();
         //Perform a selection of mating candidates based on the given strategy.
-        auto mating_pool = this->_selectionOperation.doSelect(this->_manager.getPopulation(), this->_manager);
+        auto mating_pool = this->_selectionOperation->doSelect(this->_manager.getPopulation(), this->_manager);
         boost::posix_time::ptime afterSelection = boost::posix_time::microsec_clock::local_time();
         selection += static_cast<double>((afterSelection - beforeSelection).total_microseconds());
 
         boost::posix_time::ptime beforeCoupling = boost::posix_time::microsec_clock::local_time();
-        auto offspring(this->_couplingOperation.doCopulate(mating_pool, this->_crossoverOperation, this->_manager));
+        auto offspring(this->_couplingOperation->doCopulate(mating_pool, *this->_crossoverOperation, this->_manager));
         boost::posix_time::ptime afterCoupling = boost::posix_time::microsec_clock::local_time();
         coupling += static_cast<double>((afterCoupling - beforeCoupling).total_microseconds());
 
         boost::posix_time::ptime beforeMutation = boost::posix_time::microsec_clock::local_time();
-        offspring = this->_mutationOperation.doMutate(offspring, this->_manager);
+        offspring = this->_mutationOperation->doMutate(offspring, this->_manager);
         boost::posix_time::ptime afterMutation = boost::posix_time::microsec_clock::local_time();
         mutation += static_cast<double>((afterMutation - beforeMutation).total_microseconds());
 
         //TODO (bewo): Scaling?
         boost::posix_time::ptime beforeReplacement = boost::posix_time::microsec_clock::local_time();
-        this->_replacementOperation.doReplace(this->_manager.getPopulation(), mating_pool, offspring, this->_manager);
+        this->_replacementOperation->doReplace(this->_manager.getPopulation(), mating_pool, offspring, this->_manager);
         boost::posix_time::ptime afterReplacement = boost::posix_time::microsec_clock::local_time();
         replacement += static_cast<double>((afterReplacement - beforeReplacement).total_microseconds());
 

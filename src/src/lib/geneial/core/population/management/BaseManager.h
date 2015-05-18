@@ -23,9 +23,10 @@ class BaseManager : public std::enable_shared_from_this<BaseManager<FITNESS_TYPE
 {
 
 public:
-    explicit BaseManager<FITNESS_TYPE>(BaseChromosomeFactory<FITNESS_TYPE> &chromosomeFactory) :
+    explicit BaseManager<FITNESS_TYPE>(std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> chromosomeFactory) :
+        _populationSettings(),
         _population(*this),
-        _chromosomeFactory(chromosomeFactory), _populationSettings(), _executionManager(new SequentialExecutionManager())
+        _chromosomeFactory(chromosomeFactory), _executionManager(new SequentialExecutionManager())
     {
     }
 
@@ -63,7 +64,7 @@ public:
         return _chromosomeFactory;
     }
 
-    void setChromosomeFactory(BaseChromosomeFactory<FITNESS_TYPE>*& chromosomeFactory)
+    void setChromosomeFactory(std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> chromosomeFactory)
     {
         _chromosomeFactory = chromosomeFactory;
     }
@@ -89,11 +90,11 @@ public:
     }
 
 private:
+    PopulationSettings _populationSettings;
+
     Population<FITNESS_TYPE> _population;
 
-    BaseChromosomeFactory<FITNESS_TYPE> &_chromosomeFactory;
-
-    PopulationSettings _populationSettings;
+    std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> _chromosomeFactory;
 
     std::unique_ptr<BaseExecutionManager> _executionManager;
 

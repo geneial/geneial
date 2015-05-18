@@ -30,7 +30,7 @@ private:
 
     FITNESS_TYPE _sum;
 
-    //NOTE (bewo): Benchmarked this against a map, however the RBTree and all the mallocs are very costly, hence vector.
+    //NOTE (bewo): Benchmarked this against a map, however the RBTree and all the recurring mallocs are very costly, hence vector.
     std::vector<std::pair<FITNESS_TYPE, chrom_ptr_type>> _ranges;
 
     struct RouletteWheelComparator
@@ -96,9 +96,10 @@ public:
         }
     }
 
-    chrom_ptr_type spin(FITNESS_TYPE random)
+    chrom_ptr_type spin(double random)
     {
-        return std::lower_bound(_ranges.begin(), _ranges.end(), random * _sum, RouletteWheelComparator())->second;
+        return std::lower_bound(_ranges.begin(), _ranges.end(),
+                static_cast<FITNESS_TYPE>(random * _sum),RouletteWheelComparator())->second;
     }
 };
 
@@ -127,8 +128,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
         chrom_ptr_type ptr;
         do
         {
-            //TODO (bewo) this is suboptimal for ints..
-            const FITNESS_TYPE random = (FITNESS_TYPE) Random::generate<FITNESS_TYPE>(0.0, 1.0);
+            const double random = Random::generate<double>(0.0, 1.0);
             ptr = rouletteWheel.spin(random);
         } while (allowDuplicates || std::find(result.begin(), result.end(), ptr) != result.end());
         left_select--;

@@ -23,7 +23,7 @@ void BaseManager<FITNESS_TYPE>::replenishPopulation()
     while (_population.getSize() < _populationSettings.getMaxChromosomes())
     {
         //build new chromosome
-        const typename BaseChromosome<FITNESS_TYPE>::ptr newChromosome(_chromosomeFactory.createChromosome());
+        const typename BaseChromosome<FITNESS_TYPE>::ptr newChromosome(_chromosomeFactory->createChromosome());
         _population.insertChromosome(newChromosome);
     }
 }

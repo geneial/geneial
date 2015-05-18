@@ -196,16 +196,22 @@ int main(int argc, char **argv)
 
     CombinedCriterion<double> stoppingCriterion;
     stoppingCriterion.add(CombinedCriterion<double>::INIT,
-            std::shared_ptr<MaxGenerationCriterion<double>>(new MaxGenerationCriterion<double>(100000)));
+            std::move(std::shared_ptr<MaxGenerationCriterion<double>>(new MaxGenerationCriterion<double>(100000))));
 
     stoppingCriterion.add(CombinedCriterion<double>::OR,
-            std::shared_ptr<FitnessValueReachedCriterion<double>>(new FitnessValueReachedCriterion<double>(600)));
+            std::move(std::shared_ptr<FitnessValueReachedCriterion<double>>(new FitnessValueReachedCriterion<double>(600))));
 
     DemoObserver printObserver;
 
 
-    SteadyStateAlgorithm<double> algorithm(stoppingCriterion, selectionOperation, couplingOperation, crossoverOperation,
-            replacementOperation, mutationOperation, chromosomeFactory);
+    SteadyStateAlgorithm<double> algorithm(
+            std::make_shared<CombinedCriterion<double>>(stoppingCriterion),
+            std::make_shared<RouletteWheelSelection<double>>(selectionOperation),
+            std::make_shared<RandomCouplingOperation<double>>(couplingOperation),
+            std::make_shared<MultiValueChromosomeNPointCrossover<int, double>>(crossoverOperation),
+            std::make_shared<ReplaceWorstOperation<double>>(replacementOperation),
+            std::make_shared<UniformMutationOperation<int, double>>(mutationOperation),
+            std::make_shared<MultiValueChromosomeFactory<int, double>>(chromosomeFactory));
 
     algorithm.getPopulationSettings().setMaxChromosomes(60);
 

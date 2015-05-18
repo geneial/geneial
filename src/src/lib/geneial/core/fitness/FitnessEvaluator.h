@@ -20,6 +20,8 @@ class BaseChromosome;
 namespace geneial
 {
 
+//TODO (bewo) Allow a lambda function as fitness evaluator?
+
 using namespace geneial::population::chromosome;
 
 template<typename FITNESS_TYPE>

@@ -13,7 +13,7 @@ namespace algorithm
 template<typename FITNESS_TYPE>
 inline bool BaseGeneticAlgorithm<FITNESS_TYPE>::wasCriteriaReached() //TODO(bewo) Rethink about constness of this
 {
-    const bool wasReached = _stoppingCriterion.wasReached(_manager);
+    const bool wasReached = _stoppingCriterion->wasReached(_manager);
     if (wasReached)
     {
         notifyObservers(AlgorithmObserver<FITNESS_TYPE>::CRITERIA_REACHED);
@@ -30,22 +30,24 @@ inline void BaseGeneticAlgorithm<FITNESS_TYPE>::notifyObservers(typename Algorit
     {
         switch (event)
         {
-        case AlgorithmObserver<FITNESS_TYPE>::GENERATION_DONE:
-        {
-            for (const auto& it : lb->second)
+
+            case AlgorithmObserver<FITNESS_TYPE>::GENERATION_DONE:
             {
-                it->updateGeneration(_manager);
+                for (const auto& it : lb->second)
+                {
+                    it->updateGeneration(_manager);
+                }
+                break;
             }
-            break;
-        }
-        case AlgorithmObserver<FITNESS_TYPE>::CRITERIA_REACHED:
-        {
-            for (const auto& it : lb->second)
+
+            case AlgorithmObserver<FITNESS_TYPE>::CRITERIA_REACHED:
             {
-                it->updateCriteriaReached(_manager, _stoppingCriterion);
+                for (const auto& it : lb->second)
+                {
+                    it->updateCriteriaReached(_manager, *_stoppingCriterion);
+                }
+                break;
             }
-            break;
-        }
         }
     }
 }

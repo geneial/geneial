@@ -1,4 +1,4 @@
-
+#pragma once
 
 /**
  * The Ackley function is widely used for testing optimization algorithms.
@@ -6,9 +6,11 @@
  * The function poses a risk for optimization algorithms, particularly hillclimbing algorithms, to be trapped in one of its many local minima.
  *
  */
+#include "MultiVariableOptimProblem.h"
 #include <vector>
 
-namespace Ackley{
-    double compute(const std::vector<double>& coordinates);
-}
-
+class Ackley : public MultiVariableOptimiProblem
+{
+public:
+    double compute(const std::vector<double>& coordinates) const;
+};

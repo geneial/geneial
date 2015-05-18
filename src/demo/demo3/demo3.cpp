@@ -1,3 +1,5 @@
+//TODO (bewo) this is using the old interface, move to new one.
+
 #include <limits>
 #include <stdio.h>
 #include <stdexcept>
@@ -307,6 +309,15 @@ int main(int argc, char **argv)
     BaseGeneticAlgorithm<double> algorithm = BaseGeneticAlgorithm<double>(populationSettings, chromosomeFactory,
             &combinedCriterion, selectionOperation, couplingOperation, crossoverOperation, replacementOperation,
             mutationOperation, fitnessProcessingStrategy);
+
+    SteadyStateAlgorithm<double> algorithm(
+            std::make_shared<CombinedCriterion<double>>(stoppingCriterion),
+            std::make_shared<RouletteWheelSelection<double>>(selectionOperation),
+            std::make_shared<RandomCouplingOperation<double>>(couplingOperation),
+            std::make_shared<MultiValueChromosomeNPointCrossover<int, double>>(crossoverOperation),
+            std::make_shared<ReplaceWorstOperation<double>>(replacementOperation),
+            std::make_shared<UniformMutationOperation<int, double>>(mutationOperation),
+            std::make_shared<MultiValueChromosomeFactory<int, double>>(chromosomeFactory));
 
     algorithm.registerObserver(&printObserver);
 
