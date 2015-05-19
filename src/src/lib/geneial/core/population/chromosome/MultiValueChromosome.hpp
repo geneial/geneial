@@ -70,6 +70,12 @@ typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::value_container& MultiV
 }
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
+typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::value_container MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::getContainer() const
+{
+    return _container;
+}
+
+template<typename VALUE_TYPE, typename FITNESS_TYPE>
 void MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::setValueContainer(value_container container)
 {
     _container = container;
