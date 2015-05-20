@@ -1,7 +1,7 @@
 # MakeLists files in this project can
 # refer to the root source directory of the project as ${GENETICLIBRARY_SOURCE_DIR} and
 # to the root binary directory of the project as ${GENETICLIBRARY_BIN_DIR}.
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.12)
 #Setup CMake to run tests
 enable_testing()
 
