@@ -37,7 +37,8 @@ add_library( ${LIB_GENEIAL_STATIC_NAME} STATIC ${SRCS} ${CONFIG_H_IN} ${HDRS} ${
 
 #Also create a shared library
 add_library(  ${LIB_GENEIAL_SHARED_NAME} SHARED ${SRCS} ${CONFIG_H_IN} ${HDRS} ${TMPL} )
-
+cotire(${LIB_GENEIAL_STATIC_NAME})
+cotire(${LIB_GENEIAL_SHARED_NAME})
 
 set(LIBDEST "lib")
 set(HEADERDEST "include")

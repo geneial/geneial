@@ -21,7 +21,7 @@ foreach(testSrc ${TEST_SRC})
 
         #Add compile target
         add_executable(${testName} ${testSrc})
-		
+	cotire(${testName})		
 		#link with our genetic library
 		target_link_libraries(${testName} "${LIB_GENEIAL_SHARED_NAME}")
 		
