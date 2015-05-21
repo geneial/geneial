@@ -197,7 +197,7 @@ public:
             throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
         }
 
-        std::shared_ptr<Fitness<double> > ptr(new Fitness<double>(0));
+        std::shared_ptr<Fitness<double> > ptr(new Fitness<double>(std::numeric_limits<double>::signaling_NaN())));
         return ptr;
     }
 };

@@ -40,7 +40,7 @@ template<typename FITNESS_TYPE>
 void ReplaceRandomOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &population,
         const typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
         typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
-        BaseManager<FITNESS_TYPE> &manager)
+        BaseManager<FITNESS_TYPE> &manager) const
 {
 
     unsigned int numberToReplace = getAmountToReplace(population, offspring);

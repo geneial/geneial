@@ -41,12 +41,16 @@ public:
         }
 
         _wasInvoked = true;
+
         return _cachedResult;
     }
 
 private:
+
     unsigned int _lastGenerationChecked;
+
     bool _cachedResult;
+
     bool _wasInvoked;
 };
 

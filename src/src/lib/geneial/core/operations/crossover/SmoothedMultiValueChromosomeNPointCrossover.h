@@ -20,13 +20,11 @@ using namespace geneial::population::chromosome;
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class SmoothedMultiValueChromosomeNPointCrossover: public MultiValueChromosomeNPointCrossover<VALUE_TYPE, FITNESS_TYPE>
 {
-private:
-    const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &_builderSettings;
 public:
     SmoothedMultiValueChromosomeNPointCrossover(
-            const MultiValueChromosomeNPointCrossoverSettings &crossoverSettings,
-            const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &builderSettings,
-            ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE> &builderFactory
+            const std::shared_ptr<const MultiValueChromosomeNPointCrossoverSettings> &crossoverSettings,
+            const std::shared_ptr<const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>> &builderSettings,
+            const std::shared_ptr<const ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE>> &builderFactory
             ) :
             MultiValueChromosomeNPointCrossover<VALUE_TYPE, FITNESS_TYPE>(crossoverSettings, builderSettings,
                     builderFactory), _builderSettings(builderSettings)
@@ -42,8 +40,9 @@ public:
         return false;
     }
 
-    virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set doCrossover(
-            const typename BaseChromosome<FITNESS_TYPE>::const_ptr &mommy, const typename BaseChromosome<FITNESS_TYPE>::const_ptr &daddy) const override;
+    virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set doMultiValueCrossover(
+            const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
+            const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const override;
 };
 
 } /* namespace crossover */

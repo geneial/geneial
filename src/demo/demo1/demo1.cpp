@@ -31,8 +31,6 @@
 #include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/operations/mutation/NonUniformMutationOperation.h>
 
-#include <geneial/core/operations/choosing/ChooseRandom.h>
-
 #include <geneial/config.h>
 
 #include <stdexcept>
@@ -76,7 +74,7 @@ public:
         {
             throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
         }
-        std::unique_ptr<Fitness<double>> ptr(new Fitness<double>(1));
+        std::unique_ptr<Fitness<double>> ptr(new Fitness<double>);
         return std::move(ptr);
     }
 };
@@ -99,52 +97,17 @@ int main(int argc, char **argv)
 
     ContinousMultiValueChromosomeFactory<int,double> chromosomeFactory(builderSettings);
 
-    MutationSettings mutationSettings(0.1, 0.1, 5);
+    auto algorithm = SteadyStateAlgorithm<double>::Builder().
+            setChromosomeFactory(std::make_shared<ContinousMultiValueChromosomeFactory<int,double>>(chromosomeFactory)).
+            build();
 
-    ChooseRandom<int, double> mutationChoosingOperation(mutationSettings);
+    algorithm->getPopulationSettings().setMaxChromosomes(100);
 
-    NonUniformMutationOperation<int, double> mutationOperation(1, 0.2,
-            mutationSettings, mutationChoosingOperation, builderSettings, chromosomeFactory);
+    algorithm->setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager(1))));
 
-//    FitnessProportionalSelectionSettings selectionSettings(5,5);
+    algorithm->solve();
 
-//    FitnessProportionalSelection<double> selectionOperation(selectionSettings);
-
-
-
-    RouletteWheelSelection<double> selectionOperation(SelectionSettings(5));
-
-
-    CouplingSettings couplingSettings(20);
-
-    RandomCouplingOperation<double> couplingOperation(couplingSettings);
-
-    MultiValueChromosomeNPointCrossoverSettings crossoverSettings (1, MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH, 1);
-
-    MultiValueChromosomeNPointCrossover<int, double> crossoverOperation(crossoverSettings, builderSettings, chromosomeFactory);
-
-    BaseReplacementSettings replacementSettings(BaseReplacementSettings::REPLACE_ALL_OFFSPRING, 5, 2);
-
-    ReplaceWorstOperation<double> replacementOperation(replacementSettings);
-
-    MaxGenerationCriterion<double> stoppingCriterion(100000);
-
-    SteadyStateAlgorithm<double> algorithm(
-            std::make_shared<MaxGenerationCriterion<double>>(stoppingCriterion),
-            std::make_shared<RouletteWheelSelection<double>>(selectionOperation),
-            std::make_shared<RandomCouplingOperation<double>>(couplingOperation),
-            std::make_shared<MultiValueChromosomeNPointCrossover<int, double>>(crossoverOperation),
-            std::make_shared<ReplaceWorstOperation<double>>(replacementOperation),
-            std::make_shared<NonUniformMutationOperation<int, double>>(mutationOperation),
-            std::make_shared<ContinousMultiValueChromosomeFactory<int,double>>(chromosomeFactory));
-
-    algorithm.getPopulationSettings().setMaxChromosomes(100);
-
-    algorithm.setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager(1))));
-
-    algorithm.solve();
-
-    std::cout << *algorithm.getHighestFitnessChromosome() << std::endl;
+    std::cout << *algorithm->getHighestFitnessChromosome() << std::endl;
 
     std::cout << "end." << std::endl;
 

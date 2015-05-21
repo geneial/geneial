@@ -1,6 +1,6 @@
 #pragma once
 
-#include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
+#include <geneial/core/operations/crossover/MultiValueChromosomeCrossoverOperation.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossoverSettings.h>
 
 #include <cassert>
@@ -15,23 +15,22 @@ namespace crossover
 //TODO (bewo) allow random crossover width per settings
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-class MultiValueChromosomeNPointCrossover: public BaseCrossoverOperation<FITNESS_TYPE>
+class MultiValueChromosomeNPointCrossover: public MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>
 {
 private:
-    const MultiValueChromosomeNPointCrossoverSettings _crossoverSettings;
-    const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> _builderSettings;
-    mutable MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> _builderFactory;
+    std::shared_ptr<const MultiValueChromosomeNPointCrossoverSettings> _crossoverSettings;
 
 public:
-    MultiValueChromosomeNPointCrossover(const MultiValueChromosomeNPointCrossoverSettings &crossoverSettings,
-            const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &builderSettings,
-            MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> &builderFactory) :
-            _crossoverSettings(crossoverSettings), _builderSettings(builderSettings), _builderFactory(builderFactory)
+    MultiValueChromosomeNPointCrossover(
+            const std::shared_ptr<const MultiValueChromosomeNPointCrossoverSettings> &crossoverSettings,
+            const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory):
+                MultiValueChromosomeCrossoverOperation(builderFactory),
+            _crossoverSettings(crossoverSettings)
     {
         //ensure the crossoverpoints does not exceed the number of values.
         assert(_crossoverSettings.getCrossOverPoints() <= this->getBuilderSettings().getNum());
 
-        //ensure when minwidth is selected that the minwidth does not exceed the amount of spaces we have.
+        //ensure when min width is selected that the min width does not exceed the amount of spaces we have.
         assert( _crossoverSettings.getWidthSetting() != MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH
                         || _crossoverSettings.getMinWidth() * _crossoverSettings.getCrossOverPoints()
                                 <= this->getBuilderSettings().getNum());
@@ -71,37 +70,18 @@ public:
      * ===========================
      *
      */
-    virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set
-    doCrossover(const typename BaseChromosome<FITNESS_TYPE>::const_ptr &mommy, const typename BaseChromosome<FITNESS_TYPE>::const_ptr &daddy) const override;
+    virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set doMultiValueCrossover(
+            const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
+            const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const override;
 
-    MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> const & getBuilderSettings() const
+    inline MultiValueChromosomeNPointCrossoverSettings const & getCrossoverSettings() const
     {
-        return _builderSettings;
-    }
-
-    void setBuilderSettings(const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> & builderSettings)
-    {
-        _builderSettings = builderSettings;
-    }
-
-    MultiValueChromosomeNPointCrossoverSettings const & getCrossoverSettings() const
-    {
-        return _crossoverSettings;
+        return *_crossoverSettings;
     }
 
     void setCrossoverSettings(const MultiValueChromosomeNPointCrossoverSettings & crossoverSettings)
     {
         _crossoverSettings = crossoverSettings;
-    }
-
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> & getBuilderFactory() const
-    {
-        return _builderFactory;
-    }
-
-    void setBuilderFactory(const MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> & builderFactory)
-    {
-        _builderFactory = builderFactory;
     }
 
 };

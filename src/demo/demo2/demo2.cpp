@@ -96,7 +96,7 @@ public:
         {
             throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
         }
-        std::unique_ptr<Fitness<double>> ptr(new Fitness<double>(1));
+        std::unique_ptr<Fitness<double>> ptr(new Fitness<double>);
         return std::move(ptr);
     }
 };

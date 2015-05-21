@@ -10,7 +10,7 @@ namespace replacement
 {
 
 /**
- * Select a number of parents based on a certain criteria.
+ * Replace the worst chromosomes in the population
  */
 template<typename FITNESS_TYPE>
 class ReplaceWorstOperation: public BaseReplacementOperation<FITNESS_TYPE>
@@ -19,7 +19,7 @@ private:
     unsigned int getAmountToReplace(const Population<FITNESS_TYPE> &population,
             const typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const;
 public:
-    explicit ReplaceWorstOperation(const BaseReplacementSettings& settings) :
+    explicit ReplaceWorstOperation(const std::shared_ptr<const BaseReplacementSettings> &settings) :
             BaseReplacementOperation<FITNESS_TYPE>(settings)
     {
     }
@@ -31,7 +31,7 @@ public:
     void doReplace(Population<FITNESS_TYPE> &population,
             const typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
             typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
-            BaseManager<FITNESS_TYPE> &manager) override;
+            BaseManager<FITNESS_TYPE> &manager) const override;
 
 };
 

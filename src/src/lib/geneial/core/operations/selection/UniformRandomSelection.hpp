@@ -18,7 +18,7 @@ namespace selection
 
 template<typename FITNESS_TYPE>
 typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set UniformRandomSelection<FITNESS_TYPE>::doSelect(
-        const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager)
+        const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager) const
 {
 
     //shorthands for type mess
@@ -46,7 +46,9 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set UniformRando
         } while (allowDuplicates || std::find(result.begin(), result.end(), rnditer->second) != result.end());
 
         left_select--;
+
         result.push_back(rnditer->second);
+
     }
     return result;
 }

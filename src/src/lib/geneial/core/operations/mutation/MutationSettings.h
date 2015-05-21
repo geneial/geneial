@@ -36,7 +36,7 @@ public:
     {
     }
 
-    MutationSettings(double probability, double amountOfMutation, unsigned int amountOfPointsOfMutation)
+    MutationSettings(const double probability, const double amountOfMutation, const unsigned int amountOfPointsOfMutation)
     {
         assert((probability <= 1) && (probability >= 0));
         _probability = probability;
@@ -59,17 +59,17 @@ public:
         return _amountOfPointsOfMutation;
     }
 
-    void setAmountOfPointsOfMutation(unsigned int amount)
+    void setAmountOfPointsOfMutation(const unsigned int amount)
     {
         _amountOfPointsOfMutation = amount;
     }
 
-    void setPropability(double propabilityOfMutation)
+    void setPropability(const double propabilityOfMutation)
     {
         _probability = propabilityOfMutation;
     }
 
-    void setAmountOfMutation(double amountOfMutation)
+    void setAmountOfMutation(const double amountOfMutation)
     {
         _amountOfMutation = amountOfMutation;
     }

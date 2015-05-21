@@ -7,7 +7,7 @@ namespace geneial
 template<typename FITNESS_TYPE>
 FITNESS_TYPE Fitness<FITNESS_TYPE>::get() const
 {
-    return _value;
+    return *_value;
 }
 
 template<typename FITNESS_TYPE>
@@ -17,9 +17,22 @@ void Fitness<FITNESS_TYPE>::set(FITNESS_TYPE value)
 }
 
 template<typename FITNESS_TYPE>
+bool Fitness<FITNESS_TYPE>::isValid() const
+{
+    if(_value)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+template<typename FITNESS_TYPE>
 void Fitness<FITNESS_TYPE>::print(std::ostream& os) const
 {
-    os << _value;
+    os << *_value;
 }
 
 } /* namespace geneial */

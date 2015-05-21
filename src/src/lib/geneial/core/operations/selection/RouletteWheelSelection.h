@@ -4,6 +4,7 @@
 
 #include <map>
 #include <stdexcept>
+#include <memory>
 
 namespace geneial
 {
@@ -19,7 +20,7 @@ template<typename FITNESS_TYPE>
 class RouletteWheelSelection: public BaseSelectionOperation<FITNESS_TYPE>
 {
 public:
-    explicit RouletteWheelSelection(const SelectionSettings& settings) :
+    explicit RouletteWheelSelection(const std::shared_ptr<const SelectionSettings> &settings) :
             BaseSelectionOperation<FITNESS_TYPE>(settings)
     {
     }
@@ -29,7 +30,7 @@ public:
     }
 
     virtual typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set doSelect(
-            const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager) override;
+            const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager) const override;
 
 };
 

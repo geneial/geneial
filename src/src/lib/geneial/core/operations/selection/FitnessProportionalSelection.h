@@ -3,8 +3,8 @@
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
 #include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
 
-#include <map>
 #include <stdexcept>
+#include <memory>
 
 namespace geneial
 {
@@ -20,10 +20,9 @@ template<typename FITNESS_TYPE>
 class FitnessProportionalSelection: public BaseSelectionOperation<FITNESS_TYPE>
 {
 public:
-    explicit FitnessProportionalSelection(const FitnessProportionalSelectionSettings &settings) :
+    explicit FitnessProportionalSelection(const std::shared_ptr<const FitnessProportionalSelectionSettings>& settings) :
             BaseSelectionOperation<FITNESS_TYPE>(settings), _settings(settings)
     {
-
     }
 
     virtual ~FitnessProportionalSelection()
@@ -31,10 +30,10 @@ public:
     }
 
     virtual typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set doSelect(
-            const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager) override;
+            const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager) const override;
 
 private:
-    const FitnessProportionalSelectionSettings& _settings;
+    const std::shared_ptr<const FitnessProportionalSelectionSettings> _settings;
 
 };
 

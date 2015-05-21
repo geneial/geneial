@@ -19,11 +19,17 @@ template<typename FITNESS_TYPE>
 class BaseMutationOperation
 {
 protected:
-    const MutationSettings& _settings;
-    const BaseChoosingOperation<FITNESS_TYPE>& _choosingOperation;
+
+    std::shared_ptr<const MutationSettings>_settings;
+
+    std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> _choosingOperation;
+
 public:
     //Constructor
-    BaseMutationOperation(const MutationSettings &settings, const BaseChoosingOperation<FITNESS_TYPE> &choosingOperation) :
+    BaseMutationOperation(
+            const std::shared_ptr<const MutationSettings> &settings,
+            const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation
+            ) :
             _settings(settings), _choosingOperation(choosingOperation)
     {
     }
@@ -35,21 +41,21 @@ public:
 
     typedef typename Population<FITNESS_TYPE>::chromosome_container mutation_result_set;
     virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
-            const typename Population<FITNESS_TYPE>::chromosome_container &mutants, BaseManager<FITNESS_TYPE> &manager) = 0;
+            const typename Population<FITNESS_TYPE>::chromosome_container &mutants, BaseManager<FITNESS_TYPE> &manager) const = 0;
 
     MutationSettings const & getSettings() const
     {
-        return _settings;
+        return *_settings;
     }
 
-    void setSettings(const MutationSettings& settings)
+    void setSettings(const std::shared_ptr<const MutationSettings> &settings)
     {
         _settings = settings;
     }
 
     BaseChoosingOperation<FITNESS_TYPE> const & getChoosingOperation() const
     {
-        return _choosingOperation;
+        return *_choosingOperation;
     }
 };
 

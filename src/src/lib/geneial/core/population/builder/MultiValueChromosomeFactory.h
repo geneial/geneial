@@ -26,7 +26,7 @@ public:
     typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome(
             typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues = BaseChromosomeFactory<FITNESS_TYPE>::CREATE_VALUES) override;
 
-    const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> & getSettings() const
+    inline const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> & getSettings() const
     {
         return _settings;
     }

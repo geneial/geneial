@@ -1,7 +1,6 @@
 #pragma once
 
-#include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
-#include <geneial/core/operations/coupling/BaseCouplingOperation.h>
+#include <geneial/core/operations/crossover/MultiValueChromosomeCrossoverOperation.h>
 
 #include <cassert>
 #include <geneial/utility/Interpolators.h>
@@ -14,7 +13,8 @@ namespace crossover
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-class MultiValueChromosomeBlendingCrossover: public BaseCrossoverOperation<FITNESS_TYPE>
+class MultiValueChromosomeBlendingCrossover: public MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>
+
 {
 public:
 
@@ -29,11 +29,12 @@ public:
     };
 
     //TODO (bewo): are settings necessary?
-    MultiValueChromosomeBlendingCrossover(const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &builderSettings,
-            MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> &builderFactory, const InterpolateBeta interpolationMethod,
+    MultiValueChromosomeBlendingCrossover(
+            const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory,
+            const InterpolateBeta interpolationMethod,
             const OffspringMode offspringMode, const unsigned int numChilds) :
-            _builderSettings(builderSettings), _builderFactory(builderFactory), _interpolationMethod(
-                    interpolationMethod), _offspringMode(offspringMode), _numChilds(numChilds)
+                MultiValueChromosomeCrossoverOperation(builderFactory),
+                    _interpolationMethod(interpolationMethod), _offspringMode(offspringMode), _numChilds(numChilds)
 
     {
         assert(_numChilds >= 1);
@@ -48,18 +49,9 @@ public:
         return false;
     }
 
-    virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set
-    doCrossover(const typename BaseChromosome<FITNESS_TYPE>::const_ptr &mommy, const typename BaseChromosome<FITNESS_TYPE>::const_ptr &daddy) const override;
-
-    MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> const & getBuilderSettings() const
-    {
-        return _builderSettings;
-    }
-
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>  & getBuilderFactory() const
-    {
-        return _builderFactory;
-    }
+    virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set doMultiValueCrossover(
+            const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
+            const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const override;
 
     InterpolateBeta getInterpolationMethod() const
     {
@@ -77,8 +69,6 @@ public:
     }
 
 private:
-    const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> & _builderSettings;
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> &_builderFactory;
     const InterpolateBeta _interpolationMethod;
     const OffspringMode _offspringMode;
     unsigned int _numChilds;

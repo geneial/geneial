@@ -2,6 +2,8 @@
 
 #include <geneial/utility/Printable.h>
 
+#include <boost/optional.hpp>
+
 #include <memory>
 
 namespace geneial
@@ -19,7 +21,7 @@ template<typename FITNESS_TYPE>
 class Fitness: public Printable
 {
 private:
-    FITNESS_TYPE _value;
+    boost::optional<FITNESS_TYPE> _value;
 
 public:
     Fitness()
@@ -35,15 +37,23 @@ public:
     {
     }
 
-    void set(FITNESS_TYPE value);
+    inline void set(FITNESS_TYPE value);
 
-    FITNESS_TYPE get() const;
+    inline FITNESS_TYPE get() const;
 
     //cast operator overload
-    operator FITNESS_TYPE() const
+    inline operator FITNESS_TYPE() const
     {
         return get();
     }
+
+    //cast operator overload
+    inline FITNESS_TYPE operator()() const
+    {
+        return get();
+    }
+
+    virtual bool isValid() const;
 
     void print(std::ostream&) const;
 };

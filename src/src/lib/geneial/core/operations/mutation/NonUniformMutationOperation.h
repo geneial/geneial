@@ -1,8 +1,6 @@
 #pragma once
 
-#include <geneial/core/operations/mutation/BaseMutationOperation.h>
-#include <geneial/core/population/chromosome/MultiValueChromosome.h>
-#include <geneial/core/population/builder/MultiValueChromosomeFactory.h>
+#include <geneial/core/operations/mutation/MultiValueChromosomeMutationOperation.h>
 #include <geneial/utility/Random.h>
 
 #include <cassert>
@@ -15,18 +13,19 @@ namespace mutation
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-class NonUniformMutationOperation: public BaseMutationOperation<FITNESS_TYPE>
+class NonUniformMutationOperation: public MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>
 {
 
 private:
-    const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &_builderSettings;
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> &_builderFactory;
 
     double _minimumModification;
+
     unsigned int _affectedGenerations;
 
 public:
-    /*
+    /**
+     * (TODO) bewo outdated docs.
+     *
      * NonUniformMutationOperation Mutates a chromosome, by modificating some of it's values with weight w.
      * W decreases with the amount of mutations defined by affectedGenerations.
      * minimumModification defines the percetual change to a value AFTER the number of affected Generations has been reached
@@ -34,14 +33,21 @@ public:
      * @param affectedGenerations defines how many Generations will be target for decreasing amounts of mutation
      * @param minimumModification defines the lowest percentage of mutation that is possible
      */
+    NonUniformMutationOperation(
+            const unsigned int affectedGenerations,
+            const VALUE_TYPE minimumModification,
+            const std::shared_ptr<const MutationSettings> &settings,
+            const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
+            const std::shared_ptr<const MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
 
-    NonUniformMutationOperation(unsigned int affectedGenerations, double minimumModification,
-            const MutationSettings &settings, const BaseChoosingOperation<FITNESS_TYPE> &choosingOperation,
-            const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &builderSettings,
-            MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> &builderFactory) :
-            BaseMutationOperation<FITNESS_TYPE>(settings, choosingOperation), _builderSettings(builderSettings), _builderFactory(
-                    builderFactory), _minimumModification(minimumModification), _affectedGenerations(
-                    affectedGenerations)
+                MultiValueChromosomeMutationOperation<FITNESS_TYPE,VALUE_TYPE>(
+                        settings,
+                        choosingOperation,
+                        builderFactory
+                        ),
+
+                _minimumModification(minimumModification),
+                _affectedGenerations(affectedGenerations)
     {
     }
 
@@ -49,16 +55,12 @@ public:
     {
     }
 
-    /*
+    /**
      *  Returns a new chromosome which is a partially mutated version of the old one.
      *  */
     virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
-            const typename Population<FITNESS_TYPE>::chromosome_container &mutants, BaseManager<FITNESS_TYPE> &manager) override;
+            const typename Population<FITNESS_TYPE>::chromosome_container &mutants, BaseManager<FITNESS_TYPE> &manager) const override;
 
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> & getBuilderFactory() const
-    {
-        return _builderFactory;
-    }
 
     double getMinimumModification() const
     {
@@ -80,7 +82,6 @@ public:
         this->affectedGenerations = affectedGenerations;
     }
 };
-//class
 
 } /* namespace mutation */
 } /* namespace operation */

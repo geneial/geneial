@@ -17,10 +17,10 @@ template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class ChooseRandom: public BaseChoosingOperation<FITNESS_TYPE>
 {
 private:
-    const MutationSettings &_settings;
+    std::shared_ptr<const MutationSettings> _settings;
 
 public:
-    explicit ChooseRandom(const MutationSettings &settings) :
+    explicit ChooseRandom(const std::shared_ptr<const MutationSettings> &settings) :
             BaseChoosingOperation<FITNESS_TYPE>(), _settings(settings)
     {
     }
@@ -38,10 +38,10 @@ public:
 
     const MutationSettings& getSettings() const
     {
-        return _settings;
+        return *_settings;
     }
 
-    void setSettings(const MutationSettings& settings)
+    void setSettings(const std::shared_ptr<const MutationSettings> &settings)
     {
         _settings = settings;
     }

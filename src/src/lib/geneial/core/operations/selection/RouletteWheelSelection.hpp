@@ -105,7 +105,7 @@ public:
 
 template<typename FITNESS_TYPE>
 typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWheelSelection<FITNESS_TYPE>::doSelect(
-        const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager)
+        const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager) const
 {
 
     //shorthands for type mess
@@ -118,6 +118,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
 
     RouletteWheel<FITNESS_TYPE> rouletteWheel(population);
 
+    std::cout << population.getSize() << ", " << left_select << std::endl;
     //TODO (bewo) allow parameter for the best chromosomes to be selected (and skipped here)
     assert(population.getSize() >= left_select);
 

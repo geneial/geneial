@@ -20,7 +20,7 @@ class RandomCouplingOperation: public BaseCouplingOperation<FITNESS_TYPE>
 {
 
 public:
-    explicit RandomCouplingOperation(const CouplingSettings &settings) :
+    explicit RandomCouplingOperation(const std::shared_ptr<const CouplingSettings> &settings) :
             BaseCouplingOperation<FITNESS_TYPE>(settings)
     {
     }

@@ -14,7 +14,7 @@ namespace selection
 
 template<typename FITNESS_TYPE>
 typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessProportionalSelection<FITNESS_TYPE>::doSelect(
-        const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager)
+        const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager) const
 {
 
     //shorthands for type mess
@@ -23,10 +23,10 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
     typedef typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set result_set;
 
     result_set result;
-    result.reserve(_settings.getNumberOfParents()+_settings.getNumberSelectBest());
+    result.reserve(this->getSettings().getNumberOfParents()+this->getSettings().getNumberSelectBest());
 
     //Calculate total sum of fitness
-    FITNESS_TYPE sum = std::accumulate(population.getFitnessMap().cbegin(), population.getFitnessMap().cend(), 0,
+    const FITNESS_TYPE sum = std::accumulate(population.getFitnessMap().cbegin(), population.getFitnessMap().cend(), 0,
             [](FITNESS_TYPE total, const typename Population<FITNESS_TYPE>::fitness_map::value_type& mapdata)
             {
                 total += (mapdata.second)->getFitness().get();
@@ -43,11 +43,11 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
         sorted_multimap.insert(std::pair<FITNESS_TYPE, chrom_ptr_type>(prop_fitness, it.second));
     }
 
-    unsigned int left_select = _settings.getNumberOfParents();
+    unsigned int left_select = this->getSettings().getNumberOfParents();
     //First, handle elitism, iterate backwards over the sorted multimap and select the best chromosomes.
 
     //TODO (bewo) OPTIMIZE: using sth like transform(i, j, back_inserter(v), select2nd<MapType::value_type>()); instead ???
-    unsigned int elitism_to_select = _settings.getNumberSelectBest();
+    unsigned int elitism_to_select = this->getSettings().getNumberSelectBest();
     typename map_type::reverse_iterator crit = sorted_multimap.rbegin();
     for (; crit != sorted_multimap.rend() && elitism_to_select > 0; ++crit)
     {
@@ -57,8 +57,8 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
     //Strip the inserted part from the map
     sorted_multimap.erase(crit.base(), sorted_multimap.end());
 
-    assert(result.size() == _settings.getNumberSelectBest());
-    left_select -= _settings.getNumberSelectBest();
+    assert(result.size() == this->getSettings().getNumberSelectBest());
+    left_select -= this->getSettings().getNumberSelectBest();
     assert(left_select <= sorted_multimap.size());
 
     //now select the remainder based on proportional probability.

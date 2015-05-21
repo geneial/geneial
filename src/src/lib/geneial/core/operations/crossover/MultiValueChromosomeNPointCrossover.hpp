@@ -18,32 +18,25 @@ using namespace geneial::operation::coupling;
 
 //TODO (bewo): reduce cyclomatic complexity...
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set
-    MultiValueChromosomeNPointCrossover<VALUE_TYPE,FITNESS_TYPE>::doCrossover(
-        const typename BaseChromosome<FITNESS_TYPE>::const_ptr &mommy,
-        const typename BaseChromosome<FITNESS_TYPE>::const_ptr &daddy) const
+typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueChromosomeNPointCrossover<VALUE_TYPE,
+        FITNESS_TYPE>::doMultiValueCrossover(
+        const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
+        const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const
 {
-
-    typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::value_container value_container;
-    typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr mvc_ptr;
-    typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr mvc_cptr;
 
     typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set resultset;
 
-    const mvc_cptr mvc_mommy = std::dynamic_pointer_cast<const MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(mommy);
-    assert(mvc_mommy);
-
-    const mvc_cptr mvc_daddy = std::dynamic_pointer_cast<const MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(daddy);
-    assert(mvc_daddy);
 
     const unsigned int crossoverPoints = this->getCrossoverSettings().getCrossOverPoints();
-    const unsigned int totalWidth = this->getBuilderSettings().getNum();
+    const unsigned int totalWidth = this->getBuilderFactory().getSettings().getNum();
+
     std::set<unsigned int> crossoverPositions;
+
     if (this->getCrossoverSettings().getWidthSetting()
             == MultiValueChromosomeNPointCrossoverSettings::EQUIDISTANT_WIDTH)
     {
-
         const unsigned int equidistantwidth = totalWidth / (crossoverPoints + 1);
+
         for (unsigned int i = 0; i < crossoverPoints; i++)
         {
             crossoverPositions.insert(i * equidistantwidth);
@@ -75,7 +68,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set
 
             do
             {
-                rnd_pos = Random::generate<int>(0, this->getBuilderSettings().getNum());
+                rnd_pos = Random::generate<int>(0, this->getBuilderFactory().getSettings().getNum());
 
                 std::set<unsigned int>::iterator itlow = std::lower_bound(crossoverPositions.begin(),
                         crossoverPositions.end(), rnd_pos);
@@ -116,6 +109,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set
                 {
                     continue;
                 }
+
                 valid &= itup == crossoverPositions.end()
                         || (itup != crossoverPositions.end() && *itup - rnd_pos >= minWidth);
                 if (!valid)
@@ -130,20 +124,19 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set
     }
     assert(crossoverPositions.size() == crossoverPoints);
 
-    mvc_ptr child_candidate = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
-            this->getBuilderFactory().createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
-    assert(child_candidate);
+    auto child_candidate = this->createChildCandidate();
 
-    const value_container &daddy_container = mvc_daddy->getContainer();
-    const value_container &mommy_container = mvc_mommy->getContainer();
-    value_container &child_container = child_candidate->getContainer();
+    const auto &daddy_container = daddy->getContainer();
+    const auto &mommy_container = mommy->getContainer();
+    auto &child_container = child_candidate->getContainer();
 
     child_container.clear();
 
     assert(daddy_container.size() == mommy_container.size());
 
-    typename std::back_insert_iterator<value_container> target_it = std::back_inserter(child_container);
-    std::set<unsigned int>::const_iterator widthIterator = crossoverPositions.begin();
+    auto target_it = std::back_inserter(child_container);
+    auto widthIterator = crossoverPositions.cbegin();
+
     bool flip = true; //copy from ladies first.
 
     crossoverPositions.insert(daddy_container.size());

@@ -15,22 +15,12 @@ using namespace geneial::utility;
 using namespace geneial::operation::coupling;
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-inline typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueChromosomeBlendingCrossover<
-        VALUE_TYPE, FITNESS_TYPE>::doCrossover(const typename BaseChromosome<FITNESS_TYPE>::const_ptr &mommy,
-        const typename BaseChromosome<FITNESS_TYPE>::const_ptr &daddy)
+typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueChromosomeBlendingCrossover<VALUE_TYPE,
+        FITNESS_TYPE>::doMultiValueCrossover(
+        const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
+        const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const
 {
-    //Cast Chromosomes, shorthands for necessary data structures...
-    typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::value_container value_container;
-    typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr mvc_cptr;
-    typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr mvc_ptr;
-
     typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set resultset;
-
-    const mvc_cptr mvc_mommy = std::dynamic_pointer_cast<const MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(mommy);
-    assert(mvc_mommy);
-
-    const mvc_cptr mvc_daddy = std::dynamic_pointer_cast<const MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(daddy);
-    assert(mvc_daddy);
 
     //Determine the amount of chromosomes to generate
     unsigned int chromosomesToGenerate;
@@ -53,49 +43,56 @@ inline typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set Multi
             interpolationMethod = (InterpolateBeta) (INTERPOLATE_RANDOM + Random::generate(1, 3));
         }
 
-        const double beta1 = Random::generate(0.0, 1.0);
-        const double beta2 = Random::generate(0.0, 1.0);
+        const double beta1 = Random::generate<double>(0.0, 1.0);
+        const double beta2 = Random::generate<double>(0.0, 1.0);
 
-        mvc_ptr child_candidate = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
-                this->getBuilderFactory().createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
+        auto child_candidate = this->createChildCandidate();
 
         assert(child_candidate);
 
-        const unsigned int containerSize = this->getBuilderSettings().getNum();
+        const unsigned int containerSize = this->getBuilderFactory().getBuilderSettings().getNum();
 
-        const value_container &daddy_container = mvc_daddy->getContainer();
-        const value_container &mommy_container = mvc_mommy->getContainer();
-        value_container &child_container = child_candidate->getContainer();
+        const auto &daddy_container = mommy->getContainer();
+        const auto &mommy_container = daddy->getContainer();
+        auto &child_container = child_candidate->getContainer();
 
-        typename value_container::const_it mommy_it = mommy_container.begin();
-        typename value_container::const_it daddy_it = daddy_container.begin();
+        auto mommy_it = mommy_container.cbegin();
+        auto daddy_it = daddy_container.cbegin();
+
         for (unsigned int i = 0; mommy_it != mommy_container.end(); ++i)
         {
             double targetBeta;
             switch (interpolationMethod)
             {
-            case INTERPOLATE_COSINE:
-            {
-                targetBeta = Interpolators::cosineInterpolate<double>(beta1, beta2,
-                        ((double) i) / ((double) containerSize));
-                break;
+
+                case INTERPOLATE_COSINE:
+                {
+                    targetBeta = Interpolators::cosineInterpolate<double>(beta1, beta2,
+                            ((double) i) / ((double) containerSize));
+                    break;
+                }
+
+                case INTERPOLATE_LINEARLY:
+                {
+                    targetBeta = Interpolators::linearInterpolate<double>(beta1, beta2,
+                            ((double) i) / ((double) containerSize));
+                    break;
+                }
+
+                default: //FALLTRHOUGH INTENDED
+                case INTERPOLATE_NONE:
+                {
+                    targetBeta = beta1;
+                    break;
+                }
+
             }
-            case INTERPOLATE_LINEARLY:
-            {
-                targetBeta = Interpolators::linearInterpolate<double>(beta1, beta2,
-                        ((double) i) / ((double) containerSize));
-                break;
-            }
-            default: //FALLTRHOUGH INTENDED
-            case INTERPOLATE_NONE:
-            {
-                targetBeta = beta1;
-                break;
-            }
-            }
+
             assert(targetBeta <= 1.0);
             assert(targetBeta >= 0);
+
             child_container.push_back((*mommy_it * (targetBeta) + *daddy_it * (targetBeta)));
+
             ++mommy_it;
             ++daddy_it;
         }
@@ -103,7 +100,7 @@ inline typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set Multi
         resultset.push_back(child_candidate);
     }
 
-    return resultset;
+    return std::move(resultset);
 }
 
 } /* namespace crossover */

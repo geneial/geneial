@@ -71,6 +71,7 @@ public:
     {
         _crossOverPoints = crossOverPoints;
     }
+
     unsigned int getMinWidth() const
     {
         return _min_width;

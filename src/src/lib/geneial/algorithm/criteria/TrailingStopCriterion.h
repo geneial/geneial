@@ -22,7 +22,7 @@ public:
     virtual ~TrailingStopCriterion()
     {
     }
-    ;
+
     virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager)
     {
         //TODO (bewo): unimplemeted!

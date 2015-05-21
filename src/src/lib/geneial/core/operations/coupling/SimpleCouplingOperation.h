@@ -17,7 +17,7 @@ template<typename FITNESS_TYPE>
 class SimpleCouplingOperation: public BaseCouplingOperation<FITNESS_TYPE>
 {
 public:
-    explicit SimpleCouplingOperation(const CouplingSettings &settings) :
+    explicit SimpleCouplingOperation( const std::shared_ptr<const CouplingSettings> &settings) :
             BaseCouplingOperation<FITNESS_TYPE>(settings)
     {
     }

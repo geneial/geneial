@@ -19,10 +19,10 @@ template<typename FITNESS_TYPE>
 class BaseReplacementOperation
 {
 protected:
-    const BaseReplacementSettings & _settings;
+    std::shared_ptr<const BaseReplacementSettings> _settings;
 
 public:
-    explicit BaseReplacementOperation(const BaseReplacementSettings& settings) :
+    explicit BaseReplacementOperation(const std::shared_ptr<const BaseReplacementSettings> &settings) :
             _settings(settings)
     {
     }
@@ -34,11 +34,11 @@ public:
     virtual void doReplace(Population<FITNESS_TYPE> &population,
             const typename selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
             typename coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
-            BaseManager<FITNESS_TYPE> &manager) = 0;
+            BaseManager<FITNESS_TYPE> &manager) const = 0;
 
     const BaseReplacementSettings& getSettings() const
     {
-        return _settings;
+        return *_settings;
     }
 
     void setSettings(const BaseReplacementSettings& settings)

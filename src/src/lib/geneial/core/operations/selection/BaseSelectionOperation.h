@@ -21,12 +21,12 @@ template<typename FITNESS_TYPE>
 class BaseSelectionOperation
 {
 private:
-    const SelectionSettings& _settings;
+    const std::shared_ptr<const SelectionSettings> _settings;
 
 public:
     typedef typename Population<FITNESS_TYPE>::chromosome_container selection_result_set;
 
-    explicit BaseSelectionOperation(SelectionSettings const & settings) :
+    explicit BaseSelectionOperation(const std::shared_ptr<const SelectionSettings> &settings) :
             _settings(settings)
     {
     }
@@ -40,10 +40,10 @@ public:
 
     const SelectionSettings& getSettings() const
     {
-        return _settings;
+        return *_settings;
     }
 
-    void setSettings(const SelectionSettings& settings)
+    void setSettings(const std::shared_ptr<const SelectionSettings> &settings)
     {
         _settings = settings;
     }

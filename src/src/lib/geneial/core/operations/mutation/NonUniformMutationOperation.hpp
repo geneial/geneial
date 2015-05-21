@@ -36,14 +36,20 @@ namespace mutation
  *  */
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate(
-        const typename Population<FITNESS_TYPE>::chromosome_container &_chromosomeInputContainer,
-        BaseManager<FITNESS_TYPE> &manager)
+        const typename Population<FITNESS_TYPE>::chromosome_container &chromosomeInputContainer,
+        BaseManager<FITNESS_TYPE> &manager) const
 {
 
-    typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::value_container value_container;
-    typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr mvc_ptr;
-
     typename Population<FITNESS_TYPE>::chromosome_container notChoosenChromosomeContainer;
+
+
+    const auto randomMin = this->getBuilderFactory().getSettings().getRandomMin();
+    const auto randomMax = this->getBuilderFactory().getSettings().getRandomMax() ;
+    const auto populationAge = manager.getPopulation().getAge();
+    const auto maxNumMvc = this->getBuilderFactory().getSettings().getNum();
+    const auto affectedGenerations = this->getAffectedGenerations();
+    const auto amountPointsOfMutation = this->getSettings().getAmountOfPointsOfMutation();
+
 
     unsigned int pointOfMutation = 0;
     unsigned int mutationCounter = 0;
@@ -51,13 +57,13 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
     double value_choice = 0;
 
 
-    auto choosenChromosomeContainer(this->getChoosingOperation().doChoose(_chromosomeInputContainer));
+    auto choosenChromosomeContainer(this->getChoosingOperation().doChoose(chromosomeInputContainer));
 
-    //calculates difference: _notChoosenChromosomeContainer = _choosenChromosomeContainer - _chromosomeInputContainer
-    //TODO(bewo): Think about cbegin/cend here...
-    std::set_difference(_chromosomeInputContainer.begin(), _chromosomeInputContainer.end(),
-            choosenChromosomeContainer.begin(), choosenChromosomeContainer.end(),
-            std::back_inserter(notChoosenChromosomeContainer));
+    //calculates difference: notChoosenChromosomeContainer = _choosenChromosomeContainer - _chromosomeInputContainer
+
+    std::set_difference(chromosomeInputContainer.cbegin(), chromosomeInputContainer.cend(),
+            choosenChromosomeContainer.cbegin(), choosenChromosomeContainer.cend(),
+            std::back_inserter(notChoosenChromosomeContainer)); //TODO(bewo): This seems unecessarily expensive..
 
     typename Population<FITNESS_TYPE>::chromosome_container resultset;
 
@@ -70,28 +76,26 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
     {
         mutationCounter = 0;
         //casting mutant as MVC
-        const mvc_ptr _mvcMutant(std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
+        const auto mvcMutant(std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
                 chosenChromosome));
 
-        assert(_mvcMutant);
+        assert(mvcMutant);
 
-        mvc_ptr _mutatedChromosome = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
-                this->_builderFactory.createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
-        assert(_mutatedChromosome);
+        auto mutatedChromosome = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
+                this->getBuilderFactory().createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
+        assert(mutatedChromosome);
 
-        const value_container &_mutantChromosomeContainer = _mvcMutant->getContainer();
-        value_container &result_container = _mutatedChromosome->getContainer();
+        const auto &_mutantChromosomeContainer = mvcMutant->getContainer();
+        auto &result_container = mutatedChromosome->getContainer();
 
         //first target point of mutation
-        if (this->_settings.getAmountOfPointsOfMutation() > 0)
+        if (amountPointsOfMutation > 0)
         {
-            pointOfMutation = Random::generate<int>(0,
-                    this->_builderFactory.getSettings().getNum()
-                            / this->_settings.getAmountOfPointsOfMutation());
+            pointOfMutation = Random::generate<int>(0, maxNumMvc / amountPointsOfMutation);
         }
 
         //iterator for one chromosome (to iterate it's values)
-        typename value_container::const_iterator mutant_it = _mutantChromosomeContainer.cbegin();
+        auto mutant_it = _mutantChromosomeContainer.cbegin();
 
         //Insinde Chromosome loop
         for (unsigned int i = 0; mutant_it != _mutantChromosomeContainer.cend(); i++)
@@ -104,15 +108,13 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
              * Creates a split which shifts the weight from the random value to the old value.
              * The replaced value is a sum from random and old value.
              */
-            if (manager.getPopulation().getAge() > 0)
+            if (populationAge > 0)
             {
-                split = 1
-                        - static_cast<double>(manager.getPopulation().getAge())
-                                / static_cast<double>(this->getAffectedGenerations());
+                split = 1 - static_cast<double>(populationAge) / static_cast<double>(affectedGenerations);
             }
 
             //keeping a minimum amount of mutation
-            if (this->getAffectedGenerations() < manager.getPopulation().getAge())
+            if (affectedGenerations < populationAge)
             {
                 split = this->getMinimumModification();
             }
@@ -122,30 +124,25 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
                 split = this->getMinimumModification();
             }
 
-            VALUE_TYPE randomMutation = Random::generate<VALUE_TYPE>(
-                    this->_builderFactory.getSettings().getRandomMin(),
-                    this->_builderFactory.getSettings().getRandomMax());
-            double weightedMutation = ((split) * randomMutation + (1 - split) * *mutant_it);
+            const VALUE_TYPE randomMutation = Random::generate<VALUE_TYPE>(randomMin, randomMax);
+            const VALUE_TYPE weightedMutation = ((split) * randomMutation + (1 - split) * *mutant_it);
 
             //Check amount of mutation targets in one chromosome (pointsOfMutation)
-            if (this->_settings.getAmountOfPointsOfMutation() > 0)
+            if (this->getSettings().getAmountOfPointsOfMutation() > 0)
             {
                 //pointOfMutation = Position of Mutation Target
                 //Check if current position is a target for mutation.
-                if ((i == pointOfMutation)
-                        || (this->_settings.getAmountOfPointsOfMutation()
-                                >= this->_builderFactory.getSettings().getNum()))
+                if ((i == pointOfMutation) || (amountPointsOfMutation >= maxNumMvc))
                 {
                     //Check if we reached the maximum points of mutation
-                    if (this->_settings.getAmountOfPointsOfMutation() != mutationCounter)
+                    if (amountPointsOfMutation != mutationCounter)
                     {
                         //add mutation to result_container
-                        result_container.push_back(int(weightedMutation));
+                        result_container.push_back(weightedMutation);
                         mutationCounter++;
 
                         //create a new target
-                        const unsigned int distanceBetweenTarges = (this->_builderFactory.getSettings().getNum()
-                                / this->_settings.getAmountOfPointsOfMutation());
+                        const unsigned int distanceBetweenTarges = (maxNumMvc / amountPointsOfMutation);
                         pointOfMutation = Random::generate<int>((i + 1), (i + 1 + distanceBetweenTarges));
                         //if no more mutation is needed (mutated already n times)
                     }
@@ -162,9 +159,9 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
 
                 //Target points are not used for mutation
             }
-            else if (value_choice <= this->_settings.getAmountOfMutation())
+            else if (value_choice <= amountPointsOfMutation)
             {
-                result_container.push_back(int(weightedMutation));
+                result_container.push_back(weightedMutation);
                 //In case dicing (value_choice) choose not to mutate the value
             }
             else
@@ -178,11 +175,10 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
                 ++mutant_it;
             }
 
-        }					//inside chromosome loop
+        }
 
-                            //Age reset
-        _mutatedChromosome->setAge(0);
-        resultset.push_back(_mutatedChromosome);
+        mutatedChromosome->setAge(0);
+        resultset.push_back(mutatedChromosome);
     }
 
     //add not mutated Chromosomes
