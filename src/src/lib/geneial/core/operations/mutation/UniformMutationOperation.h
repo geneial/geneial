@@ -14,10 +14,6 @@ namespace mutation
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class UniformMutationOperation: public MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>
 {
-
-private:
-    const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &_builderSettings;
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> &_builderFactory;
 public:
     /*
      * UniformMutationOperation Mutates a chromosome, by replacing some of it's values randomly.
@@ -27,7 +23,7 @@ public:
             const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
             const std::shared_ptr<const MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
 
-                MultiValueChromosomeMutationOperation<FITNESS_TYPE,VALUE_TYPE>(
+                MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>(
                         settings,
                         choosingOperation,
                         builderFactory

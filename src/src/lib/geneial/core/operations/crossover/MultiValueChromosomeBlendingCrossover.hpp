@@ -17,8 +17,8 @@ using namespace geneial::operation::coupling;
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueChromosomeBlendingCrossover<VALUE_TYPE,
         FITNESS_TYPE>::doMultiValueCrossover(
-        const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
-        const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const
+        const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
+        const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const
 {
     typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set resultset;
 

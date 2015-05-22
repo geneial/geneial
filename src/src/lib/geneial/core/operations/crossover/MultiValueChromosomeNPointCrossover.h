@@ -28,14 +28,14 @@ public:
             _crossoverSettings(crossoverSettings)
     {
         //ensure the crossoverpoints does not exceed the number of values.
-        assert(getCrossoverSettings().getCrossOverPoints() <= this->getBuilderSettings().getNum());
+        assert(getCrossoverSettings().getCrossOverPoints() <= this->getBuilderFactory().getSettings().getNum());
 
         //ensure when min width is selected that the min width does not exceed the amount of spaces we have.
         assert(
                 getCrossoverSettings().getWidthSetting()
                         != MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH
                         || getCrossoverSettings().getMinWidth() * getCrossoverSettings().getCrossOverPoints()
-                                <= this->getBuilderSettings().getNum());
+                                <= this->getBuilderFactory().getSettings().getNum());
 
     }
 
@@ -73,8 +73,8 @@ public:
      *
      */
     virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set doMultiValueCrossover(
-            const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
-            const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const override;
+            const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
+            const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const override;
 
     inline const MultiValueChromosomeNPointCrossoverSettings & getCrossoverSettings() const
     {

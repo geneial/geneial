@@ -36,7 +36,7 @@ public:
     }
 
     virtual selection_result_set doSelect(const Population<FITNESS_TYPE> &population,
-            BaseManager<FITNESS_TYPE> &manager) = 0;
+            BaseManager<FITNESS_TYPE> &manager) const = 0;
 
     const SelectionSettings& getSettings() const
     {

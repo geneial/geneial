@@ -56,7 +56,6 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
     const auto randomMax = this->getBuilderFactory().getSettings().getRandomMax() ;
     const auto populationAge = manager.getPopulation().getAge();
     const auto maxNumMvc = this->getBuilderFactory().getSettings().getNum();
-    const auto affectedGenerations = this->getAffectedGenerations();
     const auto amountPointsOfMutation = this->getSettings().getAmountOfPointsOfMutation();
 
 

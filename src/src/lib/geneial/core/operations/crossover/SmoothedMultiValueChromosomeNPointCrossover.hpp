@@ -12,8 +12,8 @@ namespace crossover
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set SmoothedMultiValueChromosomeNPointCrossover<
         VALUE_TYPE, FITNESS_TYPE>::doMultiValueCrossover(
-        const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
-        const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const
+        const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
+        const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const
 
 {
     //We can do this since this is subclass, however:

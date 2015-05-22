@@ -77,23 +77,22 @@ public:
 
         //In this case we need to check whether the chosen chromomsome builder is compatible with our default operation:
         auto mvcChromosomeFactory =
-                std::dynamic_pointer_cast<crossover::MultiValueChromosomeFactory<int, FITNESS_TYPE>>(*this->_chromosomeFactory);
+                std::dynamic_pointer_cast<crossover::MultiValueChromosomeFactory<int, FITNESS_TYPE>>(
+                        *this->_chromosomeFactory);
 
         if (!mvcChromosomeFactory)
         {
             throw new std::runtime_error("Incompatible Chromosome Factory and default crossover strategy");
         }
 
-        crossover::MultiValueChromosomeNPointCrossoverSettings crossoverSettings (1    ,
-                crossover::MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH   ,
-                                                                       1   );
+        auto crossoverSettings = std::shared_ptr < crossover::MultiValueChromosomeNPointCrossoverSettings
+                > (new crossover::MultiValueChromosomeNPointCrossoverSettings(1,
+                        crossover::MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH, 1));
 
-        std::shared_ptr<crossover::BaseCrossoverOperation<FITNESS_TYPE>>
-                       crossoverOperation(
-                               new crossover::MultiValueChromosomeNPointCrossover<int, FITNESS_TYPE>(crossoverSettings,
-                                                                                          mvcChromosomeFactory->getSettings(),
-                                                                                          *mvcChromosomeFactory)
-                                         );
+        std::shared_ptr<crossover::BaseCrossoverOperation<FITNESS_TYPE>> crossoverOperation(
+                new crossover::MultiValueChromosomeNPointCrossover<int, FITNESS_TYPE>(crossoverSettings,
+                        mvcChromosomeFactory));
+
         return crossoverOperation;
     }
 
@@ -124,8 +123,7 @@ public:
         }
 
         std::shared_ptr<mutation::BaseMutationOperation<FITNESS_TYPE>> mutationOperation(
-                new mutation::UniformMutationOperation<int, FITNESS_TYPE>(mutationSettings, mutationChoosingOperation,
-                        mvcChromosomeFactory->getSettings(), *mvcChromosomeFactory));
+                new mutation::UniformMutationOperation<int, FITNESS_TYPE>(mutationSettings, mutationChoosingOperation, mvcChromosomeFactory));
 
         return mutationOperation;
     }

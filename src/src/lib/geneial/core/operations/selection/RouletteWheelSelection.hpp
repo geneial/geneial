@@ -118,7 +118,6 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
 
     RouletteWheel<FITNESS_TYPE> rouletteWheel(population);
 
-    std::cout << population.getSize() << ", " << left_select << std::endl;
     //TODO (bewo) allow parameter for the best chromosomes to be selected (and skipped here)
     assert(population.getSize() >= left_select);
 

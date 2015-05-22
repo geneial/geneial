@@ -1,7 +1,7 @@
 #pragma once
 
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
-#include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.h>
+#include <geneial/core/population/builder/MultiValueChromosomeFactory.h>
 
 
 #include <cassert>
@@ -24,8 +24,8 @@ private:
 protected:
 
     virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set doMultiValueCrossover(
-            const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
-            const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const = 0;
+            const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
+            const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const = 0;
 
 
     virtual typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr createChildCandidate(
