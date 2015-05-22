@@ -23,11 +23,9 @@ class SmoothedMultiValueChromosomeNPointCrossover: public MultiValueChromosomeNP
 public:
     SmoothedMultiValueChromosomeNPointCrossover(
             const std::shared_ptr<const MultiValueChromosomeNPointCrossoverSettings> &crossoverSettings,
-            const std::shared_ptr<const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>> &builderSettings,
             const std::shared_ptr<const ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE>> &builderFactory
             ) :
-            MultiValueChromosomeNPointCrossover<VALUE_TYPE, FITNESS_TYPE>(crossoverSettings, builderSettings,
-                    builderFactory), _builderSettings(builderSettings)
+            MultiValueChromosomeNPointCrossover<VALUE_TYPE, FITNESS_TYPE>(crossoverSettings, builderFactory)
     {
     }
 

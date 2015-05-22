@@ -16,8 +16,8 @@ class MultiValueChromosomeAverageCrossover: public MultiValueChromosomeCrossover
 {
 public:
     MultiValueChromosomeAverageCrossover(
-            const std::shared_ptr<const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>> &builderSettings
-            ) : MultiValueChromosomeCrossoverOperation(_builderFactory)
+            const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory
+            ) : MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>(builderFactory)
     {
     }
 

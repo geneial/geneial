@@ -1,5 +1,8 @@
 #pragma once
 
+#include <geneial/core/population/chromosome/BaseChromosome.h>
+#include <geneial/core/population/Population.h>
+
 namespace geneial
 {
 namespace operation

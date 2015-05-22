@@ -33,7 +33,7 @@ public:
             const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory,
             const InterpolateBeta interpolationMethod,
             const OffspringMode offspringMode, const unsigned int numChilds) :
-                MultiValueChromosomeCrossoverOperation(builderFactory),
+                MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>(builderFactory),
                     _interpolationMethod(interpolationMethod), _offspringMode(offspringMode), _numChilds(numChilds)
 
     {

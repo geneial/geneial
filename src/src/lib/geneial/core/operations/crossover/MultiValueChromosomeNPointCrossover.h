@@ -24,15 +24,17 @@ public:
     MultiValueChromosomeNPointCrossover(
             const std::shared_ptr<const MultiValueChromosomeNPointCrossoverSettings> &crossoverSettings,
             const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory):
-                MultiValueChromosomeCrossoverOperation(builderFactory),
+                MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>(builderFactory),
             _crossoverSettings(crossoverSettings)
     {
         //ensure the crossoverpoints does not exceed the number of values.
-        assert(_crossoverSettings.getCrossOverPoints() <= this->getBuilderSettings().getNum());
+        assert(getCrossoverSettings().getCrossOverPoints() <= this->getBuilderSettings().getNum());
 
         //ensure when min width is selected that the min width does not exceed the amount of spaces we have.
-        assert( _crossoverSettings.getWidthSetting() != MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH
-                        || _crossoverSettings.getMinWidth() * _crossoverSettings.getCrossOverPoints()
+        assert(
+                getCrossoverSettings().getWidthSetting()
+                        != MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH
+                        || getCrossoverSettings().getMinWidth() * getCrossoverSettings().getCrossOverPoints()
                                 <= this->getBuilderSettings().getNum());
 
     }
@@ -74,7 +76,7 @@ public:
             const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
             const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const override;
 
-    inline MultiValueChromosomeNPointCrossoverSettings const & getCrossoverSettings() const
+    inline const MultiValueChromosomeNPointCrossoverSettings & getCrossoverSettings() const
     {
         return *_crossoverSettings;
     }

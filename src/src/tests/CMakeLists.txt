@@ -6,7 +6,7 @@ include_directories (${Boost_INCLUDE_DIRS})
 
 
 #I like to keep test files in a separate source directory called test
-file(GLOB TEST_SRC RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} suites/*.cpp)
+file(GLOB TEST_SRC RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} suites/*_test.cpp)
 
 message(STATUS "Suites : ${TEST_SRC}")
 
@@ -17,14 +17,15 @@ set(testArgs "--log_level=message")
 foreach(testSrc ${TEST_SRC})
         #Extract the filename without an extension (NAME_WE)
         get_filename_component(testName ${testSrc} NAME_WE)
-		message(STATUS "Found Test : ${testName}")
+        message(STATUS "Found Test : ${testName}")
 
         #Add compile target
         add_executable(${testName} ${testSrc})
-	cotire(${testName})		
-		#link with our genetic library
-		target_link_libraries(${testName} "${LIB_GENEIAL_SHARED_NAME}")
-		
+        cotire(${testName})		
+
+        #link with our genetic library
+        target_link_libraries(${testName} "${LIB_GENEIAL_SHARED_NAME}")
+        
         #link to Boost libraries AND your targets and dependencies
         target_link_libraries(${testName} ${Boost_LIBRARIES})
 

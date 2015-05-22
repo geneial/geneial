@@ -3,7 +3,6 @@
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
 #include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.h>
 
-#include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
 
 #include <cassert>
 #include <memory>
@@ -24,7 +23,7 @@ private:
 
 protected:
 
-    virtual BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set doMultiValueCrossover(
+    virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set doMultiValueCrossover(
             const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
             const typename MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const = 0;
 
@@ -41,8 +40,8 @@ protected:
 
 public:
     MultiValueChromosomeCrossoverOperation(
-            const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &_builderFactory
-            ) : BaseCrossoverOperation(), _builderFactory(builderFactory)
+            const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory
+            ) : BaseCrossoverOperation<FITNESS_TYPE>(), _builderFactory(builderFactory)
     {
     }
 
@@ -50,7 +49,7 @@ public:
     {
     }
 
-    virtual BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set doCrossover(
+    virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set doCrossover(
             const typename BaseChromosome<FITNESS_TYPE>::const_ptr &mommy,
             const typename BaseChromosome<FITNESS_TYPE>::const_ptr &daddy) const override
     {
