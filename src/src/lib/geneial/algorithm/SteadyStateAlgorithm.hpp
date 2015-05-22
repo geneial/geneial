@@ -111,5 +111,7 @@ void SteadyStateAlgorithm<FITNESS_TYPE>::solve()
 
 }
 
+
+
 } /* namespace algoritm */
 } /* namespace geneial */
