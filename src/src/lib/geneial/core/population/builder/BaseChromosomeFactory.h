@@ -27,7 +27,7 @@ public:
     }
 
     virtual typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome(
-            PopulateBehavior populateValues = CREATE_VALUES) = 0;
+            PopulateBehavior populateValues = CREATE_VALUES) const = 0;
 };
 
 } /* namespace chromomsome */
