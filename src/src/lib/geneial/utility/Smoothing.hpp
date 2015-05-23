@@ -11,8 +11,6 @@ template<typename VALUE_TYPE, typename FITNESS_TYPE>
 void Smoothing::restoreSmoothness(typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr chromosome,
         VALUE_TYPE maxAbsElevation, VALUE_TYPE min, VALUE_TYPE max)
 {
-    typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::value_container value_container;
-
     VALUE_TYPE lastVal = *(chromosome->getContainer().begin());
 
     for (auto& it: chromosome->getContainer())

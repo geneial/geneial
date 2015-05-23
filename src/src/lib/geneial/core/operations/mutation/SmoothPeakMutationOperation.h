@@ -1,7 +1,7 @@
 #pragma once
 
 #include <geneial/core/operations/mutation/MultiValueChromosomeMutationOperation.h>
-#include <geneial/core/population/builder/ContinousMultiIntValueChromosomeFactory.h>
+#include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.h>
 #include <geneial/core/population/builder/ContinousMultiValueBuilderSettings.h>
 #include <geneial/utility/Smoothing.h>
 

@@ -24,7 +24,7 @@ private:
 
 public:
     /**
-     * (TODO) bewo outdated docs.
+     * TODO (bewo):  outdated docs.
      *
      * NonUniformMutationOperation Mutates a chromosome, by modificating some of it's values with weight w.
      * W decreases with the amount of mutations defined by affectedGenerations.
@@ -79,7 +79,7 @@ public:
 
     void setAffectedGenerations(unsigned int affectedGenerations)
     {
-        this->affectedGenerations = affectedGenerations;
+        this->_affectedGenerations = affectedGenerations;
     }
 };
 

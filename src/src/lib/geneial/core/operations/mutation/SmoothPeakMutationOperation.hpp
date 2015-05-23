@@ -21,11 +21,11 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
 
     const auto continousBuilderSettings =
             (
-            static_cast<const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>&>(this->getBuilderFactory())
-            ).getSettings();
+            static_cast<const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>&>(this->getBuilderFactory().getSettings())
+            );
 
 
-    choosenChromosomeContainer = this->getChoosingOperation()->doChoose(chromosomeInputContainer);
+    choosenChromosomeContainer = this->getChoosingOperation().doChoose(chromosomeInputContainer);
 
     //calculates difference: _notChoosenChromosomeContainer = _choosenChromosomeContainer - _chromosomeInputContainer
     std::set_difference(chromosomeInputContainer.cbegin(), chromosomeInputContainer.cend(),
@@ -39,7 +39,7 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
     {
         //casting mutant to MVC
         const auto mvcMutant = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
-                *chosenChromosome);
+                chosenChromosome);
         assert(mvcMutant);
 
         //creating a new MVC (to keep things reversible)
@@ -81,7 +81,8 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
         else
         {
             //Iterate the chromosome's value
-            for (const auto &it : mutatedChromosome->getContainer())
+            for (auto it = mutatedChromosome->getContainer().begin();
+                    it!=mutatedChromosome->getContainer().end();++it)
             {
                 const double value_choice = Random::generate<int>(0.0, 1.0);
 
