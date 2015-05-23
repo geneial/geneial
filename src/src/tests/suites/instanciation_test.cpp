@@ -1,10 +1,8 @@
 #define BOOST_TEST_DYN_LINK
 
-#define BOOST_TEST_MODULE compilation/template_instanciaton
-
-#include <boost/test/unit_test.hpp>
-
 /**
+ * @ingroup unittests
+  *
  * @brief Initialization is used to ensure all the geneial code compiles,
  * regardless of whether it is being used in some demo program or not.
  *
@@ -19,6 +17,11 @@
  * with int, double, float instanciations of all templates.
  *
  */
+
+
+#define BOOST_TEST_MODULE compilation/template_instanciaton
+
+#include <boost/test/unit_test.hpp>
 
 #ifndef NDEBUG
 

@@ -1,5 +1,6 @@
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE chromomsome
+
+#define BOOST_TEST_MODULE test/chromomsome
 
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
