@@ -30,7 +30,7 @@ public:
             FITNESS_TYPE maxElevation,
             const std::shared_ptr<const MutationSettings> &settings,
             const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
-            const std::shared_ptr<const ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
+            const std::shared_ptr<ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
 
                 MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>(
                     settings,

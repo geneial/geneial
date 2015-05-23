@@ -36,7 +36,7 @@ public:
     virtual typename Population<FITNESS_TYPE>::chromosome_container doChoose(
             const typename Population<FITNESS_TYPE>::chromosome_container &chromosomeInputSet) const override;
 
-    const MutationSettings& getSettings() const
+    inline const MutationSettings& getSettings() const
     {
         return *_settings;
     }

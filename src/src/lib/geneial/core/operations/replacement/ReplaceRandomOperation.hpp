@@ -1,6 +1,6 @@
 #pragma once
 
-#include <geneial/core/operations/replacement/BaseReplacementSettings.h>
+#include <geneial/core/operations/replacement/ReplaceRandomOperation.h>
 #include <geneial/utility/Random.h>
 
 #include <algorithm>
@@ -55,11 +55,11 @@ void ReplaceRandomOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &p
         const unsigned int rnd_advance = Random::generate<int>(0, max);
 
         //construct an iterator
-        typename Population<FITNESS_TYPE>::fitnessmap_it advanced = population.getFitnessMap().begin();
+        auto advanced = population.getFitnessMap().begin();
         std::advance(advanced, rnd_advance);
 
         //remove the element
-        population.getFitnessMap().erase(advanced);
+        population.removeChromosome(advanced->second);
 
         numberToReplace--;
     }

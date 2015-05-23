@@ -81,7 +81,7 @@ public:
         return *_crossoverSettings;
     }
 
-    void setCrossoverSettings(const MultiValueChromosomeNPointCrossoverSettings & crossoverSettings)
+    void setCrossoverSettings(std::shared_ptr<const MultiValueChromosomeNPointCrossoverSettings>& crossoverSettings)
     {
         _crossoverSettings = crossoverSettings;
     }

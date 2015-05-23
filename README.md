@@ -142,6 +142,9 @@ In order to get c++11 support, change the "Command to get compiler specs" below 
 
 (basically add `-std=c++11` to the default params )
 
+Then rebuild your Index. 
+If that does not help search for the `__cplusplus` symbol and set it to `201103L`
+
 ###4.1.2 When using the build-in compile feature, make clutters the internal console
 
 By default the imported project set VERBOSE=1 for make, hence the cluttering.

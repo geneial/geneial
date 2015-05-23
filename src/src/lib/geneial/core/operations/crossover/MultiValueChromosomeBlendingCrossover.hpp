@@ -12,7 +12,6 @@ namespace crossover
 {
 
 using namespace geneial::utility;
-using namespace geneial::operation::coupling;
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueChromosomeBlendingCrossover<VALUE_TYPE,
@@ -31,7 +30,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
     }
     else
     {
-        chromosomesToGenerate = Random::generate(1, _numChilds);
+        chromosomesToGenerate = Random::generate<int>(1, _numChilds);
     }
 
     for (unsigned int i = 0; i < chromosomesToGenerate; i++)
@@ -50,7 +49,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 
         assert(child_candidate);
 
-        const unsigned int containerSize = this->getBuilderFactory().getBuilderSettings().getNum();
+        const unsigned int containerSize = this->getBuilderFactory().getSettings().getNum();
 
         const auto &daddy_container = mommy->getContainer();
         const auto &mommy_container = daddy->getContainer();

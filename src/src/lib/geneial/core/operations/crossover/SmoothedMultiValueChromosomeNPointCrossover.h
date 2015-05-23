@@ -1,8 +1,9 @@
 #pragma once
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
-#include <geneial/core/population/builder/ContinousMultiIntValueChromosomeFactory.h>
+#include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.h>
 #include <geneial/utility/Smoothing.h>
+
 #include <cassert>
 
 namespace geneial
@@ -12,18 +13,19 @@ namespace operation
 namespace crossover
 {
 
-using namespace geneial::utility;
-using namespace geneial::population::chromosome;
+using geneial::utility::Random;
+using geneial::population::chromosome::MultiValueChromosome;
 
 //TODO (bewo) allow random crossover width per settings
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class SmoothedMultiValueChromosomeNPointCrossover: public MultiValueChromosomeNPointCrossover<VALUE_TYPE, FITNESS_TYPE>
 {
+
 public:
     SmoothedMultiValueChromosomeNPointCrossover(
             const std::shared_ptr<const MultiValueChromosomeNPointCrossoverSettings> &crossoverSettings,
-            const std::shared_ptr<const ContinousMultiIntValueChromosomeFactory<FITNESS_TYPE>> &builderFactory
+            const std::shared_ptr<ContinousMultiValueChromosomeFactory<VALUE_TYPE,FITNESS_TYPE>> &builderFactory
             ) :
             MultiValueChromosomeNPointCrossover<VALUE_TYPE, FITNESS_TYPE>(crossoverSettings, builderFactory)
     {

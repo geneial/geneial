@@ -20,7 +20,7 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
     typedef typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set mating_container;
     typedef typename BaseChromosome<FITNESS_TYPE>::ptr chrom_ptr;
 
-    unsigned int offspring_left = this.getSettings().getNumberOfOffspring();
+    unsigned int offspring_left = this->getSettings().getNumberOfOffspring();
 
     offspring_container offspring; //A small container for all the little children :-)
     offspring.reserve(offspring_left);

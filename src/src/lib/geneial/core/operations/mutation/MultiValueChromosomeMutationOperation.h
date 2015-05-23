@@ -21,13 +21,13 @@ class MultiValueChromosomeMutationOperation : public BaseMutationOperation<FITNE
 {
 
 protected:
-    std::shared_ptr<const MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> _builderFactory;
+    std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> _builderFactory;
 
 public:
     MultiValueChromosomeMutationOperation(
             const std::shared_ptr<const MutationSettings> &settings,
             const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
-            const std::shared_ptr<const MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory
+            const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory
             ) :
             BaseMutationOperation<FITNESS_TYPE>(settings, choosingOperation), _builderFactory(builderFactory)
     {
@@ -37,7 +37,7 @@ public:
     {
     }
 
-    const MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> & getBuilderFactory() const
+    inline MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> & getBuilderFactory() const
     {
         return *_builderFactory;
     }

@@ -15,7 +15,7 @@ namespace chromosome
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::createChromosome(
-        typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues) const
+        typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues)
 {
     using namespace geneial::utility;
 
