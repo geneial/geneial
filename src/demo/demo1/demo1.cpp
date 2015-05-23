@@ -70,7 +70,7 @@ public:
             const MultiValueChromosome<int, double>& mvc = dynamic_cast<const MultiValueChromosome<int, double>&>(chromosome);
             return std::move(std::unique_ptr<Fitness<double>>(new Fitness<double>(mvc.getSum())));
         }
-        catch(std::bad_cast)
+        catch(std::bad_cast&)
         {
             throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
         }

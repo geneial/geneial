@@ -26,7 +26,6 @@
 #include <geneial/algorithm/observer/BestChromosomeObserver.h>
 
 
-
 #include <geneial/config.h>
 
 #include <limits>
@@ -92,7 +91,7 @@ public:
                 }
             }
             return std::move(std::unique_ptr<Fitness<double>>(new Fitness<double>(fitness)));
-        } catch (std::bad_cast)
+        } catch (std::bad_cast&)
         {
             throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
         }
@@ -151,7 +150,7 @@ public:
                     < MultiValueChromosome<int, double> > (manager.getHighestFitnessChromosome());
             printClearScreen();
             printChromosome(mvc);
-        } catch (std::bad_cast)
+        } catch (std::bad_cast &)
         {
             throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
         }
