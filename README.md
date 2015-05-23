@@ -47,6 +47,7 @@ To compile the debug version again run
 
 You can also make different out-of-source build directories such as `debug/` or `release`.
 
+
 ###1.3 A note on compilers
 
 In general it seems that the `gcc` error output is very verbose and [hard to read](http://clang.llvm.org/diagnostics.html). At the same time gcc seems to be slower/uses more memory.
@@ -61,6 +62,24 @@ You can switch your system compiler by running
     sudo update-alternatives --config c++
 
 From now on the cmake build system will use clang and provide more comprehensible error messages.
+
+###1.4 A note on make
+Make is slow. However the build process can be made faster by using more threads by for example invoking
+
+    make -j8
+
+to run 8 threads in parallel.
+However, the console output is still messy.
+Hence, if you are one of the cool kids you may want to use ninja, on ubuntu based system you can install it by running
+
+   sudo apt-get install ninja-build
+
+You'll need to regenerate your build folder (remove it if you have generated makefiles before)
+
+   rm -r build/
+   mkdir build/ && cd build
+   cmake -GNinja ../src
+   ninja 
 
 ##2. Installing the library
 To install the library simply run
@@ -86,8 +105,18 @@ Instead of running all test at once, you may run individual test by
 In case a test-case fails you can see the verbose output by running
 
     ctest -VV
-    
-You can create new unit-tests based on boost unit testing libarary in the tests/suites/ folder. Make sure to run `make test` again.
+
+###3.1 Disabling Unit Test Compilation
+The compilation of Unit tests can be disabled by setting
+
+    cmake -D TEST=false ../src
+
+Analougously it may be enabled by
+
+    cmake -D TEST=true ../src
+
+You can create new unit-tests based on boost unit testing library in the tests/suites/ folder. Make sure to run `make test` again.
+
 
 ##4. Setting up an Eclipse CDT 4 Project
 
@@ -100,6 +129,23 @@ now there are Eclipse .project and .cproject files found in your build/ director
 You can import them by `File`->`Import...`->`Existing Project in Workspace`, Select `Browse...` and choose your `build/` directory.
 You may also want to install the [Eclipse CMake Editor](http://www.cthing.com/CMakeEd.asp) for editing any of the `CMakeList.txt` 
 files more conveniently.
+
+##4.1 Eclipse CDT Developer Quirks 
+
+Note: This has been tested on Luna with CDT.
+
+###4.1.1 `std::` includes are not properly resolved, erroneous highlighting
+Solution: Right-Click onto the imported generated cmake geneial project -> C++ General / Preprocessor Include Paths -> Tab Providers -> Enable "CDT Cross GCC Built-in Compiler Settings"
+In order to get c++11 support, change the "Command to get compiler specs" below to:
+	
+	${COMMAND} ${FLAGS} -E -P -std=c++11 -v -dD "${INPUTS}"
+
+(basically add `-std=c++11` to the default params )
+
+###4.1.2 When using the build-in compile feature, make clutters the internal console
+
+By default the imported project set VERBOSE=1 for make, hence the cluttering.
+To remove this right click onto the project settings -> "C/C++ Make Project" -> Tab: "Environment" -> Remove VERBOSE variable (Note setting it to 0 will not work)
 
 
 ##5. Adding new Source files
@@ -155,25 +201,6 @@ that the library itself is compiling.
 The demos are also compiled by either running the all-encompassing `make` or the more unequivocal `make demo{X}` , respectively where `{X}` denotes the demo number to build.
 
 
-##99.TODOs
-* http://choorucode.com/2015/01/08/how-to-use-cpplint-in-eclipse-cdt/
-
-* check for vector reserves
-* [c11] use auto to improve readability
-* [c11] use constexpr
-* [c11] use foreach
-* [c11] use shared ptr instead of boosts
-* [consistency] check for ++i instead of prefered i++
-* use references where it makes sense
-* [c11] use override whenever makes sense
-* write documentation
-
-* remove all but geneial namespace
-* scaling
-* multithreading 
-* write demo programs
-* write code documentation
-* profit / world domination
 
 
 

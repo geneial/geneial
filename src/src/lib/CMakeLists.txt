@@ -28,7 +28,7 @@ file(GLOB_RECURSE TMPL *.hpp)
 #message(STATUS "Building Source Files : ${HDRS}")
 #message(STATUS "Building Source Files : ${TMPL}")
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
-message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+message(STATUS "CMAKE_BUILD_TYPE: ${BoldCyan}${CMAKE_BUILD_TYPE}${ColourReset}")
 message(STATUS "CMAKE_EXE_LINKER_FLAGS: ${CMAKE_EXE_LINKER_FLAGS}")
 
 
@@ -46,6 +46,20 @@ set(HEADERDEST "include")
 install (TARGETS ${LIB_GENEIAL_SHARED_NAME} DESTINATION ${LIBDEST})
 install (TARGETS ${LIB_GENEIAL_STATIC_NAME} DESTINATION ${LIBDEST})
 
+#SET(CMAKE_COLOR_MAKEFILE ON)
+#SET(CMAKE_VERBOSE_MAKEFILE ON)
+#set_target_properties(mylib PROPERTIES DEBUG_POSTFIX "debug")
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_custom_target( DebugInfo ALL
+    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --switch=${COLOR} --yellow --bold "${INDENT}"
+    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --switch=${COLOR} --yellow --bold "${INDENT}Note that you are about to compile the Debug Version. Compilation time and Runtime will be slower!"
+    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --switch=${COLOR} --yellow --bold "${INDENT}"
+    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --switch=${COLOR} --yellow --bold ""
+    COMMENT "Debug Notice")
+    add_dependencies( ${LIB_GENEIAL_SHARED_NAME} DebugInfo )
+    add_dependencies( ${LIB_GENEIAL_STATIC_NAME} DebugInfo )
+endif()
 
 install( DIRECTORY ./ 
             DESTINATION include

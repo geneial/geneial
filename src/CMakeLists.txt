@@ -3,14 +3,23 @@
 # to the root binary directory of the project as ${GENETICLIBRARY_BIN_DIR}.
 cmake_minimum_required(VERSION 2.8.12)
 #Setup CMake to run tests
-enable_testing()
 
 project (GENEIAL)
 string(TOLOWER ${PROJECT_NAME} LOWER_PROJECT_NAME)
 
+IF( NOT CMAKE_BUILD_TYPE )
+   SET( CMAKE_BUILD_TYPE Debug )
+ENDIF()
+
+if (NOT DEFINED ${TEST} OR ${TEST})
+    enable_testing()
+endif()
+
+SET( INDENT "[****] ")
 
 set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 include(cotire)
+include(colors)
 
 set (GENEIAL_SHARED_SUFFIX "_shared")
 set (LIB_GENEIAL_SHARED_NAME "${LOWER_PROJECT_NAME}${GENEIAL_SHARED_SUFFIX}")
@@ -23,26 +32,34 @@ set (GENEIAL_VERSION_MAJOR 0)
 set (GENEIAL_VERSION_MINOR 2)
 
 
-#tested for clang 3.6
-#c.f., http://clang.llvm.org/docs/UsersManual.html#controlling-code-generation
-#newer versions of clang might support more sanatization.
-#note some of this might interfere with callgrind
-set (CLANG_SANATIZERS "address") #memory error detector. Slowdown: 2x
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    #tested for clang 3.6
+    #c.f., http://clang.llvm.org/docs/UsersManual.html#controlling-code-generation
+    #newer versions of clang might support more sanatization.
+    #note some of this might interfere with callgrind
+    set (CLANG_SANATIZERS "address") #memory error detector. Slowdown: 2x
+    
+    #set (CLANG_SANATIZERS "${CLANG_SANATIZERS},thread") 
+    set (CLANG_SANATIZERS "${CLANG_SANATIZERS},undefined") #undefined behavior checks,  small runtime cost 
+    set (CLANG_SANATIZERS "${CLANG_SANATIZERS},bool") 
+    #set (CLANG_SANATIZERS "${CLANG_SANATIZERS},float-divide-by-zero")
+    set (CLANG_SANATIZERS "${CLANG_SANATIZERS},unreachable")
+    #set (CLANG_SANATIZERS "${CLANG_SANATIZERS},float-cast-overflow")
+    set (CLANG_SANATIZERS "${CLANG_SANATIZERS},return")
+    #set (CLANG_SANATIZERS "${CLANG_SANATIZERS},memory")
+    #set (CLANG_SANATIZERS "${CLANG_SANATIZERS},bounds")
+    #set (CLANG_SANATIZERS "${CLANG_SANATIZERS},integer")
+    set (CLANG_SANATIZEEXTRA "-fsanitize=${CLANG_SANATIZERS} -Wthread-safety")
+    
+    #shiny output even in ninja
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics")
+    
+    #enable sanatizers    
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CLANG_SANATIZEEXTRA}")
+endif()
 
-#set (CLANG_SANATIZERS "${CLANG_SANATIZERS},thread") 
-set (CLANG_SANATIZERS "${CLANG_SANATIZERS},undefined") #undefined behavior checks,  small runtime cost 
-set (CLANG_SANATIZERS "${CLANG_SANATIZERS},bool") 
-#set (CLANG_SANATIZERS "${CLANG_SANATIZERS},float-divide-by-zero")
-set (CLANG_SANATIZERS "${CLANG_SANATIZERS},unreachable")
-#set (CLANG_SANATIZERS "${CLANG_SANATIZERS},float-cast-overflow")
-set (CLANG_SANATIZERS "${CLANG_SANATIZERS},return")
-#set (CLANG_SANATIZERS "${CLANG_SANATIZERS},memory")
-#set (CLANG_SANATIZERS "${CLANG_SANATIZERS},bounds")
-#set (CLANG_SANATIZERS "${CLANG_SANATIZERS},integer")
-set (CLANG_SANATIZEEXTRA "-fsanitize=${CLANG_SANATIZERS} -Wthread-safety")
 
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pedantic-errors -Wextra -Werror -Wno-unused-parameter -Wno-unused-variable -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics -Wall -pedantic -pedantic-errors -Wextra -Werror -Wno-unused-parameter -Wno-unused-variable -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
 
 
@@ -72,6 +89,6 @@ if(DOXYGEN_FOUND)
         COMMENT "Generating API documentation with Doxygen" VERBATIM
     )
 else()
-    message(STATUS "Doxygen not found! Will render no documentation!")
+    message(WARNING "Doxygen not found! Will render no documentation!")
 endif(DOXYGEN_FOUND)
 
