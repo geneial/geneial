@@ -2,15 +2,18 @@
 
 #include <geneial/core/population/management/BaseManager.h>
 
-namespace geneial
+namespace __geneial_noexport
 {
-namespace algorithm
+namespace __algorithm_impl
 {
-namespace stopping_criteria
+namespace __stopping_criteria_impl
+{
+using ::geneial::utility::Printable;
+using ::geneial::population::management::BaseManager;
+
+inline namespace exports
 {
 
-using namespace geneial::utility;
-using namespace geneial::population::management;
 
 template<typename FITNESS_TYPE>
 class BaseStoppingCriterion: public Printable, public std::enable_shared_from_this<BaseStoppingCriterion<FITNESS_TYPE> >
@@ -31,7 +34,18 @@ public:
     virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager) = 0;
 };
 
-} /* namespace stopping_criteria */
-} /* namespace algorithm */
-} /* namespace geneial */
+} /* namespace exports */
+} /* namespace __stopping_criteria_impl */
+} /* namespace __algorithm_impl */
+} /* namespace __geneial_noexport */
 
+namespace geneial
+{
+namespace algorithm
+{
+namespace stopping_criteria
+{
+    using namespace ::__geneial_noexport::__algorithm_impl::__stopping_criteria_impl::exports;
+}
+}
+}

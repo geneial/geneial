@@ -4,11 +4,13 @@
 
 #include <set>
 
-namespace geneial
+namespace __geneial_noexport
 {
-namespace algorithm
+namespace __algorithm_impl
 {
 
+inline namespace exports
+{
 using namespace geneial::population::management;
 
 template<typename FITNESS_TYPE>
@@ -46,6 +48,7 @@ private:
     bool _foundBest;
 };
 
-} /* namespace algorithm */
-} /* namespace geneial */
+} /* namespace __geneial_noexport */
+} /* namespace __algorithm_impl */
+} /* namespace exports */
 

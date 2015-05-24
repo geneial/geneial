@@ -3,14 +3,17 @@
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 
-namespace geneial
+namespace __geneial_noexport
 {
-namespace algorithm
+namespace __algorithm_impl
 {
-namespace stopping_criteria
+namespace __stopping_criteria_impl
 {
+using ::geneial::population::management::BaseManager;
 
-using namespace geneial::population::management;
+inline namespace exports
+{
+using namespace geneial::algorithm::stopping_criteria;
 
 //Encapsulates when a StoppingCriterion has a state and makes sure wasReached has no sideeffects
 //and ensures wasStatefully reached is only called once per generation
@@ -54,7 +57,8 @@ private:
     bool _wasInvoked;
 };
 
-} /* namespace stopping_criteria */
-} /* namespace algorithm */
-} /* namespace geneial */
+} /* namespace exports */
+} /* namespace __stopping_criteria_impl */
+} /* namespace __algorithm_impl */
+} /* namespace __geneial_noexport */
 

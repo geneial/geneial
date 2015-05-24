@@ -5,11 +5,17 @@
 
 #include <deque>
 
-namespace geneial {
-namespace algorithm {
-namespace stopping_criteria {
+namespace __geneial_noexport
+{
+namespace __algorithm_impl
+{
+namespace __stopping_criteria_impl
+{
+using ::geneial::population::management::BaseManager;
 
-using namespace geneial::population::management;
+inline namespace exports
+{
+using namespace geneial::algorithm::stopping_criteria;
 
 //TODO (bewo) proper doc
 //Idea to implemented here
@@ -92,7 +98,8 @@ private:
 
 };
 
-} /* namespace stopping_criteria */
-} /* namespace algorithm */
-} /* namespace geneial */
+} /* namespace exports */
+} /* namespace __stopping_criteria_impl */
+} /* namespace __algorithm_impl */
+} /* namespace __geneial_noexport */
 

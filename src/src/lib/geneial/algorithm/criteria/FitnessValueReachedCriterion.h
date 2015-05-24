@@ -2,15 +2,17 @@
 
 #include <geneial/core/population/management/BaseManager.h>
 
-namespace geneial
+namespace __geneial_noexport
 {
-namespace algorithm
+namespace __algorithm_impl
 {
-namespace stopping_criteria
+namespace __stopping_criteria_impl
 {
+using ::geneial::utility::Printable;
+using ::geneial::population::management::BaseManager;
 
-using namespace geneial::population::management;
-
+inline namespace exports
+{
 /**
  * @brief checks whether the desired fitness was reached
  */
@@ -42,7 +44,8 @@ public:
 
 };
 
-} /* namespace stopping_criteria */
-} /* namespace algorithm */
-} /* namespace geneial */
+} /* namespace exports */
+} /* namespace __stopping_criteria_impl */
+} /* namespace __algorithm_impl */
+} /* namespace __geneial_noexport */
 

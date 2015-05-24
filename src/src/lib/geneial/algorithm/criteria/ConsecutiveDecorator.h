@@ -4,15 +4,17 @@
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
 #include <deque>
 
-namespace geneial
+namespace __geneial_noexport
 {
-namespace algorithm
+namespace __algorithm_impl
 {
-namespace stopping_criteria
+namespace __stopping_criteria_impl
 {
+using ::geneial::population::management::BaseManager;
 
-using namespace geneial::population::management;
-
+inline namespace exports
+{
+using namespace ::geneial::algorithm::stopping_criteria;
 /**
  * Decorator that checks whether a given criterion has been reached several times.
  */
@@ -21,11 +23,11 @@ class ConsecutiveDecorator: public StatefulStoppingCriterion<FITNESS_TYPE>
 {
 
 public:
-    typedef BaseStoppingCriterion<FITNESS_TYPE> criterion;
+    using criterion = BaseStoppingCriterion<FITNESS_TYPE>;
 
     ConsecutiveDecorator(const unsigned int windowSize, const unsigned int consecutiveHits,
-            const criterion & criterion) :
-            _windowSize(windowSize), _consecutiveHits(consecutiveHits), _criterion(criterion)
+            const std::shared_ptr<criterion> & criterion) :
+            _criterion(criterion), _windowSize(windowSize), _consecutiveHits(consecutiveHits)
     {
         assert(windowSize >= 1); //Allow wrapper valuss of 1 here, make it as flexible as possible
         assert(consecutiveHits > 0);
@@ -76,28 +78,29 @@ protected:
 
     virtual void print(std::ostream& os) const
     {
-        os << "Consecutive (criterion:" << _criterion << ", win: " << _windowSize << ")";
+        os << "Consecutive (criterion:" << *_criterion << ", win: " << _windowSize << ")";
     }
 
     const criterion& getCriterion() const
     {
-        return _criterion;
+        return *_criterion;
     }
 
-    void setCriterion(const criterion& criterion)
+    void setCriterion(const std::shared_ptr<criterion> & criterion)
     {
         _criterion = criterion;
     }
 
 private:
-    const criterion _criterion;
+    std::shared_ptr<criterion> _criterion;
     const unsigned int _windowSize;
     const unsigned int _consecutiveHits;
     std::deque<bool> _window;
 
 };
 
-} /* namespace stopping_criteria */
-} /* namespace algorithm */
-} /* namespace geneial */
+} /* namespace exports */
+} /* namespace __stopping_criteria_impl */
+} /* namespace __algorithm_impl */
+} /* namespace __geneial_noexport */
 

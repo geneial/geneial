@@ -17,15 +17,32 @@
 #include <map>
 #include <list>
 
-namespace geneial
+namespace __geneial_noexport
 {
-namespace algorithm
+namespace __algorithm_impl
 {
+using ::geneial::algorithm::stopping_criteria::BaseStoppingCriterion;
 
-using namespace geneial::operation;
-using namespace geneial::population;
-using namespace geneial::population::chromosome;
-using namespace geneial::population::management;
+using ::geneial::operation::selection::BaseSelectionOperation;
+
+using ::geneial::operation::coupling::BaseCouplingOperation;
+
+using ::geneial::operation::crossover::BaseCrossoverOperation;
+
+using ::geneial::operation::replacement::BaseReplacementOperation;
+
+using ::geneial::operation::mutation::BaseMutationOperation;
+
+using ::geneial::population::Population;
+using ::geneial::population::PopulationSettings;
+
+using ::geneial::population::chromosome::BaseChromosome;
+using ::geneial::population::chromosome::BaseChromosomeFactory;
+
+inline namespace exports
+{
+using namespace geneial::algorithm;
+
 
 template<typename FITNESS_TYPE>
 class BaseGeneticAlgorithm
@@ -42,26 +59,26 @@ protected:
 
     bool _wasStarted;
 
-    std::shared_ptr<stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE>> _stoppingCriterion;
+    std::shared_ptr<BaseStoppingCriterion<FITNESS_TYPE>> _stoppingCriterion;
 
-    std::shared_ptr<selection::BaseSelectionOperation<FITNESS_TYPE>> _selectionOperation;
+    std::shared_ptr<BaseSelectionOperation<FITNESS_TYPE>> _selectionOperation;
 
-    std::shared_ptr<coupling::BaseCouplingOperation<FITNESS_TYPE>> _couplingOperation;
+    std::shared_ptr<BaseCouplingOperation<FITNESS_TYPE>> _couplingOperation;
 
-    std::shared_ptr<crossover::BaseCrossoverOperation<FITNESS_TYPE>> _crossoverOperation;
+    std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>> _crossoverOperation;
 
-    std::shared_ptr<replacement::BaseReplacementOperation<FITNESS_TYPE>> _replacementOperation;
+    std::shared_ptr<BaseReplacementOperation<FITNESS_TYPE>> _replacementOperation;
 
-    std::shared_ptr<mutation::BaseMutationOperation<FITNESS_TYPE>> _mutationOperation;
+    std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>> _mutationOperation;
 
     //The client should use the builder instead of instacing the algorithm herself
     BaseGeneticAlgorithm(
-            std::shared_ptr<stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE>> stoppingCriterion,
-            std::shared_ptr<selection::BaseSelectionOperation<FITNESS_TYPE>> selectionOperation,
-            std::shared_ptr<coupling::BaseCouplingOperation<FITNESS_TYPE>> couplingOperation,
-            std::shared_ptr<crossover::BaseCrossoverOperation<FITNESS_TYPE>> crossoverOperation,
-            std::shared_ptr<replacement::BaseReplacementOperation<FITNESS_TYPE>> replacementOperation,
-            std::shared_ptr<mutation::BaseMutationOperation<FITNESS_TYPE>> mutationOperation,
+            std::shared_ptr<BaseStoppingCriterion<FITNESS_TYPE>> stoppingCriterion,
+            std::shared_ptr<BaseSelectionOperation<FITNESS_TYPE>> selectionOperation,
+            std::shared_ptr<BaseCouplingOperation<FITNESS_TYPE>> couplingOperation,
+            std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>> crossoverOperation,
+            std::shared_ptr<BaseReplacementOperation<FITNESS_TYPE>> replacementOperation,
+            std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>> mutationOperation,
             std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> chromosomeFactory):
 
             _manager(chromosomeFactory),
@@ -168,17 +185,17 @@ template<typename FITNESS_TYPE>
 class BaseGeneticAlgorithm<FITNESS_TYPE>::Builder
 {
 protected:
-    boost::optional<std::shared_ptr<stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE>>> _stoppingCriterion;
+    boost::optional<std::shared_ptr<BaseStoppingCriterion<FITNESS_TYPE>>> _stoppingCriterion;
 
-    boost::optional<std::shared_ptr<selection::BaseSelectionOperation<FITNESS_TYPE>>> _selectionOperation;
+    boost::optional<std::shared_ptr<BaseSelectionOperation<FITNESS_TYPE>>> _selectionOperation;
 
-    boost::optional<std::shared_ptr<coupling::BaseCouplingOperation<FITNESS_TYPE>>> _couplingOperation;
+    boost::optional<std::shared_ptr<BaseCouplingOperation<FITNESS_TYPE>>> _couplingOperation;
 
-    boost::optional<std::shared_ptr<crossover::BaseCrossoverOperation<FITNESS_TYPE>>> _crossoverOperation;
+    boost::optional<std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>>> _crossoverOperation;
 
-    boost::optional<std::shared_ptr<replacement::BaseReplacementOperation<FITNESS_TYPE>>> _replacementOperation;
+    boost::optional<std::shared_ptr<BaseReplacementOperation<FITNESS_TYPE>>> _replacementOperation;
 
-    boost::optional<std::shared_ptr<mutation::BaseMutationOperation<FITNESS_TYPE>>> _mutationOperation;
+    boost::optional<std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>>> _mutationOperation;
 
     boost::optional<std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>>> _chromosomeFactory;
 
@@ -197,31 +214,31 @@ public:
         return *this;
     }
 
-    Builder& setSelectionOperation( const std::shared_ptr<selection::BaseSelectionOperation<FITNESS_TYPE>> &selectionOperation )
+    Builder& setSelectionOperation( const std::shared_ptr<BaseSelectionOperation<FITNESS_TYPE>> &selectionOperation )
     {
         this->_selectionOperation = selectionOperation;
         return *this;
     }
 
-    Builder& setCouplingOperation( const std::shared_ptr<coupling::BaseCouplingOperation<FITNESS_TYPE>> &couplingOperation )
+    Builder& setCouplingOperation( const std::shared_ptr<BaseCouplingOperation<FITNESS_TYPE>> &couplingOperation )
     {
         this->_couplingOperation = couplingOperation;
         return *this;
     }
 
-    Builder& setCrossoverOperation( const std::shared_ptr<crossover::BaseCrossoverOperation<FITNESS_TYPE>> &crossoverOperation )
+    Builder& setCrossoverOperation( const std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>> &crossoverOperation )
     {
         this->_crossoverOperation = crossoverOperation;
         return *this;
     }
 
-    Builder& setReplacementOperation( const std::shared_ptr<replacement::BaseReplacementOperation<FITNESS_TYPE>> &replacementOperation )
+    Builder& setReplacementOperation( const std::shared_ptr<BaseReplacementOperation<FITNESS_TYPE>> &replacementOperation )
     {
         this->_replacementOperation = replacementOperation;
         return *this;
     }
 
-    Builder& setMutationOperation( const std::shared_ptr<mutation::BaseMutationOperation<FITNESS_TYPE>> &mutationOperation )
+    Builder& setMutationOperation( const std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>> &mutationOperation )
     {
         this->_mutationOperation = mutationOperation;
         return *this;
@@ -236,8 +253,17 @@ public:
     virtual std::unique_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> build() = 0;
 };
 
-} /* namespace algorithm */
-} /* namespace geneial */
+} /* namespace __geneial_noexport */
+} /* namespace __algorithm_impl */
+} /* namespace exports */
+
+namespace geneial
+{
+namespace algorithm
+{
+    using namespace ::__geneial_noexport::__algorithm_impl::exports;
+}
+}
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.hpp>
 

@@ -4,15 +4,18 @@
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 #include <geneial/core/population/Population.h>
 
-namespace geneial
+namespace __geneial_noexport
 {
-namespace algorithm
+namespace __algorithm_impl
 {
-namespace stopping_criteria
+namespace __stopping_criteria_impl
 {
+using ::geneial::population::management::BaseManager;
+using ::geneial::population::Population;
 
-using namespace geneial::population;
-using namespace geneial::population::management;
+inline namespace exports
+{
+using namespace geneial::algorithm::stopping_criteria;
 
 template<typename FITNESS_TYPE>
 class MaxGenerationCriterion: public BaseStoppingCriterion<FITNESS_TYPE>
@@ -42,7 +45,8 @@ public:
 
 };
 
-} /* namespace stopping_criteria */
-} /* namespace algorithm */
-} /* namespace geneial */
+} /* namespace exports */
+} /* namespace __stopping_criteria_impl */
+} /* namespace __algorithm_impl */
+} /* namespace __geneial_noexport */
 

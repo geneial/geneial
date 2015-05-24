@@ -4,14 +4,21 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-namespace geneial
+namespace __geneial_noexport
 {
-namespace algorithm
+namespace __algorithm_impl
 {
+
+inline namespace exports
+{
+using namespace geneial::algorithm;
 
 template<typename FITNESS_TYPE>
 void SteadyStateAlgorithm<FITNESS_TYPE>::solve()
 {
+
+    using boost::posix_time::ptime;
+    using boost::posix_time::microsec_clock;
 
     this->_wasStarted = true;
 
@@ -44,87 +51,87 @@ void SteadyStateAlgorithm<FITNESS_TYPE>::solve()
     while (!wasReached)
     {
 
-boost::posix_time::ptime beforeIteration = boost::posix_time::microsec_clock::local_time();
+ptime beforeIteration = microsec_clock::local_time();
 
         ++iterationCounter;
 
-boost::posix_time::ptime beforeAging = boost::posix_time::microsec_clock::local_time();
+ptime beforeAging = microsec_clock::local_time();
 
         this->_manager.getPopulation().doAge();
 
-boost::posix_time::ptime afterAging = boost::posix_time::microsec_clock::local_time();
+ptime afterAging = microsec_clock::local_time();
 aging += static_cast<double>((afterAging - beforeAging).total_microseconds());
 
 
 
-boost::posix_time::ptime beforeSelection = boost::posix_time::microsec_clock::local_time();
+ptime beforeSelection = microsec_clock::local_time();
 
         //Perform a selection of mating candidates based on the given strategy.
         auto mating_pool = this->_selectionOperation->doSelect(this->_manager.getPopulation(), this->_manager);
 
-boost::posix_time::ptime afterSelection = boost::posix_time::microsec_clock::local_time();
+ptime afterSelection = microsec_clock::local_time();
 selection += static_cast<double>((afterSelection - beforeSelection).total_microseconds());
 
 
 
-boost::posix_time::ptime beforeCoupling = boost::posix_time::microsec_clock::local_time();
+ptime beforeCoupling = microsec_clock::local_time();
 
         auto offspring(this->_couplingOperation->doCopulate(mating_pool, *this->_crossoverOperation, this->_manager));
 
-boost::posix_time::ptime afterCoupling = boost::posix_time::microsec_clock::local_time();
+ptime afterCoupling = microsec_clock::local_time();
 coupling += static_cast<double>((afterCoupling - beforeCoupling).total_microseconds());
 
 
 
-boost::posix_time::ptime beforeMutation = boost::posix_time::microsec_clock::local_time();
+ptime beforeMutation = microsec_clock::local_time();
 
         offspring = this->_mutationOperation->doMutate(offspring, this->_manager);
 
-boost::posix_time::ptime afterMutation = boost::posix_time::microsec_clock::local_time();
+ptime afterMutation = microsec_clock::local_time();
 mutation += static_cast<double>((afterMutation - beforeMutation).total_microseconds());
 
 
 
         //TODO (bewo): Scaling?
-boost::posix_time::ptime beforeReplacement = boost::posix_time::microsec_clock::local_time();
+ptime beforeReplacement = microsec_clock::local_time();
 
         this->_replacementOperation->doReplace(this->_manager.getPopulation(), mating_pool, offspring, this->_manager);
 
-boost::posix_time::ptime afterReplacement = boost::posix_time::microsec_clock::local_time();
+ptime afterReplacement = microsec_clock::local_time();
 replacement += static_cast<double>((afterReplacement - beforeReplacement).total_microseconds());
 
 
 
-boost::posix_time::ptime beforeReplenishment = boost::posix_time::microsec_clock::local_time();
+ptime beforeReplenishment = microsec_clock::local_time();
 
         //If we had a deficit, fill up population with fresh chromosomes
         this->_manager.replenishPopulation();
 
-boost::posix_time::ptime afterReplenishment = boost::posix_time::microsec_clock::local_time();
+ptime afterReplenishment = microsec_clock::local_time();
 replenishment += static_cast<double>((afterReplenishment - beforeReplenishment).total_microseconds());
 
 
 
-boost::posix_time::ptime beforeCriteria = boost::posix_time::microsec_clock::local_time();
+ptime beforeCriteria = microsec_clock::local_time();
 
         wasReached = this->wasCriteriaReached();
 
-boost::posix_time::ptime afterCriteria = boost::posix_time::microsec_clock::local_time();
+ptime afterCriteria = microsec_clock::local_time();
 criteria += static_cast<double>((afterCriteria - beforeCriteria).total_microseconds());
 
 
 
-boost::posix_time::ptime beforeObservers = boost::posix_time::microsec_clock::local_time();
+ptime beforeObservers = microsec_clock::local_time();
 
         this->notifyObservers(AlgorithmObserver<FITNESS_TYPE>::GENERATION_DONE);
 
-boost::posix_time::ptime afterObservers = boost::posix_time::microsec_clock::local_time();
+ptime afterObservers = microsec_clock::local_time();
 observer += static_cast<double>((afterObservers - beforeObservers).total_microseconds());
 
 
 
 
-boost::posix_time::ptime afterIteration = boost::posix_time::microsec_clock::local_time();
+ptime afterIteration = microsec_clock::local_time();
 iteration += static_cast<double>((afterIteration - beforeIteration).total_microseconds());
 
 
@@ -148,5 +155,6 @@ iteration += static_cast<double>((afterIteration - beforeIteration).total_micros
 
 
 
-} /* namespace algoritm */
-} /* namespace geneial */
+} /* inline namespace exports */
+} /* namespace __algorithm_impl */
+} /* namspace __geneial_noexport */

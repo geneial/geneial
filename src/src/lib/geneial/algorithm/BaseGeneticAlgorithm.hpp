@@ -5,10 +5,14 @@
 #include <iterator>
 #include <set>
 
-namespace geneial
+namespace __geneial_noexport
 {
-namespace algorithm
+namespace __algorithm_impl
 {
+
+inline namespace exports
+{
+using namespace geneial::algorithm;
 
 template<typename FITNESS_TYPE>
 inline bool BaseGeneticAlgorithm<FITNESS_TYPE>::wasCriteriaReached() //TODO(bewo) Rethink about constness of this
@@ -82,6 +86,8 @@ inline void  BaseGeneticAlgorithm<FITNESS_TYPE>::registerObserver(std::shared_pt
 }
 
 
-} /* namespace algorithm */
-} /* namespace geneial */
+} /* namespace __geneial_noexport */
+} /* namespace __algorithm_impl */
+} /* namespace exports */
+
 

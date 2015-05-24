@@ -27,6 +27,17 @@
 
 #include <geneial/algorithm/SteadyStateAlgorithm.h>
 
+#include <geneial/algorithm/criteria/CombinedCriterion.h>
+#include <geneial/algorithm/criteria/ConsecutiveDecorator.h>
+#include <geneial/algorithm/criteria/FitnessValueDeltaCriterion.h>
+#include <geneial/algorithm/criteria/FitnessValueReachedCriterion.h>
+#include <geneial/algorithm/criteria/FixPointCriterion.h>
+#include <geneial/algorithm/criteria/MaxGenerationCriterion.h>
+#include <geneial/algorithm/criteria/NegationDecorator.h>
+#include <geneial/algorithm/criteria/PopulationUnchangedCriterion.h>
+#include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
+
+
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 
 #include <geneial/core/operations/mutation/NonUniformMutationOperation.h>
@@ -80,6 +91,17 @@
 
 //Algorithm
 Expander1D(geneial::algorithm::SteadyStateAlgorithm)
+
+
+Expander1D(geneial::algorithm::stopping_criteria::CombinedCriterion)
+Expander1D(geneial::algorithm::stopping_criteria::ConsecutiveDecorator)
+Expander1D(geneial::algorithm::stopping_criteria::FitnessValueDeltaCriterion)
+Expander1D(geneial::algorithm::stopping_criteria::FitnessValueReachedCriterion)
+Expander1D(geneial::algorithm::stopping_criteria::FixPointCriterion)
+Expander1D(geneial::algorithm::stopping_criteria::MaxGenerationCriterion)
+Expander1D(geneial::algorithm::stopping_criteria::NegationDecorator)
+Expander1D(geneial::algorithm::stopping_criteria::PopulationUnchangedCriterion)
+Expander1D(geneial::algorithm::stopping_criteria::StatefulStoppingCriterion)
 
 //Choosing
 Expander2D(geneial::operation::choosing::ChooseRandom);

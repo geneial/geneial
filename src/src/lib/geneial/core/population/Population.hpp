@@ -123,7 +123,7 @@ typename BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getOldestCh
         {
             if (oldest->getAge() < fmv.second->getAge())
             {
-                oldest = fmv;
+                oldest = fmv.second;
             }
         }
     }

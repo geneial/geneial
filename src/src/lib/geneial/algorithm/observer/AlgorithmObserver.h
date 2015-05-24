@@ -5,13 +5,16 @@
 
 #include <set>
 
-namespace geneial
-{
-namespace algorithm
-{
 
-using namespace geneial::population::management;
-using namespace geneial::algorithm::stopping_criteria;
+namespace __geneial_noexport
+{
+namespace __algorithm_impl
+{
+using ::geneial::algorithm::stopping_criteria::BaseStoppingCriterion;
+using ::geneial::population::management::BaseManager;
+
+inline namespace exports
+{
 
 template<typename FITNESS_TYPE>
 class AlgorithmObserver
@@ -60,6 +63,15 @@ private:
 
 };
 
-} /* namespace algorithm */
-} /* namespace geneial */
+} /* namespace __geneial_noexport */
+} /* namespace __algorithm_impl */
+} /* namespace exports */
+
+namespace geneial
+{
+namespace algorithm
+{
+    using namespace ::__geneial_noexport::__algorithm_impl::exports;
+}
+}
 

@@ -6,14 +6,17 @@
 #include <vector>
 #include <utility>
 
-namespace geneial
+namespace __geneial_noexport
 {
-namespace algorithm
+namespace __algorithm_impl
 {
-namespace stopping_criteria
+namespace __stopping_criteria_impl
 {
+using ::geneial::population::management::BaseManager;
 
-using namespace geneial::population::management;
+inline namespace exports
+{
+using namespace ::geneial::algorithm::stopping_criteria;
 
 //Container that holds other Criteria which are connected by a logical condition (and/or), which propagate the condition by visitor pattern or sth.
 //Composite Pattern for hierarchies of criteria
@@ -121,7 +124,8 @@ private:
 
 };
 
-} /* namespace stopping_criteria */
-} /* namespace algorithm */
-} /* namespace geneial */
+} /* namespace exports */
+} /* namespace __stopping_criteria_impl */
+} /* namespace __algorithm_impl */
+} /* namespace __geneial_noexport */
 
