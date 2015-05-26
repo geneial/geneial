@@ -22,7 +22,7 @@ class BaseChromosome;
 
 geneial_private_namespace(geneial)
 {
-using geneial::population::chromosome::BaseChromosome;
+using ::geneial::population::chromosome::BaseChromosome;
 
 geneial_export_namespace
 {

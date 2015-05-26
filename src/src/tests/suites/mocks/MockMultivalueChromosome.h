@@ -12,8 +12,8 @@ namespace test_mock
 {
 
 using namespace geneial;
-using geneial::population::chromosome::BaseChromosome;
-using geneial::population::chromosome::MultiValueChromosome;
+using ::geneial::population::chromosome::BaseChromosome;
+using ::geneial::population::chromosome::MultiValueChromosome;
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 inline typename BaseChromosome<FITNESS_TYPE>::ptr baseCastMVC(

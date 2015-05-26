@@ -8,7 +8,7 @@
 namespace test_mock
 {
 
-using namespace geneial;
+using namespace ::geneial;
 
 template<typename T>
 class MockFitnessEvaluator: public FitnessEvaluator<double>

@@ -8,7 +8,7 @@
 
 namespace __geneial_noexport
 {
-using geneial::utility::Printable;
+using ::geneial::utility::Printable;
 
 inline namespace exports
 {
