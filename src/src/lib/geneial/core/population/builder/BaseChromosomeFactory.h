@@ -37,7 +37,7 @@ public:
             PopulateBehavior populateValues = CREATE_VALUES
         )
     {
-        return doCreateChromosome(populateValues);
+        return std::move(doCreateChromosome(populateValues));
     }
 
 protected:

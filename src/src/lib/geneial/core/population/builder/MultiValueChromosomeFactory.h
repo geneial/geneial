@@ -38,8 +38,7 @@ public:
     }
 protected:
     typename BaseChromosome<FITNESS_TYPE>::ptr doCreateChromosome(
-            typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues,
-            BaseManager<FITNESS_TYPE>& manager
+            typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues
     ) override;
 };
 

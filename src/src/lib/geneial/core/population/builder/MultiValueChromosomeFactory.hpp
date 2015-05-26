@@ -18,11 +18,10 @@ geneial_export_namespace
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename BaseChromosome<FITNESS_TYPE>::ptr MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::doCreateChromosome(
-        typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues,
-        BaseManager<FITNESS_TYPE>& manager)
+        typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues)
 {
 
-    auto new_chromosome(
+    typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr new_chromosome(
             new MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>(this->_settings.getFitnessEvaluator()));
 
     assert(new_chromosome->getSize() == 0);
