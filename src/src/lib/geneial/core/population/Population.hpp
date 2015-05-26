@@ -17,12 +17,15 @@ geneial_private_namespace(geneial)
 geneial_private_namespace(population)
 {
     using ::geneial::population::chromosome::BaseChromosome;
+    using ::geneial::Fitness;
 geneial_export_namespace
 {
 
 template<typename FITNESS_TYPE>
 Population<FITNESS_TYPE>::Population(BaseManager<FITNESS_TYPE>& manager) :
         _fitnessMap(),
+        _hashMap(),
+        _fitnessCache(),
         _age(0),
         _manager(manager)
 {
@@ -175,6 +178,13 @@ template<typename FITNESS_TYPE>
 inline void Population<FITNESS_TYPE>::_insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr& chromosome,
         typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue)
 {
+    const auto it = this->_fitnessCache.find(chromosome->getHash());
+    if(it != this->_fitnessCache.end())
+    {
+        chromosome->setFitness(std::move(std::unique_ptr<Fitness<FITNESS_TYPE>>(new Fitness<FITNESS_TYPE>(it->second))));
+    }
+
+    _fitnessCache[hashValue] = chromosome->getFitness().get();
     assert(chromosome);
     //Insert into fitness map
     fitnessmap_value_type fitness_map_value(chromosome->getFitness().get(), chromosome);
@@ -187,7 +197,6 @@ inline void Population<FITNESS_TYPE>::_insertChromosome(const typename BaseChrom
 template<typename FITNESS_TYPE>
 inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromosome_container &container)
 {
-
     std::vector<typename BaseChromosome<FITNESS_TYPE>::chromsome_hash> hashCache;
     hashCache.reserve(container.size());
 
@@ -210,12 +219,23 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
     {
         if (!chromosome->hasFitness())
         {
-            getManager().getExecutionManager().addTask([&chromosome]
+            getManager().getExecutionManager().addTask([&chromosome,this]
             {
-                chromosome->getFitness().get();
+                const auto it = this->_fitnessCache.find(chromosome->getHash());
+                if(it == this->_fitnessCache.end())
+                {
+                    chromosome->getFitness().get();
+                }
+                else
+                {
+                    //std::cout << "fitness_cache hit"<<std::endl;
+                    //TODO (bewo) If the user defined Fitness Evaluator might choose to override Fitness, we have a problem here..
+                    chromosome->setFitness(std::move(std::unique_ptr<Fitness<FITNESS_TYPE>>(new Fitness<FITNESS_TYPE>(it->second))));
+                }
             });
         }
     }
+
     getManager().getExecutionManager().waitForTasks();
 
     unsigned int i = 0;

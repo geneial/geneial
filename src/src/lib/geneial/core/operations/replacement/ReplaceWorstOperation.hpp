@@ -55,15 +55,29 @@ void ReplaceWorstOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &po
 
     //Insert all the offspring, parents are ignored here (since they are assumed to be already in the population)
 
-    unsigned int actualOffspringInserted = 0;
+    //We'd rather insert the chromsomes all at one, so we can use multithreading for determining the fitness.
+    //However, first we need to check whehter we will have duplicates
+
+    typename Population<FITNESS_TYPE>::chromosome_container newChildren;
+    newChildren.reserve(offspring.size());
+
+    unsigned int childrenCandidates = 0;
     for(const auto& newOffspring: offspring)
     {
-        actualOffspringInserted += static_cast<unsigned int>(population.insertChromosome(newOffspring));
-        if(actualOffspringInserted >= numberToReplace)
+        if(!population.hashExists(newOffspring->getHash()))
+        {
+            newChildren.push_back(newOffspring);
+            childrenCandidates++;
+        }
+        if(childrenCandidates >= numberToReplace)
         {
             break;
         }
     }
+
+    population.insertChromosomeContainer(newChildren);
+
+
     //we might have a deficit at this point if offsprings were already contained.
 
     //remove the worst chromosomes to replace (assuming worst is at the very beginning)

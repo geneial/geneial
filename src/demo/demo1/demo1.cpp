@@ -70,6 +70,7 @@ public:
         try
         {
             const MultiValueChromosome<int, double>& mvc = dynamic_cast<const MultiValueChromosome<int, double>&>(chromosome);
+            usleep(1);
             return std::move(std::unique_ptr<Fitness<double>>(new Fitness<double>(mvc.getSum())));
         }
         catch(std::bad_cast&)
@@ -105,7 +106,7 @@ int main(int argc, char **argv)
 
     algorithm->getPopulationSettings().setMaxChromosomes(100);
 
-    algorithm->setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager())));
+//    algorithm->setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager())));
 
     algorithm->solve();
 

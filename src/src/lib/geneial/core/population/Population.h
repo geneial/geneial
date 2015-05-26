@@ -8,7 +8,9 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <unordered_map>
 #include <memory>
+
 
 geneial_private_namespace(geneial)
 {
@@ -66,6 +68,8 @@ public:
 
     typedef typename fitness_map::const_iterator fitnessmap_const_it;
     typedef typename fitness_map::iterator fitnessmap_it;
+
+    typedef typename std::unordered_map<typename BaseChromosome<FITNESS_TYPE>::chromsome_hash,FITNESS_TYPE> fitness_cache;
 
     population_size getSize() const;
 
@@ -131,6 +135,8 @@ private:
     fitness_map _fitnessMap;
 
     hash_map _hashMap;
+
+    fitness_cache _fitnessCache;
 
     population_age _age;
 
