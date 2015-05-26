@@ -1,7 +1,9 @@
 #pragma once
 
-namespace geneial {
-namespace utility {
+namespace geneial
+{
+namespace utility
+{
 
 //Library for some common smoothing operations
 

@@ -1,21 +1,21 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
 #include <geneial/core/population/management/BaseManager.h>
 
 #include <set>
 
 
-namespace __geneial_noexport
+geneial_private_namespace(geneial)
 {
-namespace __algorithm_impl
+geneial_private_namespace(algorithm)
 {
 using ::geneial::algorithm::stopping_criteria::BaseStoppingCriterion;
 using ::geneial::population::management::BaseManager;
 
-inline namespace exports
+geneial_export_namespace
 {
-
 template<typename FITNESS_TYPE>
 class AlgorithmObserver
 {
@@ -63,15 +63,7 @@ private:
 
 };
 
-} /* namespace __geneial_noexport */
-} /* namespace __algorithm_impl */
-} /* namespace exports */
-
-namespace geneial
-{
-namespace algorithm
-{
-    using namespace ::__geneial_noexport::__algorithm_impl::exports;
-}
-}
+} /* geneial_export_namespace */
+} /* private namespace algorithm */
+} /* private namespace geneial */
 

@@ -1,20 +1,26 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
 #include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.h>
 #include <geneial/utility/Smoothing.h>
 
 #include <cassert>
 
-namespace geneial
-{
-namespace operation
-{
-namespace crossover
-{
 
-using geneial::utility::Random;
-using geneial::population::chromosome::MultiValueChromosome;
+geneial_private_namespace(geneial)
+{
+geneial_private_namespace(operation)
+{
+geneial_private_namespace(crossover)
+{
+using ::geneial::population::Population;
+using ::geneial::population::chromosome::MultiValueChromosome;
+using ::geneial::operation::coupling::BaseCouplingOperation;
+using ::geneial::utility::Random;
+
+geneial_export_namespace
+{
 
 //TODO (bewo) allow random crossover width per settings
 
@@ -45,9 +51,10 @@ public:
             const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const override;
 };
 
-} /* namespace crossover */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace crossover */
+} /* private namespace operation */
+} /* private namespace geneial */
 
 #include <geneial/core/operations/crossover/SmoothedMultiValueChromosomeNPointCrossover.hpp>
 

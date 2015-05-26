@@ -2,6 +2,7 @@
 
 #include <geneial/core/fitness/Fitness.h>
 #include <geneial/core/fitness/FitnessEvaluator.h>
+#include <geneial/core/population/chromosome/MultiValueChromosome.h>
 
 #include "MockFitnessEvaluator.h"
 
@@ -11,6 +12,8 @@ namespace test_mock
 {
 
 using namespace geneial;
+using geneial::population::chromosome::BaseChromosome;
+using geneial::population::chromosome::MultiValueChromosome;
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 inline typename BaseChromosome<FITNESS_TYPE>::ptr baseCastMVC(

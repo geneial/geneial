@@ -7,14 +7,19 @@
 #include <algorithm>
 #include <iterator>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace crossover
+geneial_private_namespace(crossover)
 {
+using ::geneial::population::Population;
+using ::geneial::population::chromosome::MultiValueChromosome;
+using ::geneial::operation::coupling::BaseCouplingOperation;
+using ::geneial::utility::Random;
 
-using namespace geneial::operation::coupling;
+geneial_export_namespace
+{
 
 //TODO (bewo): reduce cyclomatic complexity...
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
@@ -163,7 +168,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
     return resultset;
 }
 
-} /* namespace crossover */
-} /* namespace operation */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace crossover */
+} /* private namespace operation */
+} /* private namespace geneial */

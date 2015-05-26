@@ -2,11 +2,18 @@
 
 #include <geneial/core/operations/coupling/SimpleCouplingOperation.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace coupling
+geneial_private_namespace(coupling)
+{
+using ::geneial::population::Population;
+using ::geneial::operation::crossover::BaseCrossoverOperation;
+using ::geneial::operation::selection::BaseSelectionOperation;
+using ::geneial::population::management::BaseManager;
+
+geneial_export_namespace
 {
 
 template<typename FITNESS_TYPE>
@@ -74,7 +81,8 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
     return offspring;
 }
 
-} /* namespace coupling */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace coupling */
+} /* private namespace operation */
+} /* private namespace geneial */
 

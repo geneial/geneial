@@ -9,6 +9,9 @@
 #include <future>
 #include <list>
 
+namespace geneial
+{
+
 class BaseExecutionManager
 {
 public:
@@ -135,3 +138,5 @@ public:
     }
 }
 ;
+}
+

@@ -2,13 +2,18 @@
 
 #include <geneial/core/operations/mutation/SmoothPeakMutationOperation.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace mutation
+geneial_private_namespace(mutation)
 {
+using ::geneial::utility::Smoothing;
+using ::geneial::population::chromosome::BaseChromosomeFactory;
+using ::geneial::utility::Random;
 
+geneial_export_namespace
+{
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate(
         const typename Population<FITNESS_TYPE>::chromosome_container &chromosomeInputContainer,
@@ -119,7 +124,8 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
 
 }
 
-} /* namespace mutation */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace mutation */
+} /* private namespace operation */
+} /* private namespace geneial */
 

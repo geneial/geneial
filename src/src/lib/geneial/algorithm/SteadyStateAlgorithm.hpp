@@ -4,14 +4,12 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-namespace __geneial_noexport
+geneial_private_namespace(geneial)
 {
-namespace __algorithm_impl
+geneial_private_namespace(algorithm)
 {
-
-inline namespace exports
+geneial_export_namespace
 {
-using namespace geneial::algorithm;
 
 template<typename FITNESS_TYPE>
 void SteadyStateAlgorithm<FITNESS_TYPE>::solve()
@@ -154,7 +152,6 @@ iteration += static_cast<double>((afterIteration - beforeIteration).total_micros
 }
 
 
-
-} /* inline namespace exports */
-} /* namespace __algorithm_impl */
-} /* namspace __geneial_noexport */
+} /* geneial_export_namespace */
+} /* private namespace algorithm */
+} /* private namespace geneial */

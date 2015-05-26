@@ -1,16 +1,20 @@
 #pragma once
 
+#include <geneial/namespaces.h>
+
 #include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/population/Population.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace choosing
+geneial_private_namespace(choosing)
 {
+using ::geneial::population::Population;
 
-using namespace geneial::population;
+geneial_export_namespace
+{
 
 template<typename FITNESS_TYPE>
 class BaseChoosingOperation
@@ -28,7 +32,7 @@ public:
             const typename Population<FITNESS_TYPE>::chromosome_container &chromosomeInputSet) const = 0;
 };
 
-} /* namespace choosing */
-} /* namespace operation */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace choosing */
+} /* private namespace operation */
+} /* private namespace geneial */

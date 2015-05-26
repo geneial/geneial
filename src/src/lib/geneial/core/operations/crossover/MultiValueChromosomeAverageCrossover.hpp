@@ -2,14 +2,19 @@
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeAverageCrossover.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace crossover
+geneial_private_namespace(crossover)
+{
+using ::geneial::population::Population;
+using ::geneial::population::chromosome::MultiValueChromosome;
+using ::geneial::operation::coupling::BaseCouplingOperation;
+
+geneial_export_namespace
 {
 
-using namespace geneial::operation::coupling;
 //TODO (bewo) allow random weighting factor param for one side
 //value = (e.g. 2x ParentA + 1x ParentB) / 3 etc.
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
@@ -46,7 +51,8 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
     return std::move(resultset);
 }
 
-} /* namespace crossover */
-} /* namespace pperation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace crossover */
+} /* private namespace operation */
+} /* private namespace geneial */
 

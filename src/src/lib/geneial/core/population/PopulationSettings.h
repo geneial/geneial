@@ -1,8 +1,12 @@
 #pragma once
 
-namespace geneial
+#include <geneial/namespaces.h>
+
+geneial_private_namespace(geneial)
 {
-namespace population
+geneial_private_namespace(population)
+{
+geneial_export_namespace
 {
 
 class PopulationSettings
@@ -31,5 +35,6 @@ public:
     }
 };
 
-} /* namespace population */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace population */
+} /* private namespace geneial */

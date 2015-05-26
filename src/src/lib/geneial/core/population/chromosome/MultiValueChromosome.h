@@ -1,5 +1,6 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 
 #include <cassert>
@@ -8,11 +9,14 @@
 #include <numeric>
 #include <memory>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace population
+geneial_private_namespace(population)
 {
-namespace chromosome
+geneial_private_namespace(chromosome)
+{
+
+geneial_export_namespace
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
@@ -105,7 +109,7 @@ public:
 
     bool inline hasCache() const;
 
-    void inline invalidateHashCache();
+    void inline invalidateHashCache() const;
 
 private:
     value_container _container;
@@ -116,8 +120,9 @@ private:
 
 };
 
-} /* namespace chromomsome */
-} /* namespace population */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace chromosome */
+} /* private namespace population */
+} /* private namespace geneial */
 
 #include <geneial/core/population/chromosome/MultiValueChromosome.hpp>

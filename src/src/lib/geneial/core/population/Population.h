@@ -1,5 +1,6 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include <geneial/core/population/ContainerTypes.h>
 #include <geneial/utility/Printable.h>
@@ -9,16 +10,29 @@
 #include <vector>
 #include <memory>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace population
+geneial_private_namespace(population)
 {
-
-namespace management
+geneial_private_namespace(management)
+{
+geneial_export_namespace
 {
 template<typename FITNESS_TYPE>
-class BaseManager;
+    class BaseManager;
 }
+}
+}
+}
+
+geneial_private_namespace(geneial)
+{
+geneial_private_namespace(population)
+{
+    using ::geneial::utility::Printable;
+    using ::geneial::population::management::BaseManager;
+geneial_export_namespace
+{
 
 template<typename FITNESS_TYPE>
 class Population: public Printable
@@ -55,7 +69,7 @@ public:
 
     population_size getSize() const;
 
-    Population(management::BaseManager<FITNESS_TYPE>& manager);
+    Population(BaseManager<FITNESS_TYPE>& manager);
 
     //TODO(bewo) Population(Population &other);
 
@@ -104,7 +118,7 @@ public:
 
     void clearChromosomes();
 
-    const management::BaseManager<FITNESS_TYPE>& getManager() const
+    const BaseManager<FITNESS_TYPE>& getManager() const
     {
         return _manager;
     }
@@ -120,12 +134,12 @@ private:
 
     population_age _age;
 
-    management::BaseManager<FITNESS_TYPE>& _manager;
+    BaseManager<FITNESS_TYPE>& _manager;
 
 };
 
-} /* namespace population */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace population */
+} /* private namespace geneial */
 #include <geneial/core/population/Population.hpp>
 

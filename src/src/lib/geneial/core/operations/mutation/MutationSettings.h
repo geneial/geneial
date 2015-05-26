@@ -1,14 +1,18 @@
 #pragma once
 
+#include <geneial/namespaces.h>
+
 #include <cassert>
 
-namespace geneial
-{
-namespace operation
-{
-namespace mutation
-{
 
+geneial_private_namespace(geneial)
+{
+geneial_private_namespace(operation)
+{
+geneial_private_namespace(mutation)
+{
+geneial_export_namespace
+{
 class MutationSettings
 {
 private:
@@ -74,9 +78,8 @@ public:
         _amountOfMutation = amountOfMutation;
     }
 };
-//Class MutationSettings
-
-} /* namespace mutation */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace mutation */
+} /* private namespace operation */
+} /* private namespace geneial */
 

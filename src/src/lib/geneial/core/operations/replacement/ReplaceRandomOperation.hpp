@@ -6,13 +6,19 @@
 #include <algorithm>
 #include <iterator>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace replacement
+geneial_private_namespace(replacement)
 {
+using ::geneial::operation::coupling::BaseCouplingOperation;
+using ::geneial::operation::selection::BaseSelectionOperation;
+using ::geneial::population::Population;
+using ::geneial::utility::Random;
 
+geneial_export_namespace
+{
 template<typename FITNESS_TYPE>
 unsigned int ReplaceRandomOperation<FITNESS_TYPE>::getAmountToReplace(const Population<FITNESS_TYPE> &population,
         const typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const
@@ -69,7 +75,8 @@ void ReplaceRandomOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &p
 
 }
 
-} /* namespace replacement */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace replacement */
+} /* private namespace operation */
+} /* private namespace geneial */
 

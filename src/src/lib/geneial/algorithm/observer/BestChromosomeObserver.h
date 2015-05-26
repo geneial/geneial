@@ -4,14 +4,15 @@
 
 #include <set>
 
-namespace __geneial_noexport
+geneial_private_namespace(geneial)
 {
-namespace __algorithm_impl
+geneial_private_namespace(algorithm)
+{
+using ::geneial::population::management::BaseManager;
+
+geneial_export_namespace
 {
 
-inline namespace exports
-{
-using namespace geneial::population::management;
 
 template<typename FITNESS_TYPE>
 class BestChromosomeObserver: public AlgorithmObserver<FITNESS_TYPE>
@@ -48,7 +49,8 @@ private:
     bool _foundBest;
 };
 
-} /* namespace __geneial_noexport */
-} /* namespace __algorithm_impl */
-} /* namespace exports */
+
+} /* geneial_export_namespace */
+} /* private namespace algorithm */
+} /* private namespace geneial */
 

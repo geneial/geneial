@@ -5,13 +5,15 @@
 
 #include <cassert>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace mutation
+geneial_private_namespace(mutation)
 {
 
+geneial_export_namespace
+{
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class NonUniformMutationOperation: public MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>
 {
@@ -83,8 +85,9 @@ public:
     }
 };
 
-} /* namespace mutation */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace mutation */
+} /* private namespace operation */
+} /* private namespace geneial */
 
 #include <geneial/core/operations/mutation/NonUniformMutationOperation.hpp>

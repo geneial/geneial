@@ -1,20 +1,19 @@
 #pragma once
 
-#include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
+
 #include <deque>
 
-namespace __geneial_noexport
+geneial_private_namespace(geneial)
 {
-namespace __algorithm_impl
+geneial_private_namespace(algorithm)
 {
-namespace __stopping_criteria_impl
+geneial_private_namespace(stopping_criteria)
 {
 using ::geneial::population::management::BaseManager;
 
-inline namespace exports
+geneial_export_namespace
 {
-using namespace ::geneial::algorithm::stopping_criteria;
 /**
  * Decorator that checks whether a given criterion has been reached several times.
  */
@@ -99,8 +98,9 @@ private:
 
 };
 
-} /* namespace exports */
-} /* namespace __stopping_criteria_impl */
-} /* namespace __algorithm_impl */
-} /* namespace __geneial_noexport */
+} /* geneial_export_namespace */
+} /* private namespace stopping_criteria */
+} /* private namespace algorithm */
+} /* private namespace geneial */
+
 

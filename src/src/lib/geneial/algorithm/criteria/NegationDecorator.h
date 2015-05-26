@@ -1,19 +1,18 @@
 #pragma once
 
-#include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 #include <geneial/core/population/Population.h>
 
 
-namespace __geneial_noexport
+geneial_private_namespace(geneial)
 {
-namespace __algorithm_impl
+geneial_private_namespace(algorithm)
 {
-namespace __stopping_criteria_impl
+geneial_private_namespace(stopping_criteria)
 {
 using ::geneial::population::management::BaseManager;
 
-inline namespace exports
+geneial_export_namespace
 {
 
 /**
@@ -59,9 +58,7 @@ private:
 
 };
 
-} /* namespace exports */
-} /* namespace __stopping_criteria_impl */
-} /* namespace __algorithm_impl */
-} /* namespace __geneial_noexport */
-
-
+} /* geneial_export_namespace */
+} /* private namespace stopping_criteria */
+} /* private namespace algorithm */
+} /* private namespace geneial */

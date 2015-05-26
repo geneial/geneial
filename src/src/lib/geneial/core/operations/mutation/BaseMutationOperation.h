@@ -1,20 +1,23 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/core/population/Population.h>
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace mutation
+geneial_private_namespace(mutation)
 {
+using ::geneial::operation::choosing::BaseChoosingOperation;
+using ::geneial::population::Population;
+using ::geneial::population::management::BaseManager;
 
-using namespace geneial::operation::choosing;
-using namespace geneial::population::management;
-
+geneial_export_namespace
+{
 template<typename FITNESS_TYPE>
 class BaseMutationOperation
 {
@@ -59,7 +62,9 @@ public:
     }
 };
 
-} /* namespace mutation */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace mutation */
+} /* private namespace operation */
+} /* private namespace geneial */
+
 

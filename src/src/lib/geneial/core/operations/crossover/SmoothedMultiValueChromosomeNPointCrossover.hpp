@@ -2,11 +2,15 @@
 
 #include <geneial/core/operations/crossover/SmoothedMultiValueChromosomeNPointCrossover.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace crossover
+geneial_private_namespace(crossover)
+{
+using ::geneial::utility::Smoothing;
+
+geneial_export_namespace
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
@@ -36,6 +40,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set SmoothedMult
 
 }
 
-} /* namespace crossover */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace crossover */
+} /* private namespace operation */
+} /* private namespace geneial */

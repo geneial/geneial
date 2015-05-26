@@ -2,9 +2,12 @@
 
 #include <geneial/utility/Smoothing.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace utility
+geneial_private_namespace(utility)
+{
+    using geneial::population::chromosome::MultiValueChromosome;
+geneial_export_namespace
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
@@ -96,6 +99,7 @@ void Smoothing::peakAt(unsigned int pos, unsigned int epsLeft, unsigned int epsR
 
 }
 
-} /* namespace utility */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace utility */
+} /* private namespace geneial */
 

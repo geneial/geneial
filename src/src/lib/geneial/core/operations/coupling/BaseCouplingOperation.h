@@ -1,20 +1,25 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/operations/coupling/CouplingSettings.h>
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
 #include <geneial/core/population/management/BaseManager.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace coupling
+geneial_private_namespace(coupling)
+{
+using ::geneial::population::Population;
+using ::geneial::operation::crossover::BaseCrossoverOperation;
+using ::geneial::operation::selection::BaseSelectionOperation;
+using ::geneial::population::management::BaseManager;
+
+geneial_export_namespace
 {
 
-using namespace geneial::operation::selection;
-using namespace geneial::operation::crossover;
-using namespace geneial::population::management;
 
 template<typename FITNESS_TYPE>
 class BaseCouplingOperation
@@ -58,9 +63,10 @@ protected:
 
 };
 
-} /* namespace coupling */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace coupling */
+} /* private namespace operation */
+} /* private namespace geneial */
 
 
 #include <geneial/core/operations/coupling/BaseCouplingOperation.hpp>

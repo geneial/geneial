@@ -7,7 +7,6 @@
 #include <vector>
 
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
-#include <geneial/core/population/chromosome/BaseChromosome.h>
 
 #include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.h>
 #include <geneial/core/population/builder/ContinousMultiValueBuilderSettings.h>

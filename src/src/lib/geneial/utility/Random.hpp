@@ -1,19 +1,27 @@
 #pragma once
+
+#include <geneial/utility/Random.h>
+
 #include <stdio.h>      /* printf, scanf, puts, NULL */
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include <cstdlib> 		/* RAND_MAX */
 #include <limits>       /* min, max of float, double */
+#include <random>
 #include <iostream>
 #include <cassert>
 
-#include <geneial/utility/Random.h>
 
-namespace geneial
+
+//TODO (bewo) benchmark and possibly use new c++11 random functions
+
+geneial_private_namespace(geneial)
 {
-namespace utility
+geneial_private_namespace(utility)
 {
 
+geneial_export_namespace
+{
 //Assures we have positive mod every time. (because in cpp -6 % 5 = -1)
 inline int mymod(int k, const int n)
 {
@@ -133,5 +141,6 @@ inline void Random::initialize()
     sInitialized = true;
 }
 
-} /* namespace utility */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace utility */
+} /* private namespace geneial */

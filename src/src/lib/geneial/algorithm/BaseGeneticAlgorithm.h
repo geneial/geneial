@@ -1,14 +1,17 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/population/Population.h>
 #include <geneial/core/population/PopulationSettings.h>
+
+#include <geneial/core/population/management/BaseManager.h>
+
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
 #include <geneial/core/operations/coupling/BaseCouplingOperation.h>
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
 #include <geneial/core/operations/replacement/BaseReplacementOperation.h>
-#include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/observer/AlgorithmObserver.h>
 
 #include <boost/optional.hpp>
@@ -17,9 +20,10 @@
 #include <map>
 #include <list>
 
-namespace __geneial_noexport
+
+geneial_private_namespace(geneial)
 {
-namespace __algorithm_impl
+geneial_private_namespace(algorithm)
 {
 using ::geneial::algorithm::stopping_criteria::BaseStoppingCriterion;
 
@@ -33,15 +37,16 @@ using ::geneial::operation::replacement::BaseReplacementOperation;
 
 using ::geneial::operation::mutation::BaseMutationOperation;
 
+
 using ::geneial::population::Population;
 using ::geneial::population::PopulationSettings;
 
 using ::geneial::population::chromosome::BaseChromosome;
 using ::geneial::population::chromosome::BaseChromosomeFactory;
 
-inline namespace exports
+
+geneial_export_namespace
 {
-using namespace geneial::algorithm;
 
 
 template<typename FITNESS_TYPE>
@@ -253,17 +258,10 @@ public:
     virtual std::unique_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> build() = 0;
 };
 
-} /* namespace __geneial_noexport */
-} /* namespace __algorithm_impl */
-} /* namespace exports */
+} /* geneial_export_namespace */
+} /* private namespace algorithm */
+} /* private namespace geneial */
 
-namespace geneial
-{
-namespace algorithm
-{
-    using namespace ::__geneial_noexport::__algorithm_impl::exports;
-}
-}
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.hpp>
 

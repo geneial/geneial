@@ -1,10 +1,14 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/utility/patterns/singleton.hpp>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace utility
+geneial_private_namespace(utility)
+{
+
+geneial_export_namespace
 {
 
 class Random
@@ -32,7 +36,9 @@ protected:
 
 };
 bool Random::sInitialized = false;
-} /* namespace utility */
-} /* namespace geneial */
+
+} /* geneial_export_namespace */
+} /* private namespace utility */
+} /* private namespace geneial */
 
 #include <geneial/utility/Random.hpp>

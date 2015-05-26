@@ -1,15 +1,19 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/population/builder/BaseChromosomeFactory.h>
 #include <geneial/core/population/builder/MultiValueBuilderSettings.h>
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
 #include <geneial/utility/Random.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace population
+geneial_private_namespace(population)
 {
-namespace chromosome
+geneial_private_namespace(chromosome)
+{
+    using ::geneial::utility::Random;
+geneial_export_namespace
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
@@ -38,6 +42,7 @@ typename BaseChromosome<FITNESS_TYPE>::ptr MultiValueChromosomeFactory<VALUE_TYP
     return std::move(new_chromosome);
 }
 
-} /* namespace chromomsome */
-} /* namespace population */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace chromosome */
+} /* private namespace population */
+} /* private namespace geneial */

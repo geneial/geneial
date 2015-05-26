@@ -1,17 +1,19 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/population/management/BaseManager.h>
 
-namespace __geneial_noexport
+
+geneial_private_namespace(geneial)
 {
-namespace __algorithm_impl
+geneial_private_namespace(algorithm)
 {
-namespace __stopping_criteria_impl
+geneial_private_namespace(stopping_criteria)
 {
 using ::geneial::utility::Printable;
 using ::geneial::population::management::BaseManager;
 
-inline namespace exports
+geneial_export_namespace
 {
 
 
@@ -34,18 +36,7 @@ public:
     virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager) = 0;
 };
 
-} /* namespace exports */
-} /* namespace __stopping_criteria_impl */
-} /* namespace __algorithm_impl */
-} /* namespace __geneial_noexport */
-
-namespace geneial
-{
-namespace algorithm
-{
-namespace stopping_criteria
-{
-    using namespace ::__geneial_noexport::__algorithm_impl::__stopping_criteria_impl::exports;
-}
-}
-}
+} /* geneial_export_namespace */
+} /* private namespace stopping_criteria */
+} /* private namespace algorithm */
+} /* private namespace geneial */

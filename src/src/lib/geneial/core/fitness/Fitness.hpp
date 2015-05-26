@@ -1,7 +1,9 @@
 #pragma once
 #include <geneial/core/fitness/Fitness.h>
 
-namespace geneial
+namespace __geneial_noexport
+{
+inline namespace exports
 {
 
 template<typename FITNESS_TYPE>
@@ -35,5 +37,5 @@ void Fitness<FITNESS_TYPE>::print(std::ostream& os) const
     os << *_value;
 }
 
-} /* namespace geneial */
-
+} /* namespace exports */
+} /* namespace __geneial_noexport */

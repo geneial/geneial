@@ -7,15 +7,16 @@
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
 
-#include <boost/date_time/posix_time/posix_time.hpp>
-
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace mutation
+geneial_private_namespace(mutation)
 {
-
+using ::geneial::population::chromosome::BaseChromosomeFactory;
+using ::geneial::utility::Random;
+geneial_export_namespace
+{
 /*
  *  Returns a chromosome container with some new chromosomes which are partially mutated versions of the old ones.
  *
@@ -181,14 +182,15 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
         resultset.push_back(mutatedChromosome);
     }
 
-    //add not mutated Chromosomes
+    //add not mutated chromosomes
     resultset.insert(resultset.end(), notChoosenChromosomeContainer.begin(), notChoosenChromosomeContainer.end());
 
     return resultset;
 
 }
 
-} /* namespace mutation */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace mutation */
+} /* private namespace operation */
+} /* private namespace geneial */
 

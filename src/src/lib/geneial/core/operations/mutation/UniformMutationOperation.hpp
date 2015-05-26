@@ -7,11 +7,16 @@
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
 #include <geneial/core/population/Population.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace mutation
+geneial_private_namespace(mutation)
+{
+using ::geneial::population::chromosome::BaseChromosomeFactory;
+using ::geneial::utility::Random;
+
+geneial_export_namespace
 {
 // TODO(bewo): reduce cc!
 /*
@@ -161,7 +166,8 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
 
 }
 
-} /* namespace mutation */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace mutation */
+} /* private namespace operation */
+} /* private namespace geneial */
 

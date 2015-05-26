@@ -1,32 +1,33 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
 
+#include <geneial/core/operations/replacement/ReplaceWorstOperation.h>
+#include <geneial/core/operations/mutation/UniformMutationOperation.h>
+#include <geneial/core/operations/choosing/ChooseRandom.h>
 #include <geneial/algorithm/criteria/MaxGenerationCriterion.h>
 #include <geneial/core/operations/selection/RouletteWheelSelection.h>
 #include <geneial/core/operations/coupling/RandomCouplingOperation.h>
+
 #include <geneial/core/population/builder/MultiValueChromosomeFactory.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
-#include <geneial/core/operations/replacement/ReplaceWorstOperation.h>
-#include <geneial/core/operations/choosing/ChooseRandom.h>
-#include <geneial/core/operations/mutation/UniformMutationOperation.h>
 
-namespace __geneial_noexport
+geneial_private_namespace(geneial)
 {
-namespace __algorithm_impl
+geneial_private_namespace(algorithm)
 {
-
-using ::geneial::algorithm::stopping_criteria::BaseStoppingCriterion;
 using ::geneial::operation::selection::BaseSelectionOperation;
 using ::geneial::operation::coupling::BaseCouplingOperation;
 using ::geneial::operation::crossover::BaseCrossoverOperation;
 using ::geneial::operation::replacement::BaseReplacementOperation;
 using ::geneial::operation::mutation::BaseMutationOperation;
 using ::geneial::population::chromosome::BaseChromosomeFactory;
+using ::geneial::algorithm::stopping_criteria::BaseStoppingCriterion;
 
-inline namespace exports
+
+geneial_export_namespace
 {
-using namespace geneial::algorithm;
 
 template<typename FITNESS_TYPE>
 class SteadyStateAlgorithm: public BaseGeneticAlgorithm<FITNESS_TYPE>
@@ -77,17 +78,9 @@ public:
 
 
 
-} /* namespace __geneial_noexport */
-} /* namespace __algorithm_impl */
-} /* namespace exports */
-
-namespace geneial
-{
-namespace algorithm
-{
-    using namespace ::__geneial_noexport::__algorithm_impl::exports;
-}
-}
+} /* geneial_export_namespace */
+} /* private namespace algorithm */
+} /* private namespace geneial */
 
 
 #include <geneial/algorithm/SteadyStateAlgorithm.hpp>

@@ -6,11 +6,13 @@
 #include <stdexcept>
 #include <memory>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace selection
+geneial_private_namespace(selection)
+{
+geneial_export_namespace
 {
 
 /**
@@ -37,9 +39,10 @@ private:
 
 };
 
-} /* namespace selection */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace selection */
+} /* private namespace operation */
+} /* private namespace geneial */
 
 #include <geneial/core/operations/selection/FitnessProportionalSelection.hpp>
 

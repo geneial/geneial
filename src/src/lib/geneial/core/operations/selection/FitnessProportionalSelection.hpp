@@ -5,11 +5,17 @@
 
 #include <cassert>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace selection
+geneial_private_namespace(selection)
+{
+using ::geneial::population::Population;
+using ::geneial::utility::Random;
+using ::geneial::population::management::BaseManager;
+
+geneial_export_namespace
 {
 
 template<typename FITNESS_TYPE>
@@ -88,7 +94,8 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
     return result;
 }
 
-} /* namespace selection */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace selection */
+} /* private namespace operation */
+} /* private namespace geneial */
 

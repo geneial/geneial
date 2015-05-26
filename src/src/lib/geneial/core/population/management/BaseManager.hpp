@@ -5,11 +5,13 @@
 
 #include <iterator>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace population
+geneial_private_namespace(population)
 {
-namespace management
+geneial_private_namespace(management)
+{
+geneial_export_namespace
 {
 
 /**
@@ -59,7 +61,9 @@ FITNESS_TYPE BaseManager<FITNESS_TYPE>::getLowestFitness() const
     return _population.getFitnessMap().begin()->first;
 }
 
-} /* namespace manager */
-} /* namespace population */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace management */
+} /* private namespace population */
+} /* private namespace geneial */
+
 

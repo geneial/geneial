@@ -2,9 +2,9 @@
 
 #include <geneial/algorithm/SteadyStateAlgorithm.h>
 
-namespace __geneial_noexport
+geneial_private_namespace(geneial)
 {
-namespace __algorithm_impl
+geneial_private_namespace(algorithm)
 {
 using ::geneial::algorithm::stopping_criteria::BaseStoppingCriterion;
 using ::geneial::algorithm::stopping_criteria::MaxGenerationCriterion;
@@ -33,9 +33,8 @@ using ::geneial::operation::mutation::UniformMutationOperation;
 using ::geneial::population::chromosome::BaseChromosomeFactory;
 using ::geneial::population::chromosome::MultiValueChromosomeFactory;
 
-inline namespace exports
+geneial_export_namespace
 {
-using namespace geneial::algorithm;
 
 template<typename FITNESS_TYPE>
 std::shared_ptr<BaseStoppingCriterion<FITNESS_TYPE>> SteadyStateAlgorithm<FITNESS_TYPE>::Builder::getDefaultStoppingCriterion() const
@@ -180,6 +179,6 @@ std::unique_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> SteadyStateAlgorithm<FITNESS
 }
 
 
-} /* namespace exports */
-} /* namespace __algorithm_impl */
-} /* namespace __geneial_noexport */
+} /* geneial_export_namespace */
+} /* private namespace algorithm */
+} /* private namespace geneial */

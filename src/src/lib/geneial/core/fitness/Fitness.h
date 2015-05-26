@@ -6,10 +6,14 @@
 
 #include <memory>
 
-namespace geneial
+namespace __geneial_noexport
 {
+using geneial::utility::Printable;
 
-using namespace geneial::utility;
+inline namespace exports
+{
+using namespace geneial;
+
 /**
  * This class encapsulates the fitness.
  * In most cases this will only encapsulate a single value,
@@ -58,7 +62,14 @@ public:
     void print(std::ostream&) const;
 };
 
-} /* namespace geneial */
+
+} /* namespace exports */
+} /* namespace __geneial_noexport */
+
+namespace geneial
+{
+    using namespace ::__geneial_noexport::exports;
+}
 
 #include <geneial/core/fitness/Fitness.hpp>
 

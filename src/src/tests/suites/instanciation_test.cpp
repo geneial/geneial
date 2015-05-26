@@ -133,7 +133,8 @@ Expander1D(geneial::operation::selection::UniformRandomSelection);
 #endif
 
 
-BOOST_AUTO_TEST_SUITE( __INSTANCIATION_TEST_ALIBI );
+BOOST_AUTO_TEST_SUITE( __INSTANCIATION_TEST_ALIBI )
+
 BOOST_AUTO_TEST_CASE( Instanciation )
 {
     BOOST_CHECK(1==1); //when this test compiles it already has reached it's purpose

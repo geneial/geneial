@@ -1,12 +1,15 @@
 #pragma once
 
-namespace geneial
-{
-namespace operation
-{
-namespace replacement
-{
+#include <geneial/namespaces.h>
 
+geneial_private_namespace(geneial)
+{
+geneial_private_namespace(operation)
+{
+geneial_private_namespace(replacement)
+{
+geneial_export_namespace
+{
 class BaseReplacementSettings
 {
 
@@ -63,7 +66,7 @@ private:
 
 };
 
-} /* namespace replacement */
-} /* namespace operation */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace replacement */
+} /* private namespace operation */
+} /* private namespace geneial */

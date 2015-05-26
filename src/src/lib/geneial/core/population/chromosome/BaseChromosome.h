@@ -1,5 +1,6 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/utility/Printable.h>
 #include <geneial/core/fitness/Fitness.h>
 #include <geneial/core/fitness/FitnessEvaluator.h>
@@ -8,14 +9,17 @@
 #include <memory>
 #include <cassert>
 
-namespace geneial
-{
-namespace population
-{
-namespace chromosome
-{
 
-using namespace geneial::utility;
+geneial_private_namespace(geneial)
+{
+geneial_private_namespace(population)
+{
+geneial_private_namespace(chromosome)
+{
+using ::geneial::utility::Printable;
+
+geneial_export_namespace
+{
 
 /**
  * @brief Abstract superclass for any type of chromosome
@@ -23,6 +27,7 @@ using namespace geneial::utility;
 template<typename FITNESS_TYPE>
 class BaseChromosome: public Printable, public std::enable_shared_from_this<BaseChromosome<FITNESS_TYPE> >
 {
+    //we use our own custom optional here since some old boost::optional versions cannot move.
     template<typename T> class Optional
     {
         T mValue;
@@ -159,10 +164,10 @@ private:
     chromosome_age _age;
 };
 
-}
-/* namespace chromomsome */
-} /* namespace population */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace chromosome */
+} /* private namespace population */
+} /* private namespace geneial */
 
 #include <geneial/core/population/chromosome/BaseChromosome.hpp>
 

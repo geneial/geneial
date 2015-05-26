@@ -1,19 +1,17 @@
 #pragma once
 
-#include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 
-namespace __geneial_noexport
+geneial_private_namespace(geneial)
 {
-namespace __algorithm_impl
+geneial_private_namespace(algorithm)
 {
-namespace __stopping_criteria_impl
+geneial_private_namespace(stopping_criteria)
 {
 using ::geneial::population::management::BaseManager;
 
-inline namespace exports
+geneial_export_namespace
 {
-
 
 //TODO (bewo) Idea to implement here: -> c.f. TrailingStop in Stock market
 //Trace the best chromosome, when its gets worser as a given threshold abort.
@@ -38,7 +36,7 @@ public:
     }
 };
 
-} /* namespace exports */
-} /* namespace __stopping_criteria_impl */
-} /* namespace __algorithm_impl */
-} /* namespace __geneial_noexport */
+} /* geneial_export_namespace */
+} /* private namespace stopping_criteria */
+} /* private namespace algorithm */
+} /* private namespace geneial */

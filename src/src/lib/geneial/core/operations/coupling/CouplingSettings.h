@@ -1,14 +1,17 @@
 #pragma once
 
+#include <geneial/namespaces.h>
+
 #include <cassert>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace coupling
+geneial_private_namespace(coupling)
 {
-
+geneial_export_namespace
+{
 /**
  * Generic class for coupling options
  */
@@ -39,7 +42,8 @@ public:
 
 };
 
-} /* namespace coupling */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace coupling */
+} /* private namespace operation */
+} /* private namespace geneial */
 

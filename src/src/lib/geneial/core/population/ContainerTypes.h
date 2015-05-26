@@ -1,12 +1,16 @@
 #pragma once
 
+#include <geneial/namespaces.h>
+
 #include <vector>
 
-namespace geneial
-{
-namespace population
-{
 
+geneial_private_namespace(geneial)
+{
+geneial_private_namespace(population)
+{
+geneial_export_namespace
+{
 template<typename FITNESS_TYPE>
 class ContainerTypes
 {
@@ -20,5 +24,6 @@ public:
     typedef typename std::vector<typename chromosome::BaseChromosome<FITNESS_TYPE>::ptr> chromosome_container;
 };
 
-} /* namespace population */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace population */
+} /* private namespace geneial */

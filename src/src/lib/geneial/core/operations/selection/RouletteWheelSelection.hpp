@@ -9,11 +9,18 @@
 #include <cassert>
 #include <utility>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace selection
+geneial_private_namespace(selection)
+{
+
+using ::geneial::population::Population;
+using ::geneial::population::management::BaseManager;
+using ::geneial::utility::Random;
+
+geneial_export_namespace
 {
 
 //TODO (bewo): This is not very efficient for large populations.
@@ -137,6 +144,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
     return result;
 }
 
-} /* namespace selection */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace selection */
+} /* private namespace operation */
+} /* private namespace geneial */

@@ -1,14 +1,21 @@
 #pragma once
 
+#include <geneial/namespaces.h>
+
 #include <cassert>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace crossover
+geneial_private_namespace(crossover)
 {
+using ::geneial::population::Population;
+using ::geneial::population::chromosome::MultiValueChromosome;
+using ::geneial::operation::coupling::BaseCouplingOperation;
 
+geneial_export_namespace
+{
 class MultiValueChromosomeNPointCrossoverSettings
 {
 public:
@@ -99,7 +106,7 @@ private:
 
 };
 
-} /* namespace crossover */
-} /* namespace operation */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace crossover */
+} /* private namespace operation */
+} /* private namespace geneial */

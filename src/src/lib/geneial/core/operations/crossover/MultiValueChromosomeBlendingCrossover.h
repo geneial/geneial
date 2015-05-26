@@ -1,16 +1,23 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeCrossoverOperation.h>
 
 #include <cassert>
 #include <geneial/utility/Interpolators.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace crossover
+geneial_private_namespace(crossover)
 {
+using ::geneial::population::Population;
+using ::geneial::utility::Interpolators;
+
+geneial_export_namespace
+{
+
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class MultiValueChromosomeBlendingCrossover: public MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>
@@ -74,9 +81,10 @@ private:
     unsigned int _numChilds;
 };
 
-} /* namespace crossover */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace crossover */
+} /* private namespace operation */
+} /* private namespace geneial */
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeBlendingCrossover.hpp>
 

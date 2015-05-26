@@ -1,16 +1,21 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/operations/coupling/BaseCouplingOperation.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace coupling
+geneial_private_namespace(coupling)
 {
+using ::geneial::population::Population;
+using ::geneial::operation::crossover::BaseCrossoverOperation;
+using ::geneial::operation::selection::BaseSelectionOperation;
+using ::geneial::population::management::BaseManager;
 
-using namespace geneial::operation::selection;
-using namespace geneial::population::management;
+geneial_export_namespace
+{
 
 /**
  * RandomCouplingOperation will choose parents from the mating pool at random
@@ -35,9 +40,10 @@ public:
 
 };
 
-} /* namespace coupling */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace coupling */
+} /* private namespace operation */
+} /* private namespace geneial */
 
 #include <geneial/core/operations/coupling/RandomCouplingOperation.hpp>
 

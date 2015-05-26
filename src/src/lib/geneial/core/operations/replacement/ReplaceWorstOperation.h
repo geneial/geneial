@@ -1,12 +1,18 @@
 #pragma once
 
 #include <geneial/core/operations/replacement/BaseReplacementOperation.h>
+#include <geneial/core/operations/selection/BaseSelectionOperation.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace replacement
+geneial_private_namespace(replacement)
+{
+using ::geneial::operation::coupling::BaseCouplingOperation;
+using ::geneial::operation::selection::BaseSelectionOperation;
+
+geneial_export_namespace
 {
 
 /**
@@ -35,9 +41,11 @@ public:
 
 };
 
-} /* namespace replacement */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace replacement */
+} /* private namespace operation */
+} /* private namespace geneial */
+
 
 #include <geneial/core/operations/replacement/ReplaceWorstOperation.hpp>
 

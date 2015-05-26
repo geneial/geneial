@@ -1,10 +1,15 @@
 #pragma once
 
-namespace geneial
+#include <geneial/namespaces.h>
+#include <geneial/core/population/chromosome/BaseChromosome.h>
+
+geneial_private_namespace(geneial)
 {
-namespace population
+geneial_private_namespace(population)
 {
-namespace chromosome
+geneial_private_namespace(chromosome)
+{
+geneial_export_namespace
 {
 
 template<typename FITNESS_TYPE>
@@ -30,7 +35,7 @@ public:
             PopulateBehavior populateValues = CREATE_VALUES) = 0;
 };
 
-} /* namespace chromomsome */
-} /* namespace population */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace chromosome */
+} /* private namespace population */
+} /* private namespace geneial */

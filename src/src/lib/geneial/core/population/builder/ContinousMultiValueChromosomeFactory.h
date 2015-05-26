@@ -1,13 +1,16 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/population/builder/MultiValueChromosomeFactory.h>
 #include <geneial/core/population/builder/ContinousMultiValueBuilderSettings.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace population
+geneial_private_namespace(population)
 {
-namespace chromosome
+geneial_private_namespace(chromosome)
+{
+geneial_export_namespace
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
@@ -26,9 +29,10 @@ public:
                     FITNESS_TYPE>::CREATE_VALUES) override;
 };
 
-} /* namespace chromomsome */
-} /* namespace population */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace chromosome */
+} /* private namespace population */
+} /* private namespace geneial */
 
 #include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.hpp>
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/population/Population.h>
 #include <geneial/core/fitness/Fitness.h>
 
@@ -11,13 +12,16 @@
 #include <memory>
 
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace population
+geneial_private_namespace(population)
+{
+    using ::geneial::population::chromosome::BaseChromosome;
+geneial_export_namespace
 {
 
 template<typename FITNESS_TYPE>
-Population<FITNESS_TYPE>::Population(management::BaseManager<FITNESS_TYPE>& manager) :
+Population<FITNESS_TYPE>::Population(BaseManager<FITNESS_TYPE>& manager) :
         _fitnessMap(),
         _age(0),
         _manager(manager)
@@ -307,6 +311,6 @@ inline void Population<FITNESS_TYPE>::clearChromosomes()
     _hashMap.clear();
 }
 
-} /* namespace population */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace population */
+} /* private namespace geneial */

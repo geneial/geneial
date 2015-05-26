@@ -7,11 +7,15 @@
 #include <map>
 #include <cassert>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace selection
+geneial_private_namespace(selection)
+{
+using ::geneial::utility::Random;
+
+geneial_export_namespace
 {
 
 //TODO (bewo) check whether all this will work with negative fitness values
@@ -53,7 +57,8 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set UniformRando
     return result;
 }
 
-} /* namespace selection */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace selection */
+} /* private namespace operation */
+} /* private namespace geneial */
 

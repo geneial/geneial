@@ -4,6 +4,7 @@
 #include <cassert>
 
 #ifndef M_PI
+//TODO (bewo) move to const double..
 #define M_PI    3.14159265358979323846f
 #endif
 

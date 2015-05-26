@@ -5,24 +5,29 @@
 #include <memory>
 
 //Forward Declaration for BaseChromosome (due to circular inclusion)
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace population
+geneial_private_namespace(population)
 {
-namespace chromosome
+geneial_private_namespace(chromosome)
+{
+geneial_export_namespace
 {
 template<typename FITNESS_TYPE>
 class BaseChromosome;
 }
 }
 }
+}
 
-namespace geneial
+geneial_private_namespace(geneial)
+{
+using geneial::population::chromosome::BaseChromosome;
+
+geneial_export_namespace
 {
 
 //TODO (bewo) Allow a lambda function as fitness evaluator?
-
-using namespace geneial::population::chromosome;
 
 template<typename FITNESS_TYPE>
 class FitnessEvaluator : public std::enable_shared_from_this<FitnessEvaluator<FITNESS_TYPE>>
@@ -55,5 +60,5 @@ public:
             const BaseChromosome<FITNESS_TYPE>& chromosome) const = 0;
 };
 
-} /* namespace GeneticLibrary */
-
+} /* geneial_export_namespace*/
+} /* private namespace geneial */

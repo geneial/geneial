@@ -1,18 +1,21 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/operations/selection/SelectionSettings.h>
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/core/population/Population.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace selection
+geneial_private_namespace(selection)
 {
+using ::geneial::population::Population;
+using ::geneial::population::management::BaseManager;
 
-using namespace geneial::population::management;
-using namespace geneial::population;
+geneial_export_namespace
+{
 
 /**
  * Select a number of parents based on a certain criteria.
@@ -50,7 +53,8 @@ public:
 
 };
 
-} /* namespace selection */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace selection */
+} /* private namespace operation */
+} /* private namespace geneial */
 

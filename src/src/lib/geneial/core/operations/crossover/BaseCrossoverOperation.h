@@ -1,18 +1,19 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include <geneial/core/population/Population.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace crossover
+geneial_private_namespace(crossover)
 {
+using ::geneial::population::Population;
 
-using namespace geneial::population;
-using namespace geneial::population::chromosome;
-
+geneial_export_namespace
+{
 template<typename FITNESS_TYPE>
 class BaseCrossoverOperation
 {
@@ -35,7 +36,8 @@ public:
 
 };
 
-} /* namespace crossover */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace crossover */
+} /* private namespace operation */
+} /* private namespace geneial */
 

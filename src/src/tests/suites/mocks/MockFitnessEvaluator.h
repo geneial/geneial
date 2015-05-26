@@ -24,7 +24,7 @@ public:
     {
     }
 
-    std::unique_ptr<Fitness<T>> evaluate(const BaseChromosome<T>& chromosome) const
+    std::unique_ptr<Fitness<T>> evaluate(const geneial::population::chromosome::BaseChromosome<T>& chromosome) const
     {
         return std::move(std::unique_ptr<Fitness<T>>(new Fitness<T>(MOCK_VALUE)));
     }
