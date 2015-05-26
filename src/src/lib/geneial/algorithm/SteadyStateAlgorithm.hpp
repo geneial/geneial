@@ -21,7 +21,7 @@ void SteadyStateAlgorithm<FITNESS_TYPE>::solve()
     this->_wasStarted = true;
 
     //Initialize the first population candidate, take whatever has been inserted and fill it up to max size.
-    this->_manager.replenishPopulation();
+    this->_manager->replenishPopulation();
 
     //  std::cout << _manager.getPopulation() << std::endl;
     long double aging = 0;
@@ -55,7 +55,7 @@ ptime beforeIteration = microsec_clock::local_time();
 
 ptime beforeAging = microsec_clock::local_time();
 
-        this->_manager.getPopulation().doAge();
+        this->_manager->getPopulation().doAge();
 
 ptime afterAging = microsec_clock::local_time();
 aging += static_cast<double>((afterAging - beforeAging).total_microseconds());
@@ -65,7 +65,7 @@ aging += static_cast<double>((afterAging - beforeAging).total_microseconds());
 ptime beforeSelection = microsec_clock::local_time();
 
         //Perform a selection of mating candidates based on the given strategy.
-        auto mating_pool = this->_selectionOperation->doSelect(this->_manager.getPopulation(), this->_manager);
+        auto mating_pool = this->_selectionOperation->doSelect(this->_manager->getPopulation(), *this->_manager);
 
 ptime afterSelection = microsec_clock::local_time();
 selection += static_cast<double>((afterSelection - beforeSelection).total_microseconds());
@@ -74,7 +74,7 @@ selection += static_cast<double>((afterSelection - beforeSelection).total_micros
 
 ptime beforeCoupling = microsec_clock::local_time();
 
-        auto offspring(this->_couplingOperation->doCopulate(mating_pool, *this->_crossoverOperation, this->_manager));
+        auto offspring(this->_couplingOperation->doCopulate(mating_pool, *this->_crossoverOperation, *this->_manager));
 
 ptime afterCoupling = microsec_clock::local_time();
 coupling += static_cast<double>((afterCoupling - beforeCoupling).total_microseconds());
@@ -83,7 +83,7 @@ coupling += static_cast<double>((afterCoupling - beforeCoupling).total_microseco
 
 ptime beforeMutation = microsec_clock::local_time();
 
-        offspring = this->_mutationOperation->doMutate(offspring, this->_manager);
+        offspring = this->_mutationOperation->doMutate(offspring, *this->_manager);
 
 ptime afterMutation = microsec_clock::local_time();
 mutation += static_cast<double>((afterMutation - beforeMutation).total_microseconds());
@@ -93,7 +93,7 @@ mutation += static_cast<double>((afterMutation - beforeMutation).total_microseco
         //TODO (bewo): Scaling?
 ptime beforeReplacement = microsec_clock::local_time();
 
-        this->_replacementOperation->doReplace(this->_manager.getPopulation(), mating_pool, offspring, this->_manager);
+        this->_replacementOperation->doReplace(this->_manager->getPopulation(), mating_pool, offspring, *this->_manager);
 
 ptime afterReplacement = microsec_clock::local_time();
 replacement += static_cast<double>((afterReplacement - beforeReplacement).total_microseconds());
@@ -103,7 +103,7 @@ replacement += static_cast<double>((afterReplacement - beforeReplacement).total_
 ptime beforeReplenishment = microsec_clock::local_time();
 
         //If we had a deficit, fill up population with fresh chromosomes
-        this->_manager.replenishPopulation();
+        this->_manager->replenishPopulation();
 
 ptime afterReplenishment = microsec_clock::local_time();
 replenishment += static_cast<double>((afterReplenishment - beforeReplenishment).total_microseconds());

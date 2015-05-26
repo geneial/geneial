@@ -39,7 +39,11 @@ geneial_export_namespace
 template<typename FITNESS_TYPE>
 class Population: public Printable
 {
+private:
+    Population();
 public:
+
+    friend class BaseManager<FITNESS_TYPE>;
 
     const static int POPULATION_AGE_INITIAL = 0;
 
@@ -72,8 +76,6 @@ public:
     typedef typename std::unordered_map<typename BaseChromosome<FITNESS_TYPE>::chromsome_hash,FITNESS_TYPE> fitness_cache;
 
     population_size getSize() const;
-
-    Population(BaseManager<FITNESS_TYPE>& manager);
 
     //TODO(bewo) Population(Population &other);
 
@@ -124,7 +126,7 @@ public:
 
     const BaseManager<FITNESS_TYPE>& getManager() const
     {
-        return _manager;
+        return *_manager;
     }
 
 private:
@@ -140,7 +142,7 @@ private:
 
     population_age _age;
 
-    BaseManager<FITNESS_TYPE>& _manager;
+    std::shared_ptr<BaseManager<FITNESS_TYPE>>  _manager;
 
 };
 

@@ -109,6 +109,13 @@ public:
 
     bool inline hasCache() const;
 
+    virtual void doInvalidate() override
+    {
+        invalidateHashCache();
+        _hashCache = 0;
+        _container.clear();
+    }
+
     void inline invalidateHashCache() const;
 
 private:

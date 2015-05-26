@@ -139,6 +139,20 @@ public:
      */
     void invalidateFitness();
 
+
+    //"Resets" the whole chromosome in case where the chromosome is recycled from the holdoff set.
+    inline void invalidate()
+    {
+        invalidateFitness();
+        setAge(CHROMOSOME_AGE_UNITIALIZED);
+        //Allow for child classes to do their own magic.
+        doInvalidate();
+    }
+
+    virtual void doInvalidate()
+    {
+    }
+
     /**
      * Sets fitness of a chromosome
      */

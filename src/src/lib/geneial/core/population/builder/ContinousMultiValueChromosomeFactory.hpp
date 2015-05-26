@@ -12,6 +12,10 @@ geneial_private_namespace(population)
 {
 geneial_private_namespace(chromosome)
 {
+using ::geneial::population::chromosome::ContinousMultiValueBuilderSettings;
+using ::geneial::population::chromosome::ContinousMultiValueChromosomeFactory;
+
+
 geneial_export_namespace
 {
 
@@ -21,12 +25,10 @@ typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiValueChromosomeFactory<
 {
     using namespace geneial::utility;
 
-    typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr  new_chromosome(
-            new MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>(_settings.getFitnessEvaluator()));
-
-    assert(new_chromosome->getSize() == 0);
+    auto new_chromosome = this->allocateNewChromsome();
 
     new_chromosome->getContainer().reserve(_settings.getNum());
+
     if (populateValues == BaseChromosomeFactory<FITNESS_TYPE>::CREATE_VALUES)
     {
         const unsigned int amount = _settings.getNum();

@@ -16,18 +16,19 @@ geneial_private_namespace(geneial)
 {
 geneial_private_namespace(population)
 {
-    using ::geneial::population::chromosome::BaseChromosome;
-    using ::geneial::Fitness;
+using ::geneial::population::chromosome::BaseChromosome;
+using ::geneial::population::management::BaseManager;
+using ::geneial::Fitness;
+
 geneial_export_namespace
 {
 
 template<typename FITNESS_TYPE>
-Population<FITNESS_TYPE>::Population(BaseManager<FITNESS_TYPE>& manager) :
+Population<FITNESS_TYPE>::Population() :
         _fitnessMap(),
         _hashMap(),
         _fitnessCache(),
-        _age(0),
-        _manager(manager)
+        _age(0)
 {
 }
 
@@ -254,13 +255,13 @@ template<typename FITNESS_TYPE>
 inline void Population<FITNESS_TYPE>::removeChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr &chromosome)
 {
     const FITNESS_TYPE fitness = chromosome->getFitness().get();
-    const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hash = chromosome->getHash();
 
-    const std::pair<typename fitness_map::iterator, typename fitness_map::iterator> range = _fitnessMap.equal_range(
-            fitness);
+    const auto hash = chromosome->getHash();
+    const auto range = _fitnessMap.equal_range(fitness);
+
     bool candidateFound = false;
 
-    typename fitness_map::iterator it = range.first;
+    auto it = range.first;
     assert(range.first != _fitnessMap.end());
 
     //we might have multiple chromosomes with the same key, advance until pointer is candidateFound
@@ -276,8 +277,11 @@ inline void Population<FITNESS_TYPE>::removeChromosome(const typename BaseChromo
         }
     }
     assert(candidateFound);
-    typename hash_map::iterator hit = _hashMap.find(hash);
+
+    const auto hit = _hashMap.find(hash);
     assert(hit != _hashMap.end());
+
+    _manager->deleteOrHoldOffReference(chromosome);
 
     _fitnessMap.erase(it);
     _hashMap.erase(hit);
@@ -296,7 +300,7 @@ template<typename FITNESS_TYPE>
 inline typename BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getChromosomeByHash(
         const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue)
 {
-    typename hash_map::iterator it = _hashMap.find - (hashValue);
+    const auto it = _hashMap.find - (hashValue);
     if (it == _hashMap.end())
     {
         typename BaseChromosome<FITNESS_TYPE>::ptr null_ptr(nullptr);

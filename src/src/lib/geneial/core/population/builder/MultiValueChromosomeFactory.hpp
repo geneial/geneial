@@ -21,8 +21,7 @@ typename BaseChromosome<FITNESS_TYPE>::ptr MultiValueChromosomeFactory<VALUE_TYP
         typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues)
 {
 
-    typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr new_chromosome(
-            new MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>(this->_settings.getFitnessEvaluator()));
+    auto new_chromosome = this->allocateNewChromsome();
 
     assert(new_chromosome->getSize() == 0);
 

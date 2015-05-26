@@ -13,10 +13,12 @@ class PopulationSettings
 {
 private:
     unsigned int _max_chromosomes;
+    unsigned int _holdoff_size;
 
 public:
-    explicit PopulationSettings(int max_chromosomes = 100) :
-            _max_chromosomes(max_chromosomes)
+    explicit PopulationSettings(const unsigned int max_chromosomes = 100, const unsigned int holdoff_size=100) :
+            _max_chromosomes(max_chromosomes),
+            _holdoff_size(holdoff_size)
     {
     }
 
@@ -32,6 +34,16 @@ public:
     void setMaxChromosomes(int maxChromosomes)
     {
         _max_chromosomes = maxChromosomes;
+    }
+
+    unsigned int getHoldoffSize() const
+    {
+        return _holdoff_size;
+    }
+
+    void setHoldoffSize(const unsigned int holdoffSize)
+    {
+        _holdoff_size = holdoffSize;
     }
 };
 

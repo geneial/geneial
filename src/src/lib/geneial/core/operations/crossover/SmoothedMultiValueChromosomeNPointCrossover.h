@@ -18,6 +18,8 @@ using ::geneial::population::Population;
 using ::geneial::population::chromosome::MultiValueChromosome;
 using ::geneial::operation::coupling::BaseCouplingOperation;
 using ::geneial::utility::Random;
+using ::geneial::population::chromosome::ContinousMultiValueBuilderSettings;
+using ::geneial::population::chromosome::ContinousMultiValueChromosomeFactory;
 
 geneial_export_namespace
 {

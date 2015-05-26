@@ -62,7 +62,7 @@ protected:
 
     observers_map _observers;
 
-    BaseManager<FITNESS_TYPE> _manager;
+    std::shared_ptr<BaseManager<FITNESS_TYPE>> _manager;
 
     bool _wasSolved;
 
@@ -90,7 +90,7 @@ protected:
             std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>> mutationOperation,
             std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> chromosomeFactory):
 
-            _manager(chromosomeFactory),
+            _manager(BaseManager<FITNESS_TYPE>::create(chromosomeFactory)),
             _wasSolved(false),
             _wasStarted(false),
             _stoppingCriterion(stoppingCriterion),
@@ -116,7 +116,7 @@ public:
     virtual void setInitialPopulation(typename Population<FITNESS_TYPE>::chromosome_container &container)
     {
         assert(!_wasStarted);
-        _manager.getPopulation().replacePopulation(container);
+        _manager->getPopulation().replacePopulation(container);
     }
 
     //Delegates to manager,
@@ -124,30 +124,30 @@ public:
     inline typename BaseChromosome<FITNESS_TYPE>::ptr getHighestFitnessChromosome() const
     {
         assert(_wasStarted);
-        return _manager.getHighestFitnessChromosome();
+        return _manager->getHighestFitnessChromosome();
     }
 
     inline FITNESS_TYPE getHighestFitness() const
     {
         assert(_wasStarted);
-        return _manager.getHighestFitness();
+        return _manager->getHighestFitness();
     }
 
     virtual Population<FITNESS_TYPE>& getPopulation()
     {
-        return _manager.getPopulation();
+        return _manager->getPopulation();
     }
 
     inline typename BaseChromosome<FITNESS_TYPE>::ptr getLowestFitnessChromosome() const
     {
         assert(_wasStarted);
-        return _manager.getLowestFitnessChromosome();
+        return _manager->getLowestFitnessChromosome();
     }
 
     inline FITNESS_TYPE getLowestFitness() const
     {
         assert(_wasStarted);
-        return _manager.getLowestFitness();
+        return _manager->getLowestFitness();
     }
 
     inline virtual bool hasBeenSolved() const
@@ -162,12 +162,12 @@ public:
 
     inline virtual PopulationSettings& getPopulationSettings()
     {
-        return _manager.getPopulationSettings();
+        return _manager->getPopulationSettings();
     }
 
     inline void setPopulationSettings(PopulationSettings& populationSettings)
     {
-        _manager.setPopulationSettings(populationSettings);
+        _manager->setPopulationSettings(populationSettings);
     }
 
     inline virtual bool wasCriteriaReached();
@@ -179,12 +179,12 @@ public:
 
     BaseExecutionManager& getExecutionManager() const
     {
-        return _manager.getExecutionManager();
+        return _manager->getExecutionManager();
     }
 
     void setExecutionManager(std::unique_ptr<BaseExecutionManager> executionManager)
     {
-        _manager.setExecutionManager(std::move(executionManager));
+        _manager->setExecutionManager(std::move(executionManager));
     }
 
 

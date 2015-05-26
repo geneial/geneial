@@ -28,14 +28,28 @@ geneial_export_namespace
 template<typename FITNESS_TYPE>
 class BaseManager : public std::enable_shared_from_this<BaseManager<FITNESS_TYPE> >
 {
-
-public:
-    explicit BaseManager<FITNESS_TYPE>(std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> chromosomeFactory) :
+private:
+    explicit BaseManager<FITNESS_TYPE>(const std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> &chromosomeFactory) :
+        _holdoffSet(),
         _populationSettings(),
-        _population(*this),
+        _population(),
         _chromosomeFactory(chromosomeFactory), _executionManager(new SequentialExecutionManager())
+        {
+        }
+    BaseManager(const BaseManager& other) = delete;
+    BaseManager(const BaseManager&& other) = delete;
+public:
+
+    static std::shared_ptr<BaseManager<FITNESS_TYPE>> create(const std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> chromosomeFactory)
     {
+        std::shared_ptr<BaseManager<FITNESS_TYPE>> ptr(new BaseManager<FITNESS_TYPE>(chromosomeFactory));
+
+        ptr->_chromosomeFactory->setManager(ptr);
+        ptr->_population._manager = ptr;
+
+        return ptr;
     }
+
 
     virtual ~BaseManager<FITNESS_TYPE>()
     {
@@ -96,7 +110,31 @@ public:
         _executionManager = std::move(executionManager);
     }
 
+    void deleteOrHoldOffReference(const typename BaseChromosome<FITNESS_TYPE>::ptr& chromosome)
+    {
+        if (_holdoffSet.size() <= _populationSettings.getHoldoffSize())
+        {
+            _holdoffSet.push_back(chromosome);
+        }
+    }
+
+    typename BaseChromosome<FITNESS_TYPE>::ptr retrieveFromHoldOff()
+    {
+        typename BaseChromosome<FITNESS_TYPE>::ptr ptrCandidate;
+
+        if (_holdoffSet.size() > 1)
+        {
+            ptrCandidate = _holdoffSet.back();
+            _holdoffSet.pop_back();
+        }
+
+        return std::move(ptrCandidate);
+    }
+
 private:
+    //Set for deleted chromosomes to reassign to factory
+    typename Population<FITNESS_TYPE>::chromosome_container _holdoffSet;
+
     PopulationSettings _populationSettings;
 
     Population<FITNESS_TYPE> _population;

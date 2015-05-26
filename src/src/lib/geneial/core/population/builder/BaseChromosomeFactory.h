@@ -18,14 +18,18 @@ geneial_export_namespace
 template<typename FITNESS_TYPE>
 class BaseChromosomeFactory
 {
+
 private:
+    std::weak_ptr<BaseManager<FITNESS_TYPE>>  _manager;
+
 public:
+
     enum PopulateBehavior
     {
         CREATE_VALUES, LET_UNPOPULATED
     };
 
-    BaseChromosomeFactory()
+    BaseChromosomeFactory():_manager()
     {
     }
 
@@ -38,6 +42,16 @@ public:
         )
     {
         return std::move(doCreateChromosome(populateValues));
+    }
+
+    std::weak_ptr<BaseManager<FITNESS_TYPE>> getManager() const
+    {
+        return _manager;
+    }
+
+    void setManager(std::weak_ptr<BaseManager<FITNESS_TYPE>> manager)
+    {
+        _manager = manager;
     }
 
 protected:

@@ -27,6 +27,8 @@ public:
     }
 
 
+
+
     inline const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> & getSettings() const
     {
         return _settings;
@@ -40,6 +42,29 @@ protected:
     typename BaseChromosome<FITNESS_TYPE>::ptr doCreateChromosome(
             typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues
     ) override;
+
+    typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr allocateNewChromsome()
+    {
+        typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr new_chromosome;
+
+        auto manager = this->getManager();
+
+        if (!manager.expired())
+        {
+            auto _manager = manager.lock();
+            new_chromosome = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>>(_manager->retrieveFromHoldOff());
+            if(new_chromosome)
+            {
+                new_chromosome->invalidate();
+            }
+        }
+
+        if (!new_chromosome)
+        {
+            new_chromosome.reset(new MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>(_settings.getFitnessEvaluator()));
+        }
+        return new_chromosome;
+    }
 };
 
 } /* geneial_export_namespace */

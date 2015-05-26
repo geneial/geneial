@@ -15,7 +15,7 @@ geneial_export_namespace
 template<typename FITNESS_TYPE>
 inline bool BaseGeneticAlgorithm<FITNESS_TYPE>::wasCriteriaReached() //TODO(bewo) Rethink about constness of this
 {
-    const bool wasReached = _stoppingCriterion->wasReached(_manager);
+    const bool wasReached = _stoppingCriterion->wasReached(*_manager);
     if (wasReached)
     {
         notifyObservers(AlgorithmObserver<FITNESS_TYPE>::CRITERIA_REACHED);
@@ -37,7 +37,7 @@ inline void BaseGeneticAlgorithm<FITNESS_TYPE>::notifyObservers(typename Algorit
             {
                 for (const auto& it : lb->second)
                 {
-                    it->updateGeneration(_manager);
+                    it->updateGeneration(*_manager);
                 }
                 break;
             }
@@ -46,7 +46,7 @@ inline void BaseGeneticAlgorithm<FITNESS_TYPE>::notifyObservers(typename Algorit
             {
                 for (const auto& it : lb->second)
                 {
-                    it->updateCriteriaReached(_manager, *_stoppingCriterion);
+                    it->updateCriteriaReached(*_manager, *_stoppingCriterion);
                 }
                 break;
             }

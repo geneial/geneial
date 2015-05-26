@@ -70,7 +70,7 @@ public:
         try
         {
             const MultiValueChromosome<int, double>& mvc = dynamic_cast<const MultiValueChromosome<int, double>&>(chromosome);
-            usleep(1);
+            //usleep(1);
             return std::move(std::unique_ptr<Fitness<double>>(new Fitness<double>(mvc.getSum())));
         }
         catch(std::bad_cast&)

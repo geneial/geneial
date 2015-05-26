@@ -13,6 +13,9 @@ geneial_private_namespace(operation)
 {
 geneial_private_namespace(mutation)
 {
+using ::geneial::population::chromosome::ContinousMultiValueBuilderSettings;
+using ::geneial::population::chromosome::ContinousMultiValueChromosomeFactory;
+
 geneial_export_namespace
 {
 
