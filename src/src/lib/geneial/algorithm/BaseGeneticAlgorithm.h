@@ -14,6 +14,8 @@
 #include <geneial/core/operations/replacement/BaseReplacementOperation.h>
 #include <geneial/algorithm/observer/AlgorithmObserver.h>
 
+#include <geneial/utility/ExecutionManager.h>
+
 #include <boost/optional.hpp>
 
 #include <memory>
@@ -36,6 +38,8 @@ using ::geneial::operation::crossover::BaseCrossoverOperation;
 using ::geneial::operation::replacement::BaseReplacementOperation;
 
 using ::geneial::operation::mutation::BaseMutationOperation;
+
+using ::geneial::utility::BaseExecutionManager;
 
 
 using ::geneial::population::Population;

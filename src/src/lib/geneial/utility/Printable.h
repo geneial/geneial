@@ -1,9 +1,16 @@
 #pragma once
+
+#include <geneial/namespaces.h>
+
 #include <iostream>
 
-namespace geneial
+
+geneial_private_namespace(geneial)
 {
-namespace utility
+geneial_private_namespace(utility)
+{
+
+geneial_export_namespace
 {
 
 class Printable
@@ -24,5 +31,6 @@ std::ostream& operator<<(std::ostream& os, const Printable& p);
  */
 std::ostream& operator<<(std::ostream& os, const Printable*& p);
 
-} /* namespace utility */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace utility */
+} /* private namespace geneial */

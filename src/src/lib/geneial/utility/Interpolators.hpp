@@ -1,5 +1,7 @@
 #pragma once
 
+#include <geneial/namespaces.h>
+
 #include <cmath>
 #include <cassert>
 
@@ -8,9 +10,12 @@
 #define M_PI    3.14159265358979323846f
 #endif
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace utility
+geneial_private_namespace(utility)
+{
+
+geneial_export_namespace
 {
 
 template<typename VALUE_TYPE>
@@ -66,6 +71,7 @@ VALUE_TYPE Interpolators::cosineInterpolate(VALUE_TYPE y0, VALUE_TYPE y1, VALUE_
     return (y0 * (1 - t2) + y1 * t2);
 }
 
-} /* namespace utility */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace utility */
+} /* private namespace geneial */
 

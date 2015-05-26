@@ -1,3 +1,4 @@
+#pragma once
 
 /**
  * @brief This file declares all geneial public namespaces and

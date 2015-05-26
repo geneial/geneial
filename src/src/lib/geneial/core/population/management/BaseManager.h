@@ -16,6 +16,8 @@ geneial_private_namespace(population)
 geneial_private_namespace(management)
 {
 using ::geneial::population::chromosome::BaseChromosomeFactory;
+using ::geneial::utility::BaseExecutionManager;
+using ::geneial::utility::SequentialExecutionManager;
 
 geneial_export_namespace
 {

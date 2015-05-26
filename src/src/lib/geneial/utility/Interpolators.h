@@ -1,8 +1,11 @@
 #pragma once
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace utility
+geneial_private_namespace(utility)
+{
+
+geneial_export_namespace
 {
 
 //Library for some common smoothing operations
@@ -32,8 +35,10 @@ public:
 
 };
 
-} /* namespace utility */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace utility */
+} /* private namespace geneial */
+
 
 
 #include <geneial/utility/Interpolators.hpp>

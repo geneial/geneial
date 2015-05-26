@@ -1,9 +1,12 @@
 #include <geneial/utility/Printable.h>
 #include <cassert>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace utility
+geneial_private_namespace(utility)
+{
+
+geneial_export_namespace
 {
 
 std::ostream& operator<<(std::ostream& os, const Printable& p)
@@ -19,5 +22,7 @@ std::ostream& operator<<(std::ostream& os, const Printable*& p)
     return os;
 }
 
-} /* namespace utility */
-} /* namespace geneial */
+
+} /* geneial_export_namespace */
+} /* private namespace utility */
+} /* private namespace geneial */

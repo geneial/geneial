@@ -44,6 +44,8 @@
 using namespace geneial;
 
 using namespace geneial::algorithm;
+using namespace geneial::utility;
+
 using namespace geneial::algorithm::stopping_criteria;
 
 using namespace geneial::population;

@@ -7,7 +7,8 @@ geneial_private_namespace(geneial)
 {
 geneial_private_namespace(utility)
 {
-using geneial::population::chromosome::MultiValueChromosome;
+using ::geneial::population::chromosome::MultiValueChromosome;
+
 geneial_export_namespace
 {
 //Library for some common smoothing operations

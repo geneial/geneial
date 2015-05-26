@@ -1,3 +1,7 @@
+#pragma once
+
+#include <geneial/namespaces.h>
+
 #include <iostream>
 #include <deque>
 #include <memory>
@@ -9,7 +13,15 @@
 #include <future>
 #include <list>
 
-namespace geneial
+
+//TODO (bewo) refactor, separate def from decl to .hpp
+
+geneial_private_namespace(geneial)
+{
+geneial_private_namespace(utility)
+{
+
+geneial_export_namespace
 {
 
 class BaseExecutionManager
@@ -136,7 +148,9 @@ public:
             t->join();
         }
     }
-}
-;
-}
+};
+
+} /* geneial_export_namespace */
+} /* private namespace utility */
+} /* private namespace geneial */
 
