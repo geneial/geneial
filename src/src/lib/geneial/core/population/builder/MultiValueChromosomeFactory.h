@@ -26,8 +26,6 @@ public:
     {
     }
 
-    typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome(
-            typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues = BaseChromosomeFactory<FITNESS_TYPE>::CREATE_VALUES) override;
 
     inline const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> & getSettings() const
     {
@@ -38,6 +36,11 @@ public:
     {
         _settings = settings;
     }
+protected:
+    typename BaseChromosome<FITNESS_TYPE>::ptr doCreateChromosome(
+            typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues,
+            BaseManager<FITNESS_TYPE>& manager
+    ) override;
 };
 
 } /* geneial_export_namespace */

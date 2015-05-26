@@ -20,8 +20,8 @@ geneial_export_namespace
 /*
  *  Returns a chromosome container with some new chromosomes which are partially mutated versions of the old ones.
  *
- *  Targetpoints for mutation represent the chosen values within an Chromosome to be changed
- *  Example for 3 Points of Mutation:
+ *  target points for mutation represent the chosen values within an chromosome to be changed
+ *  Example for 3 points of Mutation:
  *
  *   Old Chrom.					  New Chrom.
  *  	(X) <- Mutate this value --> (Y)
@@ -64,7 +64,7 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
 
     std::set_difference(chromosomeInputContainer.cbegin(), chromosomeInputContainer.cend(),
             choosenChromosomeContainer.cbegin(), choosenChromosomeContainer.cend(),
-            std::back_inserter(notChoosenChromosomeContainer)); //TODO(bewo): This seems unecessarily expensive..
+            std::back_inserter(notChoosenChromosomeContainer)); //TODO(bewo): This seems unnecessarily expensive..
 
     typename Population<FITNESS_TYPE>::chromosome_container resultset;
 

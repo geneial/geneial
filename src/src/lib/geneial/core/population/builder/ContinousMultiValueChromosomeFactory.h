@@ -18,15 +18,18 @@ class ContinousMultiValueChromosomeFactory: public MultiValueChromosomeFactory<V
 {
 private:
     const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &_settings;
+
 public:
     explicit ContinousMultiValueChromosomeFactory(const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &settings) :
         MultiValueChromosomeFactory<VALUE_TYPE,FITNESS_TYPE>(settings), _settings(settings)
     {
     }
 
-    typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome(
-            typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues = BaseChromosomeFactory<
-                    FITNESS_TYPE>::CREATE_VALUES) override;
+protected:
+    typename BaseChromosome<FITNESS_TYPE>::ptr doCreateChromosome(
+            typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues,
+            BaseManager<FITNESS_TYPE>& manager
+        ) override;
 };
 
 } /* geneial_export_namespace */

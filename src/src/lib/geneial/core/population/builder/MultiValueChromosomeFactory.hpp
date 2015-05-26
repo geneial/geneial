@@ -17,12 +17,14 @@ geneial_export_namespace
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-typename BaseChromosome<FITNESS_TYPE>::ptr MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::createChromosome(
-        typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues)
+typename BaseChromosome<FITNESS_TYPE>::ptr MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>::doCreateChromosome(
+        typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues,
+        BaseManager<FITNESS_TYPE>& manager)
 {
 
-    typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr new_chromosome(
+    auto new_chromosome(
             new MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>(this->_settings.getFitnessEvaluator()));
+
     assert(new_chromosome->getSize() == 0);
 
     new_chromosome->getContainer().reserve(this->_settings.getNum());
