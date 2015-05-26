@@ -105,7 +105,7 @@ int main(int argc, char **argv)
 
     algorithm->getPopulationSettings().setMaxChromosomes(100);
 
-    algorithm->setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager(1))));
+    algorithm->setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager())));
 
     algorithm->solve();
 

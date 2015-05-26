@@ -208,12 +208,12 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
 
     for (auto& chromosome : container)
     {
-        if (chromosome->hasFitness())
+        if (!chromosome->hasFitness())
         {
             getManager().getExecutionManager().addTask([&chromosome]
             {
                 chromosome->getFitness().get();
-           });
+            });
         }
     }
     getManager().getExecutionManager().waitForTasks();

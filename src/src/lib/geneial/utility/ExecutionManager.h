@@ -106,7 +106,9 @@ public:
     ThreadedExecutionManager() :
             _tasks(), _threads(), _mutex(), _condEntry(), _finish(false)
     {
-        initializeThreads(std::thread::hardware_concurrency());
+        initializeThreads(
+                std::min(static_cast<unsigned int>(1),
+                        static_cast<unsigned int>(std::thread::hardware_concurrency() - 1)));
     }
 
     virtual ~ThreadedExecutionManager()
