@@ -186,7 +186,10 @@ inline void Population<FITNESS_TYPE>::_insertChromosome(const typename BaseChrom
         chromosome->setFitness(std::move(std::unique_ptr<Fitness<FITNESS_TYPE>>(new Fitness<FITNESS_TYPE>(it->second))));
     }
 
+    // TODO(bewo) enable this by setting @{
     _fitnessCache[hashValue] = chromosome->getFitness().get();
+    // @}
+
     assert(chromosome);
     //Insert into fitness map
     fitnessmap_value_type fitness_map_value(chromosome->getFitness().get(), chromosome);
