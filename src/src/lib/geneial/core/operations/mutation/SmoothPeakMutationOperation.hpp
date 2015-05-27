@@ -56,9 +56,11 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
         const auto &mutantChromosomeContainer = mvcMutant->getContainer();
         auto &result_container = mutatedChromosome->getContainer();
 
-        //Copy over, result container is assumed to be empty at this point!
+
+        result_container.clear();
         std::copy(mutantChromosomeContainer.cbegin(), mutantChromosomeContainer.cend(),
                 std::back_inserter(result_container));
+
 
         //We have two choices here:
         // A) Mutate a fixed amount of given points (getAmountOfPointsOfMutation > 0)

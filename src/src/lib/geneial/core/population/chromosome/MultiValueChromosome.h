@@ -1,5 +1,7 @@
 #pragma once
 
+#include <geneial/utility/Debug.h>
+
 #include <geneial/namespaces.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 
@@ -113,7 +115,7 @@ public:
     {
         invalidateHashCache();
         _hashCache = 0;
-        _container.clear();
+        //_container.clear();
     }
 
     void inline invalidateHashCache() const;

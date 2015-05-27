@@ -69,6 +69,13 @@ public:
     {
         try
         {
+            float x = 1.5f;
+            int i = 1;
+            while (i--)
+            {
+                x *= sin(x) / atan(x) * tanh(x) * sqrt(x);
+            }
+
             const MultiValueChromosome<int, double>& mvc = dynamic_cast<const MultiValueChromosome<int, double>&>(chromosome);
             //usleep(1);
             return std::move(std::unique_ptr<Fitness<double>>(new Fitness<double>(mvc.getSum())));
@@ -106,7 +113,7 @@ int main(int argc, char **argv)
 
     algorithm->getPopulationSettings().setMaxChromosomes(100);
 
-//    algorithm->setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager())));
+    //algorithm->setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager(3))));
 
     algorithm->solve();
 

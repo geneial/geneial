@@ -27,8 +27,6 @@ typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiValueChromosomeFactory<
 
     auto new_chromosome = this->allocateNewChromsome();
 
-    new_chromosome->getContainer().reserve(_settings.getNum());
-
     if (populateValues == BaseChromosomeFactory<FITNESS_TYPE>::CREATE_VALUES)
     {
         const unsigned int amount = _settings.getNum();
@@ -58,7 +56,7 @@ typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiValueChromosomeFactory<
             const int lower_limited = std::max(_settings.getRandomMin(), val);
             const int upper_limited = std::min(_settings.getRandomMax(), lower_limited);
 
-            new_chromosome->getContainer().push_back(upper_limited);
+            new_chromosome->getContainer()[amount-i] = upper_limited;
 
             lastVal = upper_limited;
 

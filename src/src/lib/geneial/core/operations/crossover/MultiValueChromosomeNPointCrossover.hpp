@@ -135,11 +135,10 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
     const auto &mommy_container = mommy->getContainer();
     auto &child_container = child_candidate->getContainer();
 
-    child_container.clear();
-
     assert(daddy_container.size() == mommy_container.size());
 
-    auto target_it = std::back_inserter(child_container);
+    auto target_it = child_container.begin();
+
     auto widthIterator = crossoverPositions.cbegin();
 
     bool flip = true; //copy from ladies first.
@@ -150,6 +149,8 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 
     for (; widthIterator != crossoverPositions.end(); ++widthIterator)
     {
+        target_it += i;
+
         if (flip)
         {
             std::copy(mommy_container.begin() + i, mommy_container.begin() + *widthIterator, target_it);

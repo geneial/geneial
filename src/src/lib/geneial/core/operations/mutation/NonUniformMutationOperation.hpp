@@ -139,7 +139,7 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
                     if (amountPointsOfMutation != mutationCounter)
                     {
                         //add mutation to result_container
-                        result_container.push_back(weightedMutation);
+                        result_container[i] = weightedMutation;
                         mutationCounter++;
 
                         //create a new target
@@ -149,25 +149,25 @@ typename Population<FITNESS_TYPE>::chromosome_container NonUniformMutationOperat
                     }
                     else
                     {
-                        result_container.push_back(*mutant_it);
+                        result_container[i] = (*mutant_it);
                     }
                     //current point is no target
                 }
                 else
                 {
-                    result_container.push_back(*mutant_it);
+                    result_container[i] = (*mutant_it);
                 }
 
                 //Target points are not used for mutation
             }
             else if (value_choice <= amountPointsOfMutation)
             {
-                result_container.push_back(weightedMutation);
+                result_container[i] = (weightedMutation);
                 //In case dicing (value_choice) choose not to mutate the value
             }
             else
             {
-                result_container.push_back(*mutant_it);
+                result_container[i] = (*mutant_it);
             }
 
             //step to next mutant.

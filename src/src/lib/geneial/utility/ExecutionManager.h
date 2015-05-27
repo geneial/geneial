@@ -63,6 +63,9 @@ class ThreadedExecutionManager: public BaseExecutionManager
 
     void executor()
     {
+        const static int amountPerThread = 1;
+        std::deque<std::function<void()>> innerTask;
+
         bool running = true;
         while (running)
         {
@@ -71,17 +74,30 @@ class ThreadedExecutionManager: public BaseExecutionManager
             {
                 return _finish || _tasks.size() != 0;
             });
+
             if (!_tasks.empty())
             {
-                auto task = _tasks.front();
-                _tasks.pop_front();
+                int i = amountPerThread;
+
+                while (i-- && !_tasks.empty())
+                {
+                    auto task = _tasks.front();
+                    _tasks.pop_front();
+                    innerTask.push_back(task);
+                }
                 l.unlock();
-                task();
+
+                for(auto task : innerTask)
+                {
+                    task();
+                }
+                innerTask.clear();
             }
             else
             {
                 running = !_finish;
             }
+
             _condExit.notify_all();
         }
     }

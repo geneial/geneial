@@ -12,7 +12,8 @@ geneial_private_namespace(population)
 {
 geneial_private_namespace(chromosome)
 {
-    using ::geneial::utility::Random;
+using ::geneial::utility::Random;
+
 geneial_export_namespace
 {
 
@@ -23,21 +24,17 @@ typename BaseChromosome<FITNESS_TYPE>::ptr MultiValueChromosomeFactory<VALUE_TYP
 
     auto new_chromosome = this->allocateNewChromsome();
 
-    assert(new_chromosome->getSize() == 0);
-
-    new_chromosome->getContainer().reserve(this->_settings.getNum());
 
     if (populateValues == BaseChromosomeFactory<FITNESS_TYPE>::CREATE_VALUES)
     {
-        int i = this->_settings.getNum();
-        while (i--)
+        auto &container= new_chromosome->getContainer();
+        for(unsigned int i=0;i<this->_settings.getNum();i++)
         {
-            new_chromosome->getContainer().push_back(
-                    Random::generate<VALUE_TYPE>(this->_settings.getRandomMin(), this->_settings.getRandomMax()));
+            container[i] = Random::generate<VALUE_TYPE>(this->_settings.getRandomMin(), this->_settings.getRandomMax());
         }
-        assert(new_chromosome->getSize() == _settings.getNum());
-
     }
+
+    assert(new_chromosome->getSize() == _settings.getNum());
 
     return std::move(new_chromosome);
 }

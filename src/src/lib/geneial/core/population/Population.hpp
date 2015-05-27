@@ -180,6 +180,7 @@ inline void Population<FITNESS_TYPE>::_insertChromosome(const typename BaseChrom
         typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue)
 {
     const auto it = this->_fitnessCache.find(chromosome->getHash());
+
     if(it != this->_fitnessCache.end())
     {
         chromosome->setFitness(std::move(std::unique_ptr<Fitness<FITNESS_TYPE>>(new Fitness<FITNESS_TYPE>(it->second))));
@@ -216,11 +217,12 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
         }
     }
 
-    for (auto& chromosome : container)
+    for (size_t i = 0; i < container.size(); i++)
     {
-        if (!chromosome->hasFitness())
+        if (!container[i]->hasFitness())
         {
-            getManager().getExecutionManager().addTask([&chromosome,this]
+            const auto chromosome = container[i];
+            getManager().getExecutionManager().addTask([chromosome,this]
             {
                 const auto it = this->_fitnessCache.find(chromosome->getHash());
                 if(it == this->_fitnessCache.end())
@@ -281,7 +283,7 @@ inline void Population<FITNESS_TYPE>::removeChromosome(const typename BaseChromo
     const auto hit = _hashMap.find(hash);
     assert(hit != _hashMap.end());
 
-    _manager->deleteOrHoldOffReference(chromosome);
+    getManager().deleteOrHoldOffReference(chromosome);
 
     _fitnessMap.erase(it);
     _hashMap.erase(hit);

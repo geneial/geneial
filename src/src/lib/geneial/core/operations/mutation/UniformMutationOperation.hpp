@@ -113,7 +113,7 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
                     if (amountPointsOfMutation != mutationCounter)
                     {
                         //add mutation to result_container
-                        result_container.push_back(random_mutation);
+                        result_container[i] = (random_mutation);
                         mutationCounter++;
                         //create a new target
                         const unsigned int distanceBetweenTarges = (maxNumMvc / amountPointsOfMutation);
@@ -122,13 +122,13 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
                     }
                     else
                     {
-                        result_container.push_back(*mutant_it);
+                        result_container[i] = (*mutant_it);
                     }
                     //current point is no target
                 }
                 else
                 {
-                    result_container.push_back(*mutant_it);
+                    result_container[i] = (*mutant_it);
                 }
 
                 //Target points are not used for mutation
@@ -138,12 +138,12 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
                 //generate a mutation value to replace an old value
                 const VALUE_TYPE random_mutation = Random::generate<double>(randomMin, randomMax);
 
-                result_container.push_back(random_mutation);
+                result_container[i] = (random_mutation);
                 //In case dicing (value_choice) choose not to mutate the value
             }
             else
             {
-                result_container.push_back(*mutant_it);
+                result_container[i] =(*mutant_it);
             }
 
             //step to next mutant.

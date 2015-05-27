@@ -63,6 +63,9 @@ protected:
         {
             new_chromosome.reset(new MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>(_settings.getFitnessEvaluator()));
         }
+
+        new_chromosome->getContainer().resize(this->_settings.getNum());
+
         return new_chromosome;
     }
 };

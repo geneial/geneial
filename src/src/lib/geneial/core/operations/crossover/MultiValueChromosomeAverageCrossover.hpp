@@ -41,7 +41,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
     //TODO (bewo) is there a more elegant STL algorithm way to do this?!
     for (unsigned int i = 0; mommy_it != mommy_container.end(); ++i)
     {
-        child_container.push_back((*mommy_it + *daddy_it) / 2);
+        child_container[i] = ((*mommy_it + *daddy_it) / 2);
         //child_container.push_back(std::max(*mommy_it,*daddy_it));
         ++mommy_it;
         ++daddy_it;

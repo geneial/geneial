@@ -124,9 +124,11 @@ public:
 
     void clearChromosomes();
 
-    const BaseManager<FITNESS_TYPE>& getManager() const
+    BaseManager<FITNESS_TYPE>& getManager() const
     {
-        return *_manager;
+        assert(!_manager.expired() && "Manager is already expired. Something was not properly bootstrapped");
+        const auto manager = _manager.lock();
+        return *manager;
     }
 
 private:
@@ -142,7 +144,7 @@ private:
 
     population_age _age;
 
-    std::shared_ptr<BaseManager<FITNESS_TYPE>>  _manager;
+    std::weak_ptr<BaseManager<FITNESS_TYPE>>  _manager;
 
 };
 
