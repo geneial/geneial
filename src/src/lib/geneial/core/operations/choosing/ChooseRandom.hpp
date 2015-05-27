@@ -16,8 +16,8 @@ using ::geneial::utility::Random;
 
 geneial_export_namespace
 {
-template<typename VALUE_TYPE, typename FITNESS_TYPE>
-typename Population<FITNESS_TYPE>::chromosome_container ChooseRandom<VALUE_TYPE, FITNESS_TYPE>::doChoose(
+template<typename FITNESS_TYPE>
+typename Population<FITNESS_TYPE>::chromosome_container ChooseRandom<FITNESS_TYPE>::doChoose(
         const typename Population<FITNESS_TYPE>::chromosome_container &chromosomeInputSet) const
 {
 

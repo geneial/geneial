@@ -17,17 +17,19 @@ geneial_export_namespace
 {
 
 
-template<typename VALUE_TYPE, typename FITNESS_TYPE>
+template<typename FITNESS_TYPE>
 class ChooseRandom: public BaseChoosingOperation<FITNESS_TYPE>
 {
 private:
     double _probability;
 
-public:
+protected:
     explicit ChooseRandom(const double probability) :
             BaseChoosingOperation<FITNESS_TYPE>(), _probability(probability)
     {
     }
+
+public:
 
     virtual ~ChooseRandom()
     {
