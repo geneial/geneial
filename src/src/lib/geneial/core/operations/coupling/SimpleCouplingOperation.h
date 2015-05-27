@@ -38,6 +38,15 @@ public:
             const typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &mating_pool,
             const BaseCrossoverOperation<FITNESS_TYPE> &crossoverOperation, BaseManager<FITNESS_TYPE> &manager) override;
 
+    class Builder:public BaseCouplingOperation<FITNESS_TYPE>::Builder
+    {
+    public:
+        virtual typename BaseCouplingOperation<FITNESS_TYPE>::ptr create() override
+        {
+            return typename BaseCouplingOperation<FITNESS_TYPE>::ptr(new SimpleCouplingOperation<FITNESS_TYPE>(this->_settings));
+        }
+    };
+
 };
 
 } /* geneial_export_namespace */

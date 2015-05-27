@@ -119,7 +119,7 @@ public:
 
         const static MultiValueChromosomeNPointCrossoverSettings::width_settings DEFAULT_WIDTH_MODE = MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH;
 
-        inline const MultiValueChromosomeNPointCrossoverSettings & getCrossoverSettings() const
+        inline MultiValueChromosomeNPointCrossoverSettings & getCrossoverSettings()
             {
                 return *_crossoverSettings;
             }

@@ -28,13 +28,19 @@ class BaseCouplingOperation
 private:
     std::shared_ptr<const CouplingSettings> _settings;
 
-public:
-    typedef typename Population<FITNESS_TYPE>::chromosome_container offspring_result_set;
-
-    explicit BaseCouplingOperation( const std::shared_ptr<const CouplingSettings> &settings) :
+protected:
+    explicit BaseCouplingOperation(const std::shared_ptr<const CouplingSettings> &settings) :
             _settings(settings)
     {
     }
+
+public:
+    using offspring_result_set = typename Population<FITNESS_TYPE>::chromosome_container;
+
+    using ptr = std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>>;
+
+    using const_ptr = std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>>;
+
 
     virtual ~BaseCouplingOperation()
     {
@@ -54,6 +60,37 @@ public:
     {
         _settings = settings;
     }
+
+    class Builder
+    {
+
+    protected:
+        std::shared_ptr<CouplingSettings> _settings;
+
+    public:
+        const static unsigned int DEFAULT_NUMER_OF_OFFSPRINGS = 5;
+
+        Builder():_settings(new CouplingSettings(DEFAULT_NUMER_OF_OFFSPRINGS))
+        {
+        }
+
+        Builder(const std::shared_ptr<CouplingSettings> &settings):_settings(settings)
+        {
+        }
+
+        virtual ptr create() = 0;
+
+        inline CouplingSettings& getSettings() const
+        {
+            return *_settings;
+        }
+
+        void setSettings(const std::shared_ptr<const CouplingSettings>& settings)
+        {
+            _settings = settings;
+        }
+
+    };
 
 protected:
    typename offspring_result_set::size_type copyUnlessMaximumReached(
