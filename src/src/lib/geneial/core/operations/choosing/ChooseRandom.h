@@ -57,7 +57,7 @@ public:
 
     protected:
 
-        const static double DEFAULT_PROBABILITY = 0.1;
+        const constexpr static double DEFAULT_PROBABILITY = 0.1;
 
         double _probability;
 
@@ -68,7 +68,7 @@ public:
         {
         }
 
-        Builder(const double _probability) :
+        Builder(const double probability) :
                 _probability(probability)
         {
         }
@@ -84,7 +84,7 @@ public:
             return _probability;
         }
 
-        void setProbability(double probability = 0.1)
+        void setProbability(double probability = DEFAULT_PROBABILITY)
         {
             _probability = probability;
         }
