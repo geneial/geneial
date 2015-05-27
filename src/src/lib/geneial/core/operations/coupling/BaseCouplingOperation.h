@@ -37,9 +37,9 @@ protected:
 public:
     using offspring_result_set = typename Population<FITNESS_TYPE>::chromosome_container;
 
-    using ptr = std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>>;
+    using ptr = std::shared_ptr<BaseCouplingOperation<FITNESS_TYPE>>;
 
-    using const_ptr = std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>>;
+    using const_ptr = std::shared_ptr<BaseCouplingOperation<FITNESS_TYPE>>;
 
 
     virtual ~BaseCouplingOperation()

@@ -2,7 +2,7 @@
 
 /**
  * @ingroup unittests
-  *
+ *
  * @brief Initialization is used to ensure all the geneial code compiles,
  * regardless of whether it is being used in some demo program or not.
  *
@@ -17,7 +17,6 @@
  * with int, double, float instanciations of all templates.
  *
  */
-
 
 #define BOOST_TEST_MODULE compilation/template_instanciaton
 
@@ -37,7 +36,6 @@
 #include <geneial/algorithm/criteria/PopulationUnchangedCriterion.h>
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
 
-
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 
 #include <geneial/core/operations/mutation/NonUniformMutationOperation.h>
@@ -47,12 +45,10 @@
 #include <geneial/core/operations/coupling/SimpleCouplingOperation.h>
 #include <geneial/core/operations/coupling/RandomCouplingOperation.h>
 
-
 #include <geneial/core/operations/crossover/MultiValueChromosomeAverageCrossover.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeBlendingCrossover.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
 #include <geneial/core/operations/crossover/SmoothedMultiValueChromosomeNPointCrossover.h>
-
 
 #include <geneial/core/operations/replacement/ReplaceRandomOperation.h>
 #include <geneial/core/operations/replacement/ReplaceWorstOperation.h>
@@ -60,7 +56,6 @@
 #include <geneial/core/operations/selection/FitnessProportionalSelection.h>
 #include <geneial/core/operations/selection/RouletteWheelSelection.h>
 #include <geneial/core/operations/selection/UniformRandomSelection.h>
-
 
 #ifndef EXHAUSTIVE_INSTANCIATION_TEST
 
@@ -92,7 +87,6 @@
 //Algorithm
 Expander1D(geneial::algorithm::SteadyStateAlgorithm)
 
-
 Expander1D(geneial::algorithm::stopping_criteria::CombinedCriterion)
 Expander1D(geneial::algorithm::stopping_criteria::ConsecutiveDecorator)
 Expander1D(geneial::algorithm::stopping_criteria::FitnessValueDeltaCriterion)
@@ -104,7 +98,7 @@ Expander1D(geneial::algorithm::stopping_criteria::PopulationUnchangedCriterion)
 Expander1D(geneial::algorithm::stopping_criteria::StatefulStoppingCriterion)
 
 //Choosing
-Expander2D(geneial::operation::choosing::ChooseRandom);
+Expander1D(geneial::operation::choosing::ChooseRandom)
 
 //Mutation
 Expander2D(geneial::operation::mutation::NonUniformMutationOperation)
@@ -122,22 +116,21 @@ Expander2D(geneial::operation::crossover::MultiValueChromosomeBlendingCrossover)
 Expander2D(geneial::operation::crossover::MultiValueChromosomeNPointCrossover)
 
 //Replacement
-Expander1D(geneial::operation::replacement::ReplaceRandomOperation);
-Expander1D(geneial::operation::replacement::ReplaceWorstOperation);
+Expander1D(geneial::operation::replacement::ReplaceRandomOperation)
+Expander1D(geneial::operation::replacement::ReplaceWorstOperation)
 
 //Selection
-Expander1D(geneial::operation::selection::RouletteWheelSelection);
-Expander1D(geneial::operation::selection::FitnessProportionalSelection);
-Expander1D(geneial::operation::selection::UniformRandomSelection);
+Expander1D(geneial::operation::selection::RouletteWheelSelection)
+Expander1D(geneial::operation::selection::FitnessProportionalSelection)
+Expander1D(geneial::operation::selection::UniformRandomSelection)
 
 #endif
-
 
 BOOST_AUTO_TEST_SUITE( __INSTANCIATION_TEST_ALIBI )
 
 BOOST_AUTO_TEST_CASE( Instanciation )
 {
-    BOOST_CHECK(1==1); //when this test compiles it already has reached it's purpose
+    BOOST_CHECK(1 == 1); //when this test compiles it already has reached it's purpose
 }
 BOOST_AUTO_TEST_SUITE_END()
 

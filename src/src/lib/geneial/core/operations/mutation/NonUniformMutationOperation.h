@@ -106,8 +106,8 @@ public:
         {
         }
 
-        Builder(const std::shared_ptr<const MutationSettings> &settings,
-                const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
+        Builder(const std::shared_ptr<MutationSettings> &settings,
+                const std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
                 const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
                 MultiValueChromosomeMutationOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(settings, choosingOperation,
                         builderFactory), _minimumModification(DEFAULT_MINIMUM_MODIFICATION), _affectedGenerations(
@@ -116,8 +116,8 @@ public:
         }
 
         Builder(const double minimumModification, const unsigned int affectedGenerations,
-                const std::shared_ptr<const MutationSettings> &settings,
-                const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
+                const std::shared_ptr<MutationSettings> &settings,
+                const std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
                 const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
                 MultiValueChromosomeMutationOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(settings, choosingOperation,
                         builderFactory), _minimumModification(minimumModification), _affectedGenerations(
@@ -133,24 +133,16 @@ public:
             return std::move(protoype);
         }
 
-        unsigned int getAffectedGenerations() const
-        {
-            return _affectedGenerations;
-        }
-
-        void setAffectedGenerations(unsigned int affectedGenerations)
+        Builder& setAffectedGenerations(unsigned int affectedGenerations)
         {
             _affectedGenerations = affectedGenerations;
+            return *this;
         }
 
-        double getMinimumModification() const
-        {
-            return _minimumModification;
-        }
-
-        void setMinimumModification(double minimumModification)
+        Builder& setMinimumModification(double minimumModification)
         {
             _minimumModification = minimumModification;
+            return *this;
         }
     };
 };

@@ -6,6 +6,7 @@
 #include <geneial/core/population/builder/BuilderSettings.h>
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
+#include <geneial/core/population/Population.h>
 
 geneial_private_namespace(geneial)
 {
@@ -15,6 +16,8 @@ geneial_private_namespace(mutation)
 {
 using ::geneial::population::chromosome::BaseChromosomeFactory;
 using ::geneial::utility::Random;
+using ::geneial::population::Population;
+
 geneial_export_namespace
 {
 /*

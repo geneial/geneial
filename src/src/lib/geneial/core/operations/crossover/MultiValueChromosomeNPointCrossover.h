@@ -26,6 +26,7 @@ class MultiValueChromosomeNPointCrossover: public MultiValueChromosomeCrossoverO
 private:
     std::shared_ptr<const MultiValueChromosomeNPointCrossoverSettings> _crossoverSettings;
 
+protected:
     MultiValueChromosomeNPointCrossover(
             const std::shared_ptr<const MultiValueChromosomeNPointCrossoverSettings> &crossoverSettings,
             const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory):

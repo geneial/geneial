@@ -100,9 +100,10 @@ public:
 
         virtual ptr create() = 0;
 
-        void setChoosingOperation(const std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE> >& choosingOperation)
+        Builder& setChoosingOperation(const std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE> >& choosingOperation)
         {
             _choosingOperation = choosingOperation;
+            return *this;
         }
 
         inline MutationSettings& getSettings() const
@@ -110,9 +111,10 @@ public:
             return *_settings;
         }
 
-        void setSettings(const std::shared_ptr<MutationSettings>& settings)
+        Builder& setSettings(const std::shared_ptr<MutationSettings>& settings)
         {
             _settings = settings;
+            return *this;
         }
     };
 

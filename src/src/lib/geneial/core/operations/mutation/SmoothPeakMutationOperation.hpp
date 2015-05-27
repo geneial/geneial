@@ -11,6 +11,7 @@ geneial_private_namespace(mutation)
 using ::geneial::utility::Smoothing;
 using ::geneial::population::chromosome::BaseChromosomeFactory;
 using ::geneial::utility::Random;
+using ::geneial::population::Population;
 
 geneial_export_namespace
 {

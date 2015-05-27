@@ -55,8 +55,8 @@ public:
                 {}
 
         Builder(
-                const std::shared_ptr<const MutationSettings> &settings,
-                const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
+                const std::shared_ptr<MutationSettings> &settings,
+                const std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
                 const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory):
                     BaseMutationOperation<FITNESS_TYPE>::Builder(settings,choosingOperation),
                     _builderFactory(builderFactory)

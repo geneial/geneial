@@ -29,16 +29,16 @@ geneial_export_namespace
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class SmoothedMultiValueChromosomeNPointCrossover: public MultiValueChromosomeNPointCrossover<VALUE_TYPE, FITNESS_TYPE>
 {
+protected:
+    SmoothedMultiValueChromosomeNPointCrossover(
+                const std::shared_ptr<const MultiValueChromosomeNPointCrossoverSettings> &crossoverSettings,
+                const std::shared_ptr<ContinousMultiValueChromosomeFactory<VALUE_TYPE,FITNESS_TYPE>> &builderFactory
+                ) :
+                MultiValueChromosomeNPointCrossover<VALUE_TYPE, FITNESS_TYPE>(crossoverSettings, builderFactory)
+        {
+        }
 
 public:
-    SmoothedMultiValueChromosomeNPointCrossover(
-            const std::shared_ptr<const MultiValueChromosomeNPointCrossoverSettings> &crossoverSettings,
-            const std::shared_ptr<ContinousMultiValueChromosomeFactory<VALUE_TYPE,FITNESS_TYPE>> &builderFactory
-            ) :
-            MultiValueChromosomeNPointCrossover<VALUE_TYPE, FITNESS_TYPE>(crossoverSettings, builderFactory)
-    {
-    }
-
     virtual ~SmoothedMultiValueChromosomeNPointCrossover()
     {
     }
