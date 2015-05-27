@@ -21,11 +21,11 @@ template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class ChooseRandom: public BaseChoosingOperation<FITNESS_TYPE>
 {
 private:
-    std::shared_ptr<const MutationSettings> _settings;
+    double _probability;
 
 public:
-    explicit ChooseRandom(const std::shared_ptr<const MutationSettings> &settings) :
-            BaseChoosingOperation<FITNESS_TYPE>(), _settings(settings)
+    explicit ChooseRandom(const double probability) :
+            BaseChoosingOperation<FITNESS_TYPE>(), _probability(probability)
     {
     }
 
@@ -33,22 +33,61 @@ public:
     {
     }
 
-    /*
+    /**
      * Chooses from an chromosomeContainer Random values. The propability that a Chromosome is choosen and therefore part of the
      * resultset is defined in MutationSettings.
      */
     virtual typename Population<FITNESS_TYPE>::chromosome_container doChoose(
             const typename Population<FITNESS_TYPE>::chromosome_container &chromosomeInputSet) const override;
 
-    inline const MutationSettings& getSettings() const
+    double getProbability() const
     {
-        return *_settings;
+        return _probability;
     }
 
-    void setSettings(const std::shared_ptr<const MutationSettings> &settings)
+    void setProbability(double probability)
     {
-        _settings = settings;
+        _probability = probability;
     }
+
+    class Builder: public BaseChoosingOperation<FITNESS_TYPE>::Builder
+    {
+
+    protected:
+
+        const static double DEFAULT_PROBABILITY = 0.1;
+
+        double _probability;
+
+    public:
+
+        Builder() :
+                _probability(DEFAULT_PROBABILITY)
+        {
+        }
+
+        Builder(const double _probability) :
+                _probability(probability)
+        {
+        }
+
+        virtual typename BaseChoosingOperation<FITNESS_TYPE>::ptr create() override
+        {
+            typename BaseChoosingOperation<FITNESS_TYPE>::ptr prototype(new ChooseRandom<FITNESS_TYPE>(this->_probability));
+            return std::move(prototype);
+        }
+
+        double getProbability() const
+        {
+            return _probability;
+        }
+
+        void setProbability(double probability = 0.1)
+        {
+            _probability = probability;
+        }
+    };
+
 };
 
 } /* geneial_export_namespace */

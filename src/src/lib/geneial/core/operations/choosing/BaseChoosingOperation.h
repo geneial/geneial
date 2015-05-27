@@ -20,6 +20,11 @@ template<typename FITNESS_TYPE>
 class BaseChoosingOperation
 {
 public:
+
+    using ptr = std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE>>;
+
+    using const_ptr = std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE>>;
+
     BaseChoosingOperation()
     {
     }
@@ -30,6 +35,13 @@ public:
 
     virtual typename Population<FITNESS_TYPE>::chromosome_container doChoose(
             const typename Population<FITNESS_TYPE>::chromosome_container &chromosomeInputSet) const = 0;
+
+    class Builder
+    {
+    public:
+        virtual ptr create() = 0;
+    };
+
 };
 
 } /* geneial_export_namespace */
