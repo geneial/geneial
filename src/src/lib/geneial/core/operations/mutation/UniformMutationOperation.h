@@ -1,6 +1,7 @@
 #pragma once
 
 #include <geneial/core/operations/mutation/MultiValueChromosomeMutationOperation.h>
+#include <geneial/core/population/Population.h>
 
 #include <cassert>
 
@@ -10,6 +11,7 @@ geneial_private_namespace(operation)
 {
 geneial_private_namespace(mutation)
 {
+using ::geneial::population::Population;
 
 geneial_export_namespace
 {
@@ -17,7 +19,6 @@ geneial_export_namespace
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class UniformMutationOperation: public MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>
 {
-public:
     /*
      * UniformMutationOperation Mutates a chromosome, by replacing some of it's values randomly.
      */
@@ -33,7 +34,11 @@ public:
                         )
     {
     }
+public:
 
+    virtual ~UniformMutationOperation()
+    {
+    }
 
     /*
      *  Returns a new chromosome which is a partially mutated version of the old one.
@@ -41,6 +46,17 @@ public:
     virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
             const typename Population<FITNESS_TYPE>::chromosome_container &mutants, BaseManager<FITNESS_TYPE> &manager) const override;
 
+
+    class Builder : MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>::Builder
+        {
+        public:
+            virtual typename BaseMutationOperation<FITNESS_TYPE>::ptr create() override
+            {
+                typename BaseMutationOperation<FITNESS_TYPE>::ptr protoype(
+                        new UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>(this->_settings, this->_choosingOperation, this->_builderFactory));
+                return std::move(protoype);
+            }
+        };
 
 };
 

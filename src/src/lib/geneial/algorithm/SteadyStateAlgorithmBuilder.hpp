@@ -108,7 +108,7 @@ std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>> SteadyStateAlgorithm<FITNES
 
     std::shared_ptr<MutationSettings> mutationSettings(new MutationSettings(0.1, 0.1, 5));
 
-    std::shared_ptr<ChooseRandom<int, FITNESS_TYPE>> mutationChoosingOperation( new ChooseRandom<int, FITNESS_TYPE>(mutationSettings));
+    auto mutationChoosingOperation = typename ChooseRandom<FITNESS_TYPE>::Builder(0.1).create();
 
     //In this case we need to check whether the chosen chromomsome builder is compatible with our default operation:
     auto mvcChromosomeFactory = std::dynamic_pointer_cast<MultiValueChromosomeFactory<int, FITNESS_TYPE>>(*this->_chromosomeFactory);

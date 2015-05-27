@@ -25,10 +25,12 @@ class SmoothPeakMutationOperation: public MultiValueChromosomeMutationOperation<
 
 private:
     unsigned int _maxLeftEps;
+
     unsigned int _maxRightEps;
+
     FITNESS_TYPE _maxElevation;
 
-public:
+protected:
     SmoothPeakMutationOperation(
             unsigned int maxLeftEps,
             unsigned int maxRightEps,
@@ -49,6 +51,7 @@ public:
     {
         //TODO (bewo): Make some assertions regarding eps and builder here
     }
+public:
 
     virtual ~SmoothPeakMutationOperation()
     {
@@ -74,6 +77,75 @@ public:
     {
         return _maxRightEps;
     }
+
+
+    class Builder : MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>::Builder
+       {
+       protected:
+            unsigned int _maxLeftEps;
+
+            unsigned int _maxRightEps;
+
+            FITNESS_TYPE _maxElevation;
+       public:
+
+            const constexpr static unsigned int DEFAULT_MAX_LEFT_EPS = 2;
+
+            const constexpr static unsigned int DEFAULT_MAX_RIGHT_EPS = 2;
+
+            const constexpr static FITNESS_TYPE DEFAULT_MAX_ELEVATION = 5;
+
+           Builder(const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
+                   MultiValueChromosomeMutationOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(builderFactory),
+                   _maxLeftEps(DEFAULT_MAX_LEFT_EPS),
+                   _maxRightEps(DEFAULT_MAX_RIGHT_EPS),
+                   _maxElevation(DEFAULT_MAX_ELEVATION)
+           {
+           }
+
+           Builder(const std::shared_ptr<const MutationSettings> &settings,
+                   const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
+                   const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
+                   MultiValueChromosomeMutationOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(settings, choosingOperation,
+                           builderFactory),
+                           _maxLeftEps(DEFAULT_MAX_LEFT_EPS),
+                           _maxRightEps(DEFAULT_MAX_RIGHT_EPS),
+                           _maxElevation(DEFAULT_MAX_ELEVATION)
+           {
+           }
+
+           void setMaxElevation(FITNESS_TYPE maxElevation)
+           {
+               _maxElevation = maxElevation;
+           }
+
+           void setMaxLeftEps(unsigned int maxLeftEps)
+           {
+               _maxLeftEps = maxLeftEps;
+           }
+
+           void setMaxRightEps(unsigned int maxRightEps)
+           {
+               _maxRightEps = maxRightEps;
+           }
+
+           virtual typename BaseMutationOperation<FITNESS_TYPE>::ptr create() override
+           {
+               typename BaseMutationOperation<FITNESS_TYPE>::ptr protoype(
+                       new SmoothPeakMutationOperation<VALUE_TYPE, FITNESS_TYPE>(
+                               this->_maxLeftEps,
+                               this->_maxRightEps,
+                               this->_maxElevation,
+                               this->_settings,
+                               this->_choosingOperation,
+                               this->_builderFactory));
+               return std::move(protoype);
+           }
+
+       };
+
+
+
 };
 //class
 

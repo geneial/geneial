@@ -23,7 +23,6 @@ class MultiValueChromosomeMutationOperation : public BaseMutationOperation<FITNE
 protected:
     std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> _builderFactory;
 
-public:
     MultiValueChromosomeMutationOperation(
             const std::shared_ptr<const MutationSettings> &settings,
             const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
@@ -33,6 +32,8 @@ public:
     {
     }
 
+public:
+
     virtual ~MultiValueChromosomeMutationOperation()
     {
     }
@@ -41,6 +42,37 @@ public:
     {
         return *_builderFactory;
     }
+
+    class Builder : BaseMutationOperation<FITNESS_TYPE>::Builder
+    {
+    protected:
+        std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> _builderFactory;
+
+    public:
+        Builder(const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory):
+                    BaseMutationOperation<FITNESS_TYPE>::Builder(),
+                    _builderFactory(builderFactory)
+                {}
+
+        Builder(
+                const std::shared_ptr<const MutationSettings> &settings,
+                const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
+                const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory):
+                    BaseMutationOperation<FITNESS_TYPE>::Builder(settings,choosingOperation),
+                    _builderFactory(builderFactory)
+                {}
+
+        const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> >& getBuilderFactory() const
+        {
+            return _builderFactory;
+        }
+
+        void setBuilderFactory(
+                const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> >& builderFactory)
+        {
+            _builderFactory = builderFactory;
+        }
+    };
 
 };
 
