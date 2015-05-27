@@ -51,6 +51,11 @@ public:
     virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set doMultiValueCrossover(
             const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
             const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const override;
+
+
+    class Builder : public MultiValueChromosomeNPointCrossover<VALUE_TYPE,FITNESS_TYPE>::Builder
+    {
+    };
 };
 
 } /* geneial_export_namespace */

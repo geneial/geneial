@@ -75,9 +75,99 @@ public:
         return _offspringMode;
     }
 
+    class Builder : public MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>::Builder
+    {
+    protected:
+
+        InterpolateBeta _interpolationMethod;
+
+        OffspringMode _offspringMode;
+
+        unsigned int _numChilds;
+
+    public:
+
+        const static InterpolateBeta DEFAULT_INTERPOLATION_METHOD = INTERPOLATE_RANDOM;
+
+        const static OffspringMode DEFAULT_OFFSPRING_MODE = RANDOM_AMOUNT;
+
+        const static unsigned int DEFAULT_NUM_CHILD = 1;
+
+
+        Builder() : MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>::Builder(),
+                _interpolationMethod(DEFAULT_INTERPOLATION_METHOD),
+                _offspringMode(DEFAULT_OFFSPRING_MODE),
+                _numChilds(DEFAULT_NUM_CHILD)
+        {
+        }
+
+        Builder(const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> & builderFactory) :
+                MultiValueChromosomeCrossoverOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(builderFactory),
+                _interpolationMethod(DEFAULT_INTERPOLATION_METHOD),
+                _offspringMode(DEFAULT_OFFSPRING_MODE),
+                _numChilds(DEFAULT_NUM_CHILD)
+        {
+        }
+
+
+        virtual typename BaseCrossoverOperation<FITNESS_TYPE>::ptr create() override
+        {
+
+            if(! this->_builderFactory )
+            {
+                throw new std::runtime_error("Must set a Chromosome Factory to build MultiValueCrossover");
+            }
+
+            //Ctor already takes care that values are initialized to proper values..
+
+            return std::move(std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>>(
+                        new MultiValueChromosomeBlendingCrossover<VALUE_TYPE, FITNESS_TYPE>(
+                                this->_builderFactory,
+                                _interpolationMethod,
+                                _offspringMode,
+                                _numChilds
+                        )
+                    )
+                );
+        }
+
+        InterpolateBeta getInterpolationMethod() const
+        {
+            return _interpolationMethod;
+        }
+
+        void setInterpolationMethod(InterpolateBeta interpolationMethod)
+        {
+            _interpolationMethod = interpolationMethod;
+        }
+
+        unsigned int getNumChilds() const
+        {
+            return _numChilds;
+        }
+
+        void setNumChilds(unsigned int numChilds)
+        {
+            _numChilds = numChilds;
+        }
+
+        OffspringMode getOffspringMode() const
+        {
+            return _offspringMode;
+        }
+
+        void setOffspringMode(OffspringMode offspringMode)
+        {
+            _offspringMode = offspringMode;
+        }
+    };
+
+
 private:
     const InterpolateBeta _interpolationMethod;
+
     const OffspringMode _offspringMode;
+
     unsigned int _numChilds;
 };
 

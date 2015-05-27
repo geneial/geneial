@@ -26,7 +26,6 @@ class MultiValueChromosomeNPointCrossover: public MultiValueChromosomeCrossoverO
 private:
     std::shared_ptr<const MultiValueChromosomeNPointCrossoverSettings> _crossoverSettings;
 
-public:
     MultiValueChromosomeNPointCrossover(
             const std::shared_ptr<const MultiValueChromosomeNPointCrossoverSettings> &crossoverSettings,
             const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory):
@@ -44,6 +43,8 @@ public:
                                 <= this->getBuilderFactory().getSettings().getNum());
 
     }
+
+public:
 
     virtual ~MultiValueChromosomeNPointCrossover()
     {
@@ -92,6 +93,55 @@ public:
         _crossoverSettings = crossoverSettings;
     }
 
+
+
+    class Builder : public MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>::Builder
+    {
+    protected:
+        std::shared_ptr<MultiValueChromosomeNPointCrossoverSettings> _crossoverSettings;
+
+    public:
+        Builder() : MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>::Builder(),
+        _crossoverSettings(new MultiValueChromosomeNPointCrossoverSettings(
+                    DEFAULT_CROSSOVERPOINTS,
+                    DEFAULT_WIDTH_MODE
+                    ))
+        {
+        }
+
+        Builder(const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> & builderFactory) :
+                MultiValueChromosomeCrossoverOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(builderFactory), _crossoverSettings(
+                        new MultiValueChromosomeNPointCrossoverSettings(DEFAULT_CROSSOVERPOINTS, DEFAULT_WIDTH_MODE))
+        {
+        }
+
+        const static unsigned int DEFAULT_CROSSOVERPOINTS = 1;
+
+        const static MultiValueChromosomeNPointCrossoverSettings::width_settings DEFAULT_WIDTH_MODE = MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH;
+
+        inline const MultiValueChromosomeNPointCrossoverSettings & getCrossoverSettings() const
+            {
+                return *_crossoverSettings;
+            }
+
+        virtual typename BaseCrossoverOperation<FITNESS_TYPE>::ptr create() override
+        {
+            if(! this->_builderFactory )
+            {
+                throw new std::runtime_error("Must set a Chromosome Factory to build MultiValueCrossover");
+            }
+
+            return std::move(
+                        std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>>
+                            (
+                            new MultiValueChromosomeNPointCrossover<VALUE_TYPE,FITNESS_TYPE>(
+                                        _crossoverSettings,
+                                        this->_builderFactory
+                                )
+                            )
+                        );
+        }
+    };
 };
 
 } /* geneial_export_namespace */

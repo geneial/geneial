@@ -4,6 +4,8 @@
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include <geneial/core/population/Population.h>
 
+#include <memory>
+
 geneial_private_namespace(geneial)
 {
 geneial_private_namespace(operation)
@@ -17,11 +19,21 @@ geneial_export_namespace
 template<typename FITNESS_TYPE>
 class BaseCrossoverOperation
 {
-public:
-    typedef typename Population<FITNESS_TYPE>::chromosome_container crossover_result_set;
+
+protected:
+
     BaseCrossoverOperation()
     {
     }
+
+public:
+
+    using crossover_result_set = typename Population<FITNESS_TYPE>::chromosome_container ;
+
+    using ptr = std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>>;
+
+    using const_ptr = std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>>;
+
 
     virtual ~BaseCrossoverOperation()
     {
@@ -33,6 +45,12 @@ public:
     //Is the order of mommy for and daddy for doCrossover() relevant?, true if yes.
     //TODO(bewo): Think about encoding this property via inheritance?
     virtual bool inline isSymmetric() const = 0;
+
+    class Builder
+    {
+    public:
+        virtual ptr create() = 0;
+    };
 
 };
 

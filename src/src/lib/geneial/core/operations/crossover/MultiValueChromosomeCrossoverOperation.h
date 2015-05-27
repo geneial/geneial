@@ -47,12 +47,13 @@ protected:
         return child_candidate;
     }
 
-public:
     MultiValueChromosomeCrossoverOperation(
             const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory
             ) : BaseCrossoverOperation<FITNESS_TYPE>(), _builderFactory(builderFactory)
     {
     }
+
+public:
 
     virtual ~MultiValueChromosomeCrossoverOperation()
     {
@@ -82,6 +83,29 @@ public:
     {
         _builderFactory = builderFactory;
     }
+
+    class Builder: public BaseCrossoverOperation<FITNESS_TYPE>::Builder
+    {
+        public:
+            Builder():_builderFactory()
+            {
+            }
+
+            Builder(const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> & builderFactory):
+                _builderFactory(builderFactory)
+            {
+            }
+
+            Builder& setBuilderFactory(
+                    const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> & builderFactory)
+            {
+                _builderFactory = builderFactory;
+                return *this;
+            }
+
+        protected:
+            std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> _builderFactory;
+    };
 
 };
 

@@ -64,6 +64,35 @@ public:
             const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const override;
 
 
+    class Builder : public MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>::Builder
+    {
+    public:
+        Builder() : MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>::Builder()
+        {
+        }
+
+        Builder(const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> & builderFactory) :
+                MultiValueChromosomeCrossoverOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(builderFactory)
+        {
+        }
+
+
+        virtual typename BaseCrossoverOperation<FITNESS_TYPE>::ptr create() override
+        {
+            if(! this->_builderFactory )
+            {
+                throw new std::runtime_error("Must set a Chromosome Factory to build MultiValueCrossover");
+            }
+
+            return std::move(
+                    std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>>
+                        (
+                                new MultiValueChromosomeAverageCrossover<VALUE_TYPE, FITNESS_TYPE>
+                                        (this->_builderFactory)
+                        )
+                    );
+        }
+    };
 };
 
 } /* geneial_export_namespace */
