@@ -88,7 +88,7 @@ public:
     }
 
 
-    class Builder : MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>::Builder
+    class Builder : public MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>::Builder
     {
     protected:
         double _minimumModification;

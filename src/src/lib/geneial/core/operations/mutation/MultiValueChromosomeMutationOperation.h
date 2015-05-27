@@ -43,7 +43,7 @@ public:
         return *_builderFactory;
     }
 
-    class Builder : BaseMutationOperation<FITNESS_TYPE>::Builder
+    class Builder : public BaseMutationOperation<FITNESS_TYPE>::Builder
     {
     protected:
         std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> _builderFactory;

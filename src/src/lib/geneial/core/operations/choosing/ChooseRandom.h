@@ -56,12 +56,10 @@ public:
     {
 
     protected:
-
-        const constexpr static double DEFAULT_PROBABILITY = 0.1;
-
         double _probability;
 
     public:
+        const constexpr static double DEFAULT_PROBABILITY = 0.1;
 
         Builder() :
                 _probability(DEFAULT_PROBABILITY)

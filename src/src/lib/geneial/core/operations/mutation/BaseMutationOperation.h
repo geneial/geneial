@@ -87,7 +87,7 @@ public:
 
         Builder():
             _settings(new MutationSettings(DEFAULT_PROBABILITY,DEFAULT_AMOUNT_OF_MUTATION,DEFAULT_AMOUNT_OF_POINTS)),
-            _choosingOperation(ChooseRandom<FITNESS_TYPE>::Builder(DEFAULT_PROBABILITY).create())
+            _choosingOperation(typename ChooseRandom<FITNESS_TYPE>::Builder(DEFAULT_PROBABILITY).create())
         {
         }
 

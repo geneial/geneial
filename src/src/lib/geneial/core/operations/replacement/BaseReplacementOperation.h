@@ -49,6 +49,9 @@ public:
         _settings = settings;
     }
 
+
+
+
 };
 
 } /* geneial_export_namespace */

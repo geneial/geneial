@@ -47,16 +47,31 @@ public:
             const typename Population<FITNESS_TYPE>::chromosome_container &mutants, BaseManager<FITNESS_TYPE> &manager) const override;
 
 
-    class Builder : MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>::Builder
+    class Builder : public MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>::Builder
+    {
+    public:
+
+        Builder(const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
+                MultiValueChromosomeMutationOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(builderFactory)
         {
-        public:
-            virtual typename BaseMutationOperation<FITNESS_TYPE>::ptr create() override
-            {
-                typename BaseMutationOperation<FITNESS_TYPE>::ptr protoype(
-                        new UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>(this->_settings, this->_choosingOperation, this->_builderFactory));
-                return std::move(protoype);
-            }
-        };
+        }
+
+        Builder(const std::shared_ptr<const MutationSettings> &settings,
+                const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
+                const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
+                MultiValueChromosomeMutationOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(settings, choosingOperation,
+                        builderFactory)
+        {
+        }
+
+        virtual typename BaseMutationOperation<FITNESS_TYPE>::ptr create() override
+        {
+            typename BaseMutationOperation<FITNESS_TYPE>::ptr protoype(
+                    new UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>(this->_settings, this->_choosingOperation,
+                            this->_builderFactory));
+            return std::move(protoype);
+        }
+    };
 
 };
 

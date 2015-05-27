@@ -106,10 +106,6 @@ template<typename FITNESS_TYPE>
 std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>> SteadyStateAlgorithm<FITNESS_TYPE>::Builder::getDefaultMutationOperation() const
 {
 
-    std::shared_ptr<MutationSettings> mutationSettings(new MutationSettings(0.1, 0.1, 5));
-
-    auto mutationChoosingOperation = typename ChooseRandom<FITNESS_TYPE>::Builder(0.1).create();
-
     //In this case we need to check whether the chosen chromomsome builder is compatible with our default operation:
     auto mvcChromosomeFactory = std::dynamic_pointer_cast<MultiValueChromosomeFactory<int, FITNESS_TYPE>>(*this->_chromosomeFactory);
 
@@ -118,10 +114,10 @@ std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>> SteadyStateAlgorithm<FITNES
         throw new std::runtime_error("Incompatible Chromosome Factory and Default Crossover Strategy");
     }
 
-    std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>> mutationOperation(
-            new UniformMutationOperation<int, FITNESS_TYPE>(mutationSettings, mutationChoosingOperation, mvcChromosomeFactory));
+    //Build Uniform mutation with all the default values.
+    auto mutationBuilder = typename UniformMutationOperation<int,FITNESS_TYPE>::Builder(mvcChromosomeFactory);
 
-    return mutationOperation;
+    return mutationBuilder.create();
 }
 
 
