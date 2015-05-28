@@ -8,6 +8,7 @@ geneial_private_namespace(operation)
 {
 geneial_private_namespace(replacement)
 {
+
 geneial_export_namespace
 {
 class BaseReplacementSettings
@@ -24,7 +25,19 @@ public:
         REPLACE_ALL_OFFSPRING, REPLACE_FIXED_NUMBER
     } replace_offspring_mode;
 
-    BaseReplacementSettings(const replace_offspring_mode mode, const unsigned int amountToReplace = 0, const unsigned int amountElitism =
+    static const BaseReplacementSettings::replace_offspring_mode DEFAULT_REPLACEMENT_MODE = BaseReplacementSettings::REPLACE_ALL_OFFSPRING;
+    static const unsigned int DEFAULT_AMOUNT_TO_REPLACE = 0;
+    static const unsigned int DEFAULT_AMOUNT_ELTISIM = 1;
+
+    BaseReplacementSettings():
+        _mode(DEFAULT_REPLACEMENT_MODE),
+        _amountToReplace(DEFAULT_AMOUNT_TO_REPLACE),
+        _amountElitism(DEFAULT_AMOUNT_ELTISIM)
+    {
+    }
+
+
+    explicit BaseReplacementSettings(const replace_offspring_mode mode, const unsigned int amountToReplace = 0, const unsigned int amountElitism =
             0) :
             _mode(mode), _amountToReplace(amountToReplace), _amountElitism(amountElitism)
     {

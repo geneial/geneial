@@ -24,11 +24,14 @@ class ReplaceWorstOperation: public BaseReplacementOperation<FITNESS_TYPE>
 private:
     unsigned int getAmountToReplace(const Population<FITNESS_TYPE> &population,
             const typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const;
-public:
+
+protected:
     explicit ReplaceWorstOperation(const std::shared_ptr<const BaseReplacementSettings> &settings) :
             BaseReplacementOperation<FITNESS_TYPE>(settings)
     {
     }
+
+public:
 
     virtual ~ReplaceWorstOperation()
     {
@@ -39,6 +42,17 @@ public:
             typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
             BaseManager<FITNESS_TYPE> &manager) const override;
 
+    class Builder : public BaseReplacementOperation<FITNESS_TYPE>::Builder
+    {
+    public:
+        Builder():BaseReplacementOperation<FITNESS_TYPE>::Builder()
+        {
+        }
+        typename BaseReplacementOperation<FITNESS_TYPE>::ptr create() override
+        {
+            return std::shared_ptr<ReplaceWorstOperation<FITNESS_TYPE>>(new ReplaceWorstOperation<FITNESS_TYPE>(this->_settings));
+        }
+    };
 };
 
 } /* geneial_export_namespace */

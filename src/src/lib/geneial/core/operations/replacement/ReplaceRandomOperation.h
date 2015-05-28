@@ -22,11 +22,14 @@ class ReplaceRandomOperation: public BaseReplacementOperation<FITNESS_TYPE>
 private:
     unsigned int getAmountToReplace(const Population<FITNESS_TYPE> &population,
             const typename coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring) const;
-public:
+
+protected:
     explicit ReplaceRandomOperation(const std::shared_ptr<const BaseReplacementSettings> &settings) :
             BaseReplacementOperation<FITNESS_TYPE>(settings)
     {
     }
+
+public:
 
     virtual ~ReplaceRandomOperation()
     {
@@ -37,6 +40,17 @@ public:
             typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
             BaseManager<FITNESS_TYPE> &manager) const override;
 
+    class Builder : public BaseReplacementOperation<FITNESS_TYPE>::Builder
+    {
+    public:
+        Builder():BaseReplacementOperation<FITNESS_TYPE>::Builder()
+        {
+        }
+        typename BaseReplacementOperation<FITNESS_TYPE>::ptr create() override
+        {
+            return std::shared_ptr<ReplaceRandomOperation<FITNESS_TYPE>>(new ReplaceRandomOperation<FITNESS_TYPE>(this->_settings));
+        }
+    };
 };
 
 } /* geneial_export_namespace */

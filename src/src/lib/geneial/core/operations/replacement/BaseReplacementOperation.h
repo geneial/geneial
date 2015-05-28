@@ -25,6 +25,10 @@ protected:
     std::shared_ptr<const BaseReplacementSettings> _settings;
 
 public:
+    using ptr = std::shared_ptr<BaseReplacementOperation<FITNESS_TYPE>>;
+
+    using const_ptr = std::shared_ptr<BaseReplacementOperation<FITNESS_TYPE>>;
+
     explicit BaseReplacementOperation(const std::shared_ptr<const BaseReplacementSettings> &settings) :
             _settings(settings)
     {
@@ -49,6 +53,19 @@ public:
         _settings = settings;
     }
 
+    class Builder
+    {
+    protected:
+        std::shared_ptr<const BaseReplacementSettings> _settings;
+
+    public:
+        Builder():_settings(new BaseReplacementSettings)
+        {
+        }
+
+        virtual ptr create() = 0;
+
+    };
 
 
 

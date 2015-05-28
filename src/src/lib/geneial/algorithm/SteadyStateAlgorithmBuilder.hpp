@@ -90,16 +90,7 @@ std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>> SteadyStateAlgorithm<FITNE
 template<typename FITNESS_TYPE>
 std::shared_ptr<BaseReplacementOperation<FITNESS_TYPE>> SteadyStateAlgorithm<FITNESS_TYPE>::Builder::getDefaultReplacementOperation() const
 {
-    //TODO (bewo) derive to replace from Population Settings?!
-
-    std::shared_ptr<BaseReplacementSettings> replacementSettings(
-            new BaseReplacementSettings(BaseReplacementSettings::REPLACE_ALL_OFFSPRING, 20,
-                    0));
-
-    std::shared_ptr<ReplaceWorstOperation<FITNESS_TYPE>> replacementOperation(
-            new ReplaceWorstOperation<FITNESS_TYPE>(replacementSettings));
-
-    return replacementOperation;
+    return typename ReplaceWorstOperation<FITNESS_TYPE>::Builder().create();
 }
 
 template<typename FITNESS_TYPE>
