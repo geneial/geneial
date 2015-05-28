@@ -13,7 +13,7 @@
 #include <geneial/core/operations/selection/FitnessProportionalSelection.h>
 #include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
 
-#include <geneial/core/operations/selection/SelectionSettings.h>
+#include <geneial/core/operations/selection/BaseSelectionSettings.h>
 #include <geneial/core/operations/selection/RouletteWheelSelection.h>
 #include <geneial/core/operations/selection/UniformRandomSelection.h>
 

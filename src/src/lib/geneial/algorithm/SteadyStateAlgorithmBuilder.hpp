@@ -11,7 +11,7 @@ using ::geneial::algorithm::stopping_criteria::MaxGenerationCriterion;
 
 using ::geneial::operation::selection::BaseSelectionOperation;
 using ::geneial::operation::selection::RouletteWheelSelection;
-using ::geneial::operation::selection::SelectionSettings;
+using ::geneial::operation::selection::BaseSelectionSettings;
 
 using ::geneial::operation::coupling::BaseCouplingOperation;
 using ::geneial::operation::coupling::CouplingSettings;
@@ -39,19 +39,15 @@ geneial_export_namespace
 template<typename FITNESS_TYPE>
 std::shared_ptr<BaseStoppingCriterion<FITNESS_TYPE>> SteadyStateAlgorithm<FITNESS_TYPE>::Builder::getDefaultStoppingCriterion() const
 {
-    std::shared_ptr<BaseStoppingCriterion<FITNESS_TYPE>> stoppingCriterion(
-            new MaxGenerationCriterion<FITNESS_TYPE>(100000));
-    return stoppingCriterion;
+    return std::make_shared<MaxGenerationCriterion<FITNESS_TYPE>>(100000);
 }
 
 
 template<typename FITNESS_TYPE>
 std::shared_ptr<BaseSelectionOperation<FITNESS_TYPE>> SteadyStateAlgorithm<FITNESS_TYPE>::Builder::getDefaultSelectionOperation() const
 {
-        std::shared_ptr<BaseSelectionOperation<FITNESS_TYPE>> selectionOperation(
-                new RouletteWheelSelection<FITNESS_TYPE>(
-                        std::shared_ptr < SelectionSettings > (new SelectionSettings(5))));
-        return selectionOperation;
+
+        return typename RouletteWheelSelection<FITNESS_TYPE>::Builder().create();
 }
 
 

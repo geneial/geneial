@@ -18,13 +18,15 @@ geneial_export_namespace
 /**
  * Select a number of parents based on a certain criteria.
  */
-class SelectionSettings
+class BaseSelectionSettings
 {
 private:
     unsigned int _numberOfParents;
 
 public:
-    virtual ~SelectionSettings()
+    static const constexpr unsigned int DEFAULT_NUMBER_OF_PARENTS = 5;
+
+    virtual ~BaseSelectionSettings()
     {
     }
 
@@ -33,12 +35,12 @@ public:
         return _numberOfParents;
     }
 
-    void setNumberOfParents(unsigned int numberOfParents)
+    void setNumberOfParents(const unsigned int numberOfParents)
     {
         _numberOfParents = numberOfParents;
     }
 
-    explicit SelectionSettings(unsigned int numberOfParents) :
+    explicit BaseSelectionSettings(const unsigned int numberOfParents = DEFAULT_NUMBER_OF_PARENTS) :
             _numberOfParents(numberOfParents)
     {
         assert(_numberOfParents > 0);

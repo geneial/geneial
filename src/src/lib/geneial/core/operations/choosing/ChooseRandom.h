@@ -61,12 +61,13 @@ public:
     public:
         const constexpr static double DEFAULT_PROBABILITY = 0.1;
 
-        Builder() :
+        Builder() : BaseChoosingOperation<FITNESS_TYPE>::Builder(),
                 _probability(DEFAULT_PROBABILITY)
         {
         }
 
         Builder(const double probability) :
+                BaseChoosingOperation<FITNESS_TYPE>::Builder(),
                 _probability(probability)
         {
         }
@@ -74,7 +75,7 @@ public:
         virtual typename BaseChoosingOperation<FITNESS_TYPE>::ptr create() override
         {
             typename BaseChoosingOperation<FITNESS_TYPE>::ptr prototype(new ChooseRandom<FITNESS_TYPE>(this->_probability));
-            return std::move(prototype);
+            return prototype;
         }
 
         double getProbability() const

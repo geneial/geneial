@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cassert>
+#include <geneial/namespaces.h>
+#include <geneial/core/operations/selection/BaseSelectionSettings.h>
 
 geneial_private_namespace(geneial)
 {
@@ -15,14 +17,18 @@ geneial_export_namespace
 /**
  * Select a number of parents based on a certain criteria.
  */
-class FitnessProportionalSelectionSettings: public SelectionSettings
+class FitnessProportionalSelectionSettings: public BaseSelectionSettings
 {
 private:
     unsigned int _numberSelectBest;
 
 public:
-    FitnessProportionalSelectionSettings(unsigned int numberOfParents, unsigned int numberSelectBest) :
-            SelectionSettings(numberOfParents), _numberSelectBest(numberSelectBest)
+    const constexpr static unsigned int DEFAULT_NUMBER_SELECT_BEST = 1;
+
+    FitnessProportionalSelectionSettings(
+            unsigned int numberOfParents = BaseSelectionSettings::DEFAULT_NUMBER_OF_PARENTS,
+            unsigned int numberSelectBest = DEFAULT_NUMBER_SELECT_BEST) :
+            BaseSelectionSettings(numberOfParents), _numberSelectBest(numberSelectBest)
     {
         assert(numberOfParents >= numberSelectBest);
     }
@@ -43,5 +49,4 @@ public:
 } /* private namespace selection */
 } /* private namespace operation */
 } /* private namespace geneial */
-
 

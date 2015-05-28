@@ -1,6 +1,7 @@
 #pragma once
 
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
+#include <geneial/utility/patterns/EnableMakeShared.h>
 
 #include <map>
 #include <stdexcept>
@@ -18,10 +19,10 @@ geneial_export_namespace
  * Select a number of parents based on a roulette wheel distribution over the chromosomes fitness
  */
 template<typename FITNESS_TYPE>
-class UniformRandomSelection: public BaseSelectionOperation<FITNESS_TYPE>
+class UniformRandomSelection: public BaseSelectionOperation<FITNESS_TYPE>, public EnableMakeShared<UniformRandomSelection<FITNESS_TYPE>>
 {
-public:
-    explicit UniformRandomSelection(const std::shared_ptr<const SelectionSettings> &settings) :
+protected:
+    UniformRandomSelection(const std::shared_ptr<BaseSelectionSettings> &settings) :
             BaseSelectionOperation<FITNESS_TYPE>(settings)
     {
     }
@@ -29,9 +30,24 @@ public:
     virtual ~UniformRandomSelection()
     {
     }
-
+public:
     virtual typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set doSelect(
             const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager) const override;
+
+    class Builder : public BaseSelectionOperation<FITNESS_TYPE>::Builder
+    {
+
+    public:
+        Builder() : BaseSelectionOperation<FITNESS_TYPE>::Builder()
+        {
+        }
+
+        typename BaseSelectionOperation<FITNESS_TYPE>::ptr create() override
+        {
+            return UniformRandomSelection<FITNESS_TYPE>::makeShared(this->_settings);
+        }
+
+    };
 
 };
 

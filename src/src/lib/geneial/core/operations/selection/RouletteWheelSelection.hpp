@@ -108,6 +108,8 @@ public:
         return std::lower_bound(_ranges.begin(), _ranges.end(),
                 static_cast<FITNESS_TYPE>(random * _sum),RouletteWheelComparator())->second;
     }
+
+
 };
 
 template<typename FITNESS_TYPE>
@@ -135,6 +137,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
         chrom_ptr_type ptr;
         do
         {
+            //TODO (bewo) Benchmark this for duplicates
             const double random = Random::generate<double>(0.0, 1.0);
             ptr = rouletteWheel.spin(random);
         } while (allowDuplicates || std::find(result.begin(), result.end(), ptr) != result.end());

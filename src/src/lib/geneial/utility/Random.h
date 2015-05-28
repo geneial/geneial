@@ -1,7 +1,7 @@
 #pragma once
 
 #include <geneial/namespaces.h>
-#include <geneial/utility/patterns/singleton.hpp>
+#include <geneial/utility/patterns/Singleton.h>
 
 geneial_private_namespace(geneial)
 {

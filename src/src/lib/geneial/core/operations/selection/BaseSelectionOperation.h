@@ -1,9 +1,10 @@
 #pragma once
 
 #include <geneial/namespaces.h>
-#include <geneial/core/operations/selection/SelectionSettings.h>
+#include <geneial/core/operations/selection/BaseSelectionSettings.h>
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/core/population/Population.h>
+#include <geneial/utility/patterns/Buildable.h>
 
 geneial_private_namespace(geneial)
 {
@@ -21,18 +22,20 @@ geneial_export_namespace
  * Select a number of parents based on a certain criteria.
  */
 template<typename FITNESS_TYPE>
-class BaseSelectionOperation
+class BaseSelectionOperation : public Buildable<BaseSelectionOperation<FITNESS_TYPE>>
 {
 private:
-    const std::shared_ptr<const SelectionSettings> _settings;
+    const std::shared_ptr<BaseSelectionSettings> _settings;
 
-public:
-    typedef typename Population<FITNESS_TYPE>::chromosome_container selection_result_set;
 
-    explicit BaseSelectionOperation(const std::shared_ptr<const SelectionSettings> &settings) :
+protected:
+    BaseSelectionOperation(const std::shared_ptr<BaseSelectionSettings> &settings) :
             _settings(settings)
     {
     }
+
+public:
+    using selection_result_set = typename Population<FITNESS_TYPE>::chromosome_container;
 
     virtual ~BaseSelectionOperation()
     {
@@ -41,16 +44,37 @@ public:
     virtual selection_result_set doSelect(const Population<FITNESS_TYPE> &population,
             BaseManager<FITNESS_TYPE> &manager) const = 0;
 
-    const SelectionSettings& getSettings() const
+
+    const BaseSelectionSettings& getSettings() const
     {
         return *_settings;
     }
 
-    void setSettings(const std::shared_ptr<const SelectionSettings> &settings)
+    void setSettings(const std::shared_ptr<BaseSelectionSettings> &settings)
     {
         _settings = settings;
     }
 
+    class Builder: Buildable<BaseSelectionOperation<FITNESS_TYPE>>::Builder
+    {
+    protected:
+        std::shared_ptr<BaseSelectionSettings> _settings;
+    public:
+        Builder() :
+                _settings(new BaseSelectionSettings)
+        {
+        }
+
+        Builder(const std::shared_ptr<BaseSelectionSettings>&settings) :
+                _settings(settings)
+        {
+        }
+
+        BaseSelectionSettings& getSettings()
+        {
+            return *_settings;
+        }
+    };
 };
 
 } /* geneial_export_namespace */

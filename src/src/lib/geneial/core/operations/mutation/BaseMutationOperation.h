@@ -79,7 +79,7 @@ public:
 
     public:
 
-        static const constexpr     double DEFAULT_PROBABILITY= 0.1;
+        static const constexpr double DEFAULT_PROBABILITY= 0.1;
 
         static const constexpr double DEFAULT_AMOUNT_OF_MUTATION = 0.1;
 
