@@ -40,8 +40,9 @@ protected:
                 MultiValueChromosomeNPointCrossover<VALUE_TYPE, FITNESS_TYPE>(crossoverSettings, builderFactory)
         {
         }
-
 public:
+    //Avoid DoD problem by specifying the required make shared
+    using EnableMakeShared<SmoothedMultiValueChromosomeNPointCrossover<VALUE_TYPE,FITNESS_TYPE>>::makeShared;
     virtual ~SmoothedMultiValueChromosomeNPointCrossover()
     {
     }
@@ -67,8 +68,9 @@ public:
             }
 
             return SmoothedMultiValueChromosomeNPointCrossover::makeShared(
-                                        _crossoverSettings,
-                                        this->_builderFactory);
+                                        this->_crossoverSettings,
+                                        std::dynamic_pointer_cast<ContinousMultiValueChromosomeFactory<VALUE_TYPE,FITNESS_TYPE>>(this->_builderFactory)
+                                      );
         }
     };
 };

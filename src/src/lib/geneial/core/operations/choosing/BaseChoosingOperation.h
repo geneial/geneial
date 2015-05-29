@@ -17,18 +17,14 @@ geneial_export_namespace
 {
 
 template<typename FITNESS_TYPE>
-class BaseChoosingOperation
+class BaseChoosingOperation : public Buildable<BaseChoosingOperation<FITNESS_TYPE>>
 {
-public:
-
-    using ptr = std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE>>;
-
-    using const_ptr = std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE>>;
-
+protected:
     BaseChoosingOperation()
     {
     }
 
+public:
     virtual ~BaseChoosingOperation()
     {
     }
@@ -36,10 +32,8 @@ public:
     virtual typename Population<FITNESS_TYPE>::chromosome_container doChoose(
             const typename Population<FITNESS_TYPE>::chromosome_container &chromosomeInputSet) const = 0;
 
-    class Builder
+    class Builder : Buildable<BaseChoosingOperation<FITNESS_TYPE>>::Builder
     {
-    public:
-        virtual ptr create() = 0;
     };
 
 };

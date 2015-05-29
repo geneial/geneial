@@ -24,10 +24,21 @@ public:
         BaseChromosomeFactory<FITNESS_TYPE>(),
         _settings(settings)
     {
+        /*for(auto & ptr : _usePool)
+                {
+        //TODO
+                    delete ptr;
+                }*/
+        for(auto & ptr : _freePool)
+                {
+            //TODO
+                    delete ptr;
+                }
     }
 
-
-
+    virtual ~MultiValueChromosomeFactory()
+    {
+    }
 
     inline const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> & getSettings() const
     {
@@ -43,26 +54,73 @@ protected:
             typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues
     ) override;
 
+    std::vector<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>*> _usePool;
+    std::vector<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>*> _freePool;
+
+    friend class FactoryDeleter;
+
+    struct FactoryDeleter {
+        MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *_factory;
+        FactoryDeleter(MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *factory):_factory(factory)
+        {
+        }
+
+        void operator()(MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>* p) const {
+            _factory->free(p);
+        }
+    };
+
+    void free(MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>* p)
+    {
+        if(_freePool.size()<100)
+        {
+            _usePool.erase(std::find(_usePool.begin(),_usePool.end(),p));
+            _freePool.push_back(p);
+        }
+        else
+        {
+            //TODO
+            delete p;
+        }
+    }
+
+
     typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr allocateNewChromsome()
     {
-        typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr new_chromosome;
+        MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> *rawChromosome ;
+
+        if (_freePool.size() > 0)
+        {
+            rawChromosome = _freePool.back();
+            _freePool.pop_back();
+            _usePool.push_back(rawChromosome);
+            rawChromosome->setFitnessEvaluator(_settings.getFitnessEvaluator());
+            rawChromosome->invalidate();
+        }
+        else
+        {
+            rawChromosome = new MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>(_settings.getFitnessEvaluator());
+            _usePool.push_back(rawChromosome);
+        }
+
+
+        typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr new_chromosome(rawChromosome, FactoryDeleter(this));
 
         auto manager = this->getManager();
 
         if (!manager.expired())
         {
             auto _manager = manager.lock();
-            new_chromosome = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>>(_manager->retrieveFromHoldOff());
-            if(new_chromosome)
-            {
-                new_chromosome->invalidate();
-            }
+            //assert(!_manager->getPopulation().hashExists(new_chromosome->getHash()) && "Consistency Problem, HoldoffSet contains Population member!");
         }
 
+/*
         if (!new_chromosome)
         {
+            _allocated++;
             new_chromosome = std::make_shared<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>>(_settings.getFitnessEvaluator());
         }
+*/
 
         new_chromosome->getContainer().resize(this->_settings.getNum());
 

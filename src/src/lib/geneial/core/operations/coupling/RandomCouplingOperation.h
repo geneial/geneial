@@ -22,7 +22,8 @@ geneial_export_namespace
  * RandomCouplingOperation will choose parents from the mating pool at random
  */
 template<typename FITNESS_TYPE>
-class RandomCouplingOperation: public BaseCouplingOperation<FITNESS_TYPE>, public EnableMakeShared<RandomCouplingOperation<FITNESS_TYPE>>
+class RandomCouplingOperation:  public BaseCouplingOperation<FITNESS_TYPE>,
+                                public EnableMakeShared<RandomCouplingOperation<FITNESS_TYPE>>
 {
 protected:
     explicit RandomCouplingOperation(const std::shared_ptr<const CouplingSettings> &settings) :

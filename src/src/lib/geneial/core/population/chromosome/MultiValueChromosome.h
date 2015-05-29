@@ -38,6 +38,8 @@ public:
     explicit MultiValueChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) :
             BaseChromosome<FITNESS_TYPE>(fitnessEvaluator), _container()
     {
+        static_assert(std::is_arithmetic<VALUE_TYPE>::value,"VALUE_TYPE is expected to be an arithmetic data type!");
+        static_assert(std::is_arithmetic<FITNESS_TYPE>::value,"FITNESS_TYPE is expected to be an arithmetic data type!");
     }
 
 
@@ -77,6 +79,8 @@ public:
 
     virtual ~MultiValueChromosome()
     {
+        std::cout << getHash() << std::endl;
+        std::cout << "D";
     }
 
     bool equals(const BaseChromosome<FITNESS_TYPE> &chromosome) const override;

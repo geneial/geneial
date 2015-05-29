@@ -37,6 +37,7 @@
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
 
 #include <geneial/core/operations/choosing/ChooseRandom.h>
+//#include <geneial/core/operations/choosing/LambdaChoosingAdapter.h>
 
 #include <geneial/core/operations/mutation/NonUniformMutationOperation.h>
 #include <geneial/core/operations/mutation/SmoothPeakMutationOperation.h>
@@ -44,6 +45,7 @@
 
 #include <geneial/core/operations/coupling/SimpleCouplingOperation.h>
 #include <geneial/core/operations/coupling/RandomCouplingOperation.h>
+#include <geneial/core/operations/coupling/LambdaCouplingAdapter.h>
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeAverageCrossover.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeBlendingCrossover.h>
@@ -99,6 +101,7 @@ Expander1D(geneial::algorithm::stopping_criteria::StatefulStoppingCriterion)
 
 //Choosing
 Expander1D(geneial::operation::choosing::ChooseRandom)
+//Expander1D(geneial::operation::choosing::LambdaChoosingAdapter)
 
 //Mutation
 Expander2D(geneial::operation::mutation::NonUniformMutationOperation)
@@ -108,6 +111,7 @@ Expander2D(geneial::operation::mutation::UniformMutationOperation)
 //Coupling
 Expander1D(geneial::operation::coupling::RandomCouplingOperation)
 Expander1D(geneial::operation::coupling::SimpleCouplingOperation)
+Expander1D(geneial::operation::coupling::LambdaCouplingAdapter)
 
 //Crossover
 Expander2D(geneial::operation::crossover::SmoothedMultiValueChromosomeNPointCrossover)

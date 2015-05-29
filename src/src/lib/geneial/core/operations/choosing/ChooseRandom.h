@@ -21,7 +21,8 @@ geneial_export_namespace
 
 
 template<typename FITNESS_TYPE>
-class ChooseRandom: public BaseChoosingOperation<FITNESS_TYPE>, public Buildable<BaseChoosingOperation<FITNESS_TYPE>>
+class ChooseRandom: public BaseChoosingOperation<FITNESS_TYPE>,
+                    public EnableMakeShared<ChooseRandom<FITNESS_TYPE>>
 {
 private:
     double _probability;
@@ -77,8 +78,7 @@ public:
 
         virtual typename BaseChoosingOperation<FITNESS_TYPE>::ptr create() override
         {
-            typename BaseChoosingOperation<FITNESS_TYPE>::ptr prototype(new ChooseRandom<FITNESS_TYPE>(this->_probability));
-            return prototype;
+            return ChooseRandom<FITNESS_TYPE>::makeShared(this->_probability);
         }
 
         double getProbability() const
@@ -86,9 +86,10 @@ public:
             return _probability;
         }
 
-        void setProbability(double probability = DEFAULT_PROBABILITY)
+        Builder& setProbability(double probability = DEFAULT_PROBABILITY)
         {
             _probability = probability;
+            return *this;
         }
     };
 

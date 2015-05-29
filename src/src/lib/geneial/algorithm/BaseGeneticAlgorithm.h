@@ -21,6 +21,7 @@
 #include <memory>
 #include <map>
 #include <list>
+#include <type_traits>
 
 
 geneial_private_namespace(geneial)
@@ -100,6 +101,7 @@ protected:
             _replacementOperation(replacementOperation),
             _mutationOperation(mutationOperation)
     {
+        static_assert(std::is_arithmetic<FITNESS_TYPE>::value,"FITNESS_TYPE is expected to be an arithmetic data type!");
     }
 
 public:

@@ -60,8 +60,6 @@ ptime beforeAging = microsec_clock::local_time();
 ptime afterAging = microsec_clock::local_time();
 aging += static_cast<double>((afterAging - beforeAging).total_microseconds());
 
-
-
 ptime beforeSelection = microsec_clock::local_time();
 
         //Perform a selection of mating candidates based on the given strategy.
@@ -69,27 +67,18 @@ ptime beforeSelection = microsec_clock::local_time();
 
 ptime afterSelection = microsec_clock::local_time();
 selection += static_cast<double>((afterSelection - beforeSelection).total_microseconds());
-
-
-
 ptime beforeCoupling = microsec_clock::local_time();
 
         auto offspring(this->_couplingOperation->doCopulate(mating_pool, *this->_crossoverOperation, *this->_manager));
 
 ptime afterCoupling = microsec_clock::local_time();
 coupling += static_cast<double>((afterCoupling - beforeCoupling).total_microseconds());
-
-
-
 ptime beforeMutation = microsec_clock::local_time();
 
         offspring = this->_mutationOperation->doMutate(offspring, *this->_manager);
 
 ptime afterMutation = microsec_clock::local_time();
 mutation += static_cast<double>((afterMutation - beforeMutation).total_microseconds());
-
-
-
         //TODO (bewo): Scaling?
 ptime beforeReplacement = microsec_clock::local_time();
 
@@ -97,7 +86,6 @@ ptime beforeReplacement = microsec_clock::local_time();
 
 ptime afterReplacement = microsec_clock::local_time();
 replacement += static_cast<double>((afterReplacement - beforeReplacement).total_microseconds());
-
 
 
 ptime beforeReplenishment = microsec_clock::local_time();
@@ -131,6 +119,18 @@ observer += static_cast<double>((afterObservers - beforeObservers).total_microse
 
 ptime afterIteration = microsec_clock::local_time();
 iteration += static_cast<double>((afterIteration - beforeIteration).total_microseconds());
+
+
+//for(const auto &chromosome : mating_pool)
+//{
+//            if(!this->_manager->getPopulation().hashExists(chromosome->getHash()))
+//            {
+//                std::cout << "K" << chromosome->getHash() << std::endl;
+//                this->_manager->deleteOrHoldOffReference(chromosome);
+//                std::cout << "CALL" << std::endl;
+//            }
+//}
+
 
 
     }

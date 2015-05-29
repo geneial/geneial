@@ -12,7 +12,7 @@ protected:
     {
         struct LocalEnableMakeShared: public CLIENT
         {
-            LocalEnableMakeShared(const Arg&&...arg) :
+            LocalEnableMakeShared(Arg&&...arg) :
                     CLIENT(std::forward<Arg>(arg)...)
             {
             }

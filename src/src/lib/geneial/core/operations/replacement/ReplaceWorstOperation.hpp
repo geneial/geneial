@@ -61,15 +61,20 @@ void ReplaceWorstOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &po
     typename Population<FITNESS_TYPE>::chromosome_container newChildren;
     newChildren.reserve(offspring.size());
 
+    //std::cout << "Population"<< population.getSize() << " Amount To Replace: " << numberToReplace <<" Offspring:"<< offspring.size()<<std::endl;
+
     unsigned int childrenCandidates = 0;
     for(const auto& newOffspring: offspring)
     {
-        if(!population.hashExists(newOffspring->getHash()))
+        if(childrenCandidates <= numberToReplace)
         {
-            newChildren.push_back(newOffspring);
-            childrenCandidates++;
+            if(!population.hashExists(newOffspring->getHash()))
+            {
+                newChildren.emplace_back(newOffspring);
+                childrenCandidates++;
+            }
         }
-        if(childrenCandidates >= numberToReplace)
+        else
         {
             break;
         }

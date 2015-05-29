@@ -105,10 +105,8 @@ int main(int argc, char **argv)
 
     ContinousMultiValueBuilderSettings<int, double> builderSettings(evaluator, 20, 130, 0, true, 20, 5);
 
-    ContinousMultiValueChromosomeFactory<int,double> chromosomeFactory(builderSettings);
-
     auto algorithm = SteadyStateAlgorithm<double>::Builder().
-            setChromosomeFactory(std::make_shared<ContinousMultiValueChromosomeFactory<int,double>>(chromosomeFactory)).
+            setChromosomeFactory(std::make_shared<ContinousMultiValueChromosomeFactory<int,double>>(builderSettings)).
             build();
 
     algorithm->getPopulationSettings().setMaxChromosomes(100);

@@ -6,6 +6,7 @@
 #include <geneial/core/population/PopulationSettings.h>
 #include <geneial/core/population/builder/BaseChromosomeFactory.h>
 #include <geneial/utility/ExecutionManager.h>
+#include <geneial/utility/mixins/EnableMakeShared.h>
 
 #include <cassert>
 
@@ -26,9 +27,10 @@ geneial_export_namespace
  * Manages the population and most of the processes which modify the chromosomes
  */
 template<typename FITNESS_TYPE>
-class BaseManager : public std::enable_shared_from_this<BaseManager<FITNESS_TYPE> >
+class BaseManager :     public std::enable_shared_from_this<BaseManager<FITNESS_TYPE> >,
+                        public EnableMakeShared<BaseManager<FITNESS_TYPE>>
 {
-private:
+protected:
     explicit BaseManager<FITNESS_TYPE>(const std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> &chromosomeFactory) :
         _holdoffSet(),
         _populationSettings(),
@@ -42,7 +44,7 @@ public:
 
     static std::shared_ptr<BaseManager<FITNESS_TYPE>> create(const std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> chromosomeFactory)
     {
-        std::shared_ptr<BaseManager<FITNESS_TYPE>> ptr(new BaseManager<FITNESS_TYPE>(chromosomeFactory));
+        auto ptr = BaseManager<FITNESS_TYPE>::makeShared(chromosomeFactory);
 
         ptr->_chromosomeFactory->setManager(ptr);
         ptr->_population._manager = ptr;
@@ -110,25 +112,9 @@ public:
         _executionManager = std::move(executionManager);
     }
 
-    void deleteOrHoldOffReference(const typename BaseChromosome<FITNESS_TYPE>::ptr& chromosome)
+    const typename Population<FITNESS_TYPE>::chromosome_container& getHoldoffSet() const
     {
-        if (_holdoffSet.size() <= _populationSettings.getHoldoffSize())
-        {
-            _holdoffSet.push_back(chromosome);
-        }
-    }
-
-    typename BaseChromosome<FITNESS_TYPE>::ptr retrieveFromHoldOff()
-    {
-        typename BaseChromosome<FITNESS_TYPE>::ptr ptrCandidate;
-
-        if (_holdoffSet.size() > 1)
-        {
-            ptrCandidate = _holdoffSet.back();
-            _holdoffSet.pop_back();
-        }
-
-        return std::move(ptrCandidate);
+        return _holdoffSet;
     }
 
 private:

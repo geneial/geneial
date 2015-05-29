@@ -36,9 +36,9 @@ private:
 
 protected:
     SmoothPeakMutationOperation(
-            unsigned int maxLeftEps,
-            unsigned int maxRightEps,
-            FITNESS_TYPE maxElevation,
+            const unsigned int maxLeftEps,
+            const unsigned int maxRightEps,
+            const FITNESS_TYPE maxElevation,
             const std::shared_ptr<const MutationSettings> &settings,
             const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
             const std::shared_ptr<ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
@@ -145,7 +145,8 @@ public:
                        this->_maxElevation,
                        this->_settings,
                        this->_choosingOperation,
-                       std::dynamic_pointer_cast<ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>>(this->_builderFactory));
+                       std::dynamic_pointer_cast<ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>>(this->_builderFactory)
+               );
            }
 
        };

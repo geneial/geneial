@@ -29,6 +29,7 @@ private:
 
     unsigned int _affectedGenerations;
 
+protected:
     NonUniformMutationOperation(
             const unsigned int affectedGenerations,
             const VALUE_TYPE minimumModification,

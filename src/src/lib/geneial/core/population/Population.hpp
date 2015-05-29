@@ -27,7 +27,7 @@ template<typename FITNESS_TYPE>
 Population<FITNESS_TYPE>::Population() :
         _fitnessMap(),
         _hashMap(),
-        _fitnessCache(),
+//        _fitnessCache(),
         _age(0)
 {
 }
@@ -179,15 +179,15 @@ template<typename FITNESS_TYPE>
 inline void Population<FITNESS_TYPE>::_insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr& chromosome,
         typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue)
 {
-    const auto it = this->_fitnessCache.find(chromosome->getHash());
+//    const auto it = this->_fitnessCache.find(chromosome->getHash());
 
-    if(it != this->_fitnessCache.end())
-    {
-        chromosome->setFitness(std::move(std::unique_ptr<Fitness<FITNESS_TYPE>>(new Fitness<FITNESS_TYPE>(it->second))));
-    }
+//    if(it != this->_fitnessCache.end())
+//    {
+//        chromosome->setFitness(std::move(std::unique_ptr<Fitness<FITNESS_TYPE>>(new Fitness<FITNESS_TYPE>(it->second))));
+//    }
 
     // TODO(bewo) enable this by setting @{
-    _fitnessCache[hashValue] = chromosome->getFitness().get();
+//    _fitnessCache[hashValue] = chromosome->getFitness().get();
     // @}
 
     assert(chromosome);
@@ -204,7 +204,6 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
 {
     std::vector<typename BaseChromosome<FITNESS_TYPE>::chromsome_hash> hashCache;
     hashCache.reserve(container.size());
-
     for (typename chromosome_container::iterator it = container.begin(); it != container.end();)
     {
         const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue = (*it)->getHash();
@@ -216,6 +215,7 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
         }
         else
         {
+            //getManager().deleteOrHoldOffReference(*it);
             it = container.erase(it);
         }
     }
@@ -227,17 +227,17 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
             const auto chromosome = container[i];
             getManager().getExecutionManager().addTask([chromosome,this]
             {
-                const auto it = this->_fitnessCache.find(chromosome->getHash());
-                if(it == this->_fitnessCache.end())
-                {
+//                const auto it = this->_fitnessCache.find(chromosome->getHash());
+//                if(it == this->_fitnessCache.end())
+//                {
                     chromosome->getFitness().get();
-                }
-                else
-                {
-                    //std::cout << "fitness_cache hit"<<std::endl;
-                    //TODO (bewo) If the user defined Fitness Evaluator might choose to override Fitness, we have a problem here..
-                    chromosome->setFitness(std::move(std::unique_ptr<Fitness<FITNESS_TYPE>>(new Fitness<FITNESS_TYPE>(it->second))));
-                }
+//                }
+//                else
+//                {
+//                    //std::cout << "fitness_cache hit"<<std::endl;
+//                    //TODO (bewo) If the user defined Fitness Evaluator might choose to override Fitness, we have a problem here..
+//                    chromosome->setFitness(std::move(std::unique_ptr<Fitness<FITNESS_TYPE>>(new Fitness<FITNESS_TYPE>(it->second))));
+//                }
             });
         }
     }
@@ -247,10 +247,10 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
     unsigned int i = 0;
     std::for_each(container.cbegin(),container.cend(),
             [&i,this,&hashCache]
-            (const typename chromosome_container::value_type &it)
+                (const typename chromosome_container::value_type &it)
             {
-            this->_insertChromosome(it, hashCache[i]);
-            ++i;
+                this->_insertChromosome(it, hashCache[i]);
+                ++i;
             }
     );
     return hashCache.size(); //TODO (bewo): This is a safe world assumption
@@ -281,15 +281,17 @@ inline void Population<FITNESS_TYPE>::removeChromosome(const typename BaseChromo
             ++it;
         }
     }
+
     assert(candidateFound);
 
     const auto hit = _hashMap.find(hash);
     assert(hit != _hashMap.end());
 
-    getManager().deleteOrHoldOffReference(chromosome);
 
     _fitnessMap.erase(it);
     _hashMap.erase(hit);
+
+    //getManager().deleteOrHoldOffReference(chromosome);
     //assert(_fitnessMap.find(hash) == _fitnessMap.end());
     //assert(_hashMap.find(hash) == _hashMap.end());
 

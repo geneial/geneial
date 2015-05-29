@@ -99,7 +99,7 @@ public:
                 _sum += positiveTranslation + it.first;
             }
 
-            _ranges.push_back(std::pair<FITNESS_TYPE, chrom_ptr_type>(_sum, it.second));
+            _ranges.emplace_back(_sum, it.second);
         }
     }
 
