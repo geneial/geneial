@@ -2,6 +2,7 @@
 
 #include <geneial/namespaces.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeCrossoverOperation.h>
+#include <geneial/utility/mixins/EnableMakeShared.h>
 
 #include <cassert>
 
@@ -16,8 +17,10 @@ using ::geneial::population::chromosome::MultiValueChromosome;
 
 geneial_export_namespace
 {
+
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-class MultiValueChromosomeAverageCrossover: public MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>
+class MultiValueChromosomeAverageCrossover: public MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>,
+                                            public EnableMakeShared<MultiValueChromosomeAverageCrossover<VALUE_TYPE,FITNESS_TYPE>>
 {
 public:
     MultiValueChromosomeAverageCrossover(
@@ -84,13 +87,7 @@ public:
                 throw new std::runtime_error("Must set a Chromosome Factory to build MultiValueCrossover");
             }
 
-            return std::move(
-                    std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>>
-                        (
-                                new MultiValueChromosomeAverageCrossover<VALUE_TYPE, FITNESS_TYPE>
-                                        (this->_builderFactory)
-                        )
-                    );
+            return MultiValueChromosomeAverageCrossover<VALUE_TYPE, FITNESS_TYPE>::makeShared(this->_builderFactory);
         }
     };
 };

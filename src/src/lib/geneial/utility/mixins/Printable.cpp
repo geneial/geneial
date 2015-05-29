@@ -1,4 +1,4 @@
-#include <geneial/utility/Printable.h>
+#include <geneial/utility/mixins/Printable.h>
 #include <cassert>
 
 geneial_private_namespace(geneial)

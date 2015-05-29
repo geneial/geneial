@@ -47,7 +47,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
         ++daddy_it;
     }
 
-    resultset.push_back(child_candidate);
+    resultset.emplace_back(std::move(child_candidate));
     return std::move(resultset);
 }
 

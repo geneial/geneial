@@ -2,6 +2,8 @@
 
 #include <geneial/core/operations/mutation/MultiValueChromosomeMutationOperation.h>
 #include <geneial/core/population/Population.h>
+#include <geneial/utility/mixins/EnableMakeShared.h>
+
 #include <geneial/utility/Random.h>
 
 #include <cassert>
@@ -17,7 +19,8 @@ using ::geneial::population::Population;
 geneial_export_namespace
 {
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-class NonUniformMutationOperation: public MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>
+class NonUniformMutationOperation:  public MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>,
+                                    public EnableMakeShared<NonUniformMutationOperation<VALUE_TYPE,FITNESS_TYPE>>
 {
 
 private:
@@ -127,10 +130,12 @@ public:
 
         virtual typename BaseMutationOperation<FITNESS_TYPE>::ptr create() override
         {
-            typename BaseMutationOperation<FITNESS_TYPE>::ptr protoype(
-                    new NonUniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>(_affectedGenerations,
-                            _minimumModification, this->_settings, this->_choosingOperation, this->_builderFactory));
-            return std::move(protoype);
+            return NonUniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::makeShared(
+                    _affectedGenerations,
+                    _minimumModification,
+                    this->_settings,
+                    this->_choosingOperation,
+                    this->_builderFactory);
         }
 
         Builder& setAffectedGenerations(unsigned int affectedGenerations)

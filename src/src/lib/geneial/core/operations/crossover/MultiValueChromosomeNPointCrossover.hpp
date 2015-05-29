@@ -164,7 +164,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
     }
     assert(child_container.size() == mommy_container.size());
 
-    resultset.push_back(child_candidate);
+    resultset.emplace_back(std::move(child_candidate));
 
     return resultset;
 }

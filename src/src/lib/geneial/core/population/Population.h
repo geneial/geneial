@@ -3,7 +3,7 @@
 #include <geneial/namespaces.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include <geneial/core/population/ContainerTypes.h>
-#include <geneial/utility/Printable.h>
+#include <geneial/utility/mixins/Printable.h>
 
 #include <iostream>
 #include <map>

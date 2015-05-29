@@ -5,6 +5,7 @@
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
 #include <geneial/core/population/management/BaseManager.h>
+#include <geneial/utility/mixins/Buildable.h>
 
 geneial_private_namespace(geneial)
 {
@@ -22,7 +23,7 @@ geneial_export_namespace
 
 
 template<typename FITNESS_TYPE>
-class BaseCouplingOperation
+class BaseCouplingOperation : public Buildable<BaseCouplingOperation<FITNESS_TYPE>>
 {
 
 private:
@@ -36,11 +37,6 @@ protected:
 
 public:
     using offspring_result_set = typename Population<FITNESS_TYPE>::chromosome_container;
-
-    using ptr = std::shared_ptr<BaseCouplingOperation<FITNESS_TYPE>>;
-
-    using const_ptr = std::shared_ptr<BaseCouplingOperation<FITNESS_TYPE>>;
-
 
     virtual ~BaseCouplingOperation()
     {
@@ -61,16 +57,14 @@ public:
         _settings = settings;
     }
 
-    class Builder
+    class Builder: public Buildable<BaseCouplingOperation<FITNESS_TYPE>>::Builder
     {
 
     protected:
         std::shared_ptr<CouplingSettings> _settings;
 
     public:
-        const static unsigned int DEFAULT_NUMER_OF_OFFSPRINGS = 5;
-
-        Builder():_settings(new CouplingSettings(DEFAULT_NUMER_OF_OFFSPRINGS))
+        Builder():_settings(std::make_shared<CouplingSettings>())
         {
         }
 
@@ -78,14 +72,12 @@ public:
         {
         }
 
-        virtual ptr create() = 0;
-
-        inline CouplingSettings& getSettings() const
+        inline CouplingSettings& getSettings()
         {
             return *_settings;
         }
 
-        void setSettings(const std::shared_ptr<const CouplingSettings>& settings)
+        void setSettings(const std::shared_ptr<CouplingSettings>& settings)
         {
             _settings = settings;
         }

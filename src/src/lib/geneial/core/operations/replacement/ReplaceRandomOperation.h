@@ -1,6 +1,8 @@
 #pragma once
 
 #include <geneial/core/operations/replacement/BaseReplacementOperation.h>
+#include <geneial/utility/mixins/EnableMakeShared.h>
+
 
 geneial_private_namespace(geneial)
 {
@@ -17,7 +19,8 @@ geneial_export_namespace
  * Replace chromosomes at random in the population
  */
 template<typename FITNESS_TYPE>
-class ReplaceRandomOperation: public BaseReplacementOperation<FITNESS_TYPE>
+class ReplaceRandomOperation:   public BaseReplacementOperation<FITNESS_TYPE>,
+                                public EnableMakeShared<ReplaceRandomOperation<FITNESS_TYPE>>
 {
 private:
     unsigned int getAmountToReplace(const Population<FITNESS_TYPE> &population,
@@ -48,7 +51,7 @@ public:
         }
         typename BaseReplacementOperation<FITNESS_TYPE>::ptr create() override
         {
-            return std::shared_ptr<ReplaceRandomOperation<FITNESS_TYPE>>(new ReplaceRandomOperation<FITNESS_TYPE>(this->_settings));
+            return ReplaceRandomOperation<FITNESS_TYPE>::makeShared(this->_settings);
         }
     };
 };

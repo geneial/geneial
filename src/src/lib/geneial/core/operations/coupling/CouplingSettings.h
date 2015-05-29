@@ -20,11 +20,13 @@ class CouplingSettings
 private:
     unsigned int _numberOfOffspring;
 public:
+    const constexpr static unsigned int DEFAULT_NUMBER_OF_OFFSPRING = 20;
+
     virtual ~CouplingSettings()
     {
     }
 
-    explicit CouplingSettings(unsigned int numberOfOffspring) :
+    explicit CouplingSettings(const unsigned int numberOfOffspring = DEFAULT_NUMBER_OF_OFFSPRING) :
             _numberOfOffspring(numberOfOffspring)
     {
         assert(numberOfOffspring > 0);
@@ -35,7 +37,7 @@ public:
         return _numberOfOffspring;
     }
 
-    void setNumberOfOffspring(unsigned int numberOfOffspring)
+    void setNumberOfOffspring(const unsigned int numberOfOffspring)
     {
         _numberOfOffspring = numberOfOffspring;
     }

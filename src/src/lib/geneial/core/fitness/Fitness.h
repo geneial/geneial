@@ -1,6 +1,6 @@
 #pragma once
 
-#include <geneial/utility/Printable.h>
+#include <geneial/utility/mixins/Printable.h>
 
 #include <boost/optional.hpp>
 

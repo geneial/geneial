@@ -46,7 +46,6 @@ std::shared_ptr<BaseStoppingCriterion<FITNESS_TYPE>> SteadyStateAlgorithm<FITNES
 template<typename FITNESS_TYPE>
 std::shared_ptr<BaseSelectionOperation<FITNESS_TYPE>> SteadyStateAlgorithm<FITNESS_TYPE>::Builder::getDefaultSelectionOperation() const
 {
-
         return typename RouletteWheelSelection<FITNESS_TYPE>::Builder().create();
 }
 
@@ -54,13 +53,7 @@ std::shared_ptr<BaseSelectionOperation<FITNESS_TYPE>> SteadyStateAlgorithm<FITNE
 template<typename FITNESS_TYPE>
 std::shared_ptr<BaseCouplingOperation<FITNESS_TYPE>> SteadyStateAlgorithm<FITNESS_TYPE>::Builder::getDefaultCouplingOperation() const
 {
-
-    std::shared_ptr<CouplingSettings> couplingSettings(new CouplingSettings(20));
-
-    std::shared_ptr<BaseCouplingOperation<FITNESS_TYPE>> couplingOperation(
-            new RandomCouplingOperation<FITNESS_TYPE>(couplingSettings));
-
-    return couplingOperation;
+    return typename RandomCouplingOperation<FITNESS_TYPE>::Builder().create();
 }
 
 

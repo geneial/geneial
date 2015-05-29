@@ -1,7 +1,7 @@
 #pragma once
 
 #include <geneial/namespaces.h>
-#include <geneial/utility/Printable.h>
+#include <geneial/utility/mixins/Printable.h>
 #include <geneial/core/fitness/Fitness.h>
 #include <geneial/core/fitness/FitnessEvaluator.h>
 

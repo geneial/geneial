@@ -2,6 +2,7 @@
 
 #include <geneial/core/operations/mutation/MultiValueChromosomeMutationOperation.h>
 #include <geneial/core/population/Population.h>
+#include <geneial/utility/mixins/EnableMakeShared.h>
 
 #include <cassert>
 

@@ -2,6 +2,7 @@
 
 #include <geneial/namespaces.h>
 #include <geneial/core/operations/coupling/BaseCouplingOperation.h>
+#include <geneial/utility/mixins/EnableMakeShared.h>
 
 geneial_private_namespace(geneial)
 {
@@ -22,14 +23,16 @@ geneial_export_namespace
  * A wrap around is in the mating pool is performed, if the coupling settings requires more offspring than required.
  */
 template<typename FITNESS_TYPE>
-class SimpleCouplingOperation: public BaseCouplingOperation<FITNESS_TYPE>
+class SimpleCouplingOperation: public BaseCouplingOperation<FITNESS_TYPE>,
+                               public EnableMakeShared<SimpleCouplingOperation<FITNESS_TYPE>>
 {
-public:
+protected:
     explicit SimpleCouplingOperation( const std::shared_ptr<const CouplingSettings> &settings) :
             BaseCouplingOperation<FITNESS_TYPE>(settings)
     {
     }
 
+public:
     virtual ~SimpleCouplingOperation()
     {
     }
@@ -43,7 +46,7 @@ public:
     public:
         virtual typename BaseCouplingOperation<FITNESS_TYPE>::ptr create() override
         {
-            return typename BaseCouplingOperation<FITNESS_TYPE>::ptr(new SimpleCouplingOperation<FITNESS_TYPE>(this->_settings));
+            return SimpleCouplingOperation::makeShared(this->_settings);
         }
     };
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <geneial/namespaces.h>
-#include <geneial/utility/patterns/Singleton.h>
 
 geneial_private_namespace(geneial)
 {
@@ -13,6 +12,8 @@ geneial_export_namespace
 
 class Random
 {
+    Random() = delete;
+    Random(const Random&) = delete;
 public:
     static inline bool generateBit();
 
@@ -32,7 +33,6 @@ public:
 protected:
     static bool sInitialized;
     static inline void checkInitialized();
-    Random(){}
 
 };
 bool Random::sInitialized = false;

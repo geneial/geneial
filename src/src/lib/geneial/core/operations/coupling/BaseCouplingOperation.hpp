@@ -32,8 +32,7 @@ typename  BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set::size_type B
 
     auto backInserter = std::back_inserter(dest);
 
-    const typename children_container::size_type toCopy
-    = std::min<typename children_container::size_type>(input.size(),limit);
+    const auto toCopy = std::min<typename children_container::size_type>(input.size(),limit);
 
     std::copy_n(input.begin(), toCopy, backInserter);
 

@@ -2,6 +2,7 @@
 
 #include <geneial/namespaces.h>
 #include <geneial/core/operations/coupling/BaseCouplingOperation.h>
+#include <geneial/utility/mixins/EnableMakeShared.h>
 
 geneial_private_namespace(geneial)
 {
@@ -21,15 +22,15 @@ geneial_export_namespace
  * RandomCouplingOperation will choose parents from the mating pool at random
  */
 template<typename FITNESS_TYPE>
-class RandomCouplingOperation: public BaseCouplingOperation<FITNESS_TYPE>
+class RandomCouplingOperation: public BaseCouplingOperation<FITNESS_TYPE>, public EnableMakeShared<RandomCouplingOperation<FITNESS_TYPE>>
 {
-
-public:
+protected:
     explicit RandomCouplingOperation(const std::shared_ptr<const CouplingSettings> &settings) :
             BaseCouplingOperation<FITNESS_TYPE>(settings)
     {
     }
 
+public:
     virtual ~RandomCouplingOperation()
     {
     }
@@ -38,12 +39,12 @@ public:
             const typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &mating_pool,
             const BaseCrossoverOperation<FITNESS_TYPE> &crossoverOperation, BaseManager<FITNESS_TYPE> &manager) override;
 
-    class Builder:public BaseCouplingOperation<FITNESS_TYPE>::Builder
+    class Builder : public BaseCouplingOperation<FITNESS_TYPE>::Builder
     {
     public:
         virtual typename BaseCouplingOperation<FITNESS_TYPE>::ptr create() override
         {
-            return typename BaseCouplingOperation<FITNESS_TYPE>::ptr(new RandomCouplingOperation<FITNESS_TYPE>(this->_settings));
+            return RandomCouplingOperation::makeShared(this->_settings);
         }
     };
 

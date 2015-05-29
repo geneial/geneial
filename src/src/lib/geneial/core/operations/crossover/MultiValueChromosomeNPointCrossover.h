@@ -3,6 +3,7 @@
 #include <geneial/namespaces.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeCrossoverOperation.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossoverSettings.h>
+#include <geneial/utility/mixins/EnableMakeShared.h>
 
 #include <cassert>
 
@@ -21,7 +22,8 @@ geneial_export_namespace
 //TODO (bewo) allow random crossover width per settings
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-class MultiValueChromosomeNPointCrossover: public MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>
+class MultiValueChromosomeNPointCrossover:  public MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>,
+                                            public EnableMakeShared<MultiValueChromosomeNPointCrossover<VALUE_TYPE,FITNESS_TYPE>>
 {
 private:
     std::shared_ptr<const MultiValueChromosomeNPointCrossoverSettings> _crossoverSettings;
@@ -132,15 +134,9 @@ public:
                 throw new std::runtime_error("Must set a Chromosome Factory to build MultiValueCrossover");
             }
 
-            return std::move(
-                        std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>>
-                            (
-                            new MultiValueChromosomeNPointCrossover<VALUE_TYPE,FITNESS_TYPE>(
+            return MultiValueChromosomeNPointCrossover::makeShared(
                                         _crossoverSettings,
-                                        this->_builderFactory
-                                )
-                            )
-                        );
+                                        this->_builderFactory);
         }
     };
 };

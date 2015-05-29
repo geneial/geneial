@@ -36,11 +36,17 @@ private:
     unsigned int _amountOfPointsOfMutation;
 
 public:
+    static const constexpr double DEFAULT_PROBABILITY= 0.1;
+
+    static const constexpr double DEFAULT_AMOUNT_OF_MUTATION = 0.1;
+
+    static const unsigned int DEFAULT_AMOUNT_OF_POINTS = 5;
+
     virtual ~MutationSettings()
     {
     }
 
-    MutationSettings(const double probability, const double amountOfMutation, const unsigned int amountOfPointsOfMutation)
+    MutationSettings(const double probability = DEFAULT_PROBABILITY, const double amountOfMutation = DEFAULT_AMOUNT_OF_MUTATION, const unsigned int amountOfPointsOfMutation=DEFAULT_AMOUNT_OF_POINTS)
     {
         assert((probability <= 1) && (probability >= 0));
         _probability = probability;

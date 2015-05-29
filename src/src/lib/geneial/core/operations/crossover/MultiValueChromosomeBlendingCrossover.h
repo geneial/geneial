@@ -2,6 +2,7 @@
 
 #include <geneial/namespaces.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeCrossoverOperation.h>
+#include <geneial/utility/mixins/EnableMakeShared.h>
 
 #include <cassert>
 #include <geneial/utility/Interpolators.h>
@@ -20,8 +21,8 @@ geneial_export_namespace
 
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-class MultiValueChromosomeBlendingCrossover: public MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>
-
+class MultiValueChromosomeBlendingCrossover: public MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>,
+                                             public EnableMakeShared<MultiValueChromosomeBlendingCrossover<VALUE_TYPE,FITNESS_TYPE>>
 {
 public:
 
@@ -119,16 +120,13 @@ public:
             }
 
             //Ctor already takes care that values are initialized to proper values..
-
-            return std::move(std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>>(
-                        new MultiValueChromosomeBlendingCrossover<VALUE_TYPE, FITNESS_TYPE>(
+            return MultiValueChromosomeBlendingCrossover<VALUE_TYPE,FITNESS_TYPE>
+                        ::makeShared(
                                 this->_builderFactory,
                                 _interpolationMethod,
                                 _offspringMode,
                                 _numChilds
-                        )
-                    )
-                );
+                                );
         }
 
         InterpolateBeta getInterpolationMethod() const
@@ -136,9 +134,10 @@ public:
             return _interpolationMethod;
         }
 
-        void setInterpolationMethod(InterpolateBeta interpolationMethod)
+        Builder& setInterpolationMethod(InterpolateBeta interpolationMethod)
         {
             _interpolationMethod = interpolationMethod;
+            return *this;
         }
 
         unsigned int getNumChilds() const
@@ -146,9 +145,10 @@ public:
             return _numChilds;
         }
 
-        void setNumChilds(unsigned int numChilds)
+        Builder& setNumChilds(unsigned int numChilds)
         {
             _numChilds = numChilds;
+            return *this;
         }
 
         OffspringMode getOffspringMode() const
@@ -156,9 +156,10 @@ public:
             return _offspringMode;
         }
 
-        void setOffspringMode(OffspringMode offspringMode)
+        Builder& setOffspringMode(OffspringMode offspringMode)
         {
             _offspringMode = offspringMode;
+            return *this;
         }
     };
 

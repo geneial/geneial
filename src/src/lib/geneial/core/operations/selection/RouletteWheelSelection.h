@@ -1,7 +1,7 @@
 #pragma once
 
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
-#include <geneial/utility/patterns/EnableMakeShared.h>
+#include <geneial/utility/mixins/EnableMakeShared.h>
 
 #include <map>
 #include <stdexcept>

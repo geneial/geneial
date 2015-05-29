@@ -4,7 +4,7 @@
 #include <geneial/core/operations/selection/BaseSelectionSettings.h>
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/core/population/Population.h>
-#include <geneial/utility/patterns/Buildable.h>
+#include <geneial/utility/mixins/Buildable.h>
 
 geneial_private_namespace(geneial)
 {

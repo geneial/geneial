@@ -2,6 +2,8 @@
 
 #include <geneial/core/operations/replacement/BaseReplacementOperation.h>
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
+#include <geneial/utility/mixins/EnableMakeShared.h>
+
 
 geneial_private_namespace(geneial)
 {
@@ -19,7 +21,8 @@ geneial_export_namespace
  * Replace the worst chromosomes in the population
  */
 template<typename FITNESS_TYPE>
-class ReplaceWorstOperation: public BaseReplacementOperation<FITNESS_TYPE>
+class ReplaceWorstOperation:    public BaseReplacementOperation<FITNESS_TYPE>,
+                                public EnableMakeShared<ReplaceWorstOperation<FITNESS_TYPE>>
 {
 private:
     unsigned int getAmountToReplace(const Population<FITNESS_TYPE> &population,
@@ -50,7 +53,7 @@ public:
         }
         typename BaseReplacementOperation<FITNESS_TYPE>::ptr create() override
         {
-            return std::shared_ptr<ReplaceWorstOperation<FITNESS_TYPE>>(new ReplaceWorstOperation<FITNESS_TYPE>(this->_settings));
+            return ReplaceWorstOperation<FITNESS_TYPE>::makeShared(this->_settings);
         }
     };
 };

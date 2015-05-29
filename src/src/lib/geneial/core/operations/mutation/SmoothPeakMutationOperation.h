@@ -4,6 +4,7 @@
 #include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.h>
 #include <geneial/core/population/builder/ContinousMultiValueBuilderSettings.h>
 #include <geneial/utility/Smoothing.h>
+#include <geneial/utility/mixins/EnableMakeShared.h>
 #include <geneial/core/population/Population.h>
 
 #include <cassert>
@@ -22,7 +23,8 @@ geneial_export_namespace
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-class SmoothPeakMutationOperation: public MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>
+class SmoothPeakMutationOperation: public MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>,
+                                   public EnableMakeShared<SmoothPeakMutationOperation<VALUE_TYPE,FITNESS_TYPE>>
 {
 
 private:
@@ -137,15 +139,13 @@ public:
 
            virtual typename BaseMutationOperation<FITNESS_TYPE>::ptr create() override
            {
-               typename BaseMutationOperation<FITNESS_TYPE>::ptr protoype(
-                       new SmoothPeakMutationOperation<VALUE_TYPE, FITNESS_TYPE>(
-                               this->_maxLeftEps,
-                               this->_maxRightEps,
-                               this->_maxElevation,
-                               this->_settings,
-                               this->_choosingOperation,
-                               std::dynamic_pointer_cast<ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>>(this->_builderFactory)));
-               return std::move(protoype);
+               return SmoothPeakMutationOperation<VALUE_TYPE,FITNESS_TYPE>::makeShared(
+                       this->_maxLeftEps,
+                       this->_maxRightEps,
+                       this->_maxElevation,
+                       this->_settings,
+                       this->_choosingOperation,
+                       std::dynamic_pointer_cast<ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>>(this->_builderFactory));
            }
 
        };

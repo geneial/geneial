@@ -3,6 +3,7 @@
 #include <geneial/namespaces.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include <geneial/core/population/Population.h>
+#include <geneial/utility/mixins/Buildable.h>
 
 #include <memory>
 
@@ -16,8 +17,9 @@ using ::geneial::population::Population;
 
 geneial_export_namespace
 {
+
 template<typename FITNESS_TYPE>
-class BaseCrossoverOperation
+class BaseCrossoverOperation : public Buildable<BaseCrossoverOperation<FITNESS_TYPE>>
 {
 
 protected:
@@ -30,11 +32,6 @@ public:
 
     using crossover_result_set = typename Population<FITNESS_TYPE>::chromosome_container ;
 
-    using ptr = std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>>;
-
-    using const_ptr = std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>>;
-
-
     virtual ~BaseCrossoverOperation()
     {
     }
@@ -46,10 +43,8 @@ public:
     //TODO(bewo): Think about encoding this property via inheritance?
     virtual bool inline isSymmetric() const = 0;
 
-    class Builder
+    class Builder : public Buildable<BaseCrossoverOperation<FITNESS_TYPE>>::Builder
     {
-    public:
-        virtual ptr create() = 0;
     };
 
 };

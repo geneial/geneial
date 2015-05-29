@@ -4,6 +4,9 @@
 #include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
 
+#include <geneial/utility/mixins/Buildable.h>
+#include <geneial/utility/mixins/EnableMakeShared.h>
+
 geneial_private_namespace(geneial)
 {
 geneial_private_namespace(operation)
@@ -18,18 +21,18 @@ geneial_export_namespace
 
 
 template<typename FITNESS_TYPE>
-class ChooseRandom: public BaseChoosingOperation<FITNESS_TYPE>
+class ChooseRandom: public BaseChoosingOperation<FITNESS_TYPE>, public Buildable<BaseChoosingOperation<FITNESS_TYPE>>
 {
 private:
     double _probability;
-
 protected:
-    explicit ChooseRandom(const double probability) :
+    explicit ChooseRandom(const double probability=DEFAULT_PROBABILITY) :
             BaseChoosingOperation<FITNESS_TYPE>(), _probability(probability)
     {
     }
 
 public:
+    const constexpr static double DEFAULT_PROBABILITY = 0.1;
 
     virtual ~ChooseRandom()
     {
