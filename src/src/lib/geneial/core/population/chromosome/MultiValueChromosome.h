@@ -79,8 +79,6 @@ public:
 
     virtual ~MultiValueChromosome()
     {
-        std::cout << getHash() << std::endl;
-        std::cout << "D";
     }
 
     bool equals(const BaseChromosome<FITNESS_TYPE> &chromosome) const override;

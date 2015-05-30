@@ -14,26 +14,43 @@ geneial_export_namespace
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
+class ResourcePool
+{
+public:
+    void free(MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>* p)
+    {
+        _usePool.erase(std::find(_usePool.begin(),_usePool.end(),p));
+        _freePool.push_back(p);
+    }
+    std::vector<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>*> _usePool;
+    std::vector<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>*> _freePool;
+    virtual ~ResourcePool(){
+        //The used pool is out in the wild guarded by sharedptr.
+        for(auto & ptr : _freePool)
+                {
+                    delete ptr;
+                }
+        for(auto & ptr : _usePool)
+                {
+                    delete ptr;
+                }
+    }
+};
+
+template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class MultiValueChromosomeFactory: public BaseChromosomeFactory<FITNESS_TYPE>
 {
 protected:
     const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &_settings;
+    std::shared_ptr<ResourcePool<VALUE_TYPE, FITNESS_TYPE>> _resourcePool;
+
 
 public:
     explicit MultiValueChromosomeFactory(const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &settings) :
         BaseChromosomeFactory<FITNESS_TYPE>(),
-        _settings(settings)
+        _settings(settings),
+        _resourcePool(std::make_shared<ResourcePool<VALUE_TYPE, FITNESS_TYPE>>())
     {
-        /*for(auto & ptr : _usePool)
-                {
-        //TODO
-                    delete ptr;
-                }*/
-        for(auto & ptr : _freePool)
-                {
-            //TODO
-                    delete ptr;
-                }
     }
 
     virtual ~MultiValueChromosomeFactory()
@@ -54,57 +71,44 @@ protected:
             typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues
     ) override;
 
-    std::vector<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>*> _usePool;
-    std::vector<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>*> _freePool;
 
     friend class FactoryDeleter;
 
     struct FactoryDeleter {
-        MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *_factory;
-        FactoryDeleter(MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *factory):_factory(factory)
+
+        std::shared_ptr<ResourcePool<VALUE_TYPE, FITNESS_TYPE>> _resourcePool;
+
+        FactoryDeleter(std::shared_ptr<ResourcePool<VALUE_TYPE, FITNESS_TYPE>>resourcePool):_resourcePool(resourcePool)
         {
         }
 
-        void operator()(MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>* p) const {
-            _factory->free(p);
+        void operator()(MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>* p) const
+        {
+            _resourcePool->free(p);
         }
     };
 
-    void free(MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>* p)
-    {
-        if(_freePool.size()<100)
-        {
-            _usePool.erase(std::find(_usePool.begin(),_usePool.end(),p));
-            _freePool.push_back(p);
-        }
-        else
-        {
-            //TODO
-            delete p;
-        }
-    }
 
 
     typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr allocateNewChromsome()
     {
         MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> *rawChromosome ;
-
-        if (_freePool.size() > 0)
+        if (_resourcePool->_freePool.size() > 0)
         {
-            rawChromosome = _freePool.back();
-            _freePool.pop_back();
-            _usePool.push_back(rawChromosome);
+            rawChromosome = _resourcePool->_freePool.back();
+            _resourcePool->_freePool.pop_back();
+            _resourcePool->_usePool.push_back(rawChromosome);
             rawChromosome->setFitnessEvaluator(_settings.getFitnessEvaluator());
             rawChromosome->invalidate();
         }
         else
         {
             rawChromosome = new MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>(_settings.getFitnessEvaluator());
-            _usePool.push_back(rawChromosome);
+            _resourcePool->_usePool.push_back(rawChromosome);
         }
 
 
-        typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr new_chromosome(rawChromosome, FactoryDeleter(this));
+        typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr new_chromosome(rawChromosome, FactoryDeleter(_resourcePool));
 
         auto manager = this->getManager();
 
