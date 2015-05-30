@@ -117,7 +117,7 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
 
         //Age reset
         mutatedChromosome->setAge(0);
-        resultset.push_back(mutatedChromosome);
+        resultset.emplace_back(mutatedChromosome);
     }
 
     //add not mutated chromosomes

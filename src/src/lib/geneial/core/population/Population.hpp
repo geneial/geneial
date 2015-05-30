@@ -210,7 +210,7 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
         const bool inHashCache = std::find(hashCache.begin(), hashCache.end(), hashValue) != hashCache.end();
         if (!hashExists(hashValue) && !inHashCache)
         {
-            hashCache.push_back(hashValue);
+            hashCache.emplace_back(hashValue);
             it++;
         }
         else

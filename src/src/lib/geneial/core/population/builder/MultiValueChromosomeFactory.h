@@ -20,20 +20,21 @@ public:
     void free(MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>* p)
     {
         _usePool.erase(std::find(_usePool.begin(),_usePool.end(),p));
-        _freePool.push_back(p);
+        _freePool.emplace_back(p);
     }
     std::vector<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>*> _usePool;
     std::vector<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>*> _freePool;
-    virtual ~ResourcePool(){
+    virtual ~ResourcePool()
+    {
         //The used pool is out in the wild guarded by sharedptr.
-        for(auto & ptr : _freePool)
-                {
-                    delete ptr;
-                }
-        for(auto & ptr : _usePool)
-                {
-                    delete ptr;
-                }
+        for (auto & ptr : _freePool)
+        {
+            delete ptr;
+        }
+        for (auto & ptr : _usePool)
+        {
+            delete ptr;
+        }
     }
 };
 
@@ -98,8 +99,8 @@ protected:
             rawChromosome = _resourcePool->_freePool.back();
             _resourcePool->_freePool.pop_back();
             _resourcePool->_usePool.push_back(rawChromosome);
-            rawChromosome->setFitnessEvaluator(_settings.getFitnessEvaluator());
             rawChromosome->invalidate();
+            rawChromosome->setFitnessEvaluator(_settings.getFitnessEvaluator());
         }
         else
         {

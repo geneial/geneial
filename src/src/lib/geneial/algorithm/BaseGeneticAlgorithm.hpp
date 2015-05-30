@@ -68,14 +68,14 @@ inline void  BaseGeneticAlgorithm<FITNESS_TYPE>::registerObserver(std::shared_pt
         {
             // key already exists
             // update lb->second if you care to
-            lb->second.push_back(observer);
+            lb->second.emplace_back(observer);
         }
         else
         {
             // the key does not exist in the map
             // add it to the map
             typename std::vector<std::shared_ptr<AlgorithmObserver<FITNESS_TYPE>>> list;
-            list.push_back(observer);
+            list.emplace_back(observer);
             _observers.insert(lb, typename observers_map::value_type(it, list));    // Use lb as a hint to insert,
         }
 

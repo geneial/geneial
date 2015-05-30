@@ -31,7 +31,7 @@ typename Population<FITNESS_TYPE>::chromosome_container ChooseRandom<FITNESS_TYP
     {
         if (Random::decision(this->getProbability()))
         {
-            chromosomeOutputSet.push_back(chromosome);
+            chromosomeOutputSet.emplace_back(chromosome);
         }
     }
     return chromosomeOutputSet;

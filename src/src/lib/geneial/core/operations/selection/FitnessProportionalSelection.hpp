@@ -57,7 +57,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
     typename map_type::reverse_iterator crit = sorted_multimap.rbegin();
     for (; crit != sorted_multimap.rend() && elitism_to_select > 0; ++crit)
     {
-        result.push_back(crit->second);
+        result.emplace_back(crit->second);
         elitism_to_select--;
     }
     //Strip the inserted part from the map
@@ -79,7 +79,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
             if (Random::decision(prob))
             {
                 //Use it.
-                result.push_back(chrom);
+                result.emplace_back(chrom);
                 left_select--;
                 sorted_multimap.erase((++crit).base()); //erase requires normal iterator,
             }

@@ -83,7 +83,7 @@ class ThreadedExecutionManager: public BaseExecutionManager
                 {
                     auto task = _tasks.front();
                     _tasks.pop_front();
-                    innerTask.push_back(task);
+                    innerTask.emplace_back(task);
                 }
                 l.unlock();
 
@@ -106,8 +106,8 @@ class ThreadedExecutionManager: public BaseExecutionManager
     {
         for (unsigned int i = 0; i < amountThreads; ++i)
         {
-            _threads.push_back(
-                    std::shared_ptr < std::thread > (new std::thread(&ThreadedExecutionManager::executor, this)));
+            _threads.emplace_back(
+                    std::make_shared<std::thread>(&ThreadedExecutionManager::executor, this));
         }
     }
 
@@ -135,7 +135,7 @@ public:
     virtual void addTask(std::function<void()> const &task) override
     {
         std::unique_lock < std::mutex > l(_mutex);
-        _tasks.push_back(task);
+        _tasks.emplace_back(task);
         _condEntry.notify_one();
     }
 

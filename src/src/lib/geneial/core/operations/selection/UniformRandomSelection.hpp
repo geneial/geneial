@@ -51,7 +51,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set UniformRando
 
         left_select--;
 
-        result.push_back(rnditer->second);
+        result.emplace_back(rnditer->second);
 
     }
     return result;

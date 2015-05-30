@@ -99,7 +99,7 @@ public:
 
     void add(const glue_criterion_pair newCriterion)
     {
-        _criteria.push_back(newCriterion);
+        _criteria.emplace_back(newCriterion);
     }
 
     void add(const glue glue, const criterion criterion)

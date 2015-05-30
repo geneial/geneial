@@ -142,7 +142,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
             ptr = rouletteWheel.spin(random);
         } while (allowDuplicates || std::find(result.begin(), result.end(), ptr) != result.end());
         left_select--;
-        result.push_back(ptr);
+        result.emplace_back(ptr);
     }
     return result;
 }
