@@ -5,8 +5,8 @@
  * defines shadow noexport namespace imports
  */
 
-#define geneial_namespace_noexport(NAME) __ ## NAME ##_noexport
-#define geneial_namespace_export __exports
+#define geneial_namespace_noexport(NAME) __ ## NAME ##_
+#define geneial_namespace_export _
 #define geneial_public_namespace_name(NAME) NAME
 
 #define geneial_private_namespace(NAME) namespace geneial_namespace_noexport(NAME)
