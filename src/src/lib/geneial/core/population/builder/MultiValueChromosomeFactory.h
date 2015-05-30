@@ -10,47 +10,26 @@ geneial_private_namespace(population)
 {
 geneial_private_namespace(chromosome)
 {
+
 geneial_export_namespace
 {
 
-template<typename VALUE_TYPE, typename FITNESS_TYPE>
-class ResourcePool
-{
-public:
-    void free(MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>* p)
-    {
-        _usePool.erase(std::find(_usePool.begin(),_usePool.end(),p));
-        _freePool.emplace_back(p);
-    }
-    std::vector<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>*> _usePool;
-    std::vector<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>*> _freePool;
-    virtual ~ResourcePool()
-    {
-        //The used pool is out in the wild guarded by sharedptr.
-        for (auto & ptr : _freePool)
-        {
-            delete ptr;
-        }
-        for (auto & ptr : _usePool)
-        {
-            delete ptr;
-        }
-    }
-};
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class MultiValueChromosomeFactory: public BaseChromosomeFactory<FITNESS_TYPE>
 {
 protected:
     const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &_settings;
-    std::shared_ptr<ResourcePool<VALUE_TYPE, FITNESS_TYPE>> _resourcePool;
+
+    //Note that the raw ptr is intended here, since we wish to reduce the overhead.
+    std::shared_ptr<ResourcePool<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>>>  _chromosomeResourcePool;
 
 
 public:
     explicit MultiValueChromosomeFactory(const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &settings) :
         BaseChromosomeFactory<FITNESS_TYPE>(),
         _settings(settings),
-        _resourcePool(std::make_shared<ResourcePool<VALUE_TYPE, FITNESS_TYPE>>())
+        _chromosomeResourcePool(std::make_shared<ResourcePool<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>>>())
     {
     }
 
@@ -75,61 +54,48 @@ protected:
 
     friend class FactoryDeleter;
 
-    struct FactoryDeleter {
+    struct ChromosomeDeleter {
+        std::weak_ptr<ResourcePool<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>>>  _resourcePool;
 
-        std::shared_ptr<ResourcePool<VALUE_TYPE, FITNESS_TYPE>> _resourcePool;
-
-        FactoryDeleter(std::shared_ptr<ResourcePool<VALUE_TYPE, FITNESS_TYPE>>resourcePool):_resourcePool(resourcePool)
+        ChromosomeDeleter(std::weak_ptr<ResourcePool<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>>> resourcePool):_resourcePool(resourcePool)
         {
         }
 
-        void operator()(MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>* p) const
+        inline void operator()(MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>* p) const
         {
-            _resourcePool->free(p);
+            if (const auto resourcePool = _resourcePool.lock())
+            {
+                resourcePool->free(std::move(p));
+            }
+            else
+            {
+                delete p;
+            }
         }
     };
-
 
 
     typename MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::ptr allocateNewChromsome()
     {
         MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE> *rawChromosome ;
-        if (_resourcePool->_freePool.size() > 0)
+
+        if(this->_chromosomeResourcePool->retrieve(rawChromosome))
         {
-            rawChromosome = _resourcePool->_freePool.back();
-            _resourcePool->_freePool.pop_back();
-            _resourcePool->_usePool.push_back(rawChromosome);
             rawChromosome->invalidate();
             rawChromosome->setFitnessEvaluator(_settings.getFitnessEvaluator());
         }
         else
         {
             rawChromosome = new MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>(_settings.getFitnessEvaluator());
-            _resourcePool->_usePool.push_back(rawChromosome);
         }
 
 
-        typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr new_chromosome(rawChromosome, FactoryDeleter(_resourcePool));
-
-        auto manager = this->getManager();
-
-        if (!manager.expired())
-        {
-            auto _manager = manager.lock();
-            //assert(!_manager->getPopulation().hashExists(new_chromosome->getHash()) && "Consistency Problem, HoldoffSet contains Population member!");
-        }
-
-/*
-        if (!new_chromosome)
-        {
-            _allocated++;
-            new_chromosome = std::make_shared<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>>(_settings.getFitnessEvaluator());
-        }
-*/
+        typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr new_chromosome(
+                rawChromosome, ChromosomeDeleter(this->_chromosomeResourcePool));
 
         new_chromosome->getContainer().resize(this->_settings.getNum());
 
-        return new_chromosome;
+        return std::move(new_chromosome);
     }
 };
 

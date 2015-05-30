@@ -3,6 +3,7 @@
 #include <geneial/namespaces.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include <geneial/core/population/management/BaseManager.h>
+#include <geneial/core/population/management/ResourcePool.h>
 
 geneial_private_namespace(geneial)
 {
@@ -11,6 +12,7 @@ geneial_private_namespace(population)
 geneial_private_namespace(chromosome)
 {
 using ::geneial::population::management::BaseManager;
+using ::geneial::population::management::ResourcePool;
 
 geneial_export_namespace
 {
@@ -19,9 +21,6 @@ template<typename FITNESS_TYPE>
 class BaseChromosomeFactory
 {
 
-private:
-    std::weak_ptr<BaseManager<FITNESS_TYPE>>  _manager;
-
 public:
 
     enum PopulateBehavior
@@ -29,7 +28,7 @@ public:
         CREATE_VALUES, LET_UNPOPULATED
     };
 
-    BaseChromosomeFactory():_manager()
+    BaseChromosomeFactory()
     {
     }
 
@@ -42,16 +41,6 @@ public:
         )
     {
         return std::move(doCreateChromosome(populateValues));
-    }
-
-    std::weak_ptr<BaseManager<FITNESS_TYPE>> getManager() const
-    {
-        return _manager;
-    }
-
-    void setManager(std::weak_ptr<BaseManager<FITNESS_TYPE>> manager)
-    {
-        _manager = manager;
     }
 
 protected:

@@ -32,7 +32,6 @@ class BaseManager :     public std::enable_shared_from_this<BaseManager<FITNESS_
 {
 protected:
     explicit BaseManager<FITNESS_TYPE>(const std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> &chromosomeFactory) :
-        _holdoffSet(),
         _populationSettings(),
         _population(),
         _chromosomeFactory(chromosomeFactory), _executionManager(new SequentialExecutionManager())
@@ -44,12 +43,11 @@ public:
 
     static std::shared_ptr<BaseManager<FITNESS_TYPE>> create(const std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> chromosomeFactory)
     {
-        auto ptr = BaseManager<FITNESS_TYPE>::makeShared(chromosomeFactory);
+        auto prototype = BaseManager<FITNESS_TYPE>::makeShared(chromosomeFactory);
 
-        ptr->_chromosomeFactory->setManager(ptr);
-        ptr->_population._manager = ptr;
+        prototype->_population._manager = prototype;
 
-        return ptr;
+        return std::move(prototype);
     }
 
 
@@ -111,16 +109,7 @@ public:
     {
         _executionManager = std::move(executionManager);
     }
-
-    const typename Population<FITNESS_TYPE>::chromosome_container& getHoldoffSet() const
-    {
-        return _holdoffSet;
-    }
-
 private:
-    //Set for deleted chromosomes to reassign to factory
-    typename Population<FITNESS_TYPE>::chromosome_container _holdoffSet;
-
     PopulationSettings _populationSettings;
 
     Population<FITNESS_TYPE> _population;
