@@ -35,7 +35,12 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
     const unsigned int crossoverPoints = this->getCrossoverSettings().getCrossOverPoints();
     const unsigned int totalWidth = this->getBuilderFactory().getSettings().getNum();
 
-    std::set<unsigned int> crossoverPositions;
+    //std::set<unsigned int> crossoverPositions;
+
+    std::vector<unsigned int> crossoverPositions;
+    crossoverPositions.reserve(crossoverPoints);
+
+
 
     if (this->getCrossoverSettings().getWidthSetting()
             == MultiValueChromosomeNPointCrossoverSettings::EQUIDISTANT_WIDTH)
@@ -44,7 +49,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 
         for (unsigned int i = 0; i < crossoverPoints; i++)
         {
-            crossoverPositions.insert(i * equidistantwidth);
+            crossoverPositions.emplace_back(i * equidistantwidth);
         }
 
     }
@@ -65,68 +70,56 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
             minWidth = this->getCrossoverSettings().getMinWidth();
         }
 
-        for (unsigned int i = 0; i < crossoverPoints; i++)
+        //TODO(bewo) make some assertions about minwidth, crossoverPositions and size
+
+        const auto max = this->getBuilderFactory().getSettings().getNum();
+        while (crossoverPositions.size() < crossoverPoints)
         {
-            //Pick a random number in the interval
-            unsigned int rnd_pos;
-            bool valid;
+            const unsigned int rnd_pos = Random::generate<int>(0, max);
+            bool valid = true;
 
-            do
+            valid &= rnd_pos >= minWidth; //ensure there is enough space on the interval boundaries
+            if (!valid)
             {
-                rnd_pos = Random::generate<int>(0, this->getBuilderFactory().getSettings().getNum());
+                continue;
+            }
 
-                std::set<unsigned int>::iterator itlow = std::lower_bound(crossoverPositions.begin(),
-                        crossoverPositions.end(), rnd_pos);
+            valid &= rnd_pos <= totalWidth - minWidth;
+            if (!valid)
+            {
+                continue;
+            }
 
-                if (itlow != crossoverPositions.end())
-                {
-                    std::advance(itlow, -1);
-                }
+            const auto pos = std::find(crossoverPositions.begin(), crossoverPositions.end(), rnd_pos);
+            valid &= pos == crossoverPositions.end(); //element is not contained within the set
+            if (!valid)
+            {
+                continue;
+            }
 
-                std::set<unsigned int>::const_iterator itup = crossoverPositions.upper_bound(rnd_pos);
-                std::set<unsigned int>::const_iterator pos = crossoverPositions.find(rnd_pos);
+            const auto itlow = std::lower_bound(crossoverPositions.begin(), crossoverPositions.end(), rnd_pos);
+            const auto itup = std::upper_bound(crossoverPositions.begin(), crossoverPositions.end(), rnd_pos);
+            //is the picked element too near to another element already contained?
+            //ensure between two values there is enough width, i.e. either we have a lower or upper neighbor and the distance is correct or not.
+            valid &= itlow == crossoverPositions.end()
+                    || (itlow != crossoverPositions.end() && rnd_pos - *itlow >= minWidth);
+            if (!valid)
+            {
+                continue;
+            }
 
-                valid = true;
-
-                valid &= rnd_pos >= minWidth; //ensure there is enough space on the interval boundaries
-                if (!valid)
-                {
-                    continue;
-                }
-
-                valid &= rnd_pos <= totalWidth - minWidth;
-                if (!valid)
-                {
-                    continue;
-                }
-
-                valid &= pos == crossoverPositions.end(); //element is not contained within the set
-                if (!valid)
-                {
-                    continue;
-                }
-
-                //is the picked element too near to another element already contained?
-                //ensure between two values there is enough width, i.e. either we have a lower or upper neighbor and the distance is correct or not.
-                valid &= itlow == crossoverPositions.end()
-                        || (itlow != crossoverPositions.end() && rnd_pos - *itlow >= minWidth);
-                if (!valid)
-                {
-                    continue;
-                }
-
-                valid &= itup == crossoverPositions.end()
-                        || (itup != crossoverPositions.end() && *itup - rnd_pos >= minWidth);
-                if (!valid)
-                {
-                    continue;
-                }
-
-            } while (!valid);
-
-            crossoverPositions.insert(rnd_pos);
+            valid &= itup == crossoverPositions.end()
+                    || (itup != crossoverPositions.end() && *itup - rnd_pos >= minWidth);
+            if (!valid)
+            {
+                continue;
+            }
+            crossoverPositions.emplace_back(rnd_pos);
         }
+
+    std::sort(crossoverPositions.begin(),crossoverPositions.end());
     }
+
     assert(crossoverPositions.size() == crossoverPoints);
 
     auto child_candidate = this->createChildCandidate();
@@ -139,12 +132,18 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 
     auto target_it = child_container.begin();
 
-    auto widthIterator = crossoverPositions.cbegin();
 
     bool flip = true; //copy from ladies first.
 
-    crossoverPositions.insert(daddy_container.size());
+    //push back to end so its ok, does not destroy sortedness
+    crossoverPositions.push_back(daddy_container.size());
 
+    auto widthIterator = crossoverPositions.cbegin();
+
+//    for(auto size:crossoverPositions)
+//    {
+//        std::cout << size << ", "<< std::endl;
+//    }
     unsigned int i = 0;
 
     for (; widthIterator != crossoverPositions.end(); ++widthIterator)
@@ -166,7 +165,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 
     resultset.emplace_back(std::move(child_candidate));
 
-    return resultset;
+    return std::move(resultset);
 }
 
 } /* geneial_export_namespace */
