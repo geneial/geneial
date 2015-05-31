@@ -72,14 +72,14 @@ to run 8 threads in parallel.
 However, the console output is still messy.
 Hence, if you are one of the cool kids you may want to use ninja, on ubuntu based system you can install it by running
 
-   sudo apt-get install ninja-build
+    sudo apt-get install ninja-build
 
 You'll need to regenerate your build folder (remove it if you have generated makefiles before)
 
-   rm -r build/
-   mkdir build/ && cd build
-   cmake -GNinja ../src
-   ninja 
+    rm -r build/
+    mkdir build/ && cd build
+    cmake -GNinja ../src
+    ninja 
 
 ##2. Installing the library
 To install the library simply run
@@ -147,8 +147,9 @@ If that does not help search for the `__cplusplus` symbol and set it to `201103L
 
 ###4.1.2 When using the build-in compile feature, make clutters the internal console
 
-By default the imported project set VERBOSE=1 for make, hence the cluttering.
-To remove this right click onto the project settings -> "C/C++ Make Project" -> Tab: "Environment" -> Remove VERBOSE variable (Note setting it to 0 will not work)
+By default the imported project set `VERBOSE=1` for make, hence the cluttering.
+To remove this right click onto the project settings -> *C/C++ Make Project* -> Tab: *Environment* -> Remove `VERBOSE` variable
+(**Note:** setting it to `0` will not work.)
 
 
 ##5. Adding new Source files
@@ -162,6 +163,7 @@ In order to generate Doxygen documentation make sure you'll have doxygen install
     sudo apt-get install doxygen
 
 Then in the `build/` directory run
+
     make doc
 
 You will find the documentation in `build/doc/html/index.html`
@@ -197,6 +199,13 @@ The callgrind suite produces a `callgrind.TIMESTAMP.log` whereas TIMESTAMP denot
 On an Ubuntu/Debian machine you may install kcachegrind by  
 
     sudo apt-get install kcachegrind
+
+
+You can then see  the latest run using.
+
+    kcachegrind `ls -tr callgrind.out.* | tail -1`
+
+    
 
 ##8. Running the demo(s)
 Currently, libGENEIAL is mainly a template-based library. Hence, it is essential that the demos compile to ensure 
