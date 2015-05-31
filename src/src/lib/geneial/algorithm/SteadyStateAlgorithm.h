@@ -25,6 +25,8 @@ using ::geneial::operation::mutation::BaseMutationOperation;
 using ::geneial::population::chromosome::BaseChromosomeFactory;
 using ::geneial::algorithm::stopping_criteria::BaseStoppingCriterion;
 
+using ::geneial::population::management::ScopedEvent;
+
 
 geneial_export_namespace
 {

@@ -42,13 +42,14 @@ using ::geneial::operation::mutation::BaseMutationOperation;
 
 using ::geneial::utility::BaseExecutionManager;
 
-
 using ::geneial::population::Population;
 using ::geneial::population::PopulationSettings;
 
 using ::geneial::population::chromosome::BaseChromosome;
 using ::geneial::population::chromosome::BaseChromosomeFactory;
 
+using ::geneial::population::management::BaseBookkeeper;
+using ::geneial::population::management::BaseManager;
 
 geneial_export_namespace
 {
@@ -184,12 +185,15 @@ public:
         return _manager->getExecutionManager();
     }
 
-    void setExecutionManager(std::unique_ptr<BaseExecutionManager> executionManager)
+    void setExecutionManager(std::unique_ptr<BaseExecutionManager>&& executionManager)
     {
         _manager->setExecutionManager(std::move(executionManager));
     }
 
-
+    void setBookkeeper(std::unique_ptr<BaseBookkeeper>&& bookkeeper)
+    {
+        _manager->setBookkeeper(std::move(bookkeeper));
+    }
 };
 
 template<typename FITNESS_TYPE>

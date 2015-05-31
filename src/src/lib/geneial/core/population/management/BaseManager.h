@@ -5,6 +5,7 @@
 #include <geneial/core/population/Population.h>
 #include <geneial/core/population/PopulationSettings.h>
 #include <geneial/core/population/builder/BaseChromosomeFactory.h>
+#include <geneial/core/population/management/Bookkeeper.h>
 #include <geneial/utility/ExecutionManager.h>
 #include <geneial/utility/mixins/EnableMakeShared.h>
 
@@ -32,9 +33,11 @@ class BaseManager :     public std::enable_shared_from_this<BaseManager<FITNESS_
 {
 protected:
     explicit BaseManager<FITNESS_TYPE>(const std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> &chromosomeFactory) :
-        _populationSettings(),
         _population(),
-        _chromosomeFactory(chromosomeFactory), _executionManager(new SequentialExecutionManager())
+        _populationSettings(),
+        _chromosomeFactory(chromosomeFactory),
+        _executionManager(new SequentialExecutionManager),
+        _bookkeeper(new DefaultBookkeeper)
         {
         }
     BaseManager(const BaseManager& other) = delete;
@@ -105,18 +108,31 @@ public:
         return *_executionManager;
     }
 
-    void setExecutionManager(std::unique_ptr<BaseExecutionManager> executionManager)
+    void setExecutionManager(std::unique_ptr<BaseExecutionManager>&& executionManager)
     {
         _executionManager = std::move(executionManager);
     }
-private:
-    PopulationSettings _populationSettings;
 
+    BaseBookkeeper& getBookkeeper() const
+    {
+        return *_bookkeeper;
+    }
+
+    void setBookkeeper(std::unique_ptr<BaseBookkeeper>&& bookkeeper)
+    {
+        _bookkeeper = std::move(bookkeeper);
+    }
+
+private:
     Population<FITNESS_TYPE> _population;
+
+    PopulationSettings _populationSettings;
 
     std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> _chromosomeFactory;
 
     std::unique_ptr<BaseExecutionManager> _executionManager;
+
+    std::unique_ptr<BaseBookkeeper> _bookkeeper;
 
 };
 

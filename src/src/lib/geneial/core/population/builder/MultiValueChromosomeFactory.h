@@ -4,6 +4,8 @@
 #include <geneial/core/population/builder/BaseChromosomeFactory.h>
 #include <geneial/core/population/builder/MultiValueBuilderSettings.h>
 
+#include <memory>
+
 geneial_private_namespace(geneial)
 {
 geneial_private_namespace(population)

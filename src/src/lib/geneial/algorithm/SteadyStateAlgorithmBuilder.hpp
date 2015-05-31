@@ -39,7 +39,7 @@ geneial_export_namespace
 template<typename FITNESS_TYPE>
 std::shared_ptr<BaseStoppingCriterion<FITNESS_TYPE>> SteadyStateAlgorithm<FITNESS_TYPE>::Builder::getDefaultStoppingCriterion() const
 {
-    return std::make_shared<MaxGenerationCriterion<FITNESS_TYPE>>(1000000);
+    return std::make_shared<MaxGenerationCriterion<FITNESS_TYPE>>(100000);
 }
 
 

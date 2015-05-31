@@ -1,35 +1,11 @@
 #include <geneial/algorithm/SteadyStateAlgorithm.h>
+
 #include <geneial/algorithm/criteria/MaxGenerationCriterion.h>
-#include <geneial/algorithm/criteria/NegationDecorator.h>
-
-#include <geneial/core/fitness/Fitness.h>
-#include <geneial/core/fitness/FitnessEvaluator.h>
-
-#include <geneial/core/population/PopulationSettings.h>
 
 #include <geneial/core/population/builder/ContinousMultiValueBuilderSettings.h>
 #include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.h>
 
-#include <geneial/core/operations/selection/FitnessProportionalSelection.h>
-#include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
-
-#include <geneial/core/operations/selection/BaseSelectionSettings.h>
-#include <geneial/core/operations/selection/RouletteWheelSelection.h>
-#include <geneial/core/operations/selection/UniformRandomSelection.h>
-
-//#include <geneial/core/operations/coupling/SimpleCouplingOperation.h>
-#include <geneial/core/operations/coupling/RandomCouplingOperation.h>
-
-#include <geneial/core/operations/replacement/BaseReplacementSettings.h>
-
-#include <geneial/core/operations/replacement/ReplaceWorstOperation.h>
-#include <geneial/core/operations/replacement/ReplaceRandomOperation.h>
-
-#include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
-#include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossoverSettings.h>
-
-#include <geneial/core/operations/mutation/MutationSettings.h>
-#include <geneial/core/operations/mutation/NonUniformMutationOperation.h>
+#include <geneial/core/population/management/Bookkeeper.h>
 
 #include <geneial/config.h>
 
@@ -51,12 +27,7 @@ using namespace geneial::algorithm::stopping_criteria;
 using namespace geneial::population;
 using namespace geneial::population::chromosome;
 
-using namespace geneial::operation::selection;
-using namespace geneial::operation::coupling;
-using namespace geneial::operation::crossover;
-using namespace geneial::operation::replacement;
-using namespace geneial::operation::mutation;
-using namespace geneial::operation::choosing;
+using geneial::population::management::StatisticBookkeeper;
 
 class DemoChromosomeEvaluator: public FitnessEvaluator<double>
 {
@@ -112,6 +83,8 @@ int main(int argc, char **argv)
     algorithm->getPopulationSettings().setMaxChromosomes(100);
 
     //algorithm->setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager(3))));
+
+    algorithm->setBookkeeper(std::move(std::unique_ptr<StatisticBookkeeper>(new StatisticBookkeeper)));
 
     algorithm->solve();
 
