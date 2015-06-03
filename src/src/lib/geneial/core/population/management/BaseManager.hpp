@@ -22,6 +22,8 @@ geneial_export_namespace
 template<typename FITNESS_TYPE>
 void BaseManager<FITNESS_TYPE>::replenishPopulation()
 {
+    const int difference = _population.getSize() - _populationSettings.getMaxChromosomes();
+
     //if there are less chromosomes than required fill up:
     while (_population.getSize() < _populationSettings.getMaxChromosomes())
     {
@@ -29,6 +31,8 @@ void BaseManager<FITNESS_TYPE>::replenishPopulation()
         const typename BaseChromosome<FITNESS_TYPE>::ptr newChromosome(_chromosomeFactory->createChromosome());
         _population.insertChromosome(newChromosome);
     }
+
+    this->getBookkeeper().traceEvent("REPLENISH_AMOUNT",EventValueData<int>(difference));
 }
 
 template<typename FITNESS_TYPE>

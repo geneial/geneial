@@ -25,6 +25,17 @@ struct EventData
 {
 };
 
+template<typename T>
+struct EventValueData : public EventData
+{
+    T _value;
+public:
+    EventValueData(const T value) :
+        _value(value)
+    {
+    }
+};
+
 struct TimingEventData: public EventData
 {
     double _duration;
@@ -93,10 +104,12 @@ public:
 
     virtual void traceEvent(const char* traceName) override
     {
+        _events.emplace(traceName,EventData());
     }
 
     virtual void traceEvent(const char* traceName, EventData data) override
     {
+        _events.emplace(traceName,std::move(data));
     }
 
     virtual ~StatisticBookkeeper()

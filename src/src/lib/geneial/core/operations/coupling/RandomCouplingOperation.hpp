@@ -67,6 +67,7 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set RandomCouplin
 
     assert(offspring_left == 0);
 
+
     return offspring;
 }
 

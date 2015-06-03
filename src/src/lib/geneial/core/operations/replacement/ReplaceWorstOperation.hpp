@@ -80,7 +80,9 @@ void ReplaceWorstOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &po
         }
     }
 
-    population.insertChromosomeContainer(newChildren);
+    const unsigned int failed_inserts = childrenCandidates - population.insertChromosomeContainer(newChildren);
+    this->getBookkeeper().traceEvent("REPLACEMENT_FAILED_INSERTS",failed_inserts);
+
 
 
     //we might have a deficit at this point if offsprings were already contained.
@@ -106,10 +108,7 @@ void ReplaceWorstOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &po
     }
     else
     {
-        //TODO(bewo) else log this case, if this occurs frequently this is
-        //an indicator of some saturation or misconfiguration in the GA
-         //static int noop = 0;
-        //std::cout << "Noop Replacement" << noop++ << std::endl;
+        this->getBookkeeper().traceEvent("REPLACEMENT_NO_WORST_DELETED");
     }
 
 }
