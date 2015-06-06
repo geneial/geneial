@@ -1,4 +1,8 @@
 include_directories ("../lib")
+
+#TODO(bewo): this is an ugly hack to include config.h
+include_directories("${CMAKE_CURRENT_BINARY_DIR}/../../generated/")
+
 find_package(Boost COMPONENTS unit_test_framework system REQUIRED)
 include_directories (${Boost_INCLUDE_DIRS})
 

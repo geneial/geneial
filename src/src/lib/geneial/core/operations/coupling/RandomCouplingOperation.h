@@ -14,6 +14,7 @@ using ::geneial::population::Population;
 using ::geneial::operation::crossover::BaseCrossoverOperation;
 using ::geneial::operation::selection::BaseSelectionOperation;
 using ::geneial::population::management::BaseManager;
+using ::geneial::utility::EnableMakeShared;
 
 geneial_export_namespace
 {
@@ -23,7 +24,7 @@ geneial_export_namespace
  */
 template<typename FITNESS_TYPE>
 class RandomCouplingOperation:  public BaseCouplingOperation<FITNESS_TYPE>,
-                                public EnableMakeShared<RandomCouplingOperation<FITNESS_TYPE>>
+                                public virtual EnableMakeShared<RandomCouplingOperation<FITNESS_TYPE>>
 {
 protected:
     explicit RandomCouplingOperation(const std::shared_ptr<const CouplingSettings> &settings) :

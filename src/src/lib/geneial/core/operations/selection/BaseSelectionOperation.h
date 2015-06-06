@@ -14,6 +14,7 @@ geneial_private_namespace(selection)
 {
 using ::geneial::population::Population;
 using ::geneial::population::management::BaseManager;
+using ::geneial::utility::Buildable;
 
 geneial_export_namespace
 {

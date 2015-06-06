@@ -7,15 +7,11 @@
 
 #include <geneial/core/population/management/Bookkeeper.h>
 
-#include <geneial/config.h>
+#include <geneial/algorithm/diagnostics/Diagnostics.h>
 
 #include <stdexcept>
 #include <cassert>
 #include <memory>
-#include <chrono>
-#include <thread>
-
-#include <unistd.h>
 
 using namespace geneial;
 
@@ -28,6 +24,7 @@ using namespace geneial::population;
 using namespace geneial::population::chromosome;
 
 using geneial::population::management::StatisticBookkeeper;
+using geneial::algorithm::Diagnostics;
 
 class DemoChromosomeEvaluator: public FitnessEvaluator<double>
 {
@@ -87,6 +84,8 @@ int main(int argc, char **argv)
     algorithm->setBookkeeper(std::move(std::unique_ptr<StatisticBookkeeper>(new StatisticBookkeeper)));
 
     algorithm->solve();
+
+    auto diagnostics =
 
     std::cout << *algorithm->getHighestFitnessChromosome() << std::endl;
 

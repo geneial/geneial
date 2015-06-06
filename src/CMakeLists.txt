@@ -1,12 +1,26 @@
 # MakeLists files in this project can
 # refer to the root source directory of the project as ${GENETICLIBRARY_SOURCE_DIR} and
 # to the root binary directory of the project as ${GENETICLIBRARY_BIN_DIR}.
+
+#NOTE (bewo) cotire requires at least 2.8.12
 cmake_minimum_required(VERSION 2.8.12)
-#Setup CMake to run tests
 
+
+#
+# GENEIAL Project Meta information
+#
 project (GENEIAL)
-string(TOLOWER ${PROJECT_NAME} LOWER_PROJECT_NAME)
+#GENEIAL -> geneial
 
+set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
+include(vars)
+include(version)
+include(cotire)
+include(colors)
+
+#
+# Build Debug Version if nothing was specified.
+#
 IF( NOT CMAKE_BUILD_TYPE )
    SET( CMAKE_BUILD_TYPE Debug )
 ENDIF()
@@ -15,21 +29,6 @@ if (NOT DEFINED ${TEST} OR ${TEST})
     enable_testing()
 endif()
 
-SET( INDENT "[****] ")
-
-set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
-include(cotire)
-include(colors)
-
-set (GENEIAL_SHARED_SUFFIX "_shared")
-set (LIB_GENEIAL_SHARED_NAME "${LOWER_PROJECT_NAME}${GENEIAL_SHARED_SUFFIX}")
-
-set (GENEIAL_STATIC_SUFFIX "_static")
-set (LIB_GENEIAL_STATIC_NAME "${LOWER_PROJECT_NAME}${GENEIAL_STATIC_SUFFIX}")
-
-
-set (GENEIAL_VERSION_MAJOR 0)
-set (GENEIAL_VERSION_MINOR 2)
 
 
 message ("CXX Compiler: ${CMAKE_CXX_COMPILER_ID}")

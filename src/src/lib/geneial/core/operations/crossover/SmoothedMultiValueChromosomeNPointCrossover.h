@@ -21,6 +21,8 @@ using ::geneial::operation::coupling::BaseCouplingOperation;
 using ::geneial::utility::Random;
 using ::geneial::population::chromosome::ContinousMultiValueBuilderSettings;
 using ::geneial::population::chromosome::ContinousMultiValueChromosomeFactory;
+using ::geneial::utility::EnableMakeShared;
+
 
 geneial_export_namespace
 {
@@ -29,7 +31,7 @@ geneial_export_namespace
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class SmoothedMultiValueChromosomeNPointCrossover:  public MultiValueChromosomeNPointCrossover<VALUE_TYPE, FITNESS_TYPE>,
-                                                    public EnableMakeShared<SmoothedMultiValueChromosomeNPointCrossover<VALUE_TYPE,FITNESS_TYPE>>
+                                                    public virtual EnableMakeShared<SmoothedMultiValueChromosomeNPointCrossover<VALUE_TYPE,FITNESS_TYPE>>
 
 {
 protected:
@@ -67,10 +69,13 @@ public:
                 throw new std::runtime_error("Must set a Chromosome Factory to build MultiValueCrossover");
             }
 
-            return SmoothedMultiValueChromosomeNPointCrossover::makeShared(
+            return std::move(
+                    SmoothedMultiValueChromosomeNPointCrossover::makeShared(
                                         this->_crossoverSettings,
-                                        std::dynamic_pointer_cast<ContinousMultiValueChromosomeFactory<VALUE_TYPE,FITNESS_TYPE>>(this->_builderFactory)
-                                      );
+                                        std::dynamic_pointer_cast<ContinousMultiValueChromosomeFactory<VALUE_TYPE,FITNESS_TYPE>>
+                                                                                                                (this->_builderFactory)
+                                      )
+            );
         }
     };
 };

@@ -13,6 +13,8 @@ geneial_private_namespace(operation)
 {
 geneial_private_namespace(selection)
 {
+using ::geneial::utility::EnableMakeShared;
+
 geneial_export_namespace
 {
 
@@ -20,7 +22,8 @@ geneial_export_namespace
  * Select a number of parents based on a certain criteria.
  */
 template<typename FITNESS_TYPE>
-class FitnessProportionalSelection: public BaseSelectionOperation<FITNESS_TYPE>, public EnableMakeShared<FitnessProportionalSelection<FITNESS_TYPE>>
+class FitnessProportionalSelection: public BaseSelectionOperation<FITNESS_TYPE>,
+                                    public virtual EnableMakeShared<FitnessProportionalSelection<FITNESS_TYPE>>
 {
 private:
     //TODO(bewo) this is ugly since it hides the fact that there are base class settings.

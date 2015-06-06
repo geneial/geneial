@@ -12,6 +12,8 @@ geneial_private_namespace(replacement)
 {
 using ::geneial::operation::coupling::BaseCouplingOperation;
 using ::geneial::operation::selection::BaseSelectionOperation;
+using ::geneial::utility::EnableMakeShared;
+
 geneial_export_namespace
 {
 
@@ -51,7 +53,9 @@ public:
         }
         typename BaseReplacementOperation<FITNESS_TYPE>::ptr create() override
         {
-            return ReplaceRandomOperation<FITNESS_TYPE>::makeShared(this->_settings);
+            return std::move(
+                        ReplaceRandomOperation<FITNESS_TYPE>::makeShared(this->_settings)
+                    );
         }
     };
 };

@@ -8,7 +8,7 @@
 #include <geneial/core/population/PopulationSettings.h>
 
 #include <geneial/core/population/builder/ContinousMultiValueBuilderSettings.h>
-#include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.h>
+#include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.hbb>
 
 #include <geneial/core/operations/selection/FitnessProportionalSelection.h>
 #include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>

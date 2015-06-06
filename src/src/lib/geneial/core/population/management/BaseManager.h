@@ -20,6 +20,7 @@ geneial_private_namespace(management)
 using ::geneial::population::chromosome::BaseChromosomeFactory;
 using ::geneial::utility::BaseExecutionManager;
 using ::geneial::utility::SequentialExecutionManager;
+using ::geneial::utility::EnableMakeShared;
 
 geneial_export_namespace
 {
@@ -37,7 +38,7 @@ protected:
         _populationSettings(),
         _chromosomeFactory(chromosomeFactory),
         _executionManager(new SequentialExecutionManager),
-        _bookkeeper(new DefaultBookkeeper)
+        _bookkeeper(std::make_shared<DefaultBookkeeper>())
         {
         }
     BaseManager(const BaseManager& other) = delete;
@@ -118,7 +119,7 @@ public:
         return *_bookkeeper;
     }
 
-    void setBookkeeper(std::unique_ptr<BaseBookkeeper>&& bookkeeper)
+    void setBookkeeper(const std::shared_ptr<BaseBookkeeper>& bookkeeper)
     {
         _bookkeeper = std::move(bookkeeper);
     }
@@ -132,7 +133,7 @@ private:
 
     std::unique_ptr<BaseExecutionManager> _executionManager;
 
-    std::unique_ptr<BaseBookkeeper> _bookkeeper;
+    std::shared_ptr<BaseBookkeeper> _bookkeeper;
 
 };
 

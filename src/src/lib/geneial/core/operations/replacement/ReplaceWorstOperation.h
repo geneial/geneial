@@ -13,6 +13,7 @@ geneial_private_namespace(replacement)
 {
 using ::geneial::operation::coupling::BaseCouplingOperation;
 using ::geneial::operation::selection::BaseSelectionOperation;
+using ::geneial::utility::EnableMakeShared;
 
 geneial_export_namespace
 {

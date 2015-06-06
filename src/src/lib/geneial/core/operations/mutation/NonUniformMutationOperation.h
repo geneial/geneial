@@ -15,6 +15,7 @@ geneial_private_namespace(operation)
 geneial_private_namespace(mutation)
 {
 using ::geneial::population::Population;
+using ::geneial::utility::EnableMakeShared;
 
 geneial_export_namespace
 {
@@ -119,7 +120,8 @@ public:
         {
         }
 
-        Builder(const double minimumModification, const unsigned int affectedGenerations,
+        Builder(const double minimumModification,
+                const unsigned int affectedGenerations,
                 const std::shared_ptr<MutationSettings> &settings,
                 const std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
                 const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
@@ -131,12 +133,17 @@ public:
 
         virtual typename BaseMutationOperation<FITNESS_TYPE>::ptr create() override
         {
-            return NonUniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::makeShared(
-                    _affectedGenerations,
-                    _minimumModification,
-                    this->_settings,
-                    this->_choosingOperation,
-                    this->_builderFactory);
+            return std::move
+                    (
+                        NonUniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::makeShared
+                        (
+                            _affectedGenerations,
+                            _minimumModification,
+                            this->_settings,
+                            this->_choosingOperation,
+                            this->_builderFactory
+                        )
+                    );
         }
 
         Builder& setAffectedGenerations(unsigned int affectedGenerations)

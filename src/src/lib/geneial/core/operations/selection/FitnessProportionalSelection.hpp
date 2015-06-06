@@ -54,7 +54,8 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 
     //TODO (bewo) OPTIMIZE: using sth like transform(i, j, back_inserter(v), select2nd<MapType::value_type>()); instead ???
     unsigned int elitism_to_select = this->_settings->getNumberSelectBest();
-    typename map_type::reverse_iterator crit = sorted_multimap.rbegin();
+
+    auto crit = sorted_multimap.rbegin();
     for (; crit != sorted_multimap.rend() && elitism_to_select > 0; ++crit)
     {
         result.emplace_back(crit->second);
@@ -71,7 +72,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
     while (left_select > 0)
     {
         //wrap around if necessary.
-        typename map_type::reverse_iterator crit = sorted_multimap.rbegin();
+        auto crit = sorted_multimap.rbegin();
         while (crit != sorted_multimap.rend() && left_select > 0)
         {
             chrom_ptr_type chrom = crit->second;

@@ -13,13 +13,16 @@ geneial_private_namespace(operation)
 geneial_private_namespace(mutation)
 {
 using ::geneial::population::Population;
+using ::geneial::utility::EnableMakeShared;
 
 geneial_export_namespace
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-class UniformMutationOperation: public MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>
+class UniformMutationOperation: public MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>,
+                                public virtual EnableMakeShared<UniformMutationOperation<VALUE_TYPE,FITNESS_TYPE>>
 {
+protected:
     /*
      * UniformMutationOperation Mutates a chromosome, by replacing some of it's values randomly.
      */
@@ -67,10 +70,14 @@ public:
 
         virtual typename BaseMutationOperation<FITNESS_TYPE>::ptr create() override
         {
-            typename BaseMutationOperation<FITNESS_TYPE>::ptr protoype(
-                    new UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>(this->_settings, this->_choosingOperation,
-                            this->_builderFactory));
-            return std::move(protoype);
+            return std::move(
+                    UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::makeShared
+                     (
+                        this->_settings,
+                        this->_choosingOperation,
+                        this->_builderFactory
+                     )
+                   );
         }
     };
 

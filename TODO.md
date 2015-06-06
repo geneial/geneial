@@ -27,3 +27,5 @@ Note that most of the TODOs are reflected within the code, simply grep the sourc
 * Organize Buildsystem
 
 * profit / world domination
+
+* Builder for Factories

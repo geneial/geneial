@@ -1,6 +1,8 @@
 #pragma once
 
 #include <geneial/namespaces.h>
+#include <geneial/config.h>
+
 #include <geneial/core/population/Population.h>
 #include <geneial/core/population/PopulationSettings.h>
 
@@ -29,25 +31,16 @@ geneial_private_namespace(geneial)
 geneial_private_namespace(algorithm)
 {
 using ::geneial::algorithm::stopping_criteria::BaseStoppingCriterion;
-
 using ::geneial::operation::selection::BaseSelectionOperation;
-
 using ::geneial::operation::coupling::BaseCouplingOperation;
-
 using ::geneial::operation::crossover::BaseCrossoverOperation;
-
 using ::geneial::operation::replacement::BaseReplacementOperation;
-
 using ::geneial::operation::mutation::BaseMutationOperation;
-
 using ::geneial::utility::BaseExecutionManager;
-
 using ::geneial::population::Population;
 using ::geneial::population::PopulationSettings;
-
 using ::geneial::population::chromosome::BaseChromosome;
 using ::geneial::population::chromosome::BaseChromosomeFactory;
-
 using ::geneial::population::management::BaseBookkeeper;
 using ::geneial::population::management::BaseManager;
 
@@ -193,6 +186,11 @@ public:
     void setBookkeeper(std::unique_ptr<BaseBookkeeper>&& bookkeeper)
     {
         _manager->setBookkeeper(std::move(bookkeeper));
+    }
+
+    const std::shared_ptr<const BaseBookkeeper> getBookkeeper() const
+    {
+        return _manager->getBookkeeper();
     }
 };
 

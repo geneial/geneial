@@ -6,7 +6,7 @@
 
 double Ackley::compute(const std::vector<double>& coordinates) const
 {
-    constexpr double C_PI = 3.14159265358979323846;
+    constexpr const double C_PI = 3.14159265358979323846;
     constexpr const double a = 20;
     constexpr const double b = 0.2;
     constexpr const double c = 2 * C_PI;

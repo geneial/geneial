@@ -14,13 +14,14 @@ geneial_private_namespace(crossover)
 {
 using ::geneial::population::Population;
 using ::geneial::population::chromosome::MultiValueChromosome;
+using ::geneial::utility::EnableMakeShared;
 
 geneial_export_namespace
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class MultiValueCrossoverLambdaAdapter: public MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>,
-                                        public EnableMakeShared<MultiValueCrossoverLambdaAdapter<VALUE_TYPE,FITNESS_TYPE>>
+                                        public virtual EnableMakeShared<MultiValueCrossoverLambdaAdapter<VALUE_TYPE,FITNESS_TYPE>>
 {
 private:
     const bool _operationIsSymmetric;

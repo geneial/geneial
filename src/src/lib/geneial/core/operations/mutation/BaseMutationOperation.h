@@ -18,6 +18,7 @@ using ::geneial::operation::choosing::BaseChoosingOperation;
 using ::geneial::operation::choosing::ChooseRandom;
 using ::geneial::population::Population;
 using ::geneial::population::management::BaseManager;
+using ::geneial::utility::Buildable;
 
 geneial_export_namespace
 {

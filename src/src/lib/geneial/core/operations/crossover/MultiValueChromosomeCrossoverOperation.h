@@ -20,6 +20,7 @@ using ::geneial::population::chromosome::BaseChromosomeFactory;
 using ::geneial::population::chromosome::MultiValueChromosomeFactory;
 using ::geneial::operation::coupling::BaseCouplingOperation;
 
+
 geneial_export_namespace
 {
 

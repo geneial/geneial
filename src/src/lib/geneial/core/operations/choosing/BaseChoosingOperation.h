@@ -3,6 +3,7 @@
 #include <geneial/namespaces.h>
 
 #include <geneial/core/operations/mutation/MutationSettings.h>
+#include <geneial/utility/mixins/Buildable.h>
 #include <geneial/core/population/Population.h>
 
 geneial_private_namespace(geneial)
@@ -12,6 +13,7 @@ geneial_private_namespace(operation)
 geneial_private_namespace(choosing)
 {
 using ::geneial::population::Population;
+using ::geneial::utility::Buildable;
 
 geneial_export_namespace
 {

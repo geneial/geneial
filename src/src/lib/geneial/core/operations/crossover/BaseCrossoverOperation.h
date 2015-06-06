@@ -14,6 +14,7 @@ geneial_private_namespace(operation)
 geneial_private_namespace(crossover)
 {
 using ::geneial::population::Population;
+using ::geneial::utility::Buildable;
 
 geneial_export_namespace
 {

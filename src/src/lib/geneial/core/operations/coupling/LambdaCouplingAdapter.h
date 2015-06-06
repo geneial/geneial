@@ -14,6 +14,7 @@ using ::geneial::population::Population;
 using ::geneial::operation::crossover::BaseCrossoverOperation;
 using ::geneial::operation::selection::BaseSelectionOperation;
 using ::geneial::population::management::BaseManager;
+using ::geneial::utility::EnableMakeShared;
 
 geneial_export_namespace
 {
@@ -23,7 +24,7 @@ geneial_export_namespace
  */
 template<typename FITNESS_TYPE>
 class LambdaCouplingAdapter:    public BaseCouplingOperation<FITNESS_TYPE>,
-                                public EnableMakeShared<LambdaCouplingAdapter<FITNESS_TYPE>>
+                                public virtual EnableMakeShared<LambdaCouplingAdapter<FITNESS_TYPE>>
 {
 public:
     using offspring_result_set = typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set;

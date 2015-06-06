@@ -15,11 +15,12 @@ using ::geneial::population::Population;
 using ::geneial::operation::crossover::BaseCrossoverOperation;
 using ::geneial::operation::selection::BaseSelectionOperation;
 using ::geneial::population::management::BaseManager;
+using ::geneial::utility::Buildable;
 
 geneial_export_namespace
 {
 template<typename FITNESS_TYPE>
-class BaseReplacementOperation
+class BaseReplacementOperation  : public Buildable<BaseReplacementOperation<FITNESS_TYPE>>
 {
 protected:
     std::shared_ptr<const BaseReplacementSettings> _settings;
@@ -53,7 +54,7 @@ public:
         _settings = settings;
     }
 
-    class Builder
+    class Builder : public Buildable<BaseReplacementOperation<FITNESS_TYPE>>::Builder
     {
     protected:
         std::shared_ptr<const BaseReplacementSettings> _settings;
@@ -62,9 +63,6 @@ public:
         Builder():_settings(new BaseReplacementSettings)
         {
         }
-
-        virtual ptr create() = 0;
-
     };
 
 

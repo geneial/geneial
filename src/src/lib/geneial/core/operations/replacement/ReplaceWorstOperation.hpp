@@ -1,6 +1,7 @@
 #pragma once
 
 #include <geneial/core/operations/replacement/ReplaceWorstOperation.h>
+#include <geneial/core/population/management/Bookkeeper.h>
 
 #include <algorithm>
 #include <iterator>
@@ -17,6 +18,7 @@ geneial_private_namespace(replacement)
 using ::geneial::population::Population;
 using ::geneial::operation::coupling::BaseCouplingOperation;
 using ::geneial::operation::selection::BaseSelectionOperation;
+using ::geneial::population::management::EventValueData;
 
 geneial_export_namespace
 {
@@ -81,7 +83,7 @@ void ReplaceWorstOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &po
     }
 
     const unsigned int failed_inserts = childrenCandidates - population.insertChromosomeContainer(newChildren);
-    this->getBookkeeper().traceEvent("REPLACEMENT_FAILED_INSERTS",failed_inserts);
+    manager.getBookkeeper().traceEvent("REPLACEMENT_FAILED_INSERTS",EventValueData<const unsigned int>(failed_inserts));
 
 
 
@@ -108,7 +110,7 @@ void ReplaceWorstOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &po
     }
     else
     {
-        this->getBookkeeper().traceEvent("REPLACEMENT_NO_WORST_DELETED");
+        manager.getBookkeeper().traceEvent("REPLACEMENT_NO_WORST_DELETED");
     }
 
 }

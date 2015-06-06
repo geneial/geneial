@@ -115,6 +115,11 @@ public:
     virtual ~StatisticBookkeeper()
     {
     }
+
+    const std::unordered_multimap<std::string, EventData>& getEvents() const
+    {
+        return _events;
+    }
 };
 
 class ScopedTimeTrace: public ScopedTrace

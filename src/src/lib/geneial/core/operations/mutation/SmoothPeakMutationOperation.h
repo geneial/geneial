@@ -18,6 +18,8 @@ geneial_private_namespace(mutation)
 using ::geneial::population::chromosome::ContinousMultiValueBuilderSettings;
 using ::geneial::population::chromosome::ContinousMultiValueChromosomeFactory;
 using ::geneial::population::Population;
+using ::geneial::utility::EnableMakeShared;
+
 
 geneial_export_namespace
 {
@@ -139,13 +141,16 @@ public:
 
            virtual typename BaseMutationOperation<FITNESS_TYPE>::ptr create() override
            {
-               return SmoothPeakMutationOperation<VALUE_TYPE,FITNESS_TYPE>::makeShared(
+               return std::move
+                   (
+                       SmoothPeakMutationOperation<VALUE_TYPE,FITNESS_TYPE>::makeShared(
                        this->_maxLeftEps,
                        this->_maxRightEps,
                        this->_maxElevation,
                        this->_settings,
                        this->_choosingOperation,
                        std::dynamic_pointer_cast<ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>>(this->_builderFactory)
+                   )
                );
            }
 

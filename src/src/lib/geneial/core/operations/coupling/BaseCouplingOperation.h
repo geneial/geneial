@@ -17,6 +17,7 @@ using ::geneial::population::Population;
 using ::geneial::operation::crossover::BaseCrossoverOperation;
 using ::geneial::operation::selection::BaseSelectionOperation;
 using ::geneial::population::management::BaseManager;
+using ::geneial::utility::Buildable;
 
 geneial_export_namespace
 {

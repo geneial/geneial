@@ -15,6 +15,7 @@ geneial_private_namespace(choosing)
 {
 using ::geneial::population::Population;
 using ::geneial::operation::mutation::MutationSettings;
+using ::geneial::utility::EnableMakeShared;
 
 geneial_export_namespace
 {

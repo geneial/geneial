@@ -12,6 +12,8 @@ geneial_private_namespace(operation)
 {
 geneial_private_namespace(selection)
 {
+using ::geneial::utility::EnableMakeShared;
+
 geneial_export_namespace
 {
 
@@ -19,7 +21,8 @@ geneial_export_namespace
  * Select a number of parents based on a roulette wheel distribution over the chromosomes fitness
  */
 template<typename FITNESS_TYPE>
-class UniformRandomSelection: public BaseSelectionOperation<FITNESS_TYPE>, public EnableMakeShared<UniformRandomSelection<FITNESS_TYPE>>
+class UniformRandomSelection: public BaseSelectionOperation<FITNESS_TYPE>,
+                              public virtual EnableMakeShared<UniformRandomSelection<FITNESS_TYPE>>
 {
 protected:
     UniformRandomSelection(const std::shared_ptr<BaseSelectionSettings> &settings) :
