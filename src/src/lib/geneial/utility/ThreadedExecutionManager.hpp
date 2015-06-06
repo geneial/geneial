@@ -1,0 +1,99 @@
+#pragma once
+
+#include <geneial/utility/ThreadedExecutionManager.h>
+
+geneial_private_namespace(geneial)
+{
+geneial_private_namespace(utility)
+{
+
+geneial_export_namespace
+{
+void ThreadedExecutionManager::executor()
+{
+    const static int amountPerThread = 1;
+    std::deque<std::function<void()>> innerTask;
+
+    bool running = true;
+    while (running)
+    {
+        std::unique_lock<std::mutex> l(_mutex);
+        _condEntry.wait(l, [this]()
+        {
+            return _finish || _tasks.size() != 0;
+        });
+
+        if (!_tasks.empty())
+        {
+            int i = amountPerThread;
+
+            while (i-- && !_tasks.empty())
+            {
+                auto task = _tasks.front();
+                _tasks.pop_front();
+                innerTask.emplace_back(task);
+            }
+            l.unlock();
+
+            for (auto task : innerTask)
+            {
+                task();
+            }
+            innerTask.clear();
+        }
+        else
+        {
+            running = !_finish;
+        }
+
+        _condExit.notify_all();
+    }
+}
+
+void ThreadedExecutionManager::initializeThreads(const unsigned int amountThreads)
+{
+    for (unsigned int i = 0; i < amountThreads; ++i)
+    {
+        _threads.emplace_back(
+                std::make_shared<std::thread>(&ThreadedExecutionManager::executor, this));
+    }
+}
+
+virtual void ThreadedExecutionManager::addTask(std::function<void()> const &task)
+{
+    std::unique_lock < std::mutex > l(_mutex);
+    _tasks.emplace_back(task);
+    _condEntry.notify_one();
+}
+
+virtual void ThreadedExecutionManager::waitForTasks()
+{
+    unsigned int activeTasks = 0;
+    do
+    {
+        std::unique_lock < std::mutex > l(_mutex);
+        activeTasks = _tasks.size();
+        if (activeTasks != 0)
+        {
+            _condExit.wait(l, [this]()
+            {   return _tasks.size() == 0;});
+        }
+    } while (activeTasks != 0);
+}
+
+void ThreadedExecutionManager::joinAll()
+{
+    {
+        std::unique_lock < std::mutex > l(_mutex);
+        _finish = true;
+    }
+    _condEntry.notify_all();
+    for (auto t : _threads)
+    {
+        t->join();
+    }
+}
+
+} /* geneial_export_namespace */
+} /* private namespace utility */
+} /* private namespace geneial */

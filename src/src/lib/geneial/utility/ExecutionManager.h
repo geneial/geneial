@@ -2,19 +2,7 @@
 
 #include <geneial/namespaces.h>
 
-#include <iostream>
-#include <deque>
-#include <memory>
 #include <functional>
-#include <chrono>
-#include <thread>
-#include <mutex>
-#include <condition_variable>
-#include <future>
-#include <list>
-
-
-//TODO (bewo) refactor, separate def from decl to .hpp
 
 geneial_private_namespace(geneial)
 {
@@ -24,14 +12,30 @@ geneial_private_namespace(utility)
 geneial_export_namespace
 {
 
+/**
+ * @brief The execution manager can takes care of processing arbitrary task.
+ *
+ * @see ThreadedExecutationManager
+ *
+ */
 class BaseExecutionManager
 {
 public:
     virtual ~BaseExecutionManager(){}
+    /**
+     * Add another worker task
+     */
     virtual void addTask(std::function<void()> const &task) = 0;
+    /**
+     * Block until all tasks are completed
+     */
     virtual void waitForTasks() = 0;
 };
 
+
+/**
+ * The sequential Execution manager immediately executes any given task and is blocking
+ */
 class SequentialExecutionManager: public BaseExecutionManager
 {
 public:
@@ -42,133 +46,14 @@ public:
 
     virtual void waitForTasks() override
     {
+        //Due to sequentialness we can immediatedly return
         return;
     }
 
 };
 
-class ThreadedExecutionManager: public BaseExecutionManager
-{
-    std::deque<std::function<void()>> _tasks;
 
-    std::vector<std::shared_ptr<std::thread>> _threads;
-
-    std::mutex _mutex;
-
-    std::condition_variable _condEntry;
-
-    std::condition_variable _condExit;
-
-    bool _finish;
-
-    void executor()
-    {
-        const static int amountPerThread = 1;
-        std::deque<std::function<void()>> innerTask;
-
-        bool running = true;
-        while (running)
-        {
-            std::unique_lock < std::mutex > l(_mutex);
-            _condEntry.wait(l, [this]()
-            {
-                return _finish || _tasks.size() != 0;
-            });
-
-            if (!_tasks.empty())
-            {
-                int i = amountPerThread;
-
-                while (i-- && !_tasks.empty())
-                {
-                    auto task = _tasks.front();
-                    _tasks.pop_front();
-                    innerTask.emplace_back(task);
-                }
-                l.unlock();
-
-                for(auto task : innerTask)
-                {
-                    task();
-                }
-                innerTask.clear();
-            }
-            else
-            {
-                running = !_finish;
-            }
-
-            _condExit.notify_all();
-        }
-    }
-
-    void initializeThreads(const unsigned int amountThreads)
-    {
-        for (unsigned int i = 0; i < amountThreads; ++i)
-        {
-            _threads.emplace_back(
-                    std::make_shared<std::thread>(&ThreadedExecutionManager::executor, this));
-        }
-    }
-
-public:
-
-    explicit ThreadedExecutionManager(const unsigned int amountThreads) :
-            _tasks(), _threads(), _mutex(), _condEntry(), _finish(false)
-    {
-        initializeThreads(amountThreads);
-    }
-
-    ThreadedExecutionManager() :
-            _tasks(), _threads(), _mutex(), _condEntry(), _finish(false)
-    {
-        initializeThreads(
-                std::min(static_cast<unsigned int>(1),
-                        static_cast<unsigned int>(std::thread::hardware_concurrency() - 1)));
-    }
-
-    virtual ~ThreadedExecutionManager()
-    {
-        joinAll();
-    }
-
-    virtual void addTask(std::function<void()> const &task) override
-    {
-        std::unique_lock < std::mutex > l(_mutex);
-        _tasks.emplace_back(task);
-        _condEntry.notify_one();
-    }
-
-    virtual void waitForTasks() override
-    {
-        unsigned int activeTasks = 0;
-        do
-        {
-            std::unique_lock < std::mutex > l(_mutex);
-            activeTasks = _tasks.size();
-            if (activeTasks != 0)
-            {
-                _condExit.wait(l, [this]()
-                {   return _tasks.size() == 0;});
-            }
-        } while (activeTasks != 0);
-    }
-
-    void joinAll()
-    {
-        {
-            std::unique_lock < std::mutex > l(_mutex);
-            _finish = true;
-        }
-        _condEntry.notify_all();
-        for (auto t : _threads)
-        {
-            t->join();
-        }
-    }
-};
 
 } /* geneial_export_namespace */
 } /* private namespace utility */
 } /* private namespace geneial */
-
