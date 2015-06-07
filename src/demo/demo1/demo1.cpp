@@ -63,10 +63,7 @@ int main(int argc, char **argv)
     std::cout
             //<< "\x1b[0m\x1b[35;1m\x1b[41;1m"
             << "Running GENEIAL demo1 - Version "
-            << GENEIAL_VERSION_MAJOR
-            << "." << GENEIAL_VERSION_MINOR
-            << " ("
-                << GENEIAL_BUILD_TYPE << ")"
+            << GENEIAL_VERSION_STRING << "("<<GENEIAL_BUILD_TYPE << ")"
             << std::endl;
 
     auto evaluator = std::make_shared<DemoChromosomeEvaluator>();
