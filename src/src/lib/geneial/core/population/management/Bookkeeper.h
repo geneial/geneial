@@ -8,6 +8,8 @@
 #include <ratio>
 #include <functional>
 
+//TODO(bewo): Clean this up.
+
 geneial_private_namespace(geneial)
 {
 geneial_private_namespace(population)
@@ -156,13 +158,11 @@ protected:
             _bookKeeper(bookKeeper),
             _name(traceName)
     {
-        //std::cout << "Start " << traceName << std::endl;;
     }
 
 public:
     virtual ~ScopedTimeTrace()
     {
-//        std::cout << "Stop " << _name << std::endl;;
         const std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
         const auto duration = std::chrono::duration_cast<std::chrono::duration<double,std::milli>>(end - _start).count();
         //TODO (bewo):string?

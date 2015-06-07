@@ -39,7 +39,6 @@
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 //#include <geneial/core/operations/choosing/LambdaChoosingAdapter.h>
 
-//#include <geneial/core/operations/mutation/NonUniformMutationOperation.h>
 #include <geneial/core/operations/mutation/SmoothPeakMutationOperation.h>
 #include <geneial/core/operations/mutation/UniformMutationOperation.h>
 
@@ -58,6 +57,9 @@
 #include <geneial/core/operations/selection/FitnessProportionalSelection.h>
 #include <geneial/core/operations/selection/RouletteWheelSelection.h>
 #include <geneial/core/operations/selection/UniformRandomSelection.h>
+
+#include <geneial/algorithm/diagnostics/Diagnostics.h>
+#include <geneial/core/population/management/Bookkeeper.h>
 
 #ifndef EXHAUSTIVE_INSTANCIATION_TEST
 
@@ -126,6 +128,9 @@ Expander1D(geneial::operation::replacement::ReplaceWorstOperation)
 Expander1D(geneial::operation::selection::RouletteWheelSelection)
 Expander1D(geneial::operation::selection::FitnessProportionalSelection)
 Expander1D(geneial::operation::selection::UniformRandomSelection)
+
+//Auxiliary
+Expander1D(geneial::algorithm::Diagnostics)
 
 #endif
 
