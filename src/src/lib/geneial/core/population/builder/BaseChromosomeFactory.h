@@ -37,8 +37,8 @@ public:
     }
 
     inline typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome(
-            PopulateBehavior populateValues = CREATE_VALUES
-        )
+                                                                        PopulateBehavior populateValues = CREATE_VALUES
+                                                                        )
     {
         return std::move(doCreateChromosome(populateValues));
     }

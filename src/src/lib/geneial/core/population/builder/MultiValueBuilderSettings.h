@@ -9,6 +9,7 @@ geneial_private_namespace(population)
 {
 geneial_private_namespace(chromosome)
 {
+
 geneial_export_namespace
 {
 
@@ -23,9 +24,14 @@ private:
     unsigned int _num;
 
 public:
-    MultiValueBuilderSettings(const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator, unsigned int num,
-            VALUE_TYPE random_max, VALUE_TYPE random_min) :
-            BuilderSettings<FITNESS_TYPE>(fitnessEvaluator), _random_max(random_max), _random_min(random_min), _num(num)
+    MultiValueBuilderSettings( const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator,
+                               const unsigned int num,
+                               const VALUE_TYPE random_max,
+                               const VALUE_TYPE random_min) :
+            BuilderSettings<FITNESS_TYPE>(fitnessEvaluator),
+            _random_max(random_max),
+            _random_min(random_min),
+            _num(num)
     {
     }
 
