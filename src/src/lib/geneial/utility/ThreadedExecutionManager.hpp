@@ -59,14 +59,14 @@ void ThreadedExecutionManager::initializeThreads(const unsigned int amountThread
     }
 }
 
-virtual void ThreadedExecutionManager::addTask(std::function<void()> const &task)
+void ThreadedExecutionManager::addTask(std::function<void()> const &task)
 {
     std::unique_lock < std::mutex > l(_mutex);
     _tasks.emplace_back(task);
     _condEntry.notify_one();
 }
 
-virtual void ThreadedExecutionManager::waitForTasks()
+void ThreadedExecutionManager::waitForTasks()
 {
     unsigned int activeTasks = 0;
     do

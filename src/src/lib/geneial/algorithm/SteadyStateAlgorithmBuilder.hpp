@@ -26,7 +26,7 @@ using ::geneial::operation::replacement::BaseReplacementSettings;
 using ::geneial::operation::replacement::ReplaceWorstOperation;
 
 using ::geneial::operation::mutation::BaseMutationOperation;
-using ::geneial::operation::mutation::MutationSettings;
+using ::geneial::operation::mutation::MultiValueMutationSettings;
 using ::geneial::operation::choosing::ChooseRandom;
 using ::geneial::operation::mutation::UniformMutationOperation;
 

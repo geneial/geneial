@@ -1,3 +1,5 @@
+#pragma once
+
 #include <geneial/utility/ExecutionManager.h>
 
 #include <iostream>
@@ -69,3 +71,5 @@ public:
 } /* geneial_export_namespace */
 } /* private namespace utility */
 } /* private namespace geneial */
+
+#include <geneial/utility/ThreadedExecutionManager.hpp>

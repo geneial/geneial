@@ -1,11 +1,13 @@
 #pragma once
 
 #include <geneial/core/operations/mutation/UniformMutationOperation.h>
-#include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/population/builder/BuilderSettings.h>
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
+#include <geneial/core/operations/mutation/MultiValueMutationSettings.h>
 #include <geneial/core/population/Population.h>
+
+#include <unordered_set>
 
 geneial_private_namespace(geneial)
 {
@@ -18,7 +20,6 @@ using ::geneial::utility::Random;
 
 geneial_export_namespace
 {
-// TODO(bewo): reduce cc!
 /*
  *  Returns a chromosome container with some new chromosomes which are partially mutated versions of the old ones.
  *
@@ -61,8 +62,8 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
     const auto randomMax = this->getBuilderFactory().getSettings().getRandomMax() ;
     const auto populationAge = manager.getPopulation().getAge();
     const auto maxNumMvc = this->getBuilderFactory().getSettings().getNum();
-    const auto amountPointsOfMutation = this->getSettings().getAmountOfPointsOfMutation();
 
+    const auto slotsToMutate = Random::generate<unsigned int>(this->getSettings().getMinimumPointsToMutate(),this->getSettings().getMaximumPointsToMutate());
 
     //only mutate choosen chromosomes
     for (const auto& chromosome : choosenChromosomeContainer)
@@ -83,76 +84,22 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
         const auto &mutantChromosomeContainer = mvcMutant->getContainer();
         auto &result_container = mutatedChromosome->getContainer();
 
-        //first target point of mutation
-        if (amountPointsOfMutation > 0)
+        //copy values:
+        std::copy(mutantChromosomeContainer.begin(),mutantChromosomeContainer.end(),result_container.begin());
+
+        //Predetermine Positions for Mutation:
+        std::unordered_set<unsigned int> positions;
+        while (positions.size() < slotsToMutate)
         {
-            pointOfMutation = Random::generate<int>(0, maxNumMvc / amountPointsOfMutation);
+            positions.emplace(Random::generate<unsigned int>(0, maxNumMvc));
         }
 
-        //iterator for one chromosome (to iterate it's values)
-        auto mutant_it = mutantChromosomeContainer.cbegin();
-
-        //Inside chromosome loop
-        for (unsigned int i = 0; mutant_it != mutantChromosomeContainer.cend(); i++)
+        for(const auto pos : positions)
         {
+            const VALUE_TYPE randomMutation = Random::generate<VALUE_TYPE>(randomMin, randomMax);
+            result_container[pos] = randomMutation;
+        }
 
-            //dicing whether to mutate or not (influeced by propability setting)
-            const double value_choice = Random::generate<double>(0.0, 1.0);
-
-            //Check amount of mutation targets in one chromosome (pointsOfMutation)
-            if (amountPointsOfMutation > 0)
-            {
-                //generate a mutation value to replace an old value
-                const VALUE_TYPE random_mutation = Random::generate<double>(randomMin, randomMax);
-
-                //pointOfMutation = Position of Mutation Target
-                //Check if current position is a target for mutation.
-                if ((i == pointOfMutation) || (amountPointsOfMutation >= maxNumMvc))
-                {
-                    //Check if we reached the maximum points of mutation
-                    if (amountPointsOfMutation != mutationCounter)
-                    {
-                        //add mutation to result_container
-                        result_container[i] = (random_mutation);
-                        mutationCounter++;
-                        //create a new target
-                        const unsigned int distanceBetweenTarges = (maxNumMvc / amountPointsOfMutation);
-                        pointOfMutation = Random::generate<int>((i + 1), (i + 1 + distanceBetweenTarges));
-                        //if no more mutation is needed (mutated already n times)
-                    }
-                    else
-                    {
-                        result_container[i] = (*mutant_it);
-                    }
-                    //current point is no target
-                }
-                else
-                {
-                    result_container[i] = (*mutant_it);
-                }
-
-                //Target points are not used for mutation
-            }
-            else if (value_choice <= amountPointsOfMutation)
-            {
-                //generate a mutation value to replace an old value
-                const VALUE_TYPE random_mutation = Random::generate<double>(randomMin, randomMax);
-
-                result_container[i] = (random_mutation);
-                //In case dicing (value_choice) choose not to mutate the value
-            }
-            else
-            {
-                result_container[i] =(*mutant_it);
-            }
-
-            //step to next mutant.
-            if (mutant_it != mutantChromosomeContainer.cend())
-            {
-                ++mutant_it;
-            }
-
-        }//inside chromosome loop
 
         //Age reset
         mutatedChromosome->setAge(0);

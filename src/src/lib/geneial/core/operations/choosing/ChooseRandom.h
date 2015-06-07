@@ -1,7 +1,6 @@
 #pragma once
 
 #include <geneial/namespaces.h>
-#include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
 
 #include <geneial/utility/mixins/Buildable.h>
@@ -14,7 +13,6 @@ geneial_private_namespace(operation)
 geneial_private_namespace(choosing)
 {
 using ::geneial::population::Population;
-using ::geneial::operation::mutation::MutationSettings;
 using ::geneial::utility::EnableMakeShared;
 
 geneial_export_namespace

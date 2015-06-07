@@ -57,11 +57,21 @@ public:
     class Builder : public Buildable<BaseReplacementOperation<FITNESS_TYPE>>::Builder
     {
     protected:
-        std::shared_ptr<const BaseReplacementSettings> _settings;
+        std::shared_ptr<BaseReplacementSettings> _settings;
 
     public:
         Builder():_settings(new BaseReplacementSettings)
         {
+        }
+
+        BaseReplacementSettings& getSettings()
+        {
+            return *_settings;
+        }
+
+        void setSettings(const std::shared_ptr<BaseReplacementSettings>& settings)
+        {
+            _settings = settings;
         }
     };
 
