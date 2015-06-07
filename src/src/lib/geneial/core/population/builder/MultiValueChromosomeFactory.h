@@ -55,8 +55,6 @@ protected:
     ) override;
 
 
-    friend class ChromosomeDeleter;
-
     struct ChromosomeDeleter {
         std::weak_ptr<ResourcePool<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>>>  _resourcePool;
 
