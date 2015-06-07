@@ -6,6 +6,7 @@
 #include <chrono>
 #include <ctime>
 #include <ratio>
+#include <functional>
 
 geneial_private_namespace(geneial)
 {
@@ -19,29 +20,14 @@ geneial_export_namespace
 
 struct ScopedTrace
 {
-};
-
-struct EventData
-{
-};
-
-template<typename T>
-struct EventValueData : public EventData
-{
-    T _value;
-public:
-    EventValueData(const T value) :
-        _value(value)
+    virtual ~ScopedTrace()
     {
     }
 };
 
-struct TimingEventData: public EventData
+struct EventData
 {
-    double _duration;
-public:
-    TimingEventData(const double duration) :
-            _duration(duration)
+    virtual ~EventData()
     {
     }
 };
@@ -53,11 +39,37 @@ public:
     {
     }
 
-    virtual ScopedTrace scopedEventTrace(const char* traceName) = 0;
+    virtual std::unique_ptr<ScopedTrace> scopedEventTrace(const char* traceName) = 0;
 
     virtual void traceEvent(const char* traceName) = 0;
 
-    virtual void traceEvent(const char* traceName, EventData data) = 0;
+    virtual void traceEvent(const char* traceName, EventData* data) = 0;
+};
+
+template<typename T>
+class EventValueData : public EventData
+{
+    T _value;
+private:
+    EventValueData(const T value) :
+        _value(value)
+    {
+    }
+
+public:
+    virtual ~EventValueData()
+    {
+    }
+
+    static inline void create(BaseBookkeeper &bookkeeper, const char* name, const T value)
+    {
+        bookkeeper.traceEvent(name,new EventValueData(value));
+    }
+
+    T getValue() const
+    {
+        return _value;
+    }
 };
 
 class DefaultBookkeeper: public BaseBookkeeper
@@ -67,16 +79,16 @@ public:
     {
     }
 
-    virtual ScopedTrace scopedEventTrace(const char* traceName) override
+    virtual std::unique_ptr<ScopedTrace> scopedEventTrace(const char*) override
     {
-        return ScopedTrace();
+        return std::move(std::unique_ptr<ScopedTrace>(nullptr));
     }
 
-    virtual void traceEvent(const char* traceName) override
+    virtual void traceEvent(const char*) override
     {
     }
 
-    virtual void traceEvent(const char* traceName, EventData data) override
+    virtual void traceEvent(const char*, EventData*) override
     {
     }
 };
@@ -91,32 +103,39 @@ private:
 
     //We use an unordered map since we want insert to be as fast as possible.
     //Later when diagnosing on this data-structure we do not care about speed.
-    std::unordered_multimap<std::string, EventData> _events;
+    std::unordered_multimap<std::string,
+                            std::unique_ptr<EventData>> _events;
 
+    StatisticBookkeeper& operator= ( const StatisticBookkeeper & ) = delete;
+    StatisticBookkeeper(StatisticBookkeeper const&) = delete;
 protected:
-    void traceTime(const std::string name, const double duration)
+    void traceTime(const char* name, const double duration)
     {
-        _events.emplace(name,TimingEventData(duration));
+        EventValueData<double>::create(*this,name,duration);
     }
 
+
 public:
-    virtual ScopedTrace scopedEventTrace(const char* traceName) override;
+    StatisticBookkeeper()
+    {
+    }
+    virtual std::unique_ptr<ScopedTrace> scopedEventTrace(const char* traceName) override;
 
     virtual void traceEvent(const char* traceName) override
     {
-        _events.emplace(traceName,EventData());
+        _events.insert(std::make_pair(std::string(traceName),std::unique_ptr<EventData>(new EventData())));
     }
 
-    virtual void traceEvent(const char* traceName, EventData data) override
+    virtual void traceEvent(const char* traceName, EventData* data) override
     {
-        _events.emplace(traceName,std::move(data));
+        _events.insert(std::make_pair(std::string(traceName),std::unique_ptr<EventData>(data)));
     }
 
     virtual ~StatisticBookkeeper()
     {
     }
 
-    const std::unordered_multimap<std::string, EventData>& getEvents() const
+    std::unordered_multimap<std::string, std::unique_ptr<EventData> >& getEvents()
     {
         return _events;
     }
@@ -137,25 +156,28 @@ protected:
             _bookKeeper(bookKeeper),
             _name(traceName)
     {
+        //std::cout << "Start " << traceName << std::endl;;
     }
 
 public:
     virtual ~ScopedTimeTrace()
     {
+//        std::cout << "Stop " << _name << std::endl;;
         const std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-        const auto duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - _start).count();
-        _bookKeeper->traceTime(_name, duration);
+        const auto duration = std::chrono::duration_cast<std::chrono::duration<double,std::milli>>(end - _start).count();
+        //TODO (bewo):string?
+        _bookKeeper->traceTime(_name.c_str(), duration);
     }
 };
 
-ScopedTrace StatisticBookkeeper::scopedEventTrace(const char* traceName)
+std::unique_ptr<ScopedTrace> StatisticBookkeeper::scopedEventTrace(const char* traceName)
 {
-        return ScopedTimeTrace(this,traceName);
+        return std::move(std::unique_ptr<ScopedTimeTrace>(new ScopedTimeTrace(this,traceName)));
 }
 
 class ScopedEvent
 {
-    ScopedTrace _trace;
+    std::unique_ptr<ScopedTrace> _trace;
 public:
     ScopedEvent(const char* name,BaseBookkeeper &bookkeeper):
         _trace(bookkeeper.scopedEventTrace(name))

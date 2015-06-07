@@ -170,7 +170,7 @@ public:
 
     inline virtual void notifyObservers(typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent event);
 
-    inline virtual void registerObserver(std::shared_ptr<AlgorithmObserver<FITNESS_TYPE>> observer);
+    inline virtual void registerObserver(const std::shared_ptr<AlgorithmObserver<FITNESS_TYPE>>& observer);
 
 
     BaseExecutionManager& getExecutionManager() const
@@ -183,12 +183,12 @@ public:
         _manager->setExecutionManager(std::move(executionManager));
     }
 
-    void setBookkeeper(std::unique_ptr<BaseBookkeeper>&& bookkeeper)
+    void setBookkeeper(const std::shared_ptr<BaseBookkeeper>& bookkeeper)
     {
-        _manager->setBookkeeper(std::move(bookkeeper));
+        _manager->setBookkeeper(bookkeeper);
     }
 
-    const std::shared_ptr<const BaseBookkeeper> getBookkeeper() const
+    const std::shared_ptr<BaseBookkeeper> getBookkeeper() const
     {
         return _manager->getBookkeeper();
     }
@@ -263,7 +263,7 @@ public:
         return *this;
     }
 
-    virtual std::unique_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> build() = 0;
+    virtual std::shared_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> build() = 0;
 };
 
 } /* geneial_export_namespace */

@@ -26,23 +26,24 @@ void SteadyStateAlgorithm<FITNESS_TYPE>::solve()
 
     bool wasReached = this->wasCriteriaReached();
 
+    const auto bookkeeper = this->_manager->getBookkeeper();
     while (!wasReached)
     {
         {
-            ScopedEvent trace_criteria("TIME_ITERATION",this->_manager->getBookkeeper());
+            ScopedEvent trace_iteration("TIME_ITERATION",*bookkeeper);
 
             ++iterationCounter;
 
             //Let all the chromosomes in the population age...
             {
-                ScopedEvent trace_aging("TIME_AGING",this->_manager->getBookkeeper());
+                ScopedEvent trace_aging("TIME_AGING",*bookkeeper);
                 this->_manager->getPopulation().doAge();
             }
 
             //Select some chromosomes from the population using the specified selection operation
             chromosome_container mating_pool;
             {
-                ScopedEvent trace_selection("TIME_SELECTION",this->_manager->getBookkeeper());
+                ScopedEvent trace_selection("TIME_SELECTION",*bookkeeper);
                 //Perform a selection of mating candidates based on the given strategy.
                 mating_pool = this->_selectionOperation->doSelect(this->_manager->getPopulation(), *this->_manager);
             }
@@ -56,39 +57,39 @@ void SteadyStateAlgorithm<FITNESS_TYPE>::solve()
              */
             chromosome_container offspring;
             {
-                ScopedEvent trace_coupling("TIME_OFFSPRING",this->_manager->getBookkeeper());
+                ScopedEvent trace_coupling("TIME_OFFSPRING",*bookkeeper);
                 offspring = this->_couplingOperation->doCopulate(mating_pool, *this->_crossoverOperation, *this->_manager);
             }
 
             //Mutate some of the offspring chromosomes using the specified mutation operation
             //TODO (bewo): Should mutation operate on the whole population instead?
             {
-                ScopedEvent trace_mutation("TIME_MUTATION",this->_manager->getBookkeeper());
+                ScopedEvent trace_mutation("TIME_MUTATION",*bookkeeper);
                 offspring = this->_mutationOperation->doMutate(offspring, *this->_manager);
             }
 
             //Given the new offspring, replace members of the iteration's starting population with the offspring
             {
-                ScopedEvent trace_replacement("TIME_REPLACEMENT",this->_manager->getBookkeeper());
+                ScopedEvent trace_replacement("TIME_REPLACEMENT",*bookkeeper);
                 this->_replacementOperation->doReplace(this->_manager->getPopulation(), mating_pool, offspring, *this->_manager);
             }
 
             //In the case that the replacement removed too much chromosomes from the population we will replenish the missing chromosomes
             {
-                ScopedEvent trace_replenishment("TIME_REPLENISHMENT",this->_manager->getBookkeeper());
+                ScopedEvent trace_replenishment("TIME_REPLENISHMENT",*bookkeeper);
                 //If we had a deficit, fill up population with fresh chromosomes
                 this->_manager->replenishPopulation();
             }
 
             //Check whether the stopping criteria were met this iteration
             {
-                ScopedEvent trace_criteria("TIME_CRITERIA",this->_manager->getBookkeeper());
+                ScopedEvent trace_criteria("TIME_CRITERIA",*bookkeeper);
                 wasReached = this->wasCriteriaReached();
             }
 
             //Notify algorithm observers about new generation change.
             {
-                ScopedEvent trace_criteria("TIME_OBSERVERS",this->_manager->getBookkeeper());
+                ScopedEvent trace_criteria("TIME_OBSERVERS",*bookkeeper);
                 this->notifyObservers(AlgorithmObserver<FITNESS_TYPE>::GENERATION_DONE);
             }
         }

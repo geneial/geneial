@@ -55,7 +55,7 @@ inline void BaseGeneticAlgorithm<FITNESS_TYPE>::notifyObservers(typename Algorit
 }
 
 template<typename FITNESS_TYPE>
-inline void  BaseGeneticAlgorithm<FITNESS_TYPE>::registerObserver(std::shared_ptr<AlgorithmObserver<FITNESS_TYPE>> observer)
+inline void  BaseGeneticAlgorithm<FITNESS_TYPE>::registerObserver(const std::shared_ptr<AlgorithmObserver<FITNESS_TYPE>> &observer)
 {
     typedef std::set<typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent> setType;
     const setType events = observer->getSubscribedEvents();

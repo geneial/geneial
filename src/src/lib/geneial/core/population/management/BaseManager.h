@@ -114,14 +114,14 @@ public:
         _executionManager = std::move(executionManager);
     }
 
-    BaseBookkeeper& getBookkeeper() const
+    std::shared_ptr<BaseBookkeeper> getBookkeeper() const
     {
-        return *_bookkeeper;
+        return _bookkeeper;
     }
 
     void setBookkeeper(const std::shared_ptr<BaseBookkeeper>& bookkeeper)
     {
-        _bookkeeper = std::move(bookkeeper);
+        _bookkeeper = bookkeeper;
     }
 
 private:

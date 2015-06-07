@@ -37,7 +37,7 @@ geneial_export_namespace
 {
 
 template<typename FITNESS_TYPE>
-std::shared_ptr<BaseStoppingCriterion<FITNESS_TYPE>> SteadyStateAlgorithm<FITNESS_TYPE>::Builder::getDefaultStoppingCriterion() const
+std::shared_ptr<BaseStoppingCriterion<FITNESS_TYPE>>SteadyStateAlgorithm<FITNESS_TYPE>::Builder::getDefaultStoppingCriterion() const
 {
     return std::make_shared<MaxGenerationCriterion<FITNESS_TYPE>>(100000);
 }
@@ -102,7 +102,7 @@ std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>> SteadyStateAlgorithm<FITNES
 
 
 template<typename FITNESS_TYPE>
-std::unique_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> SteadyStateAlgorithm<FITNESS_TYPE>::Builder::build()
+std::shared_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> SteadyStateAlgorithm<FITNESS_TYPE>::Builder::build()
 {
 
     if (!this->_stoppingCriterion)
@@ -140,11 +140,13 @@ std::unique_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> SteadyStateAlgorithm<FITNESS
         throw new std::runtime_error("One must at least specify a chromosome Factory with a fitness evaluator");
     }
 
-    auto algorithm = std::unique_ptr < SteadyStateAlgorithm
-            < FITNESS_TYPE
-                    >> (new SteadyStateAlgorithm<FITNESS_TYPE>(*this->_stoppingCriterion, *this->_selectionOperation,
-                            *this->_couplingOperation, *this->_crossoverOperation, *this->_replacementOperation,
-                            *this->_mutationOperation, *this->_chromosomeFactory));
+    auto algorithm = SteadyStateAlgorithm<FITNESS_TYPE>::makeShared(*this->_stoppingCriterion,
+                                                                    *this->_selectionOperation,
+                                                                    *this->_couplingOperation,
+                                                                    *this->_crossoverOperation,
+                                                                    *this->_replacementOperation,
+                                                                    *this->_mutationOperation,
+                                                                    *this->_chromosomeFactory);
     return std::move(algorithm);
 }
 

@@ -37,15 +37,14 @@ public:
     {
         try
         {
-            float x = 1.5f;
-            int i = 1;
+            volatile float x = 1.5f;
+            volatile int i = 1; //Increase i to simulate cpu fitness load ...
             while (i--)
             {
                 x *= sin(x) / atan(x) * tanh(x) * sqrt(x);
             }
 
             const MultiValueChromosome<int, double>& mvc = dynamic_cast<const MultiValueChromosome<int, double>&>(chromosome);
-            //usleep(1);
             return std::move(std::unique_ptr<Fitness<double>>(new Fitness<double>(mvc.getSum())));
         }
         catch(std::bad_cast&)
@@ -57,9 +56,9 @@ public:
     }
 };
 
+
 int main(int argc, char **argv)
 {
-
     std::cout
             //<< "\x1b[0m\x1b[35;1m\x1b[41;1m"
             << "Running GENEIAL demo1 - Version "
@@ -69,7 +68,7 @@ int main(int argc, char **argv)
                 << GENEIAL_BUILD_TYPE << ")"
             << std::endl;
 
-    DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
+    auto evaluator = std::make_shared<DemoChromosomeEvaluator>();
 
     ContinousMultiValueBuilderSettings<int, double> builderSettings(evaluator, 20, 130, 0, true, 20, 5);
 
@@ -79,13 +78,13 @@ int main(int argc, char **argv)
 
     algorithm->getPopulationSettings().setMaxChromosomes(100);
 
-    //algorithm->setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager(3))));
 
-    algorithm->setBookkeeper(std::move(std::unique_ptr<StatisticBookkeeper>(new StatisticBookkeeper)));
+    //algorithm->setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager(3))));
+    Diagnostics<double> diag(algorithm);
 
     algorithm->solve();
 
-    auto diagnostics =
+    diag.analyseAll(std::cout);
 
     std::cout << *algorithm->getHighestFitnessChromosome() << std::endl;
 

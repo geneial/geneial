@@ -83,9 +83,8 @@ void ReplaceWorstOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &po
     }
 
     const unsigned int failed_inserts = childrenCandidates - population.insertChromosomeContainer(newChildren);
-    manager.getBookkeeper().traceEvent("REPLACEMENT_FAILED_INSERTS",EventValueData<const unsigned int>(failed_inserts));
 
-
+    EventValueData<unsigned int>::create(*manager.getBookkeeper(),"REPLACEMENT_FAILED_INSERTS",failed_inserts);
 
     //we might have a deficit at this point if offsprings were already contained.
 
@@ -110,7 +109,7 @@ void ReplaceWorstOperation<FITNESS_TYPE>::doReplace(Population<FITNESS_TYPE> &po
     }
     else
     {
-        manager.getBookkeeper().traceEvent("REPLACEMENT_NO_WORST_DELETED");
+        manager.getBookkeeper()->traceEvent("REPLACEMENT_NO_WORST_DELETED");
     }
 
 }

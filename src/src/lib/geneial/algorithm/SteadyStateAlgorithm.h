@@ -13,6 +13,8 @@
 #include <geneial/core/population/builder/MultiValueChromosomeFactory.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
 
+#include <geneial/utility/mixins/EnableMakeShared.h>
+
 geneial_private_namespace(geneial)
 {
 geneial_private_namespace(algorithm)
@@ -26,13 +28,15 @@ using ::geneial::population::chromosome::BaseChromosomeFactory;
 using ::geneial::algorithm::stopping_criteria::BaseStoppingCriterion;
 
 using ::geneial::population::management::ScopedEvent;
+using ::geneial::utility::EnableMakeShared;
 
 
 geneial_export_namespace
 {
 
 template<typename FITNESS_TYPE>
-class SteadyStateAlgorithm: public BaseGeneticAlgorithm<FITNESS_TYPE>
+class SteadyStateAlgorithm: public BaseGeneticAlgorithm<FITNESS_TYPE>,
+                            public virtual EnableMakeShared<SteadyStateAlgorithm<FITNESS_TYPE>>
 {
 protected:
     SteadyStateAlgorithm(
@@ -43,8 +47,13 @@ protected:
                 std::shared_ptr<BaseReplacementOperation<FITNESS_TYPE>> replacementOperation,
                 std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>> mutationOperation,
                 std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> chromosomeFactory) :
-                BaseGeneticAlgorithm<FITNESS_TYPE>(stoppingCriterion, selectionOperation, couplingOperation,
-                        crossoverOperation, replacementOperation, mutationOperation, chromosomeFactory)
+                BaseGeneticAlgorithm<FITNESS_TYPE>(stoppingCriterion,
+                                                   selectionOperation,
+                                                   couplingOperation,
+                                                   crossoverOperation,
+                                                   replacementOperation,
+                                                   mutationOperation,
+                                                   chromosomeFactory)
         {
         }
 
@@ -74,7 +83,7 @@ public:
 
     virtual std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>> getDefaultMutationOperation() const;
 
-    virtual std::unique_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> build() override;
+    virtual std::shared_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> build() override;
 
 };
 

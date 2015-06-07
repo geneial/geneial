@@ -32,7 +32,7 @@ void BaseManager<FITNESS_TYPE>::replenishPopulation()
         _population.insertChromosome(newChromosome);
     }
 
-    this->getBookkeeper().traceEvent("REPLENISH_AMOUNT",EventValueData<int>(difference));
+    EventValueData<unsigned int>::create(*this->getBookkeeper(),"REPLENISH_AMOUNT",difference);
 }
 
 template<typename FITNESS_TYPE>

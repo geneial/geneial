@@ -3,7 +3,7 @@
 #include <geneial/namespaces.h>
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
-#include <geneial/utility/mixins/EnableMakeShared.h>
+#include <geneial/core/population/management/Bookkeeper.h>
 
 #include <unordered_map>
 #include <chrono>
@@ -18,29 +18,30 @@ geneial_private_namespace(algorithm)
 geneial_export_namespace
 {
 using ::geneial::algorithm::BaseGeneticAlgorithm;
-using ::geneial::utility::EnableMakeShared;
 
 geneial_export_namespace
 {
-class Diagnostics : public virtual EnableMakeShared<Diagnostics>{
-    const std::shared_ptr<BaseBookkeeper> _bookkeeper;
+
+template<typename FITNESS_TYPE>
+class Diagnostics
+{
+    const std::shared_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> _algorithm;
 
 protected:
-    Diagnostics(const std::shared_ptr<BaseBookkeeper> &bookkeeper);
+    void instrumentAlgorithm();
+
 public:
+    Diagnostics(const std::shared_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> &algorithm);
 
-    void analyseAll();
+    void analyseAll(std::ostream& os);
 
-    void analyseTimeSpent();
-    void analyseEventsCoupling();
-    void analyseEventsCrossover();
-    void analyseEventsMutation();
-    void analyseEventsReplacement();
-    void anaylseEventsSelection();
+    void analyseTimeSpent(std::ostream& os);
+    void analyseEventsCoupling(std::ostream& os);
+    void analyseEventsCrossover(std::ostream& os);
+    void analyseEventsMutation(std::ostream& os);
+    void analyseEventsReplacement(std::ostream& os);
+    void anaylseEventsSelection(std::ostream& os);
 
-    class Builder
-    {
-    };
 };
 
 
@@ -48,3 +49,5 @@ public:
 }
 }
 }
+
+#include <geneial/algorithm/diagnostics/Diagnostics.hpp>
