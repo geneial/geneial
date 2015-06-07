@@ -102,7 +102,7 @@ std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>> SteadyStateAlgorithm<FITNES
 
 
 template<typename FITNESS_TYPE>
-std::shared_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> SteadyStateAlgorithm<FITNESS_TYPE>::Builder::build()
+std::shared_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> SteadyStateAlgorithm<FITNESS_TYPE>::Builder::create()
 {
 
     if (!this->_stoppingCriterion)

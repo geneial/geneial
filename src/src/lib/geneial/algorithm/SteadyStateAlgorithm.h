@@ -83,7 +83,7 @@ public:
 
     virtual std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>> getDefaultMutationOperation() const;
 
-    virtual std::shared_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> build() override;
+    virtual std::shared_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> create() override;
 
 };
 

@@ -21,17 +21,24 @@ private:
 
     VALUE_TYPE _random_min;
 
-    unsigned int _num;
+    unsigned int _numberallee;
 
 public:
+
+    static const VALUE_TYPE DEFAULT_RANDOM_MAX = 100;
+
+    static const VALUE_TYPE DEFAULT_RANDOM_MIN = 0;
+
+    static const unsigned int DEFAULT_NUM = 2;
+
     MultiValueBuilderSettings( const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator,
-                               const unsigned int num,
-                               const VALUE_TYPE random_max,
-                               const VALUE_TYPE random_min) :
+                               const unsigned int num = DEFAULT_NUM,
+                               const VALUE_TYPE random_max = DEFAULT_RANDOM_MAX,
+                               const VALUE_TYPE random_min = DEFAULT_RANDOM_MIN ) :
             BuilderSettings<FITNESS_TYPE>(fitnessEvaluator),
             _random_max(random_max),
             _random_min(random_min),
-            _num(num)
+            _numberallee(num)
     {
     }
 
@@ -41,12 +48,12 @@ public:
 
     inline unsigned int getNum() const
     {
-        return _num;
+        return _numberallee;
     }
 
     void setNum(unsigned int num)
     {
-        _num = num;
+        _numberallee = num;
     }
 
     inline VALUE_TYPE getRandomMax() const

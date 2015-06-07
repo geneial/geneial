@@ -15,6 +15,7 @@
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
 #include <geneial/core/operations/replacement/BaseReplacementOperation.h>
 #include <geneial/algorithm/observer/AlgorithmObserver.h>
+#include <geneial/utility/mixins/Buildable.h>
 
 #include <geneial/utility/ExecutionManager.h>
 
@@ -44,12 +45,14 @@ using ::geneial::population::chromosome::BaseChromosomeFactory;
 using ::geneial::population::management::BaseBookkeeper;
 using ::geneial::population::management::BaseManager;
 
+using ::geneial::utility::Buildable;
+
 geneial_export_namespace
 {
 
 
 template<typename FITNESS_TYPE>
-class BaseGeneticAlgorithm
+class BaseGeneticAlgorithm : public virtual Buildable<BaseGeneticAlgorithm<FITNESS_TYPE>>
 {
 protected:
     typedef typename std::map<typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent,
@@ -195,7 +198,7 @@ public:
 };
 
 template<typename FITNESS_TYPE>
-class BaseGeneticAlgorithm<FITNESS_TYPE>::Builder
+class BaseGeneticAlgorithm<FITNESS_TYPE>::Builder : public Buildable<BaseGeneticAlgorithm<FITNESS_TYPE>>::Builder
 {
 protected:
     boost::optional<std::shared_ptr<BaseStoppingCriterion<FITNESS_TYPE>>> _stoppingCriterion;
@@ -262,8 +265,6 @@ public:
         _chromosomeFactory = chromosomeFactory;
         return *this;
     }
-
-    virtual std::shared_ptr<BaseGeneticAlgorithm<FITNESS_TYPE>> build() = 0;
 };
 
 } /* geneial_export_namespace */

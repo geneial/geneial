@@ -44,6 +44,7 @@ public:
                 x *= sin(x) / atan(x) * tanh(x) * sqrt(x);
             }
 
+
             const MultiValueChromosome<int, double>& mvc = dynamic_cast<const MultiValueChromosome<int, double>&>(chromosome);
             return std::move(std::unique_ptr<Fitness<double>>(new Fitness<double>(mvc.getSum())));
         }
@@ -70,21 +71,26 @@ int main(int argc, char **argv)
 
     auto evaluator = std::make_shared<DemoChromosomeEvaluator>();
 
-    ContinousMultiValueBuilderSettings<int, double> builderSettings(evaluator, 20, 130, 0, true, 20, 5);
 
-    auto algorithm = SteadyStateAlgorithm<double>::Builder().
-            setChromosomeFactory(std::make_shared<ContinousMultiValueChromosomeFactory<int,double>>(builderSettings)).
-            build();
+    ContinousMultiValueChromosomeFactory<int,double>::Builder factoryBuilder(evaluator);
+    factoryBuilder.getSettings().setNum(20);
+    factoryBuilder.getSettings().setRandomMin(20);
+    factoryBuilder.getSettings().setRandomMax(130);
+    factoryBuilder.getSettings().setHasStart(true);
+    factoryBuilder.getSettings().setStart(70);
+    factoryBuilder.getSettings().setEps(5);
+
+    auto algorithm = SteadyStateAlgorithm<double>::Builder().setChromosomeFactory(factoryBuilder.create()).create();
 
     algorithm->getPopulationSettings().setMaxChromosomes(100);
 
 
     //algorithm->setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager(3))));
-    Diagnostics<double> diag(algorithm);
+    //Diagnostics<double> diag(algorithm);
 
     algorithm->solve();
 
-    diag.analyseAll(std::cout);
+    //diag.analyseAll(std::cout);
 
     std::cout << *algorithm->getHighestFitnessChromosome() << std::endl;
 
