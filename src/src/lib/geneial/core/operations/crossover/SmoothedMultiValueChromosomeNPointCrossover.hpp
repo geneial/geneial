@@ -22,11 +22,13 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set SmoothedMult
 {
     //We can do this since this is subclass, however:
     //TODO(bewo) make this class a decorator for an arbitrary crossover function
-    auto result = MultiValueChromosomeNPointCrossover<VALUE_TYPE, FITNESS_TYPE>::doCrossover(mommy, daddy);
 
-    const auto &builderSettings =
+    auto result = MultiValueChromosomeNPointCrossover<VALUE_TYPE, FITNESS_TYPE>::doMultiValueCrossover(mommy, daddy);
+
+        const auto &builderSettings =
             (static_cast<const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>&>(
                     this->getBuilderFactory().getSettings()));
+
     const auto eps = builderSettings.getEps();
     const auto min = builderSettings.getRandomMin();
     const auto max = builderSettings.getRandomMax();

@@ -62,11 +62,11 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
     const auto populationAge = manager.getPopulation().getAge();
     const auto maxNumMvc = this->getBuilderFactory().getSettings().getNum();
 
-    const auto slotsToMutate = Random::generate<unsigned int>(this->getSettings().getMinimumPointsToMutate(),this->getSettings().getMaximumPointsToMutate());
 
     //only mutate choosen chromosomes
     for (const auto& chromosome : choosenChromosomeContainer)
     {
+        const auto slotsToMutate = Random::generate<unsigned int>(this->getSettings().getMinimumPointsToMutate(),this->getSettings().getMaximumPointsToMutate());
         //casting mutant as MVC
         auto mvcMutant = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
                 chromosome);
@@ -88,7 +88,7 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
         std::unordered_set<unsigned int> positions;
         while (positions.size() < slotsToMutate)
         {
-            positions.emplace(Random::generate<unsigned int>(0, maxNumMvc));
+            positions.emplace(Random::generate<unsigned int>(0, maxNumMvc - 1));
         }
 
         for(const auto pos : positions)

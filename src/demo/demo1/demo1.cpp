@@ -45,7 +45,7 @@ public:
             }
 
 
-            const MultiValueChromosome<int, double>& mvc = dynamic_cast<const MultiValueChromosome<int, double>&>(chromosome);
+            const auto& mvc = dynamic_cast<const MultiValueChromosome<int, double>&>(chromosome);
             return std::move(std::unique_ptr<Fitness<double>>(new Fitness<double>(mvc.getSum())));
         }
         catch(std::bad_cast&)

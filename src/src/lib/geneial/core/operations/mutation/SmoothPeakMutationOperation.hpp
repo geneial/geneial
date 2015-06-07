@@ -2,6 +2,8 @@
 
 #include <geneial/core/operations/mutation/SmoothPeakMutationOperation.h>
 
+#include <unordered_set>
+
 geneial_private_namespace(geneial)
 {
 geneial_private_namespace(operation)
@@ -24,6 +26,7 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
     typename Population<FITNESS_TYPE>::chromosome_container resultset;
     typename Population<FITNESS_TYPE>::chromosome_container choosenChromosomeContainer;
     typename Population<FITNESS_TYPE>::chromosome_container notChoosenChromosomeContainer;
+    const auto maxNumMvc = this->getBuilderFactory().getSettings().getNum();
 
     const auto continousBuilderSettings =
             (
@@ -46,60 +49,52 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
 
         const auto slotsToMutate = Random::generate<unsigned int>(this->getSettings().getMinimumPointsToMutate(),this->getSettings().getMaximumPointsToMutate());
 
-        //casting mutant to MVC
-        const auto mvcMutant = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
-                chosenChromosome);
-        assert(mvcMutant);
+            //casting mutant to MVC
+            const auto mvcMutant = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
+                    chosenChromosome);
+            assert(mvcMutant);
 
-        //creating a new MVC (to keep things reversible)
-        auto mutatedChromosome = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
-                this->getBuilderFactory().createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
-        assert(mutatedChromosome);
+            //creating a new MVC (to keep things reversible)
+            auto mutatedChromosome = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
+                    this->getBuilderFactory().createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
+            assert(mutatedChromosome);
 
-        //getting values
-        const auto &mutantChromosomeContainer = mvcMutant->getContainer();
-        auto &result_container = mutatedChromosome->getContainer();
-
-
-        result_container.clear();
-        std::copy(mutantChromosomeContainer.cbegin(), mutantChromosomeContainer.cend(),
-                result_container.begin());
+            //getting values
+            const auto &mutantChromosomeContainer = mvcMutant->getContainer();
+            auto &result_container = mutatedChromosome->getContainer();
 
 
-        //We have two choices here:
-        // A) Mutate a fixed amount of given points (getAmountOfPointsOfMutation > 0)
-        // B) Mutate every point based on a predetermined probability
-        if (slotsToMutate > 0)
-        {
+            std::copy(mutantChromosomeContainer.cbegin(), mutantChromosomeContainer.cend(),
+                    result_container.begin());
 
-            std::set<unsigned int> positionsToPeak;
+
+            //Predetermine Positions for Mutation:
+            std::unordered_set<unsigned int> positions;
+            while (positions.size() < slotsToMutate)
+            {
+                const auto rand = Random::generate<unsigned int>(0, maxNumMvc - 1);
+                positions.emplace(rand);
+            }
 
             //We have an predetermined amount of points for introducing peaks...
-            for (unsigned int i = slotsToMutate; i > 0; i--)
+            for(const auto pos : positions)
             {
-                unsigned int pos;
-                do
-                {
-                    pos = Random::generate<int>(0, continousBuilderSettings.getNum() - 1);
-                } while (positionsToPeak.find(pos) != positionsToPeak.end());
-
                 const int sign = (Random::generateBit()) ? -1 : 1;
                 Smoothing::peakAt<VALUE_TYPE, FITNESS_TYPE>(pos, Random::generate<int>(0, this->_maxLeftEps),
                         Random::generate<int>(0, this->_maxRightEps),
                         sign * Random::generate<int>(1, this->_maxElevation), mutatedChromosome);
             }
-        }
 
-        //Correct smoothness in mutated chromosome
-        Smoothing::restoreSmoothness<VALUE_TYPE, FITNESS_TYPE>(
-                mutatedChromosome,
-                continousBuilderSettings.getEps(),
-                continousBuilderSettings.getRandomMin(),
-                continousBuilderSettings.getRandomMax());
+            //Correct smoothness in mutated chromosome
+            Smoothing::restoreSmoothness<VALUE_TYPE, FITNESS_TYPE>(
+                    mutatedChromosome,
+                    continousBuilderSettings.getEps(),
+                    continousBuilderSettings.getRandomMin(),
+                    continousBuilderSettings.getRandomMax());
 
-        //Age reset
-        mutatedChromosome->setAge(0);
-        resultset.emplace_back(mutatedChromosome);
+            //Age reset
+            mutatedChromosome->setAge(0);
+            resultset.emplace_back(mutatedChromosome);
     }
 
     //add not mutated chromosomes

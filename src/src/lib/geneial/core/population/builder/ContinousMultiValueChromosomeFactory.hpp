@@ -31,14 +31,14 @@ typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiValueChromosomeFactory<
     {
         const unsigned int amount = _settings.getNum();
 
-        unsigned int i = amount;
+        unsigned int i = 0;
 
         int lastVal = 0; //reference to last inserted value
 
-        while (i--)
+        while (i<amount)
         {
 
-            if (i == amount - 1)
+            if (i == 0)
             {
                 if (_settings.hasStart())
                 {
@@ -56,10 +56,10 @@ typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiValueChromosomeFactory<
             const int lower_limited = std::max(_settings.getRandomMin(), val);
             const int upper_limited = std::min(_settings.getRandomMax(), lower_limited);
 
-            new_chromosome->getContainer()[amount-i] = upper_limited;
+            new_chromosome->getContainer()[i] = upper_limited;
 
             lastVal = upper_limited;
-
+            i++;
         }
         assert(new_chromosome->getSize() == _settings.getNum());
 

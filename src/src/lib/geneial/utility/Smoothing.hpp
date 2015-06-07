@@ -53,7 +53,8 @@ void Smoothing::peakAt(unsigned int pos, unsigned int epsLeft, unsigned int epsR
 {
     const unsigned int chromSize = chromosome->getSize();
 
-    assert(pos <= chromSize);
+
+    assert(pos < chromSize);
 
     assert(0 <= pos);
 
