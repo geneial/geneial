@@ -23,12 +23,13 @@ class MultiValueChromosomeFactory: public BaseChromosomeFactory<FITNESS_TYPE>
 protected:
     const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &_settings;
 
-    //Note that the raw ptr is intended here, since we wish to reduce the overhead.
+    //This shared ptr is necessary if there are chromomsome references after the shutdown of the factory that reference the resource pool for cleanup.
+    //Those delteers, then are unable to check whether the resource pool is still valid or not.
     std::shared_ptr<ResourcePool<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>>>  _chromosomeResourcePool;
 
 
 public:
-    explicit MultiValueChromosomeFactory(const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &settings) :
+    explicit MultiValueChromosomeFactory (const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &settings) :
         BaseChromosomeFactory<FITNESS_TYPE>(),
         _settings(settings),
         _chromosomeResourcePool(std::make_shared<ResourcePool<MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>>>())
@@ -54,7 +55,7 @@ protected:
     ) override;
 
 
-    friend class FactoryDeleter;
+    friend class ChromosomeDeleter;
 
     struct ChromosomeDeleter {
         std::weak_ptr<ResourcePool<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>>>  _resourcePool;
@@ -71,6 +72,7 @@ protected:
             }
             else
             {
+                //The resource pool is already gone, manual fallback resource cleanup.
                 delete p;
             }
         }

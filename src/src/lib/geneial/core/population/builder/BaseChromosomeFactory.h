@@ -4,6 +4,7 @@
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/core/population/management/ResourcePool.h>
+#include <geneial/utility/mixins/Buildable.h>
 
 geneial_private_namespace(geneial)
 {
@@ -13,12 +14,13 @@ geneial_private_namespace(chromosome)
 {
 using ::geneial::population::management::BaseManager;
 using ::geneial::population::management::ResourcePool;
+using ::geneial::utility::Buildable;
 
 geneial_export_namespace
 {
 
 template<typename FITNESS_TYPE>
-class BaseChromosomeFactory
+class BaseChromosomeFactory : public virtual Buildable<BaseChromosomeFactory<FITNESS_TYPE>>
 {
 
 public:
@@ -28,9 +30,6 @@ public:
         CREATE_VALUES, LET_UNPOPULATED
     };
 
-    BaseChromosomeFactory()
-    {
-    }
 
     virtual ~BaseChromosomeFactory()
     {
@@ -43,7 +42,15 @@ public:
         return std::move(doCreateChromosome(populateValues));
     }
 
+    class Builder : public Buildable<BaseChromosomeFactory<FITNESS_TYPE>>::Builder
+    {
+    };
+
 protected:
+    BaseChromosomeFactory()
+    {
+    }
+
     virtual typename BaseChromosome<FITNESS_TYPE>::ptr doCreateChromosome(
             PopulateBehavior populateValues
         ) = 0;
