@@ -38,11 +38,14 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
             choosenChromosomeContainer.cbegin(), choosenChromosomeContainer.cend(),
             std::back_inserter(notChoosenChromosomeContainer));
 
-    const auto amountPointOfMutation = this->getSettings().getAmountOfPointsOfMutation();
+    const auto slotsToMutate = Random::generate<unsigned int>(this->getSettings().getMinimumPointsToMutate(),this->getSettings().getMaximumPointsToMutate());
 
     //only mutate choosen chromosomes
     for (const auto &chosenChromosome : choosenChromosomeContainer)
     {
+
+        const auto slotsToMutate = Random::generate<unsigned int>(this->getSettings().getMinimumPointsToMutate(),this->getSettings().getMaximumPointsToMutate());
+
         //casting mutant to MVC
         const auto mvcMutant = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
                 chosenChromosome);
@@ -60,19 +63,19 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
 
         result_container.clear();
         std::copy(mutantChromosomeContainer.cbegin(), mutantChromosomeContainer.cend(),
-                std::back_inserter(result_container));
+                result_container.begin());
 
 
         //We have two choices here:
         // A) Mutate a fixed amount of given points (getAmountOfPointsOfMutation > 0)
         // B) Mutate every point based on a predetermined probability
-        if (amountPointOfMutation > 0)
+        if (slotsToMutate > 0)
         {
 
             std::set<unsigned int> positionsToPeak;
 
             //We have an predetermined amount of points for introducing peaks...
-            for (unsigned int i = amountPointOfMutation; i > 0; i--)
+            for (unsigned int i = slotsToMutate; i > 0; i--)
             {
                 unsigned int pos;
                 do
@@ -85,27 +88,6 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
                         Random::generate<int>(0, this->_maxRightEps),
                         sign * Random::generate<int>(1, this->_maxElevation), mutatedChromosome);
             }
-        }
-        else
-        {
-            //Iterate the chromosome's value
-            for (auto it = mutatedChromosome->getContainer().begin();
-                    it!=mutatedChromosome->getContainer().end();++it)
-            {
-                const double value_choice = Random::generate<int>(0.0, 1.0);
-
-                if (value_choice < this->getSettings().getAmountOfMutation())
-                {
-                    const int sign = (Random::generateBit()) ? -1 : 1;
-
-                    Smoothing::peakAt<VALUE_TYPE, FITNESS_TYPE>(
-                            std::distance(mutatedChromosome->getContainer().begin(), it),
-                            Random::generate<int>(0, this->_maxLeftEps),
-                            Random::generate<int>(0, this->_maxRightEps),
-                            sign * Random::generate<int>(1, this->_maxElevation), mutatedChromosome);
-                }
-            }
-
         }
 
         //Correct smoothness in mutated chromosome

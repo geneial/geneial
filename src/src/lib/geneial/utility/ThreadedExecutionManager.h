@@ -40,16 +40,18 @@ private:
 
     void initializeThreads(const unsigned int amountThreads);
 
+    unsigned int _amountPerThread = 1;
+
 public:
 
     explicit ThreadedExecutionManager(const unsigned int amountThreads) :
-            _tasks(), _threads(), _mutex(), _condEntry(), _finish(false)
+            _tasks(), _threads(), _mutex(), _condEntry(), _finish(false),_amountPerThread(1)
     {
         initializeThreads(amountThreads);
     }
 
     ThreadedExecutionManager() :
-            _tasks(), _threads(), _mutex(), _condEntry(), _finish(false)
+            _tasks(), _threads(), _mutex(), _condEntry(), _finish(false),_amountPerThread(1)
     {
         initializeThreads(
                 std::min(static_cast<unsigned int>(1),
@@ -66,6 +68,20 @@ public:
     virtual void waitForTasks() override;
 
     void joinAll();
+
+    unsigned int getAmountPerThread() const
+    {
+        return _amountPerThread;
+    }
+
+    /**
+     * Determines the work bucket size for one thread,
+     * i.e. how much work does one thread do until the thread syncs again.
+     */
+    void setAmountPerThread(unsigned int amountPerThread = 1)
+    {
+        _amountPerThread = amountPerThread;
+    }
 };
 
 } /* geneial_export_namespace */

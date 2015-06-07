@@ -27,47 +27,6 @@ geneial_export_namespace
 template<typename FITNESS_TYPE>
 class BaseChromosome: public Printable, public std::enable_shared_from_this<BaseChromosome<FITNESS_TYPE> >
 {
-    //we use our own custom optional here since some old boost::optional versions cannot move.
-    template<typename T> class Optional
-    {
-        T mValue;
-        bool mHasValue;
-
-    public:
-
-        Optional() :
-                mHasValue(false)
-        {
-        }
-
-        Optional(T &&v) :
-                mValue(std::move(v)), mHasValue(true)
-        {
-        }
-
-        inline void set(T const &&v)
-        {
-            mValue = std::move(v);
-            mHasValue = true;
-        }
-
-        //Note this does not call the dtor right away
-        inline void clear()
-        {
-            mHasValue = false;\
-        }
-
-        inline T const &get() const
-        {
-            return mValue;
-        }
-
-        inline bool is_initialized() const
-        {
-            return mHasValue;
-        }
-    };
-
 public:
     static const int CHROMOSOME_AGE_UNITIALIZED = 0;
 
@@ -91,7 +50,7 @@ public:
      *
      */
     explicit BaseChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) :
-            _fitness(), _fitnessEvaluator(fitnessEvaluator), _age(CHROMOSOME_AGE_UNITIALIZED)
+            _fitness(nullptr), _fitnessEvaluator(fitnessEvaluator), _age(CHROMOSOME_AGE_UNITIALIZED)
     {
         assert(_fitnessEvaluator);
     }
@@ -120,7 +79,8 @@ public:
     bool inline hasFitness() const
     {
         //Note (bewo) cast to bool will yield to boost::optional evaluation
-        return _fitness.is_initialized();
+        //return _fitness.is_initialized();
+        return _fitness != nullptr;
     }
 
     /**
@@ -171,7 +131,7 @@ protected:
     virtual void printHash(std::ostream& os) const;
 
 private:
-    mutable Optional<typename std::unique_ptr<Fitness<FITNESS_TYPE>>>_fitness;
+    mutable std::unique_ptr<Fitness<FITNESS_TYPE>> _fitness;
 
     typename FitnessEvaluator<FITNESS_TYPE>::ptr _fitnessEvaluator;
 

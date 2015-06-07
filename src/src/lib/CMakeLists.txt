@@ -93,9 +93,9 @@ install (TARGETS ${LIB_GENEIAL_STATIC_NAME} DESTINATION ${LIBDEST})
 #Warn if Debugmode is set.
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_custom_target( DebugInfo ALL
-    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --switch=${COLOR} --yellow --bold "${INDENT}==========="
+    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --switch=${COLOR} --yellow --bold "${INDENT}============"
     COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --switch=${COLOR} --yellow --bold "${INDENT}Note that you are about to compile the Debug Version. Compilation time and Runtime will be slower!"
-    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --switch=${COLOR} --yellow --bold "${INDENT}==========="
+    COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --switch=${COLOR} --yellow --bold "${INDENT}============"
     COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --switch=${COLOR} --yellow --bold ""
     COMMENT "Debug Notice")
     add_dependencies( ${LIB_GENEIAL_SHARED_NAME} DebugInfo )

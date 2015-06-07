@@ -41,7 +41,7 @@ protected:
             const unsigned int maxLeftEps,
             const unsigned int maxRightEps,
             const FITNESS_TYPE maxElevation,
-            const std::shared_ptr<const MutationSettings> &settings,
+            const std::shared_ptr<const MultiValueMutationSettings> &settings,
             const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
             const std::shared_ptr<ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
 
@@ -110,7 +110,7 @@ public:
            {
            }
 
-           Builder(const std::shared_ptr<MutationSettings> &settings,
+           Builder(const std::shared_ptr<MultiValueMutationSettings> &settings,
                    const std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
                    const std::shared_ptr<ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
                    MultiValueChromosomeMutationOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(settings, choosingOperation,

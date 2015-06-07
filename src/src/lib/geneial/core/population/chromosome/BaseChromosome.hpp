@@ -28,11 +28,13 @@ const Fitness<FITNESS_TYPE>& BaseChromosome<FITNESS_TYPE>::getFitness() const
     if (_fitnessEvaluator && !hasFitness())
     {
         //if we have a fitness evaluator assigned to the chromosome, but no fitness was calculated yet, do so.
+        assert(_fitnessEvaluator);
+        assert(this);
         _fitness = (std::move(_fitnessEvaluator->evaluate(*this)));
     }
 
     //No fitness evaluator -> undefined, probably null but no guarantee.
-    return *(_fitness.get());
+    return *_fitness;
 
 }
 
@@ -73,7 +75,7 @@ const typename FitnessEvaluator<FITNESS_TYPE>::ptr BaseChromosome<FITNESS_TYPE>:
 template<typename FITNESS_TYPE>
 void BaseChromosome<FITNESS_TYPE>::invalidateFitness()
 {
-    _fitness.clear();
+    _fitness = nullptr;
 }
 
 template<typename FITNESS_TYPE>

@@ -48,7 +48,6 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
     typename Population<FITNESS_TYPE>::chromosome_container notChoosenChromosomeContainer;
 
     unsigned int pointOfMutation = 0;
-    unsigned int mutationCounter = 0;
 
     choosenChromosomeContainer = this->getChoosingOperation().doChoose(chromosomeInputContainer);
 
@@ -68,8 +67,6 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
     //only mutate choosen chromosomes
     for (const auto& chromosome : choosenChromosomeContainer)
     {
-        mutationCounter = 0;
-
         //casting mutant as MVC
         auto mvcMutant = std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
                 chromosome);

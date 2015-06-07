@@ -3,6 +3,8 @@
 #include <geneial/namespaces.h>
 #include <geneial/core/population/builder/BaseChromosomeFactory.h>
 #include <geneial/core/population/builder/MultiValueBuilderSettings.h>
+#include <mutex>
+
 
 geneial_private_namespace(geneial)
 {
@@ -26,6 +28,8 @@ geneial_export_namespace
 template<typename RESOURCE>
 class ResourcePool
 {
+    std::mutex _poolMutex;
+
     std::vector<RESOURCE*> _freePool;
     //TODO (bewo): Think about pruning when having large amounts of resources.
 
@@ -39,6 +43,7 @@ public:
      */
     bool inline retrieve(RESOURCE* &raw_ptr)
     {
+        std::lock_guard<std::mutex> lock(_poolMutex);
         if (_freePool.size() > 0)
         {
             raw_ptr = _freePool.back();
@@ -57,7 +62,12 @@ public:
      */
     void inline free(RESOURCE*&& raw_ptr)
     {
+#ifndef NALLOCREUSE
+        std::lock_guard<std::mutex> lock(_poolMutex);
         _freePool.emplace_back(raw_ptr);
+#else
+        delete raw_ptr;
+#endif
     }
 
     size_t inline size()

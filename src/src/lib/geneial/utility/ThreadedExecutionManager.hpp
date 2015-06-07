@@ -11,7 +11,6 @@ geneial_export_namespace
 {
 void ThreadedExecutionManager::executor()
 {
-    const static int amountPerThread = 1;
     std::deque<std::function<void()>> innerTask;
 
     bool running = true;
@@ -25,7 +24,7 @@ void ThreadedExecutionManager::executor()
 
         if (!_tasks.empty())
         {
-            int i = amountPerThread;
+            int i = _amountPerThread;
 
             while (i-- && !_tasks.empty())
             {

@@ -34,6 +34,9 @@
 #include <stdexcept>
 #include <cassert>
 #include <memory>
+#include <thread>
+#include <condition_variable>
+#include <mutex>
 
 using namespace geneial;
 
@@ -141,6 +144,27 @@ void printChromosome(const MultiValueChromosome<int, double> &chromosomeToPrint)
     std::cout << std::endl;
 }
 
+bool running = true;
+std::condition_variable cv;
+std::mutex cv_m;
+MultiValueChromosome<int, double>::ptr best;
+
+void displayOnUpdate()
+{
+    MultiValueChromosome<int, double>::ptr _best;
+
+    while (running)
+    {
+        std::unique_lock<std::mutex> l(cv_m);
+        cv.wait(l);
+        _best = best;
+        printClearScreen();
+        printChromosome(*_best);
+    }
+
+    std::cerr << "...finished waiting. i == 1\n";
+}
+
 class DemoObserver: public BestChromosomeObserver<double>
 {
 public:
@@ -148,9 +172,8 @@ public:
     {
         try
         {
-            const MultiValueChromosome<int, double>& mvc = *std::dynamic_pointer_cast< MultiValueChromosome<int, double> > (manager.getHighestFitnessChromosome());
-            printClearScreen();
-            printChromosome(mvc);
+            best = std::dynamic_pointer_cast< MultiValueChromosome<int, double> > (manager.getHighestFitnessChromosome());
+            cv.notify_all();
         } catch (std::bad_cast &)
         {
             throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
@@ -161,6 +184,8 @@ public:
 
 int main(int argc, char **argv)
 {
+
+
     std::cout
             << "Running GENEIAL demo2 - Version "
             << GENEIAL_VERSION_STRING << " ("<<GENEIAL_BUILD_TYPE << ")"
@@ -182,7 +207,7 @@ int main(int argc, char **argv)
     //Mutation:
     UniformMutationOperation<int,double>::Builder mutationBuilder(factory);
 
-    auto choosing = ChooseRandom<double>::Builder().setProbability(0.2).create();
+    auto choosing = ChooseRandom<double>::Builder().setProbability(0.4).create();
     mutationBuilder.setChoosingOperation(choosing);
     mutationBuilder.getSettings().setMinimumPointsToMutate(1);
     mutationBuilder.getSettings().setMaximumPointsToMutate(10);
@@ -204,7 +229,7 @@ int main(int argc, char **argv)
 
     //Crossover:
     auto crossoverBuilder = MultiValueChromosomeNPointCrossover<int, double>::Builder(factory);
-    crossoverBuilder.getCrossoverSettings().setCrossOverPoints(1);
+    crossoverBuilder.getCrossoverSettings().setCrossOverPoints(2);
     crossoverBuilder.getCrossoverSettings().setWidthSetting(MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH);
     crossoverBuilder.getCrossoverSettings().setMinWidth(3);
 
@@ -232,18 +257,29 @@ int main(int argc, char **argv)
     auto algorithm = algorithmBuilder.create();
     algorithm->getPopulationSettings().setMaxChromosomes(100);
 
-    //algorithm->setExecutionManager(
-    //        std::move(std::unique_ptr < ThreadedExecutionManager > (new ThreadedExecutionManager(1))));
+    auto threadproto = new ThreadedExecutionManager(4);
+    threadproto->setAmountPerThread(4);
+    algorithm->setExecutionManager(
+            std::move(std::unique_ptr < ThreadedExecutionManager > (std::move(threadproto))));
 
     algorithm->registerObserver(std::make_shared<DemoObserver>());
 
+    std::thread ui_update(displayOnUpdate);
+
     algorithm->solve();
+    running = false;
+    cv.notify_all();
+    cv.notify_all();
+
+
+    ui_update.join();
 
     printClearScreen();
     auto mvc = std::dynamic_pointer_cast<MultiValueChromosome<int, double> >(
             algorithm->getHighestFitnessChromosome());
     printChromosome (*mvc);
     std::cout << "ended after " << algorithm->getPopulation().getAge() << " generations" << std::endl;
+
 
 
 }

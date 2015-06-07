@@ -120,6 +120,13 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
     std::sort(crossoverPositions.begin(),crossoverPositions.end());
     }
 
+
+    for (auto pos : crossoverPositions)
+    {
+        std::cout << "pos" << pos << ",";
+    }
+    std::cout << std::endl;
+
     assert(crossoverPositions.size() == crossoverPoints);
 
     auto child_candidate = this->createChildCandidate();

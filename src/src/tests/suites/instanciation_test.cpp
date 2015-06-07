@@ -39,7 +39,7 @@
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 //#include <geneial/core/operations/choosing/LambdaChoosingAdapter.h>
 
-#include <geneial/core/operations/mutation/NonUniformMutationOperation.h>
+//#include <geneial/core/operations/mutation/NonUniformMutationOperation.h>
 #include <geneial/core/operations/mutation/SmoothPeakMutationOperation.h>
 #include <geneial/core/operations/mutation/UniformMutationOperation.h>
 
@@ -104,7 +104,7 @@ Expander1D(geneial::operation::choosing::ChooseRandom)
 //Expander1D(geneial::operation::choosing::LambdaChoosingAdapter)
 
 //Mutation
-Expander2D(geneial::operation::mutation::NonUniformMutationOperation)
+//Expander2D(geneial::operation::mutation::NonUniformMutationOperation)
 Expander2D(geneial::operation::mutation::SmoothPeakMutationOperation)
 Expander2D(geneial::operation::mutation::UniformMutationOperation)
 
