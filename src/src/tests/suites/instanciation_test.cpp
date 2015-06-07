@@ -104,7 +104,6 @@ Expander1D(geneial::operation::choosing::ChooseRandom)
 //Expander1D(geneial::operation::choosing::LambdaChoosingAdapter)
 
 //Mutation
-//Expander2D(geneial::operation::mutation::NonUniformMutationOperation)
 Expander2D(geneial::operation::mutation::SmoothPeakMutationOperation)
 Expander2D(geneial::operation::mutation::UniformMutationOperation)
 
