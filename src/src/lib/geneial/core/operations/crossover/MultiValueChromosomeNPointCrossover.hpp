@@ -121,12 +121,6 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
     }
 
 
-    for (auto pos : crossoverPositions)
-    {
-        std::cout << "pos" << pos << ",";
-    }
-    std::cout << std::endl;
-
     assert(crossoverPositions.size() == crossoverPoints);
 
     auto child_candidate = this->createChildCandidate();
@@ -137,9 +131,6 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 
     assert(daddy_container.size() == mommy_container.size());
 
-    auto target_it = child_container.begin();
-
-
     bool flip = true; //copy from ladies first.
 
     //push back to end so its ok, does not destroy sortedness
@@ -147,28 +138,26 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
 
     auto widthIterator = crossoverPositions.cbegin();
 
-//    for(auto size:crossoverPositions)
-//    {
-//        std::cout << size << ", "<< std::endl;
-//    }
     unsigned int i = 0;
 
     for (; widthIterator != crossoverPositions.end(); ++widthIterator)
     {
-        target_it += i;
-
         if (flip)
         {
-            std::copy(mommy_container.begin() + i, mommy_container.begin() + *widthIterator, target_it);
+            std::copy(mommy_container.begin() + i, mommy_container.begin() + *widthIterator, child_container.begin()+i);
         }
         else
         {
-            std::copy(daddy_container.begin() + i, daddy_container.begin() + *widthIterator, target_it);
+            std::copy(daddy_container.begin() + i, daddy_container.begin() + *widthIterator, child_container.begin()+i);
         }
         i = *widthIterator;
         flip = !flip;
     }
     assert(child_container.size() == mommy_container.size());
+
+    //std::cout << "MOMMIE: "<<  *daddy << std::endl;
+    //std::cout << "DADDIE: "<<  *mommy << std::endl;
+    //std::cout << "LIL' KEVIN: "<<  *child_candidate << std::endl;
 
     resultset.emplace_back(std::move(child_candidate));
 
