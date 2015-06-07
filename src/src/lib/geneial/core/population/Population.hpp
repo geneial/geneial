@@ -284,31 +284,11 @@ inline void Population<FITNESS_TYPE>::removeChromosome(const typename BaseChromo
 
     assert(candidateFound);
     const auto hit = _hashMap.find(hash);
-    /*if(hit == _hashMap.end())
-    {
-        std::cout <<"ERROR !!!! " <<std::endl;
-        for(auto i : _hashMap)
-        {
-            if(i.second == chromosome)
-            {
-                std::cout << "HASHMAP h " <<i.first << " ptr " << i.second;
-            }
-        }
-        for(auto i : _fitnessMap)
-        {
-            if(i.second == chromosome)
-            {
-                std::cout << "FITNESSMAP" << i.first << " ptr " << i.second;
-            }
-        }
-        std::cout << chromosome << " fitness " << chromosome->getFitness().get() << " h "<< chromosome->getHash() << std::endl;
-    }*/
     assert(hit != _hashMap.end());
 
     _fitnessMap.erase(it);
     _hashMap.erase(hit);
 
-    //getManager().deleteOrHoldOffReference(chromosome);
     //assert(_fitnessMap.find(hash) == _fitnessMap.end());
     //assert(_hashMap.find(hash) == _hashMap.end());
 

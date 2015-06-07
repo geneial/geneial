@@ -155,10 +155,6 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
     }
     assert(child_container.size() == mommy_container.size());
 
-    //std::cout << "MOMMIE: "<<  *daddy << std::endl;
-    //std::cout << "DADDIE: "<<  *mommy << std::endl;
-    //std::cout << "LIL' KEVIN: "<<  *child_candidate << std::endl;
-
     resultset.emplace_back(std::move(child_candidate));
 
     return std::move(resultset);
