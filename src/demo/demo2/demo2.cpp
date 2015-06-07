@@ -10,6 +10,7 @@
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
 
 #include <geneial/core/operations/replacement/ReplaceWorstOperation.h>
+#include <geneial/core/operations/replacement/ReplaceRandomOperation.h>
 
 #include <geneial/core/operations/mutation/UniformMutationOperation.h>
 
@@ -22,11 +23,11 @@
 
 #include <geneial/core/fitness/FitnessEvaluator.h>
 
+#include <geneial/utility/ThreadedExecutionManager.h>
 
 #include <geneial/algorithm/observer/BestChromosomeObserver.h>
 
 
-#include <geneial/config.h>
 
 #include <limits>
 #include <stdio.h>
@@ -48,6 +49,8 @@ using namespace geneial::operation::crossover;
 using namespace geneial::operation::replacement;
 using namespace geneial::operation::mutation;
 using namespace geneial::operation::choosing;
+
+using namespace geneial::utility;
 
 const char targetFigure[] =
 //0123456789|123456789|123456789|123456789
@@ -121,11 +124,10 @@ void printChromosome(const MultiValueChromosome<int, double> &chromosomeToPrint)
 {
     std::cout << std::endl;
     int it = 0;
-    MultiValueChromosome<int, double>::value_container container = chromosomeToPrint.getContainer();
-    assert(container.size() == charsPerFigure);
+    assert(chromosomeToPrint.getContainer().size() == charsPerFigure);
     while (it < charsPerFigure)
     {
-        std::cout << (char) container[it];
+        std::cout << (char) chromosomeToPrint.getContainer()[it];
         if (it != 0 && 0 == (it % lineBreakAfter))
         {
             std::cout << std::endl;
@@ -142,12 +144,11 @@ void printChromosome(const MultiValueChromosome<int, double> &chromosomeToPrint)
 class DemoObserver: public BestChromosomeObserver<double>
 {
 public:
-    void updateNewBestChromosome(BaseManager<double> &manager)
+    virtual void updateNewBestChromosome(geneial::population::management::BaseManager<double> &manager)
     {
         try
         {
-            const MultiValueChromosome<int, double> & mvc = *std::dynamic_pointer_cast
-                    < MultiValueChromosome<int, double> > (manager.getHighestFitnessChromosome());
+            const MultiValueChromosome<int, double>& mvc = *std::dynamic_pointer_cast< MultiValueChromosome<int, double> > (manager.getHighestFitnessChromosome());
             printClearScreen();
             printChromosome(mvc);
         } catch (std::bad_cast &)
@@ -160,72 +161,89 @@ public:
 
 int main(int argc, char **argv)
 {
+    std::cout
+            << "Running GENEIAL demo2 - Version "
+            << GENEIAL_VERSION_STRING << " ("<<GENEIAL_BUILD_TYPE << ")"
+            << std::endl;
 
-    std::cout << "Running GENEIAL demo2 - Version " << GENEIAL_VERSION_MAJOR << "." << GENEIAL_VERSION_MINOR << " ("
-            << GENEIAL_BUILD_TYPE << ")" << std::endl;
+    auto evaluator = std::make_shared<DemoChromosomeEvaluator>();
 
-    DemoChromosomeEvaluator::ptr evaluator(new DemoChromosomeEvaluator());
+    auto algorithmBuilder = SteadyStateAlgorithm<double>::Builder();
 
-    MultiValueBuilderSettings<int, double> builderSettings(evaluator, charsPerFigure, 128, 32);
+    //Factory:
+    MultiValueChromosomeFactory<int, double>::Builder factoryBuilder(evaluator);
+    factoryBuilder.getSettings().setNum(charsPerFigure);
+    factoryBuilder.getSettings().setRandomMin(32);
+    factoryBuilder.getSettings().setRandomMax(128);
 
-    MultiValueChromosomeFactory<int, double> chromosomeFactory(builderSettings);
+    auto factory  = std::dynamic_pointer_cast<MultiValueChromosomeFactory<int, double>>(factoryBuilder.create());
+    algorithmBuilder.setChromosomeFactory(factory);
 
-    MutationSettings mutationSettings(0.8, 0.0, 1);
+    //Mutation:
+    UniformMutationOperation<int,double>::Builder mutationBuilder(factory);
 
-    ChooseRandom<int, double> mutationChoosingOperation(mutationSettings);
+    auto choosing = ChooseRandom<double>::Builder().setProbability(0.2).create();
+    mutationBuilder.setChoosingOperation(choosing);
+    mutationBuilder.getSettings().setMinimumPointsToMutate(1);
+    mutationBuilder.getSettings().setMaximumPointsToMutate(10);
 
-    UniformMutationOperation<int, double> mutationOperation(mutationSettings, mutationChoosingOperation,
-            builderSettings, chromosomeFactory);
+    algorithmBuilder.setMutationOperation(mutationBuilder.create());
 
-    RouletteWheelSelection<double> selectionOperation(SelectionSettings(5));
+    //Selection:
+    auto selectionBuilder = RouletteWheelSelection<double>::Builder();
+    selectionBuilder.getSettings().setNumberOfParents(10);
 
-    CouplingSettings couplingSettings(20);
+    algorithmBuilder.setSelectionOperation(selectionBuilder.create());
 
-    RandomCouplingOperation<double> couplingOperation(couplingSettings);
+    //Coupling:
+    auto couplingBuilder = RandomCouplingOperation<double>::Builder();
+    couplingBuilder.getSettings().setNumberOfOffspring(20);
 
-    MultiValueChromosomeNPointCrossoverSettings crossoverSettings(1,
-            MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH, 3);
-
-    MultiValueChromosomeNPointCrossover<int, double> crossoverOperation(crossoverSettings, builderSettings,
-            chromosomeFactory);
-
-    BaseReplacementSettings replacementSettings(BaseReplacementSettings::REPLACE_ALL_OFFSPRING, 20, 0);
-
-    ReplaceWorstOperation<double> replacementOperation(replacementSettings);
-
-    CombinedCriterion<double> stoppingCriterion;
-    stoppingCriterion.add(CombinedCriterion<double>::INIT,
-            std::move(std::shared_ptr<MaxGenerationCriterion<double>>(new MaxGenerationCriterion<double>(100000))));
-
-    stoppingCriterion.add(CombinedCriterion<double>::OR,
-            std::move(std::shared_ptr<FitnessValueReachedCriterion<double>>(new FitnessValueReachedCriterion<double>(600))));
-
-    DemoObserver printObserver;
+    algorithmBuilder.setCouplingOperation(couplingBuilder.create());
 
 
-    SteadyStateAlgorithm<double> algorithm(
-            std::make_shared<CombinedCriterion<double>>(stoppingCriterion),
-            std::make_shared<RouletteWheelSelection<double>>(selectionOperation),
-            std::make_shared<RandomCouplingOperation<double>>(couplingOperation),
-            std::make_shared<MultiValueChromosomeNPointCrossover<int, double>>(crossoverOperation),
-            std::make_shared<ReplaceWorstOperation<double>>(replacementOperation),
-            std::make_shared<UniformMutationOperation<int, double>>(mutationOperation),
-            std::make_shared<MultiValueChromosomeFactory<int, double>>(chromosomeFactory));
+    //Crossover:
+    auto crossoverBuilder = MultiValueChromosomeNPointCrossover<int, double>::Builder(factory);
+    crossoverBuilder.getCrossoverSettings().setCrossOverPoints(1);
+    crossoverBuilder.getCrossoverSettings().setWidthSetting(MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH);
+    crossoverBuilder.getCrossoverSettings().setMinWidth(3);
 
-    algorithm.getPopulationSettings().setMaxChromosomes(60);
+    algorithmBuilder.setCrossoverOperation(crossoverBuilder.create());
 
-    algorithm.setExecutionManager(
-            std::move(std::unique_ptr < ThreadedExecutionManager > (new ThreadedExecutionManager(1))));
+    //Replacement:
+    auto replacementBuilder = ReplaceWorstOperation<double>::Builder();
+    //auto replacementBuilder = ReplaceRandomOperation<double>::Builder();
+    replacementBuilder.getSettings().setMode(BaseReplacementSettings::REPLACE_ALL_OFFSPRING);
+    replacementBuilder.getSettings().setAmountElitism(20);
+    //replacementBuilder.getSettings().setAmountToReplace(30);
 
-    algorithm.registerObserver(std::make_shared<DemoObserver>(printObserver));
+    algorithmBuilder.setReplacementOperation(replacementBuilder.create());
 
-    algorithm.solve();
+    //Stopping Criteria
+    auto stoppingCriterion = std::make_shared<CombinedCriterion<double>>();
+    stoppingCriterion->add(CombinedCriterion<double>::INIT,
+            std::move(std::make_shared<MaxGenerationCriterion<double>>(1000000)));
+
+    stoppingCriterion->add(CombinedCriterion<double>::OR,
+            std::move(std::make_shared<FitnessValueReachedCriterion<double>>(600)));
+
+    algorithmBuilder.setStoppingCriterion(stoppingCriterion);
+
+    auto algorithm = algorithmBuilder.create();
+    algorithm->getPopulationSettings().setMaxChromosomes(100);
+
+    //algorithm->setExecutionManager(
+    //        std::move(std::unique_ptr < ThreadedExecutionManager > (new ThreadedExecutionManager(1))));
+
+    algorithm->registerObserver(std::make_shared<DemoObserver>());
+
+    algorithm->solve();
 
     printClearScreen();
-    MultiValueChromosome<int, double>::ptr mvc = std::dynamic_pointer_cast<MultiValueChromosome<int, double> >(
-            algorithm.getHighestFitnessChromosome());
+    auto mvc = std::dynamic_pointer_cast<MultiValueChromosome<int, double> >(
+            algorithm->getHighestFitnessChromosome());
     printChromosome (*mvc);
-    std::cout << "ended after " << algorithm.getPopulation().getAge() << " generations" << std::endl;
+    std::cout << "ended after " << algorithm->getPopulation().getAge() << " generations" << std::endl;
 
 
 }

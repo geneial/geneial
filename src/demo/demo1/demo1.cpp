@@ -61,9 +61,8 @@ public:
 int main(int argc, char **argv)
 {
     std::cout
-            //<< "\x1b[0m\x1b[35;1m\x1b[41;1m"
             << "Running GENEIAL demo1 - Version "
-            << GENEIAL_VERSION_STRING << "("<<GENEIAL_BUILD_TYPE << ")"
+            << GENEIAL_VERSION_STRING << " ("<<GENEIAL_BUILD_TYPE << ")"
             << std::endl;
 
     auto evaluator = std::make_shared<DemoChromosomeEvaluator>();
@@ -83,11 +82,11 @@ int main(int argc, char **argv)
 
 
     //algorithm->setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager(3))));
-    //Diagnostics<double> diag(algorithm);
+    Diagnostics<double> diag(algorithm);
 
     algorithm->solve();
 
-    //diag.analyseAll(std::cout);
+    diag.analyseAll(std::cout);
 
     std::cout << *algorithm->getHighestFitnessChromosome() << std::endl;
 
