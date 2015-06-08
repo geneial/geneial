@@ -1,43 +1,40 @@
-#include <geneial/algorithm/SteadyStateAlgorithm.h>
-#include <geneial/algorithm/criteria/MaxGenerationCriterion.h>
-#include <geneial/algorithm/criteria/NegationDecorator.h>
-
-#include <geneial/core/fitness/Fitness.h>
-#include <geneial/core/fitness/FitnessEvaluator.h>
-
-#include <geneial/core/population/PopulationSettings.h>
-
-#include <geneial/core/population/builder/ContinousMultiValueBuilderSettings.h>
-#include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.hbb>
-
-#include <geneial/core/operations/selection/FitnessProportionalSelection.h>
-#include <geneial/core/operations/selection/FitnessProportionalSelectionSettings.h>
-
-#include <geneial/core/operations/selection/SelectionSettings.h>
-#include <geneial/core/operations/selection/RouletteWheelSelection.h>
-#include <geneial/core/operations/selection/UniformRandomSelection.h>
-
-//#include <geneial/core/operations/coupling/SimpleCouplingOperation.h>
-#include <geneial/core/operations/coupling/RandomCouplingOperation.h>
-
-#include <geneial/core/operations/replacement/BaseReplacementSettings.h>
-
-#include <geneial/core/operations/replacement/ReplaceWorstOperation.h>
-#include <geneial/core/operations/replacement/ReplaceRandomOperation.h>
-
-#include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
-#include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossoverSettings.h>
-
-#include <geneial/core/operations/mutation/MutationSettings.h>
-#include <geneial/core/operations/mutation/UniformMutationOperation.h>
-
-#include <geneial/core/operations/choosing/ChooseRandom.h>
-
-#include <geneial/config.h>
 
 #include "functions/MultiVariableOptimProblem.h"
 #include "functions/Sphere.h"
 #include "functions/Ackley.h"
+#include "functions/F10.h"
+#include "functions/F5.h"
+
+#include <geneial/algorithm/SteadyStateAlgorithm.h>
+#include <geneial/algorithm/criteria/CombinedCriterion.h>
+#include <geneial/algorithm/criteria/MaxGenerationCriterion.h>
+#include <geneial/algorithm/criteria/NegationDecorator.h>
+#include <geneial/algorithm/criteria/FitnessValueReachedCriterion.h>
+#include <geneial/algorithm/criteria/FixPointCriterion.h>
+
+
+#include <geneial/core/population/builder/MultiValueChromosomeFactory.h>
+
+#include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
+
+#include <geneial/core/operations/replacement/ReplaceWorstOperation.h>
+#include <geneial/core/operations/replacement/ReplaceRandomOperation.h>
+
+#include <geneial/core/operations/mutation/UniformMutationOperation.h>
+
+#include <geneial/core/operations/selection/RouletteWheelSelection.h>
+
+#include <geneial/core/operations/coupling/RandomCouplingOperation.h>
+
+
+#include <geneial/core/operations/choosing/ChooseRandom.h>
+
+#include <geneial/core/fitness/FitnessEvaluator.h>
+
+#include <geneial/utility/ThreadedExecutionManager.h>
+
+#include <geneial/algorithm/observer/BestChromosomeObserver.h>
+
 
 #include <stdexcept>
 #include <cassert>
@@ -49,13 +46,10 @@
 #include <unistd.h>
 
 using namespace geneial;
-
 using namespace geneial::algorithm;
 using namespace geneial::algorithm::stopping_criteria;
-
 using namespace geneial::population;
 using namespace geneial::population::chromosome;
-
 using namespace geneial::operation::selection;
 using namespace geneial::operation::coupling;
 using namespace geneial::operation::crossover;
@@ -100,57 +94,102 @@ int main(int argc, char **argv)
             << "GENEIAL Benchmark Suite - Version " << GENEIAL_VERSION_MAJOR << "." << GENEIAL_VERSION_MINOR << " ("
             << GENEIAL_BUILD_TYPE << ")" << std::endl;
 
-    Ackley ackley;
-    Sphere sphere;
-    std::vector < std::shared_ptr<MultiVariableOptimiProblem>> problems { std::make_shared < Ackley > (ackley), std::make_shared< Sphere > (sphere) };
+    std::vector <
+    std::pair< unsigned int,std::shared_ptr<MultiVariableOptimiProblem>>> problems {
+        {2,std::make_shared<Ackley> ()},
+        {2,std::make_shared<Sphere> ()},
+        {2,std::make_shared<F10> ()},
+        {2,std::make_shared<F5> ()}
+    };
 
     for (const auto & optimProblem : problems)
     {
-        GlobalMimiziationProblemEvaluator::ptr evaluator(new GlobalMimiziationProblemEvaluator(optimProblem));
 
-        MultiValueBuilderSettings<double, double> builderSettings(evaluator, 2, 500, -500);
+        auto evaluator = std::make_shared<GlobalMimiziationProblemEvaluator>(optimProblem.second);
 
-        MultiValueChromosomeFactory<double, double> chromosomeFactory(builderSettings);
+            auto algorithmBuilder = SteadyStateAlgorithm<double>::Builder();
 
-        MutationSettings mutationSettings(0.3, 0.0, 1);
+            //Factory:
+            MultiValueChromosomeFactory<double, double>::Builder factoryBuilder(evaluator);
+            factoryBuilder.getSettings().setNum(optimProblem.first);
+            factoryBuilder.getSettings().setRandomMin(-1000);
+            factoryBuilder.getSettings().setRandomMax( 1000);
 
-        ChooseRandom<double, double> mutationChoosingOperation(mutationSettings);
+            auto factory  = std::dynamic_pointer_cast<MultiValueChromosomeFactory<double, double>>(factoryBuilder.create());
+            algorithmBuilder.setChromosomeFactory(factory);
 
-        UniformMutationOperation<double, double> mutationOperation(mutationSettings, mutationChoosingOperation,
-                builderSettings, chromosomeFactory);
+            //Mutation:
+            UniformMutationOperation<double,double>::Builder mutationBuilder(factory);
 
-        RouletteWheelSelection<double> selectionOperation(SelectionSettings(5));
+            auto choosing = ChooseRandom<double>::Builder().setProbability(0.1).create();
+            mutationBuilder.setChoosingOperation(choosing);
+            mutationBuilder.getSettings().setMinimumPointsToMutate(1);
+            mutationBuilder.getSettings().setMaximumPointsToMutate(optimProblem.first);
 
-        CouplingSettings couplingSettings(20);
+            algorithmBuilder.setMutationOperation(mutationBuilder.create());
 
-        RandomCouplingOperation<double> couplingOperation(couplingSettings);
+            //Selection:
+            auto selectionBuilder = RouletteWheelSelection<double>::Builder();
+            selectionBuilder.getSettings().setNumberOfParents(10);
 
-        MultiValueChromosomeNPointCrossoverSettings crossoverSettings(1,
-                MultiValueChromosomeNPointCrossoverSettings::EQUIDISTANT_WIDTH);
+            algorithmBuilder.setSelectionOperation(selectionBuilder.create());
 
-        MultiValueChromosomeNPointCrossover<double, double> crossoverOperation(crossoverSettings, builderSettings,
-                chromosomeFactory);
+            //Coupling:
+            auto couplingBuilder = RandomCouplingOperation<double>::Builder();
+            couplingBuilder.getSettings().setNumberOfOffspring(20);
 
-        BaseReplacementSettings replacementSettings(BaseReplacementSettings::REPLACE_ALL_OFFSPRING, 5, 2);
+            algorithmBuilder.setCouplingOperation(couplingBuilder.create());
 
-        ReplaceWorstOperation<double> replacementOperation(replacementSettings);
 
-        MaxGenerationCriterion<double> stoppingCriterion(1000000);
+            //Crossover:
+            auto crossoverBuilder = MultiValueChromosomeNPointCrossover<double, double>::Builder(factory);
+            crossoverBuilder.getCrossoverSettings().setCrossOverPoints(1);
+            crossoverBuilder.getCrossoverSettings().setWidthSetting(MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH);
+            //crossoverBuilder.getCrossoverSettings().setMinWidth(3);
 
-        SteadyStateAlgorithm<double> algorithm(std::make_shared<MaxGenerationCriterion<double>>(stoppingCriterion),
-                std::make_shared<RouletteWheelSelection<double>>(selectionOperation),
-                std::make_shared<RandomCouplingOperation<double>>(couplingOperation),
-                std::make_shared<MultiValueChromosomeNPointCrossover<double, double>>(crossoverOperation),
-                std::make_shared<ReplaceWorstOperation<double>>(replacementOperation),
-                std::make_shared<UniformMutationOperation<double, double>>(mutationOperation),
-                std::make_shared<MultiValueChromosomeFactory<double, double>>(chromosomeFactory));
+            algorithmBuilder.setCrossoverOperation(crossoverBuilder.create());
 
-        algorithm.solve();
+            //Replacement:
+            //auto replacementBuilder = ReplaceWorstOperation<double>::Builder();
+            auto replacementBuilder = ReplaceRandomOperation<double>::Builder();
+            replacementBuilder.getSettings().setMode(BaseReplacementSettings::REPLACE_ALL_OFFSPRING);
+            replacementBuilder.getSettings().setAmountElitism(20);
+            //replacementBuilder.getSettings().setAmountToReplace(30);
 
-        std::cout << *algorithm.getHighestFitnessChromosome() << std::endl;
+            algorithmBuilder.setReplacementOperation(replacementBuilder.create());
 
-        std::cout << "end." << std::endl;
+            //Stopping Criteria
+            auto stoppingCriterion = std::make_shared<CombinedCriterion<double>>();
+            stoppingCriterion->add(CombinedCriterion<double>::INIT,
+                    std::move(std::make_shared<MaxGenerationCriterion<double>>(1000000)));
 
+//            stoppingCriterion->add(CombinedCriterion<double>::OR,
+//                    std::move(std::make_shared<FixPointCriterion<double>>(0.00001, 50000, 50000)));
+
+            algorithmBuilder.setStoppingCriterion(stoppingCriterion);
+
+            auto algorithm = algorithmBuilder.create();
+            algorithm->getPopulationSettings().setMaxChromosomes(100);
+
+//            auto threadproto = new ThreadedExecutionManager(4);
+//            threadproto->setAmountPerThread(4);
+//            algorithm->setExecutionManager(
+//                   std::move(std::unique_ptr < ThreadedExecutionManager > (std::move(threadproto))));
+
+
+            algorithm->solve();
+            auto mvc = std::dynamic_pointer_cast<MultiValueChromosome<double, double> >(
+                    algorithm->getHighestFitnessChromosome());
+//            std::cout << std::endl;
+            std::cout << optimProblem.second->getName() << std::endl;
+            std::cout << "ended after " << algorithm->getPopulation().getAge() << " generations" << std::endl;
+            std::cout <<"Best chromosome" << std::endl;
+            std::cout << *mvc << std::endl << std::endl;
+            std::cout << "Minimum:"<<std::endl;
+            for(const auto min : optimProblem.second->getMinima(optimProblem.first))
+            {
+                std::cout << min << ",";
+            }
     }
 
 }

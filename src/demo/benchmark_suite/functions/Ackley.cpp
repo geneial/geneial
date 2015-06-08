@@ -27,3 +27,14 @@ double Ackley::compute(const std::vector<double>& coordinates) const
     return value;
 }
 
+
+std::vector<double> Ackley::getMinima(const unsigned int num_dimension) const
+{
+    unsigned int dimleft = num_dimension;
+    std::vector<double> res;
+    while(dimleft--)
+    {
+        res.emplace_back(0);
+    }
+    return res;
+}
