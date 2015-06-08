@@ -36,9 +36,9 @@ private:
 
     bool _finish;
 
-    void executor();
+    void inline executor();
 
-    void initializeThreads(const unsigned int amountThreads);
+    void inline initializeThreads(const unsigned int amountThreads);
 
     unsigned int _amountPerThread = 1;
 
@@ -63,11 +63,11 @@ public:
         joinAll();
     }
 
-    virtual void addTask(std::function<void()> const &task) override;
+    virtual inline void addTask(std::function<void()> const &task) override;
 
-    virtual void waitForTasks() override;
+    virtual inline void waitForTasks() override;
 
-    void joinAll();
+    void inline joinAll();
 
     unsigned int getAmountPerThread() const
     {

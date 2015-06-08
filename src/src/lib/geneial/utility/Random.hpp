@@ -20,19 +20,14 @@ geneial_private_namespace(geneial)
 geneial_private_namespace(utility)
 {
 
-geneial_export_namespace
-{
 //Assures we have positive mod every time. (because in cpp -6 % 5 = -1)
 inline int mymod(int k, const int n)
 {
     return ((k %= n) < 0) ? k + n : k;
 }
 
-bool Random::generateBit()
+geneial_export_namespace
 {
-    checkInitialized();
-    return rand() & 1;
-}
 
 template<>
 inline int Random::generate(const int min, const int max)
@@ -110,6 +105,12 @@ inline float Random::generate()
 
 }
 
+bool Random::generateBit()
+{
+    checkInitialized();
+    return rand() & 1;
+}
+
 bool Random::decision(const double probability)
 {
     checkInitialized();
@@ -126,21 +127,11 @@ bool Random::decision(const double probability)
     }
 }
 
-
-inline void Random::checkInitialized()
-{
-    if (!sInitialized)
-    {
-        initialize();
-    }
-}
-
 inline void Random::initialize()
 {
     srand(static_cast<unsigned>(time(0)));
     sInitialized = true;
 }
-
 } /* geneial_export_namespace */
 } /* private namespace utility */
 } /* private namespace geneial */

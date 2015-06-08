@@ -32,10 +32,16 @@ public:
     void static initialize();
 protected:
     static bool sInitialized;
-    static inline void checkInitialized();
+
+    static inline void checkInitialized()
+    {
+        if (!sInitialized)
+        {
+            initialize();
+        }
+    }
 
 };
-bool Random::sInitialized = false;
 
 } /* geneial_export_namespace */
 } /* private namespace utility */

@@ -80,7 +80,7 @@ template<typename VALUE_TYPE, typename FITNESS_TYPE>
 void MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::setValueContainer(const value_container &container)
 {
     invalidateHashCache();
-    _container(container);
+    _container = container;
 }
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>

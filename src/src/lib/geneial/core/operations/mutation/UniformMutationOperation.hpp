@@ -47,8 +47,6 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
     typename Population<FITNESS_TYPE>::chromosome_container choosenChromosomeContainer;
     typename Population<FITNESS_TYPE>::chromosome_container notChoosenChromosomeContainer;
 
-    unsigned int pointOfMutation = 0;
-
     choosenChromosomeContainer = this->getChoosingOperation().doChoose(chromosomeInputContainer);
 
     //calculates difference: _notChoosenChromosomeContainer = _choosenChromosomeContainer - _chromosomeInputContainer
@@ -59,7 +57,6 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
 
     const auto randomMin = this->getBuilderFactory().getSettings().getRandomMin();
     const auto randomMax = this->getBuilderFactory().getSettings().getRandomMax() ;
-    const auto populationAge = manager.getPopulation().getAge();
     const auto maxNumMvc = this->getBuilderFactory().getSettings().getNum();
 
 

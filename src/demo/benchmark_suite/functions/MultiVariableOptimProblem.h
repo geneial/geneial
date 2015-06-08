@@ -4,6 +4,7 @@
  * Base class for Multivariable optimization problems.
  */
 #include <vector>
+#include <string>
 
 class MultiVariableOptimiProblem
 {

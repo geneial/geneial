@@ -7,6 +7,7 @@
 #include <ctime>
 #include <ratio>
 #include <functional>
+#include <memory>
 
 //TODO(bewo): Clean this up.
 
@@ -94,7 +95,7 @@ public:
     {
     }
 };
-class StatisticBookkeeper;
+
 class ScopedTimeTrace;
 
 
@@ -170,10 +171,6 @@ public:
     }
 };
 
-std::unique_ptr<ScopedTrace> StatisticBookkeeper::scopedEventTrace(const char* traceName)
-{
-        return std::move(std::unique_ptr<ScopedTimeTrace>(new ScopedTimeTrace(this,traceName)));
-}
 
 class ScopedEvent
 {
