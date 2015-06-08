@@ -25,7 +25,32 @@
 #include <stdio.h>
 #include <stdexcept>
 #include <cassert>
+#include <ostream>
 
+//http://stackoverflow.com/a/17469726/506651
+namespace Color {
+    enum Code {
+        FG_RED      = 31,
+        FG_GREEN    = 32,
+        FG_YELLOW   = 33,
+        FG_BLUE     = 34,
+        FG_DEFAULT  = 39,
+        BG_RED      = 41,
+        BG_GREEN    = 42,
+        BG_YELLOW    = 43,
+        BG_BLUE     = 44,
+        BG_DEFAULT  = 49
+    };
+    class Modifier {
+        Code code;
+    public:
+        Modifier(Code pCode) : code(pCode) {}
+        friend std::ostream&
+        operator<<(std::ostream& os, const Modifier& mod) {
+            return os << "\033[" << mod.code << "m";
+        }
+    };
+}
 
 using namespace geneial;
 
@@ -71,10 +96,9 @@ void plot(const MultiValueChromosome<double, double> &chromosomeToPrint)
     const double xmin = 0;
     const double xstep = 1;
 
-    const double ymax = 100;
-    const double ymin = -50;
+    const double ymax = 80;
+    const double ymin = 0;
     const double ystep = 10;
-
     for (double y = ymax; y >= ymin; y -= ystep)
     {
         for (double x = xmin; x < xmax; x += xstep)
@@ -99,7 +123,23 @@ void plot(const MultiValueChromosome<double, double> &chromosomeToPrint)
                     out = '-';
                 }
             }
-            std::cout << out;
+
+            if (out == 'x')
+            {
+                std::cout << Color::Modifier(Color::FG_GREEN) << out << Color::Modifier(Color::FG_DEFAULT);
+            }
+            else if (out == '-')
+            {
+                std::cout << Color::Modifier(Color::FG_RED) << out << Color::Modifier(Color::FG_DEFAULT);
+            }
+            else if (out == '+')
+            {
+                std::cout << Color::Modifier(Color::FG_YELLOW) << out << Color::Modifier(Color::FG_DEFAULT);
+            }
+            else
+            {
+                std::cout << out;
+            }
         }
         std::cout << std::endl;
     }
