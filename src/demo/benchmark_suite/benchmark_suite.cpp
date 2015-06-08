@@ -150,7 +150,6 @@ int main(int argc, char **argv)
             algorithmBuilder.setCrossoverOperation(crossoverBuilder.create());
 
             //Replacement:
-            //auto replacementBuilder = ReplaceWorstOperation<double>::Builder();
             auto replacementBuilder = ReplaceRandomOperation<double>::Builder();
             replacementBuilder.getSettings().setMode(BaseReplacementSettings::REPLACE_ALL_OFFSPRING);
             replacementBuilder.getSettings().setAmountElitism(20);
@@ -163,18 +162,10 @@ int main(int argc, char **argv)
             stoppingCriterion->add(CombinedCriterion<double>::INIT,
                     std::move(std::make_shared<MaxGenerationCriterion<double>>(1000000)));
 
-//            stoppingCriterion->add(CombinedCriterion<double>::OR,
-//                    std::move(std::make_shared<FixPointCriterion<double>>(0.00001, 50000, 50000)));
-
             algorithmBuilder.setStoppingCriterion(stoppingCriterion);
 
             auto algorithm = algorithmBuilder.create();
             algorithm->getPopulationSettings().setMaxChromosomes(100);
-
-//            auto threadproto = new ThreadedExecutionManager(4);
-//            threadproto->setAmountPerThread(4);
-//            algorithm->setExecutionManager(
-//                   std::move(std::unique_ptr < ThreadedExecutionManager > (std::move(threadproto))));
 
 
             algorithm->solve();
