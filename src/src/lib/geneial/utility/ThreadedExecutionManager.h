@@ -54,7 +54,7 @@ public:
             _tasks(), _threads(), _mutex(), _condEntry(), _finish(false),_amountPerThread(1)
     {
         initializeThreads(
-                std::min(static_cast<unsigned int>(1),
+                std::max(static_cast<unsigned int>(1),
                         static_cast<unsigned int>(std::thread::hardware_concurrency() - 1)));
     }
 
