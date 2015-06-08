@@ -20,7 +20,7 @@ void Smoothing::restoreSmoothness(typename MultiValueChromosome<VALUE_TYPE, FITN
     {
         const VALUE_TYPE currentValue = it;
 
-        if (std::abs(-lastVal) < maxAbsElevation)
+        if (std::abs(currentValue-lastVal) < maxAbsElevation)
         {
             //We are within the boundaries of the allowed elevation..
             //Not much to do here...
@@ -53,48 +53,60 @@ void Smoothing::peakAt(unsigned int pos, unsigned int epsLeft, unsigned int epsR
 {
     const unsigned int chromSize = chromosome->getSize();
 
-
     assert(pos < chromSize);
-
     assert(0 <= pos);
 
     //Look at all the value to the LEFT of pos
     //Determine target left position (avoid underflow)
-    unsigned int leftEpsPos;
+    unsigned int leftEpsPos = pos - epsLeft;
     if (pos < epsLeft)
     {
         leftEpsPos = 0;
     }
-    else
-    {
-        leftEpsPos = pos - epsLeft;
-    }
+    assert(leftEpsPos >= 0);
+    assert(leftEpsPos <= chromSize - 1);
 
-    for (unsigned int i = pos; i > leftEpsPos; i--)
+    for (int i = pos; i >= static_cast<int>(leftEpsPos); i--)
     {
+        assert(i >= 0);
+        assert(i <= static_cast<signed>(chromSize - 1));
         //How many pct have we advanced to the left?
-        const double pctElevated = ((double) (i - leftEpsPos)) / (double) epsLeft;
-        const VALUE_TYPE toModify = (VALUE_TYPE) (((double) pctElevated) * elevation);
+        double pctElevated;
+        if (leftEpsPos != 0)
+        {
+            pctElevated = 1.0 - (static_cast<double>(i - leftEpsPos)) / static_cast<double>(leftEpsPos);
+        }
+        else
+        {
+            pctElevated = 1.0;
+        }
+        const VALUE_TYPE toModify = static_cast<VALUE_TYPE>(static_cast<double>(pctElevated) * elevation);
+
         chromosome->getContainer()[i] += toModify;
     }
 
     //Look at all the values to the RIGHT of pos
     //avoid overflow.
-    unsigned int rightEpsPos;
-    if (pos + epsRight > chromSize)
-    {
-        rightEpsPos = chromSize;
-    }
-    else
-    {
-        rightEpsPos = pos + epsRight;
-    }
+    unsigned int rightEpsPos = std::min(pos + epsRight, chromSize - 1);
+    assert(rightEpsPos >= 0);
+    assert(rightEpsPos <= chromSize - 1);
 
     for (unsigned int i = pos + 1; i < rightEpsPos; i++)
     {
+        assert(i >= 0);
+        assert(i <= chromSize - 1);
         //How many pct have we advanced to the right?
-        const double pctElevated = ((double) (rightEpsPos - i)) / (double) epsRight;
-        const VALUE_TYPE toModify = (VALUE_TYPE) ((1.0 - (double) pctElevated) * elevation);
+        double pctElevated;
+        if (rightEpsPos != 0)
+        {
+            pctElevated = (static_cast<double>(i)) / static_cast<double>(rightEpsPos);
+        }
+        else
+        {
+            pctElevated = 0;
+        }
+        const VALUE_TYPE toModify = static_cast<VALUE_TYPE>((1.0 - static_cast<double>(pctElevated)) * elevation);
+
         chromosome->getContainer()[i] += toModify;
     }
 

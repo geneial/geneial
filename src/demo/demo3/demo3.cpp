@@ -1,8 +1,3 @@
-#include <limits>
-#include <stdio.h>
-#include <stdexcept>
-#include <cassert>
-
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
 #include <geneial/algorithm/SteadyStateAlgorithm.h>
 
@@ -20,8 +15,17 @@
 #include <geneial/algorithm/criteria/NegationDecorator.h>
 #include <geneial/algorithm/criteria/FixPointCriterion.h>
 
-
 #include <geneial/algorithm/observer/BestChromosomeObserver.h>
+
+
+#include <thread>
+#include <condition_variable>
+#include <mutex>
+#include <limits>
+#include <stdio.h>
+#include <stdexcept>
+#include <cassert>
+
 
 using namespace geneial;
 
@@ -58,23 +62,26 @@ double myTargetFunc3(double x)
     return 200/x;
 }
 */
-void plot(const MultiValueChromosome<int, double> &chromosomeToPrint)
+void plot(const MultiValueChromosome<double, double> &chromosomeToPrint)
 {
     const auto & container = chromosomeToPrint.getContainer();
 
-    const double xmax = 30;
-    const double xstep = 0.25;
+    const int amountOfPlaces= chromosomeToPrint.getContainer().size();
+    const double xmax = amountOfPlaces;
+    const double xmin = 0;
+    const double xstep = 1;
 
-    const double ymax = 180;
-    const double ystep = 20;
+    const double ymax = 100;
+    const double ymin = -50;
+    const double ystep = 10;
 
-    for (double y = ymax; y >= 0; y -= ystep)
+    for (double y = ymax; y >= ymin; y -= ystep)
     {
-        for (double x = 0; x < xmax; x += xstep)
+        for (double x = xmin; x < xmax; x += xstep)
         {
             char out = ' ';
 
-            const double result = myTargetFunc1(x);
+            const double result = myTargetFunc1((int)x);
             if (y <= result && result < y + ystep)
             {
                 out = '+';
@@ -85,7 +92,7 @@ void plot(const MultiValueChromosome<int, double> &chromosomeToPrint)
             {
                 if (out == '+')
                 {
-                    out = 'X';
+                    out = 'x';
                 }
                 else
                 {
@@ -119,9 +126,14 @@ void plot(const MultiValueChromosome<int, double> &chromosomeToPrint)
     std::cout.width(15);
     std::cout << std::left << " |y1-y2| " << "|";
     std::cout << std::endl;
-    for (int i = 0; i < 30; i++)
-    {
 
+    double maxDiff = 0;
+    for (int i = 0; i < amountOfPlaces; i++)
+    {
+        if(i>0)
+        {
+            maxDiff = std::max(maxDiff,std::abs(myTargetFunc1(i)-myTargetFunc1(i-1)));
+        }
         std::cout.width(15);
         std::cout.width(1);
         std::cout << "|";
@@ -143,6 +155,8 @@ void plot(const MultiValueChromosome<int, double> &chromosomeToPrint)
         std::cout << std::right << std::abs(myTargetFunc1(i) - container[i]) << "|";
         std::cout << std::endl;
     }
+    std::cout << "max_i(|y_i-y_i-1|) = "<< maxDiff <<std::endl;
+    std::flush(std::cout);
 }
 
 class DemoChromosomeEvaluator: public FitnessEvaluator<double>
@@ -153,7 +167,7 @@ public:
         try
         {
             double fitness = 1;
-            const auto& mvc = dynamic_cast<const MultiValueChromosome<int, double>&>(chromosome);
+            const auto& mvc = dynamic_cast<const MultiValueChromosome<double, double>&>(chromosome);
             int i = 0;
             for (auto value : mvc.getContainer())
             {
@@ -163,12 +177,15 @@ public:
             return std::move(std::unique_ptr<Fitness<double> >(new Fitness<double>(1 / fitness)));
         } catch (std::bad_cast&)
         {
-            throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
+            throw new std::runtime_error("Chromosome is not an Double MultiValueChromosome with double fitness!");
         }
         std::unique_ptr<Fitness<double> > ptr(new Fitness<double>(std::numeric_limits<double>::signaling_NaN()));
         return std::move(ptr);
     }
 };
+
+
+
 
 
 void inline printClearScreen()
@@ -188,14 +205,40 @@ void inline printClearScreen()
 #endif
 }
 
+bool running = true;
+std::condition_variable cv;
+std::mutex cv_m;
+MultiValueChromosome<double, double>::ptr best;
+
+void displayOnUpdate()
+{
+    MultiValueChromosome<double, double>::ptr _best;
+
+    while (running)
+    {
+        std::unique_lock<std::mutex> l(cv_m);
+        cv.wait(l);
+        _best = best;
+        printClearScreen();
+        plot(*_best);
+    }
+
+    std::cerr << "...finished waiting. i == 1\n";
+}
+
 class DemoObserver: public BestChromosomeObserver<double>
 {
 public:
     virtual void updateNewBestChromosome(geneial::population::management::BaseManager<double> &manager)
     {
-        auto best = std::dynamic_pointer_cast< MultiValueChromosome<int, double> > (manager.getHighestFitnessChromosome());
-        printClearScreen();
-        plot(*best);
+        try
+        {
+            best = std::dynamic_pointer_cast< MultiValueChromosome<double, double> > (manager.getHighestFitnessChromosome());
+            cv.notify_all();
+        } catch (std::bad_cast &)
+        {
+            throw new std::runtime_error("Chromosome is not an double MultiValueChromosome with double fitness!");
+        }
     }
 
 };
@@ -212,23 +255,23 @@ int main(int argc, char **argv)
     auto algorithmBuilder = SteadyStateAlgorithm<double>::Builder();
 
     //Factory:
-    ContinousMultiValueChromosomeFactory<int,double>::Builder factoryBuilder(evaluator);
-    factoryBuilder.getSettings().setNum(30);
-    factoryBuilder.getSettings().setRandomMin(-250);
-    factoryBuilder.getSettings().setRandomMax(250);
+    ContinousMultiValueChromosomeFactory<double,double>::Builder factoryBuilder(evaluator);
+    factoryBuilder.getSettings().setNum(50);
+    factoryBuilder.getSettings().setRandomMin(-1000);
+    factoryBuilder.getSettings().setRandomMax(1000);
     factoryBuilder.getSettings().setHasStart(false);
-    factoryBuilder.getSettings().setEps(100);
+    factoryBuilder.getSettings().setEps(28);
 
-    auto factory  = std::dynamic_pointer_cast<ContinousMultiValueChromosomeFactory<int, double>>(factoryBuilder.create());
+    auto factory  = std::dynamic_pointer_cast<ContinousMultiValueChromosomeFactory<double, double>>(factoryBuilder.create());
     algorithmBuilder.setChromosomeFactory(factory);
 
     //Mutation:
-    SmoothPeakMutationOperation<int,double>::Builder mutationBuilder(factory);
+    SmoothPeakMutationOperation<double,double>::Builder mutationBuilder(factory);
 
     auto choosing = ChooseRandom<double>::Builder().setProbability(0.4).create();
     mutationBuilder.setMaxElevation(20);
-    mutationBuilder.setMaxLeftEps(5);
-    mutationBuilder.setMaxRightEps(5);
+    mutationBuilder.setMaxLeftEps(10);
+    mutationBuilder.setMaxRightEps(10);
 
     algorithmBuilder.setMutationOperation(mutationBuilder.create());
 
@@ -246,7 +289,7 @@ int main(int argc, char **argv)
 
 
     //Crossover:
-    auto crossoverBuilder = SmoothedMultiValueChromosomeNPointCrossover<int, double>::Builder(factory);
+    auto crossoverBuilder = SmoothedMultiValueChromosomeNPointCrossover<double, double>::Builder(factory);
     crossoverBuilder.getCrossoverSettings().setCrossOverPoints(2);
     crossoverBuilder.getCrossoverSettings().setWidthSetting(MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH);
     crossoverBuilder.getCrossoverSettings().setMinWidth(3);
@@ -267,8 +310,8 @@ int main(int argc, char **argv)
     stoppingCriterion->add(CombinedCriterion<double>::INIT,
             std::move(std::make_shared<MaxGenerationCriterion<double>>(1000000)));
 
-    //stoppingCriterion->add(CombinedCriterion<double>::OR,
-     //      std::move(std::make_shared<FixPointCriterion<double>>(0, 50000, 50000)));
+    stoppingCriterion->add(CombinedCriterion<double>::OR,
+          std::move(std::make_shared<FixPointCriterion<double>>(0, 50000, 50000)));
 
 
     algorithmBuilder.setStoppingCriterion(stoppingCriterion);
@@ -278,11 +321,16 @@ int main(int argc, char **argv)
 
     algorithm->registerObserver(std::make_shared<DemoObserver>());
 
-    algorithm->solve();
+    std::thread ui_update(displayOnUpdate);
 
+    algorithm->solve();
+    running = false;
+    cv.notify_all();
+    cv.notify_all();
+    ui_update.join();
 
     printClearScreen();
-    auto mvc = std::dynamic_pointer_cast<MultiValueChromosome<int, double> >(
+    auto mvc = std::dynamic_pointer_cast<MultiValueChromosome<double, double> >(
             algorithm->getHighestFitnessChromosome());
     plot (*mvc);
     std::cout << "ended after " << algorithm->getPopulation().getAge() << " generations" << std::endl;

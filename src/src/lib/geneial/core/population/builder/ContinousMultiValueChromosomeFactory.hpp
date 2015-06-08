@@ -33,7 +33,7 @@ typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiValueChromosomeFactory<
 
         unsigned int i = 0;
 
-        int lastVal = 0; //reference to last inserted value
+        VALUE_TYPE lastVal = 0; //reference to last inserted value
 
         while (i<amount)
         {
@@ -51,10 +51,10 @@ typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiValueChromosomeFactory<
                 }
             }
 
-            const int val = Random::generate<VALUE_TYPE>(lastVal - _settings.getEps(),
+            const VALUE_TYPE val = Random::generate<VALUE_TYPE>(lastVal - _settings.getEps(),
                     lastVal + _settings.getEps());
-            const int lower_limited = std::max(_settings.getRandomMin(), val);
-            const int upper_limited = std::min(_settings.getRandomMax(), lower_limited);
+            const VALUE_TYPE lower_limited = std::max(_settings.getRandomMin(), val);
+            const VALUE_TYPE upper_limited = std::min(_settings.getRandomMax(), lower_limited);
 
             new_chromosome->getContainer()[i] = upper_limited;
 

@@ -93,6 +93,7 @@ void SteadyStateAlgorithm<FITNESS_TYPE>::solve()
                 this->notifyObservers(AlgorithmObserver<FITNESS_TYPE>::GENERATION_DONE);
             }
         }
+
     }
 
     this->_wasSolved = true;

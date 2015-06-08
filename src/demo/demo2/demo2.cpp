@@ -270,8 +270,6 @@ int main(int argc, char **argv)
     running = false;
     cv.notify_all();
     cv.notify_all();
-
-
     ui_update.join();
 
     printClearScreen();

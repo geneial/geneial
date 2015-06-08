@@ -25,11 +25,11 @@ private:
 
 public:
 
-    static const VALUE_TYPE DEFAULT_RANDOM_MAX = 100;
+    static constexpr const VALUE_TYPE DEFAULT_RANDOM_MAX = 100;
 
-    static const VALUE_TYPE DEFAULT_RANDOM_MIN = 0;
+    static constexpr const VALUE_TYPE DEFAULT_RANDOM_MIN = 0;
 
-    static const unsigned int DEFAULT_NUM = 2;
+    static constexpr const unsigned int DEFAULT_NUM = 2;
 
     MultiValueBuilderSettings( const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator,
                                const unsigned int num = DEFAULT_NUM,

@@ -82,7 +82,8 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
                 const int sign = (Random::generateBit()) ? -1 : 1;
                 Smoothing::peakAt<VALUE_TYPE, FITNESS_TYPE>(pos, Random::generate<int>(0, this->_maxLeftEps),
                         Random::generate<int>(0, this->_maxRightEps),
-                        sign * Random::generate<int>(1, this->_maxElevation), mutatedChromosome);
+                        //TODO(bewo): Make minElevation another setting
+                        sign * Random::generate<VALUE_TYPE>(0, this->_maxElevation), mutatedChromosome);
             }
 
             //Correct smoothness in mutated chromosome
