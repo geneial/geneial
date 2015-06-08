@@ -95,7 +95,7 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
             assert(targetBeta <= 1.0);
             assert(targetBeta >= 0);
 
-            child_container[i] = ((*mommy_it * (targetBeta) + *daddy_it * (targetBeta)));
+            child_container[i] = ((*mommy_it * (1 - targetBeta) + *daddy_it * (targetBeta)));
 
             ++mommy_it;
             ++daddy_it;
