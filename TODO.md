@@ -17,9 +17,26 @@ Note that most of the TODOs are reflected within the code, simply grep the sourc
 
 * remove all but geneial namespace
 
-* scaling
 
-* multithreading 
+* implement this as roulette wheel 
+
+@article{DBLP:journals/corr/abs-1109-3627,
+  author    = {Adam Lipowski and
+               Dorota Lipowska},
+  title     = {Roulette-wheel selection via stochastic acceptance},
+  journal   = {CoRR},
+  volume    = {abs/1109.3627},
+  year      = {2011},
+  url       = {http://arxiv.org/abs/1109.3627},
+  timestamp = {Mon, 05 Dec 2011 18:05:24 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/corr/abs-1109-3627},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+* implement tournament selection
+
+
+* scaling
 
 * write new demo programs
 * write code documentation
@@ -27,3 +44,7 @@ Note that most of the TODOs are reflected within the code, simply grep the sourc
 * Organize Buildsystem
 
 * profit / world domination
+
+
+
+
