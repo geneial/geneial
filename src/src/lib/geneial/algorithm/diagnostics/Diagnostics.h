@@ -15,9 +15,13 @@ geneial_private_namespace(geneial)
 geneial_private_namespace(algorithm)
 {
 
-geneial_export_namespace
-{
+using ::geneial::population::management::EventData;
+void printTiming(const char* string, std::unordered_multimap<std::string, std::unique_ptr<EventData> > &events, std::ostream& os);
+
 using ::geneial::algorithm::BaseGeneticAlgorithm;
+using ::geneial::population::management::EventData;
+using ::geneial::population::management::EventValueData;
+using ::geneial::population::management::StatisticBookkeeper;
 
 geneial_export_namespace
 {
@@ -41,11 +45,11 @@ public:
     void analyseEventsMutation(std::ostream& os);
     void analyseEventsReplacement(std::ostream& os);
     void anaylseEventsSelection(std::ostream& os);
+    void anaylseConvergence(std::ostream& os);
 
 };
 
 
-}
 }
 }
 }
