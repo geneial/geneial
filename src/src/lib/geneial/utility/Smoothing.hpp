@@ -10,6 +10,7 @@ using ::geneial::population::chromosome::MultiValueChromosome;
 geneial_export_namespace
 {
 
+//TODO 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 void Smoothing::restoreSmoothness(typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr chromosome,
         VALUE_TYPE maxAbsElevation, VALUE_TYPE min, VALUE_TYPE max)
@@ -74,7 +75,8 @@ void Smoothing::peakAt(unsigned int pos, unsigned int epsLeft, unsigned int epsR
         double pctElevated;
         if (leftEpsPos != 0)
         {
-            pctElevated = 1.0 - (static_cast<double>(i - leftEpsPos)) / static_cast<double>(leftEpsPos);
+            //pctElevated = 1.0 - (static_cast<double>(i - leftEpsPos)) / static_cast<double>(leftEpsPos);
+            pctElevated = 1.0 - (static_cast<double>(pos -i)) / static_cast<double>(epsLeft);
         }
         else
         {
@@ -99,13 +101,15 @@ void Smoothing::peakAt(unsigned int pos, unsigned int epsLeft, unsigned int epsR
         double pctElevated;
         if (rightEpsPos != 0)
         {
-            pctElevated = (static_cast<double>(i)) / static_cast<double>(rightEpsPos);
+            //pctElevated = (static_cast<double>(i)) / static_cast<double>(rightEpsPos);
+            pctElevated = 1.0 - (static_cast<double>(i -pos)) / static_cast<double>(epsRight);
         }
         else
         {
             pctElevated = 0;
         }
-        const VALUE_TYPE toModify = static_cast<VALUE_TYPE>((1.0 - static_cast<double>(pctElevated)) * elevation);
+        //const VALUE_TYPE toModify = static_cast<VALUE_TYPE>((1.0 - static_cast<double>(pctElevated)) * elevation);
+	    const VALUE_TYPE toModify = static_cast<VALUE_TYPE>((static_cast<double>(pctElevated)) * elevation);
 
         chromosome->getContainer()[i] += toModify;
     }
