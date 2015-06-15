@@ -70,8 +70,7 @@ std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>> SteadyStateAlgorithm<FITNE
         throw new std::runtime_error("Incompatible Chromosome Factory and default crossover strategy");
     }
 
-    auto builder = typename MultiValueChromosomeNPointCrossover<int,FITNESS_TYPE>::Builder();
-    builder.setBuilderFactory(mvcChromosomeFactory);
+    auto builder = typename MultiValueChromosomeNPointCrossover<int,FITNESS_TYPE>::Builder(mvcChromosomeFactory);
     return builder.create();
 }
 

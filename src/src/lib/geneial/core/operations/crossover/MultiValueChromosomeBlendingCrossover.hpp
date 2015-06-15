@@ -72,14 +72,14 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
                 case INTERPOLATE_COSINE:
                 {
                     targetBeta = Interpolators::cosineInterpolate<double>(beta1, beta2,
-                            ((double) i) / ((double) containerSize));
+                            static_cast<double>(i) / (static_cast<double>(containerSize)));
                     break;
                 }
 
                 case INTERPOLATE_LINEARLY:
                 {
                     targetBeta = Interpolators::linearInterpolate<double>(beta1, beta2,
-                            ((double) i) / ((double) containerSize));
+                            static_cast<double>(i) / (static_cast<double>(containerSize)));
                     break;
                 }
 

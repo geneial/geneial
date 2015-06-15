@@ -58,11 +58,6 @@ public:
         _eps = eps;
     }
 
-    bool isHasStart() const
-    {
-        return _hasStart;
-    }
-
     void setHasStart(bool hasStart)
     {
         _hasStart = hasStart;
@@ -70,15 +65,15 @@ public:
 
     VALUE_TYPE hasStart() const
     {
-        return _start;
+        return _hasStart;
     }
 
-    VALUE_TYPE getStart() const
+    VALUE_TYPE getStartValue() const
     {
         return _start;
     }
 
-    void setStart(VALUE_TYPE start)
+    void setStartValue(VALUE_TYPE start)
     {
         _start = start;
     }

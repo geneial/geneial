@@ -95,14 +95,6 @@ public:
 
         const static unsigned int DEFAULT_NUM_CHILD = 1;
 
-
-        Builder() : MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>::Builder(),
-                _interpolationMethod(DEFAULT_INTERPOLATION_METHOD),
-                _offspringMode(DEFAULT_OFFSPRING_MODE),
-                _numChilds(DEFAULT_NUM_CHILD)
-        {
-        }
-
         Builder(const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> & builderFactory) :
                 MultiValueChromosomeCrossoverOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(builderFactory),
                 _interpolationMethod(DEFAULT_INTERPOLATION_METHOD),

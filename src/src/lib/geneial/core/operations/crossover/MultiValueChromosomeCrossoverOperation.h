@@ -88,10 +88,6 @@ public:
     class Builder: public BaseCrossoverOperation<FITNESS_TYPE>::Builder
     {
         public:
-            Builder():_builderFactory()
-            {
-            }
-
             Builder(const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> & builderFactory):
                 _builderFactory(builderFactory)
             {

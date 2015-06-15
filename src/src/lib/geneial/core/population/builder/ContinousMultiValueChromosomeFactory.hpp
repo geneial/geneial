@@ -42,17 +42,17 @@ typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiValueChromosomeFactory<
             {
                 if (_settings.hasStart())
                 {
-                    lastVal = _settings.getStart();
+                    lastVal = _settings.getStartValue();
                 }
                 else
                 {
                     lastVal = Random::generate<VALUE_TYPE>(_settings.getRandomMin(),
-                            _settings.getRandomMax());
+                                                           _settings.getRandomMax());
                 }
             }
 
             const VALUE_TYPE val = Random::generate<VALUE_TYPE>(lastVal - _settings.getEps(),
-                    lastVal + _settings.getEps());
+                                                                lastVal + _settings.getEps());
             const VALUE_TYPE lower_limited = std::max(_settings.getRandomMin(), val);
             const VALUE_TYPE upper_limited = std::min(_settings.getRandomMax(), lower_limited);
 

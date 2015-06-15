@@ -73,7 +73,7 @@ int main(int argc, char **argv)
     factoryBuilder.getSettings().setRandomMin(20);
     factoryBuilder.getSettings().setRandomMax(130);
     factoryBuilder.getSettings().setHasStart(true);
-    factoryBuilder.getSettings().setStart(70);
+    factoryBuilder.getSettings().setStartValue(70);
     factoryBuilder.getSettings().setEps(5);
 
     auto algorithm = SteadyStateAlgorithm<double>::Builder().setChromosomeFactory(factoryBuilder.create()).create();
