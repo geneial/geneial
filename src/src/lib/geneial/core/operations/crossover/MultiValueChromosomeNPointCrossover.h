@@ -106,14 +106,6 @@ public:
         std::shared_ptr<MultiValueChromosomeNPointCrossoverSettings> _crossoverSettings;
 
     public:
-        Builder() : MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>::Builder(),
-        _crossoverSettings(new MultiValueChromosomeNPointCrossoverSettings(
-                    DEFAULT_CROSSOVERPOINTS,
-                    DEFAULT_WIDTH_MODE
-                    ))
-        {
-        }
-
         Builder(const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> & builderFactory) :
                 MultiValueChromosomeCrossoverOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(builderFactory), _crossoverSettings(
                         new MultiValueChromosomeNPointCrossoverSettings(DEFAULT_CROSSOVERPOINTS, DEFAULT_WIDTH_MODE))

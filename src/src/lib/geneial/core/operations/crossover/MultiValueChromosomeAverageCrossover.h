@@ -71,10 +71,6 @@ public:
     class Builder : public MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>::Builder
     {
     public:
-        Builder() : MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>::Builder()
-        {
-        }
-
         Builder(const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> & builderFactory) :
                 MultiValueChromosomeCrossoverOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(builderFactory)
         {

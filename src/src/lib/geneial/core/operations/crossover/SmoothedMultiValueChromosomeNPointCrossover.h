@@ -63,11 +63,6 @@ public:
     {
     public:
 
-        Builder() : MultiValueChromosomeNPointCrossover<VALUE_TYPE,FITNESS_TYPE>::Builder()
-        {
-        }
-
-
         Builder(const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> & builderFactory) :
                 MultiValueChromosomeNPointCrossover<VALUE_TYPE, FITNESS_TYPE>::Builder(builderFactory)
         {
