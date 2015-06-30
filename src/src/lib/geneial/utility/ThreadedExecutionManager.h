@@ -26,6 +26,8 @@ class ThreadedExecutionManager: public BaseExecutionManager
 private:
     std::deque<std::function<void()>> _tasks;
 
+    int _activeTasks = 0;
+
     std::vector<std::shared_ptr<std::thread>> _threads;
 
     std::mutex _mutex;

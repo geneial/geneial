@@ -224,7 +224,7 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
     {
         if (!container[i]->hasFitness())
         {
-            getManager().getExecutionManager().addTask([container,i,this]
+            getManager().getExecutionManager().addTask([i,&container]
             {
 //                const auto it = this->_fitnessCache.find(chromosome->getHash());
 //                if(it == this->_fitnessCache.end())

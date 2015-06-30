@@ -32,13 +32,20 @@ void ThreadedExecutionManager::executor()
                 _tasks.pop_front();
                 innerTask.emplace_back(task);
             }
+            const size_t taskToProcess = innerTask.size();
+            _activeTasks += taskToProcess;
             l.unlock();
 
+            size_t processedTasks = 0;
             for (auto task : innerTask)
             {
+                processedTasks++;
                 task();
             }
             innerTask.clear();
+            assert(processedTasks == taskToProcess);
+            l.lock();
+            _activeTasks -= processedTasks;
         }
         else
         {
@@ -71,11 +78,11 @@ void ThreadedExecutionManager::waitForTasks()
     do
     {
         std::unique_lock < std::mutex > l(_mutex);
-        activeTasks = _tasks.size();
+        activeTasks = _tasks.size() + _activeTasks;
         if (activeTasks != 0)
         {
             _condExit.wait(l, [this]()
-            {   return _tasks.size() == 0;});
+            {   return _tasks.size() == 0 && _activeTasks == 0;});
         }
     } while (activeTasks != 0);
 }
