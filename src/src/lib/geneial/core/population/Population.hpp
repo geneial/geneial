@@ -224,13 +224,12 @@ inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromoso
     {
         if (!container[i]->hasFitness())
         {
-            const auto chromosome = container[i];
-            getManager().getExecutionManager().addTask([chromosome,this]
+            getManager().getExecutionManager().addTask([container,i,this]
             {
 //                const auto it = this->_fitnessCache.find(chromosome->getHash());
 //                if(it == this->_fitnessCache.end())
 //                {
-                    chromosome->getFitness().get();
+                    container[i]->getFitness().get();
 //                }
 //                else
 //                {
