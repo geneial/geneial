@@ -41,8 +41,6 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
             choosenChromosomeContainer.cbegin(), choosenChromosomeContainer.cend(),
             std::back_inserter(notChoosenChromosomeContainer));
 
-    const auto slotsToMutate = Random::generate<unsigned int>(this->getSettings().getMinimumPointsToMutate(),this->getSettings().getMaximumPointsToMutate());
-
     //only mutate choosen chromosomes
     for (const auto &chosenChromosome : choosenChromosomeContainer)
     {
