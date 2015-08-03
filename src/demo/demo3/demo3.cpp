@@ -214,13 +214,13 @@ public:
                 fitness += std::abs(value - myTargetFunc1(i));
                 i++;
             }
-            return std::move(std::unique_ptr<Fitness<double> >(new Fitness<double>(1 / fitness)));
+            return std::unique_ptr<Fitness<double> >(new Fitness<double>(1 / fitness));
         } catch (std::bad_cast&)
         {
             throw new std::runtime_error("Chromosome is not an Double MultiValueChromosome with double fitness!");
         }
         std::unique_ptr<Fitness<double> > ptr(new Fitness<double>(std::numeric_limits<double>::signaling_NaN()));
-        return std::move(ptr);
+        return ptr;
     }
 };
 
@@ -348,10 +348,10 @@ int main(int argc, char **argv)
     //Stopping Criteria
     auto stoppingCriterion = std::make_shared<CombinedCriterion<double>>();
     stoppingCriterion->add(CombinedCriterion<double>::INIT,
-            std::move(std::make_shared<MaxGenerationCriterion<double>>(1000000)));
+            std::make_shared<MaxGenerationCriterion<double>>(1000000));
 
     stoppingCriterion->add(CombinedCriterion<double>::OR,
-          std::move(std::make_shared<FixPointCriterion<double>>(0, 50000, 50000)));
+          std::make_shared<FixPointCriterion<double>>(0, 50000, 50000));
 
 
     algorithmBuilder.setStoppingCriterion(stoppingCriterion);

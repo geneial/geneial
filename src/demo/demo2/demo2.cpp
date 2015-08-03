@@ -96,161 +96,161 @@ public:
                     ++fitness;
                 }
             }
-            return std::move(std::unique_ptr<Fitness<double>>(new Fitness<double>(fitness)));
+            return std::unique_ptr<Fitness<double>>(new Fitness<double>(fitness));
         } catch (std::bad_cast&)
         {
             throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
         }
         std::unique_ptr<Fitness<double>> ptr(new Fitness<double>);
-        return std::move(ptr);
-    }
-};
+		return ptr;
+	    }
+	};
 
-void inline printClearScreen()
-{
-#ifdef WINDOWS
-    if(!
-            std::system ( "CLS" ))
-    {
-        assert("Unable to clear Screen");
-    }
-#else
-    // Assume POSIX
-    if (!std::system("clear"))
-    {
-        assert("Unable to clear Screen");
-    }
-#endif
-}
+	void inline printClearScreen()
+	{
+	#ifdef WINDOWS
+	    if(!
+		    std::system ( "CLS" ))
+	    {
+		assert("Unable to clear Screen");
+	    }
+	#else
+	    // Assume POSIX
+	    if (!std::system("clear"))
+	    {
+		assert("Unable to clear Screen");
+	    }
+	#endif
+	}
 
-void printChromosome(const MultiValueChromosome<int, double> &chromosomeToPrint)
-{
-    std::cout << std::endl;
-    int it = 0;
-    assert(chromosomeToPrint.getContainer().size() == charsPerFigure);
-    while (it < charsPerFigure)
-    {
-        std::cout << (char) chromosomeToPrint.getContainer()[it];
-        if (it != 0 && 0 == (it % lineBreakAfter))
-        {
-            std::cout << std::endl;
-        }
-        ++it;
-    }
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << "Age:" << chromosomeToPrint.getAge();
-    std::cout << " Fitness:" << chromosomeToPrint.getFitness().get();
-    std::cout << std::endl;
-}
+	void printChromosome(const MultiValueChromosome<int, double> &chromosomeToPrint)
+	{
+	    std::cout << std::endl;
+	    int it = 0;
+	    assert(chromosomeToPrint.getContainer().size() == charsPerFigure);
+	    while (it < charsPerFigure)
+	    {
+		std::cout << (char) chromosomeToPrint.getContainer()[it];
+		if (it != 0 && 0 == (it % lineBreakAfter))
+		{
+		    std::cout << std::endl;
+		}
+		++it;
+	    }
+	    std::cout << std::endl;
+	    std::cout << std::endl;
+	    std::cout << "Age:" << chromosomeToPrint.getAge();
+	    std::cout << " Fitness:" << chromosomeToPrint.getFitness().get();
+	    std::cout << std::endl;
+	}
 
-bool running = true;
-std::condition_variable cv;
-std::mutex cv_m;
-MultiValueChromosome<int, double>::ptr best;
+	bool running = true;
+	std::condition_variable cv;
+	std::mutex cv_m;
+	MultiValueChromosome<int, double>::ptr best;
 
-void displayOnUpdate()
-{
-    MultiValueChromosome<int, double>::ptr _best;
+	void displayOnUpdate()
+	{
+	    MultiValueChromosome<int, double>::ptr _best;
 
-    while (running)
-    {
-        std::unique_lock<std::mutex> l(cv_m);
-        cv.wait(l);
-        _best = best;
-        printClearScreen();
-        printChromosome(*_best);
-    }
+	    while (running)
+	    {
+		std::unique_lock<std::mutex> l(cv_m);
+		cv.wait(l);
+		_best = best;
+		printClearScreen();
+		printChromosome(*_best);
+	    }
 
-    std::cerr << "...finished waiting. i == 1\n";
-}
+	    std::cerr << "...finished waiting. i == 1\n";
+	}
 
-class DemoObserver: public BestChromosomeObserver<double>
-{
-public:
-    virtual void updateNewBestChromosome(geneial::population::management::BaseManager<double> &manager)
-    {
-        try
-        {
-            best = std::dynamic_pointer_cast< MultiValueChromosome<int, double> > (manager.getHighestFitnessChromosome());
-            cv.notify_all();
-        } catch (std::bad_cast &)
-        {
-            throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
-        }
-    }
+	class DemoObserver: public BestChromosomeObserver<double>
+	{
+	public:
+	    virtual void updateNewBestChromosome(geneial::population::management::BaseManager<double> &manager)
+	    {
+		try
+		{
+		    best = std::dynamic_pointer_cast< MultiValueChromosome<int, double> > (manager.getHighestFitnessChromosome());
+		    cv.notify_all();
+		} catch (std::bad_cast &)
+		{
+		    throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
+		}
+	    }
 
-};
+	};
 
-int main(int argc, char **argv)
-{
-
-
-    std::cout
-            << "Running GENEIAL demo2 - Version "
-            << GENEIAL_VERSION_STRING << " ("<<GENEIAL_BUILD_TYPE << ")"
-            << std::endl;
-
-    auto evaluator = std::make_shared<DemoChromosomeEvaluator>();
-
-    auto algorithmBuilder = SteadyStateAlgorithm<double>::Builder();
-
-    //Factory:
-    MultiValueChromosomeFactory<int, double>::Builder factoryBuilder(evaluator);
-    factoryBuilder.getSettings().setNum(charsPerFigure);
-    factoryBuilder.getSettings().setRandomMin(32);
-    factoryBuilder.getSettings().setRandomMax(128);
-
-    auto factory  = std::dynamic_pointer_cast<MultiValueChromosomeFactory<int, double>>(factoryBuilder.create());
-    algorithmBuilder.setChromosomeFactory(factory);
-
-    //Mutation:
-    UniformMutationOperation<int,double>::Builder mutationBuilder(factory);
-
-    auto choosing = ChooseRandom<double>::Builder().setProbability(0.4).create();
-    mutationBuilder.setChoosingOperation(choosing);
-    mutationBuilder.getSettings().setMinimumPointsToMutate(1);
-    mutationBuilder.getSettings().setMaximumPointsToMutate(10);
-
-    algorithmBuilder.setMutationOperation(mutationBuilder.create());
-
-    //Selection:
-    auto selectionBuilder = RouletteWheelSelection<double>::Builder();
-    selectionBuilder.getSettings().setNumberOfParents(10);
-
-    algorithmBuilder.setSelectionOperation(selectionBuilder.create());
-
-    //Coupling:
-    auto couplingBuilder = RandomCouplingOperation<double>::Builder();
-    couplingBuilder.getSettings().setNumberOfOffspring(20);
-
-    algorithmBuilder.setCouplingOperation(couplingBuilder.create());
+	int main(int argc, char **argv)
+	{
 
 
-    //Crossover:
-    auto crossoverBuilder = MultiValueChromosomeNPointCrossover<int, double>::Builder(factory);
-    crossoverBuilder.getCrossoverSettings().setCrossOverPoints(2);
-    crossoverBuilder.getCrossoverSettings().setWidthSetting(MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH);
-    crossoverBuilder.getCrossoverSettings().setMinWidth(3);
+	    std::cout
+		    << "Running GENEIAL demo2 - Version "
+		    << GENEIAL_VERSION_STRING << " ("<<GENEIAL_BUILD_TYPE << ")"
+		    << std::endl;
 
-    algorithmBuilder.setCrossoverOperation(crossoverBuilder.create());
+	    auto evaluator = std::make_shared<DemoChromosomeEvaluator>();
 
-    //Replacement:
-    auto replacementBuilder = ReplaceWorstOperation<double>::Builder();
-    //auto replacementBuilder = ReplaceRandomOperation<double>::Builder();
-    replacementBuilder.getSettings().setMode(BaseReplacementSettings::REPLACE_ALL_OFFSPRING);
-    replacementBuilder.getSettings().setAmountElitism(20);
-    //replacementBuilder.getSettings().setAmountToReplace(30);
+	    auto algorithmBuilder = SteadyStateAlgorithm<double>::Builder();
 
-    algorithmBuilder.setReplacementOperation(replacementBuilder.create());
+	    //Factory:
+	    MultiValueChromosomeFactory<int, double>::Builder factoryBuilder(evaluator);
+	    factoryBuilder.getSettings().setNum(charsPerFigure);
+	    factoryBuilder.getSettings().setRandomMin(32);
+	    factoryBuilder.getSettings().setRandomMax(128);
 
-    //Stopping Criteria
-    auto stoppingCriterion = std::make_shared<CombinedCriterion<double>>();
-    stoppingCriterion->add(CombinedCriterion<double>::INIT,
-            std::move(std::make_shared<MaxGenerationCriterion<double>>(1000000)));
+	    auto factory  = std::dynamic_pointer_cast<MultiValueChromosomeFactory<int, double>>(factoryBuilder.create());
+	    algorithmBuilder.setChromosomeFactory(factory);
+
+	    //Mutation:
+	    UniformMutationOperation<int,double>::Builder mutationBuilder(factory);
+
+	    auto choosing = ChooseRandom<double>::Builder().setProbability(0.4).create();
+	    mutationBuilder.setChoosingOperation(choosing);
+	    mutationBuilder.getSettings().setMinimumPointsToMutate(1);
+	    mutationBuilder.getSettings().setMaximumPointsToMutate(10);
+
+	    algorithmBuilder.setMutationOperation(mutationBuilder.create());
+
+	    //Selection:
+	    auto selectionBuilder = RouletteWheelSelection<double>::Builder();
+	    selectionBuilder.getSettings().setNumberOfParents(10);
+
+	    algorithmBuilder.setSelectionOperation(selectionBuilder.create());
+
+	    //Coupling:
+	    auto couplingBuilder = RandomCouplingOperation<double>::Builder();
+	    couplingBuilder.getSettings().setNumberOfOffspring(20);
+
+	    algorithmBuilder.setCouplingOperation(couplingBuilder.create());
+
+
+	    //Crossover:
+	    auto crossoverBuilder = MultiValueChromosomeNPointCrossover<int, double>::Builder(factory);
+	    crossoverBuilder.getCrossoverSettings().setCrossOverPoints(2);
+	    crossoverBuilder.getCrossoverSettings().setWidthSetting(MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH);
+	    crossoverBuilder.getCrossoverSettings().setMinWidth(3);
+
+	    algorithmBuilder.setCrossoverOperation(crossoverBuilder.create());
+
+	    //Replacement:
+	    auto replacementBuilder = ReplaceWorstOperation<double>::Builder();
+	    //auto replacementBuilder = ReplaceRandomOperation<double>::Builder();
+	    replacementBuilder.getSettings().setMode(BaseReplacementSettings::REPLACE_ALL_OFFSPRING);
+	    replacementBuilder.getSettings().setAmountElitism(20);
+	    //replacementBuilder.getSettings().setAmountToReplace(30);
+
+	    algorithmBuilder.setReplacementOperation(replacementBuilder.create());
+
+	    //Stopping Criteria
+	    auto stoppingCriterion = std::make_shared<CombinedCriterion<double>>();
+	    stoppingCriterion->add(CombinedCriterion<double>::INIT,
+		    std::make_shared<MaxGenerationCriterion<double>>(1000000));
 
     stoppingCriterion->add(CombinedCriterion<double>::OR,
-            std::move(std::make_shared<FitnessValueReachedCriterion<double>>(600)));
+            std::make_shared<FitnessValueReachedCriterion<double>>(600));
 
     algorithmBuilder.setStoppingCriterion(stoppingCriterion);
 
@@ -260,7 +260,7 @@ int main(int argc, char **argv)
     auto threadproto = new ThreadedExecutionManager(4);
     threadproto->setAmountPerThread(4);
     algorithm->setExecutionManager(
-            std::move(std::unique_ptr < ThreadedExecutionManager > (std::move(threadproto))));
+            std::unique_ptr < ThreadedExecutionManager > (std::move(threadproto)));
 
     algorithm->registerObserver(std::make_shared<DemoObserver>());
 

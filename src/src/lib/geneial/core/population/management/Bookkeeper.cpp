@@ -14,7 +14,7 @@ geneial_export_namespace
 
     std::unique_ptr<ScopedTrace> StatisticBookkeeper::scopedEventTrace(const char* traceName)
     {
-            return std::move(std::unique_ptr<ScopedTimeTrace>(new ScopedTimeTrace(this,traceName)));
+            return std::unique_ptr<ScopedTimeTrace>(new ScopedTimeTrace(this,traceName));
     }
 
 }
