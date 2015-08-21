@@ -1,8 +1,21 @@
 #pragma once
 
 /**
+ *
  * @brief This file declares all geneial public namespaces and
  * defines shadow noexport namespace imports
+ *
+ * The idea is that geneial has public and private namespaces.
+ * By default, everything is declared in private namespaces
+ * to avoid namespace pollution when a geneial header is used.
+ *
+ * If a class, type, etc. needs to be made publicy available
+ * it should be defined within the export inline namespace.
+ *
+ *
+ * This file contains an enumeration of all namespaces being
+ * used within geneial, new namespaces should be declared here accordingly.
+ *
  */
 
 #define geneial_namespace_noexport(NAME) __ ## NAME ##_
