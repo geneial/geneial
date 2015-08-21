@@ -17,8 +17,8 @@ class BaseReplacementSettings
 public:
     /**
      * Every selection operation should allow the following modes:
-     * 	REPLACE_ALL_OFFSPRING -- Replace every offspring
-     * 	REPLACE_FIXED_NUMBER -- Replace a given number in the existing Population with offspring
+     *     REPLACE_ALL_OFFSPRING -- Replace every offspring
+     *     REPLACE_FIXED_NUMBER -- Replace a given number in the existing Population with offspring
      */
     typedef enum
     {

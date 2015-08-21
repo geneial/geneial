@@ -5,7 +5,7 @@
 #include <stdio.h>      /* printf, scanf, puts, NULL */
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
-#include <cstdlib> 		/* RAND_MAX */
+#include <cstdlib>         /* RAND_MAX */
 #include <limits>       /* min, max of float, double */
 #include <random>
 #include <iostream>

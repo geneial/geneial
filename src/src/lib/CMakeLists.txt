@@ -11,7 +11,6 @@ configure_file (
 )
 
 
-
 #Make sure we can include files from this directory as root directory
 #(e.g, using #include "geneial/utility/random.h")
 
@@ -41,7 +40,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 #
 # GENEIAL STATIC:
 #
-#
 
 #Create a static library
 add_library( ${LIB_GENEIAL_STATIC_NAME} STATIC ${SRCS} ${CONFIG_H_IN} ${HDRS} ${TMPL} )
@@ -52,13 +50,9 @@ target_compile_definitions(${LIB_GENEIAL_STATIC_NAME} PRIVATE GENEIAL_STATICALLY
 #geneial static will also be libgeneial
 set_target_properties(${LIB_GENEIAL_STATIC_NAME} PROPERTIES OUTPUT_NAME ${LOWER_PROJECT_NAME})
 
-#precompile headers...
-cotire(${LIB_GENEIAL_STATIC_NAME})
-
 
 #
 # GENEIAL SHARED:
-#
 #
 
 #Also create a shared library
@@ -74,7 +68,7 @@ set_target_properties(${LIB_GENEIAL_SHARED_NAME} PROPERTIES
                                                             SOVERSION ${GENEIAL_VERSION_MAJOR}
                                                             )
 
-cotire(${LIB_GENEIAL_SHARED_NAME})
+
 
 
 #
@@ -87,9 +81,6 @@ set(HEADERDEST "include")
 install (TARGETS ${LIB_GENEIAL_SHARED_NAME} DESTINATION ${LIBDEST})
 install (TARGETS ${LIB_GENEIAL_STATIC_NAME} DESTINATION ${LIBDEST})
 
-#SET(CMAKE_COLOR_MAKEFILE ON)
-#SET(CMAKE_VERBOSE_MAKEFILE ON)
-#set_target_properties(mylib PROPERTIES DEBUG_POSTFIX "debug")
 
 #Warn if Debugmode is set.
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -102,6 +93,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_dependencies( ${LIB_GENEIAL_SHARED_NAME} DebugInfo )
     add_dependencies( ${LIB_GENEIAL_STATIC_NAME} DebugInfo )
 endif()
+
 
 install( DIRECTORY ./ 
             DESTINATION include

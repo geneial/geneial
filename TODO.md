@@ -1,6 +1,7 @@
 #TODOs
 Note that most of the TODOs are reflected within the code, simply grep the source files for TODO or use the Eclipse Task View
 
+* License?
 * extract nontrivial methods to hpp files
 * complete/endetail diagnostics
 * lambda adapters

@@ -22,9 +22,9 @@ public:
 
     /**
      * Every selection operation should allow the following modes:
-     * 	RANDOM_WIDTH -- Crossoverwidth are chosen at random
-     * 	RANDOM_MIN_WIDTH -- Crossoverwidth are chosen at random, but a min width has to be respected
-     * 	EQUIDISTANT_WIDTH -- Crossoverwith is equidistant
+     *     RANDOM_WIDTH -- Crossoverwidth are chosen at random
+     *     RANDOM_MIN_WIDTH -- Crossoverwidth are chosen at random, but a min width has to be respected
+     *     EQUIDISTANT_WIDTH -- Crossoverwith is equidistant
      *
      *
      * Example:

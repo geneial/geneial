@@ -6,6 +6,4 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}/../../generated/")
 
 #link with our genetic library
 add_executable(demo1 demo1.cpp)
-cotire(demo1)
 target_link_libraries(demo1 "${LIB_GENEIAL_SHARED_NAME}" -lpthread ${Boost_LIBRARIES})
-message(STATUS "Boost_LIBRARIES: ${Boost_LIBRARIES}")

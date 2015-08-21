@@ -109,7 +109,7 @@ void Smoothing::peakAt(unsigned int pos, unsigned int epsLeft, unsigned int epsR
             pctElevated = 0;
         }
         //const VALUE_TYPE toModify = static_cast<VALUE_TYPE>((1.0 - static_cast<double>(pctElevated)) * elevation);
-	    const VALUE_TYPE toModify = static_cast<VALUE_TYPE>((static_cast<double>(pctElevated)) * elevation);
+        const VALUE_TYPE toModify = static_cast<VALUE_TYPE>((static_cast<double>(pctElevated)) * elevation);
 
         chromosome->getContainer()[i] += toModify;
     }

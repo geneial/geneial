@@ -3,7 +3,8 @@ cmake_minimum_required(VERSION 2.8)
 
 #Ensure we set the current git version
 find_package(Git QUIET)
-   if(GIT_FOUND)
+
+if(GIT_FOUND)
     
     # Get the current working branch
     execute_process(

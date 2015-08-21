@@ -74,8 +74,8 @@ BOOST_AUTO_TEST_CASE( UNIFORM_TEST__basicMutation )
         BOOST_CHECK(inputSet != resultSet_Uniform);
     }
 
-//	BOOST_TEST_MESSAGE ("");
-//	BOOST_TEST_MESSAGE ("Checking Mutation at 0% probability");
+//    BOOST_TEST_MESSAGE ("");
+//    BOOST_TEST_MESSAGE ("Checking Mutation at 0% probability");
     for (double i = 0; i <= 1; i = i + 0.1)
     {
         MutationSettings mutationSettings(0, i, 0);
@@ -119,9 +119,9 @@ BOOST_AUTO_TEST_CASE( UNIFORM_TEST__Mutation_probability )
     for (double probability = 0.0; probability <= 1.0; probability = probability + 0.1)
     {
 
-//		BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
-//		BaseMutationOperation<double>::mutation_result_set inputSet;
-//		BaseMutationOperation<double>::mutation_result_set resultSet[10000];
+//        BaseChromosome<double>::ptr _newChromosome = chromosomeFactory->createChromosome(true);
+//        BaseMutationOperation<double>::mutation_result_set inputSet;
+//        BaseMutationOperation<double>::mutation_result_set resultSet[10000];
 
         MutationSettings mutationSettings(probability, 1, 5);
         ChooseRandom<int, double> mutationChoosingOperation(mutationSettings);

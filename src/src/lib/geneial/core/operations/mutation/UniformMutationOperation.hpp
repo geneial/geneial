@@ -26,14 +26,14 @@ geneial_export_namespace
  *  Targetpoints for mutation represent the choosen values within an Chromosome to be changed
  *  Example for 3 Points of Mutation:
  *
- *   Old Chrom.					  New Chrom.
- *  	(X) <- Mutate this value --> (Y)
- *	 	(X)							 (X)
- *  	(X)						     (X)
- *  	(X) <- Mutate this value --> (Y)
- *  	(X)							 (X)
- *  	(X) <- Mutate this value --> (Y)
- *  	(X)							 (X)
+ *   Old Chrom.                      New Chrom.
+ *      (X) <- Mutate this value --> (Y)
+ *         (X)                             (X)
+ *      (X)                             (X)
+ *      (X) <- Mutate this value --> (Y)
+ *      (X)                             (X)
+ *      (X) <- Mutate this value --> (Y)
+ *      (X)                             (X)
  *
  *
  **/

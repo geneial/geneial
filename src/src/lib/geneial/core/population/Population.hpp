@@ -86,11 +86,11 @@ void Population<FITNESS_TYPE>::doAge()
 
 /**
  * Removes any duplicates from within the container, which are
- * 	- appearing twice in the container
- * 	- appearing already in the container
+ *     - appearing twice in the container
+ *     - appearing already in the container
  *
- * 	NOTE: This function only considers a chromosome hash value,
- * 	and does not take the age into consideration.
+ *     NOTE: This function only considers a chromosome hash value,
+ *     and does not take the age into consideration.
  */
 template<typename FITNESS_TYPE>
 inline unsigned int Population<FITNESS_TYPE>::removeDuplicates(chromosome_container &toCheck)
