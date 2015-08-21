@@ -74,15 +74,15 @@ public:
         {
             const MultiValueChromosome<double, double>& mvc =
                     dynamic_cast<const MultiValueChromosome<double, double>&>(chromosome);
-            return std::move(
+            return 
                     std::unique_ptr<Fitness<double>>(
-                            new Fitness<double>(-1 * _problemInstance->compute(mvc.getContainer()))));
+                            new Fitness<double>(-1 * _problemInstance->compute(mvc.getContainer())));
         } catch (std::bad_cast)
         {
             throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
         }
         std::unique_ptr<Fitness<double>> ptr(new Fitness<double>(std::numeric_limits<double>::signaling_NaN()));
-        return std::move(ptr);
+        return ptr;
     }
 };
 
@@ -160,7 +160,7 @@ int main(int argc, char **argv)
             //Stopping Criteria
             auto stoppingCriterion = std::make_shared<CombinedCriterion<double>>();
             stoppingCriterion->add(CombinedCriterion<double>::INIT,
-                    std::move(std::make_shared<MaxGenerationCriterion<double>>(1000000)));
+                    std::make_shared<MaxGenerationCriterion<double>>(1000000));
 
             algorithmBuilder.setStoppingCriterion(stoppingCriterion);
 

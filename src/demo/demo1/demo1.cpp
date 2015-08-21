@@ -46,14 +46,14 @@ public:
 
 
             const auto& mvc = dynamic_cast<const MultiValueChromosome<int, double>&>(chromosome);
-            return std::move(std::unique_ptr<Fitness<double>>(new Fitness<double>(mvc.getSum())));
+            return std::unique_ptr<Fitness<double>>(new Fitness<double>(mvc.getSum()));
         }
         catch(std::bad_cast&)
         {
             throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
         }
         std::unique_ptr<Fitness<double>> ptr(new Fitness<double>);
-        return std::move(ptr);
+        return ptr;
     }
 };
 

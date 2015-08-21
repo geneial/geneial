@@ -84,7 +84,7 @@ public:
 
     virtual std::unique_ptr<ScopedTrace> scopedEventTrace(const char*) override
     {
-        return std::move(std::unique_ptr<ScopedTrace>(nullptr));
+        return std::unique_ptr<ScopedTrace>(nullptr);
     }
 
     virtual void traceEvent(const char*) override
