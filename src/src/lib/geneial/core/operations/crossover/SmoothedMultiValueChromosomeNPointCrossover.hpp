@@ -25,18 +25,20 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set SmoothedMult
 
     auto result = MultiValueChromosomeNPointCrossover<VALUE_TYPE, FITNESS_TYPE>::doMultiValueCrossover(mommy, daddy);
 
-        const auto &builderSettings =
-            (static_cast<const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>&>(
-                    this->getBuilderFactory().getSettings()));
+    const auto &builderSettings =
+        (static_cast<const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>&>(
+                this->getBuilderFactory().getSettings()));
 
     const auto eps = builderSettings.getEps();
     const auto min = builderSettings.getRandomMin();
     const auto max = builderSettings.getRandomMax();
+    const auto hasStart = builderSettings.hasStart();
+    const auto startValue = builderSettings.getStartValue();
 
     for (const auto& chromosome : result)
     {
         Smoothing::restoreSmoothness<VALUE_TYPE, FITNESS_TYPE>(
-                std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(chromosome), eps, min, max);
+                std::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(chromosome), eps, min, max, hasStart, startValue);
     }
     return result;
 

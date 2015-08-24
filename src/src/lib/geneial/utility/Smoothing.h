@@ -30,7 +30,7 @@ public:
     //TODO (bewo): Docs!
     template<typename VALUE_TYPE, typename FITNESS_TYPE>
     static void restoreSmoothness(typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr chromosome,
-            VALUE_TYPE maxAbsElevation, VALUE_TYPE min, VALUE_TYPE max);
+            VALUE_TYPE maxAbsElevation, VALUE_TYPE min, VALUE_TYPE max, bool hasStart, VALUE_TYPE start);
 
     //TODO (bewo): Docs!
     template<typename VALUE_TYPE, typename FITNESS_TYPE>
