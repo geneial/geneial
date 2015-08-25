@@ -5,11 +5,14 @@
 
 #include <iterator>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace population
+geneial_private_namespace(population)
 {
-namespace management
+geneial_private_namespace(management)
+{
+
+geneial_export_namespace
 {
 
 /**
@@ -19,13 +22,17 @@ namespace management
 template<typename FITNESS_TYPE>
 void BaseManager<FITNESS_TYPE>::replenishPopulation()
 {
+    const int difference = _population.getSize() - _populationSettings.getMaxChromosomes();
+
     //if there are less chromosomes than required fill up:
-    while (_population.getSize() < _populationSettings->getMaxChromosomes())
+    while (_population.getSize() < _populationSettings.getMaxChromosomes())
     {
         //build new chromosome
-        typename BaseChromosome<FITNESS_TYPE>::ptr newChromosome = _chromosomeFactory->createChromosome();
+        const typename BaseChromosome<FITNESS_TYPE>::ptr newChromosome(_chromosomeFactory->createChromosome());
         _population.insertChromosome(newChromosome);
     }
+
+    EventValueData<unsigned int>::create(*this->getBookkeeper(),"REPLENISH_AMOUNT",difference);
 }
 
 template<typename FITNESS_TYPE>
@@ -59,7 +66,9 @@ FITNESS_TYPE BaseManager<FITNESS_TYPE>::getLowestFitness() const
     return _population.getFitnessMap().begin()->first;
 }
 
-} /* namespace manager */
-} /* namespace population */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace management */
+} /* private namespace population */
+} /* private namespace geneial */
+
 

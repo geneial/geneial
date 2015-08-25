@@ -1,18 +1,21 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/algorithm/BaseGeneticAlgorithm.h>
 #include <geneial/core/population/management/BaseManager.h>
 
 #include <set>
 
-namespace geneial
-{
-namespace algorithm
-{
 
-using namespace geneial::population::management;
-using namespace geneial::algorithm::stopping_criteria;
+geneial_private_namespace(geneial)
+{
+geneial_private_namespace(algorithm)
+{
+using ::geneial::algorithm::stopping_criteria::BaseStoppingCriterion;
+using ::geneial::population::management::BaseManager;
 
+geneial_export_namespace
+{
 template<typename FITNESS_TYPE>
 class AlgorithmObserver
 {
@@ -31,7 +34,7 @@ public:
     }
 
     virtual void updateCriteriaReached(BaseManager<FITNESS_TYPE> &manager,
-            const BaseStoppingCriterion<FITNESS_TYPE> * const criteria)
+            const BaseStoppingCriterion<FITNESS_TYPE>& criteria)
     {
     }
 
@@ -60,6 +63,7 @@ private:
 
 };
 
-} /* namespace algorithm */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace algorithm */
+} /* private namespace geneial */
 

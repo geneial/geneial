@@ -1,42 +1,47 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include <geneial/core/fitness/Fitness.h>
 
+#include <boost/version.hpp>
+
 #include <cstring> //memcmp
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace population
+geneial_private_namespace(population)
 {
-namespace chromosome
+geneial_private_namespace(chromosome)
 {
 
+geneial_export_namespace
+{
 template<typename FITNESS_TYPE>
-const typename Fitness<FITNESS_TYPE>::ptr BaseChromosome<FITNESS_TYPE>::getFitness()
+const Fitness<FITNESS_TYPE>& BaseChromosome<FITNESS_TYPE>::getFitness() const
 {
 
-    if (!hasFitnessEvaluator())
-    {
-        //No fitness evaluator -> undefined, probably null but no guarantee.
-        return _fitness;
-    }
+    //Note that _fitness is mutable and should be only computed if needed.
 
-    if (hasFitnessEvaluator() && !hasFitness())
+    //Note that _fitness is const wrt. the chromosome contents, only the actual computation is held off until firstly needed.
+
+    if (_fitnessEvaluator && !hasFitness())
     {
         //if we have a fitness evaluator assigned to the chromosome, but no fitness was calculated yet, do so.
-        //_fitness = boost::shared_ptr<Fitness <FITNESS_TYPE> >(new Fitness<FITNESS_TYPE>(1));
-        _fitness = _fitnessEvaluator->evaluate(this->getPtr());
+        assert(_fitnessEvaluator);
+        assert(this);
+        _fitness = (std::move(_fitnessEvaluator->evaluate(*this)));
     }
 
-    return _fitness;
+    //No fitness evaluator -> undefined, probably null but no guarantee.
+    return *_fitness;
 
 }
 
 template<typename FITNESS_TYPE>
-bool BaseChromosome<FITNESS_TYPE>::hashEquals(typename BaseChromosome<FITNESS_TYPE>::const_ptr chromosome) const
+bool BaseChromosome<FITNESS_TYPE>::hashEquals(const BaseChromosome<FITNESS_TYPE> &chromosome) const
 {
-    const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashA = chromosome->getHash();
+    const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashA = chromosome.getHash();
     const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashB = this->getHash();
 
     if (memcmp((void*) &hashA, (void*) &hashB, sizeof(hashA)) == 0)
@@ -56,15 +61,9 @@ void BaseChromosome<FITNESS_TYPE>::printHash(std::ostream& os) const
 }
 
 template<typename FITNESS_TYPE>
-const typename Fitness<FITNESS_TYPE>::ptr BaseChromosome<FITNESS_TYPE>::getFitness() const
+void BaseChromosome<FITNESS_TYPE>::setFitness(typename std::unique_ptr<Fitness<FITNESS_TYPE>> fit)
 {
-    return _fitness;
-}
-
-template<typename FITNESS_TYPE>
-void BaseChromosome<FITNESS_TYPE>::setFitness(const typename Fitness<FITNESS_TYPE>::ptr& fit)
-{
-    _fitness = fit;
+    _fitness = std::move(fit);
 }
 
 template<typename FITNESS_TYPE>
@@ -76,7 +75,7 @@ const typename FitnessEvaluator<FITNESS_TYPE>::ptr BaseChromosome<FITNESS_TYPE>:
 template<typename FITNESS_TYPE>
 void BaseChromosome<FITNESS_TYPE>::invalidateFitness()
 {
-    _fitness.reset(); //sets the ptr to null
+    _fitness = nullptr;
 }
 
 template<typename FITNESS_TYPE>
@@ -104,7 +103,8 @@ unsigned int BaseChromosome<FITNESS_TYPE>::getAge() const
     return _age;
 }
 
-} /* namespace chromomsome */
-} /* namespace population */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace chromosome */
+} /* private namespace population */
+} /* private namespace geneial */
 

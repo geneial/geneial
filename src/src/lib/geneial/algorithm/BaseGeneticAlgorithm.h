@@ -1,82 +1,121 @@
 #pragma once
 
+#include <geneial/namespaces.h>
+#include <geneial/config.h>
+
 #include <geneial/core/population/Population.h>
 #include <geneial/core/population/PopulationSettings.h>
+
+#include <geneial/core/population/management/BaseManager.h>
+
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 #include <geneial/core/operations/selection/BaseSelectionOperation.h>
 #include <geneial/core/operations/coupling/BaseCouplingOperation.h>
 #include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
 #include <geneial/core/operations/replacement/BaseReplacementOperation.h>
-#include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/observer/AlgorithmObserver.h>
+#include <geneial/utility/mixins/Buildable.h>
 
+#include <geneial/utility/ExecutionManager.h>
+
+#include <boost/optional.hpp>
+
+#include <memory>
 #include <map>
 #include <list>
+#include <type_traits>
 
-namespace geneial
+
+geneial_private_namespace(geneial)
 {
-namespace algorithm
+geneial_private_namespace(algorithm)
+{
+using ::geneial::algorithm::stopping_criteria::BaseStoppingCriterion;
+using ::geneial::operation::selection::BaseSelectionOperation;
+using ::geneial::operation::coupling::BaseCouplingOperation;
+using ::geneial::operation::crossover::BaseCrossoverOperation;
+using ::geneial::operation::replacement::BaseReplacementOperation;
+using ::geneial::operation::mutation::BaseMutationOperation;
+using ::geneial::utility::BaseExecutionManager;
+using ::geneial::population::Population;
+using ::geneial::population::PopulationSettings;
+using ::geneial::population::chromosome::BaseChromosome;
+using ::geneial::population::chromosome::BaseChromosomeFactory;
+using ::geneial::population::management::BaseBookkeeper;
+using ::geneial::population::management::BaseManager;
+
+using ::geneial::utility::Buildable;
+
+geneial_export_namespace
 {
 
-using namespace geneial::operation;
-using namespace geneial::population;
-using namespace geneial::population::chromosome;
-using namespace geneial::population::management;
 
 template<typename FITNESS_TYPE>
-class BaseGeneticAlgorithm
+class BaseGeneticAlgorithm : public virtual Buildable<BaseGeneticAlgorithm<FITNESS_TYPE>>
 {
-private:
+protected:
     typedef typename std::map<typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent,
-            std::list<AlgorithmObserver<FITNESS_TYPE>*> > observers_map;
+            std::vector<std::shared_ptr<AlgorithmObserver<FITNESS_TYPE>>>> observers_map;
 
     observers_map _observers;
 
-    BaseManager<FITNESS_TYPE> _manager;
+    std::shared_ptr<BaseManager<FITNESS_TYPE>> _manager;
 
     bool _wasSolved;
+
     bool _wasStarted;
 
-    stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE> * _stoppingCriterion;
+    std::shared_ptr<BaseStoppingCriterion<FITNESS_TYPE>> _stoppingCriterion;
 
-    selection::BaseSelectionOperation<FITNESS_TYPE> * _selectionOperation;
+    std::shared_ptr<BaseSelectionOperation<FITNESS_TYPE>> _selectionOperation;
 
-    coupling::BaseCouplingOperation<FITNESS_TYPE> *_couplingOperation;
+    std::shared_ptr<BaseCouplingOperation<FITNESS_TYPE>> _couplingOperation;
 
-    crossover::BaseCrossoverOperation<FITNESS_TYPE> *_crossoverOperation;
+    std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>> _crossoverOperation;
 
-    replacement::BaseReplacementOperation<FITNESS_TYPE> *_replacementOperation;
+    std::shared_ptr<BaseReplacementOperation<FITNESS_TYPE>> _replacementOperation;
 
-    mutation::BaseMutationOperation<FITNESS_TYPE> *_mutationOperation;
+    std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>> _mutationOperation;
+
+    //The client should use the builder instead of instacing the algorithm herself
+    BaseGeneticAlgorithm(
+            std::shared_ptr<BaseStoppingCriterion<FITNESS_TYPE>> stoppingCriterion,
+            std::shared_ptr<BaseSelectionOperation<FITNESS_TYPE>> selectionOperation,
+            std::shared_ptr<BaseCouplingOperation<FITNESS_TYPE>> couplingOperation,
+            std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>> crossoverOperation,
+            std::shared_ptr<BaseReplacementOperation<FITNESS_TYPE>> replacementOperation,
+            std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>> mutationOperation,
+            std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> chromosomeFactory):
+
+            _manager(BaseManager<FITNESS_TYPE>::create(chromosomeFactory)),
+            _wasSolved(false),
+            _wasStarted(false),
+            _stoppingCriterion(stoppingCriterion),
+            _selectionOperation(selectionOperation),
+            _couplingOperation(couplingOperation),
+            _crossoverOperation(crossoverOperation),
+            _replacementOperation(replacementOperation),
+            _mutationOperation(mutationOperation)
+    {
+        static_assert(std::is_arithmetic<FITNESS_TYPE>::value,"FITNESS_TYPE is expected to be an arithmetic data type!");
+    }
 
 public:
-    BaseGeneticAlgorithm(PopulationSettings *populationSettings, BaseChromosomeFactory<FITNESS_TYPE> *chromosomeFactory,
-            stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE> *stoppingCriterion,
-            selection::BaseSelectionOperation<FITNESS_TYPE> *selectionOperation,
-            coupling::BaseCouplingOperation<FITNESS_TYPE> *couplingOperation,
-            crossover::BaseCrossoverOperation<FITNESS_TYPE> *crossoverOperation,
-            replacement::BaseReplacementOperation<FITNESS_TYPE> *replacementOperation,
-            mutation::BaseMutationOperation<FITNESS_TYPE> *mutationOperation,
-            BaseFitnessProcessingStrategy<FITNESS_TYPE> *fitnessProcessingStrategy) :
-            _manager(populationSettings, chromosomeFactory), _wasSolved(false), _wasStarted(false), _stoppingCriterion(
-                    stoppingCriterion), _selectionOperation(selectionOperation), _couplingOperation(couplingOperation), _crossoverOperation(
-                    crossoverOperation), _replacementOperation(replacementOperation), _mutationOperation(
-                    mutationOperation)
-    {
-        _manager.getPopulation().setProcessingStrategy(fitnessProcessingStrategy);
-    }
+    // use this class to construct an Algorithm
+    class Builder;
+
 
     virtual ~BaseGeneticAlgorithm()
     {
     }
 
-    virtual void solve();
+    virtual void solve() = 0;
 
     virtual void setInitialPopulation(typename Population<FITNESS_TYPE>::chromosome_container &container)
     {
         assert(!_wasStarted);
-        _manager.getPopulation().replacePopulation(container);
+        _manager->getPopulation().replacePopulation(container);
     }
 
     //Delegates to manager,
@@ -84,30 +123,30 @@ public:
     inline typename BaseChromosome<FITNESS_TYPE>::ptr getHighestFitnessChromosome() const
     {
         assert(_wasStarted);
-        return _manager.getHighestFitnessChromosome();
+        return _manager->getHighestFitnessChromosome();
     }
 
     inline FITNESS_TYPE getHighestFitness() const
     {
         assert(_wasStarted);
-        return _manager.getHighestFitness();
+        return _manager->getHighestFitness();
     }
 
     virtual Population<FITNESS_TYPE>& getPopulation()
     {
-        return _manager.getPopulation();
+        return _manager->getPopulation();
     }
 
     inline typename BaseChromosome<FITNESS_TYPE>::ptr getLowestFitnessChromosome() const
     {
         assert(_wasStarted);
-        return _manager.getLowestFitnessChromosome();
+        return _manager->getLowestFitnessChromosome();
     }
 
     inline FITNESS_TYPE getLowestFitness() const
     {
         assert(_wasStarted);
-        return _manager.getLowestFitness();
+        return _manager->getLowestFitness();
     }
 
     inline virtual bool hasBeenSolved() const
@@ -120,69 +159,118 @@ public:
         return _wasStarted;
     }
 
-    inline virtual bool wasCriteriaReached();
-
-    void inline notifyObservers(typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent event)
+    inline virtual PopulationSettings& getPopulationSettings()
     {
-        typename observers_map::const_iterator lb = _observers.lower_bound(event);
-
-        if (lb != _observers.end() && !(_observers.key_comp()(event, lb->first)))
-        {
-            switch (event)
-            {
-            case AlgorithmObserver<FITNESS_TYPE>::GENERATION_DONE:
-            {
-                for (typename observers_map::mapped_type::const_iterator it = lb->second.begin();
-                        it != lb->second.end(); ++it)
-                {
-                    (*it)->updateGeneration(_manager);
-                }
-                break;
-            }
-            case AlgorithmObserver<FITNESS_TYPE>::CRITERIA_REACHED:
-            {
-                for (typename observers_map::mapped_type::const_iterator it = lb->second.begin();
-                        it != lb->second.end(); ++it)
-                {
-                    (*it)->updateCriteriaReached(_manager, _stoppingCriterion);
-                }
-                break;
-            }
-            }
-        }
+        return _manager->getPopulationSettings();
     }
 
-    void registerObserver(AlgorithmObserver<FITNESS_TYPE>* observer)
+    inline void setPopulationSettings(PopulationSettings& populationSettings)
     {
-        typedef std::set<typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent> setType;
-        const setType events = observer->getSubscribedEvents();
-        for (typename setType::const_iterator it = events.begin(); it != events.end(); ++it)
-        {
+        _manager->setPopulationSettings(populationSettings);
+    }
 
-            typename observers_map::iterator lb = _observers.lower_bound(*it);
+    inline virtual bool wasCriteriaReached();
 
-            if (lb != _observers.end() && !(_observers.key_comp()(*it, lb->first)))
-            {
-                // key already exists
-                // update lb->second if you care to
-                lb->second.insert(lb->second.begin(), observer);
-            }
-            else
-            {
-                // the key does not exist in the map
-                // add it to the map
-                typename std::list<AlgorithmObserver<FITNESS_TYPE>*> list;
-                list.insert(list.begin(), observer);
-                _observers.insert(lb, typename observers_map::value_type(*it, list));    // Use lb as a hint to insert,
-            }
+    inline virtual void notifyObservers(typename AlgorithmObserver<FITNESS_TYPE>::ObserveableEvent event);
 
-        }
+    inline virtual void registerObserver(const std::shared_ptr<AlgorithmObserver<FITNESS_TYPE>>& observer);
 
+
+    BaseExecutionManager& getExecutionManager() const
+    {
+        return _manager->getExecutionManager();
+    }
+
+    void setExecutionManager(std::unique_ptr<BaseExecutionManager>&& executionManager)
+    {
+        _manager->setExecutionManager(std::move(executionManager));
+    }
+
+    void setBookkeeper(const std::shared_ptr<BaseBookkeeper>& bookkeeper)
+    {
+        _manager->setBookkeeper(bookkeeper);
+    }
+
+    const std::shared_ptr<BaseBookkeeper> getBookkeeper() const
+    {
+        return _manager->getBookkeeper();
     }
 };
 
-} /* namespace algorithm */
-} /* namespace geneial */
+template<typename FITNESS_TYPE>
+class BaseGeneticAlgorithm<FITNESS_TYPE>::Builder : public Buildable<BaseGeneticAlgorithm<FITNESS_TYPE>>::Builder
+{
+protected:
+    boost::optional<std::shared_ptr<BaseStoppingCriterion<FITNESS_TYPE>>> _stoppingCriterion;
+
+    boost::optional<std::shared_ptr<BaseSelectionOperation<FITNESS_TYPE>>> _selectionOperation;
+
+    boost::optional<std::shared_ptr<BaseCouplingOperation<FITNESS_TYPE>>> _couplingOperation;
+
+    boost::optional<std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>>> _crossoverOperation;
+
+    boost::optional<std::shared_ptr<BaseReplacementOperation<FITNESS_TYPE>>> _replacementOperation;
+
+    boost::optional<std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>>> _mutationOperation;
+
+    boost::optional<std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>>> _chromosomeFactory;
+
+public:
+    Builder()
+    {
+    }
+
+    virtual ~Builder()
+    {
+    }
+
+    Builder& setStoppingCriterion( const std::shared_ptr<stopping_criteria::BaseStoppingCriterion<FITNESS_TYPE>> &stoppingCriterion )
+    {
+        this->_stoppingCriterion = stoppingCriterion;
+        return *this;
+    }
+
+    Builder& setSelectionOperation( const std::shared_ptr<BaseSelectionOperation<FITNESS_TYPE>> &selectionOperation )
+    {
+        this->_selectionOperation = selectionOperation;
+        return *this;
+    }
+
+    Builder& setCouplingOperation( const std::shared_ptr<BaseCouplingOperation<FITNESS_TYPE>> &couplingOperation )
+    {
+        this->_couplingOperation = couplingOperation;
+        return *this;
+    }
+
+    Builder& setCrossoverOperation( const std::shared_ptr<BaseCrossoverOperation<FITNESS_TYPE>> &crossoverOperation )
+    {
+        this->_crossoverOperation = crossoverOperation;
+        return *this;
+    }
+
+    Builder& setReplacementOperation( const std::shared_ptr<BaseReplacementOperation<FITNESS_TYPE>> &replacementOperation )
+    {
+        this->_replacementOperation = replacementOperation;
+        return *this;
+    }
+
+    Builder& setMutationOperation( const std::shared_ptr<BaseMutationOperation<FITNESS_TYPE>> &mutationOperation )
+    {
+        this->_mutationOperation = mutationOperation;
+        return *this;
+    }
+
+    Builder& setChromosomeFactory (const std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> chromosomeFactory )
+    {
+        _chromosomeFactory = chromosomeFactory;
+        return *this;
+    }
+};
+
+} /* geneial_export_namespace */
+} /* private namespace algorithm */
+} /* private namespace geneial */
+
 
 #include <geneial/algorithm/BaseGeneticAlgorithm.hpp>
 

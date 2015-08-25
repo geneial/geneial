@@ -1,44 +1,47 @@
 #pragma once
 
-#include <geneial/utility/Printable.h>
+#include <geneial/namespaces.h>
+#include <geneial/utility/mixins/Printable.h>
 #include <geneial/core/fitness/Fitness.h>
 #include <geneial/core/fitness/FitnessEvaluator.h>
 
 #include <iostream>
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
+#include <memory>
+#include <cassert>
 
-namespace geneial
-{
-namespace population
-{
-namespace chromosome
-{
 
-using namespace geneial::utility;
+geneial_private_namespace(geneial)
+{
+geneial_private_namespace(population)
+{
+geneial_private_namespace(chromosome)
+{
+using ::geneial::utility::Printable;
+
+geneial_export_namespace
+{
 
 /**
  * @brief Abstract superclass for any type of chromosome
  */
 template<typename FITNESS_TYPE>
-class BaseChromosome: public Printable, public boost::enable_shared_from_this<BaseChromosome<FITNESS_TYPE> >
+class BaseChromosome: public Printable, public std::enable_shared_from_this<BaseChromosome<FITNESS_TYPE> >
 {
-
 public:
     static const int CHROMOSOME_AGE_UNITIALIZED = 0;
 
-    typedef unsigned int chromosome_age;
-    typedef std::size_t chromsome_hash;
+    using chromosome_age = unsigned int;
+    using chromsome_hash = std::size_t;
 
-    typedef typename boost::shared_ptr<BaseChromosome<FITNESS_TYPE> > ptr;
-    typedef typename boost::shared_ptr<const BaseChromosome<FITNESS_TYPE> > const_ptr;
+    using ptr = std::shared_ptr<BaseChromosome<FITNESS_TYPE>>;
+    using const_ptr =std::shared_ptr<const BaseChromosome<FITNESS_TYPE>>;
 
-    ptr getPtr() //TODO (bewo) constness correct?
+    ptr getPtr()
     {
         return this->shared_from_this();
     }
 
-    const_ptr getConstPtr() //TODO (bewo) constness correct?
+    const_ptr getConstPtr()
     {
         return this->shared_from_this();
     }
@@ -46,8 +49,8 @@ public:
     /**
      *
      */
-    BaseChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) :
-            _fitness(), _fitnessEvaluator(fitnessEvaluator), _age(CHROMOSOME_AGE_UNITIALIZED)
+    explicit BaseChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) :
+            _fitness(nullptr), _fitnessEvaluator(fitnessEvaluator), _age(CHROMOSOME_AGE_UNITIALIZED)
     {
         assert(_fitnessEvaluator);
     }
@@ -56,7 +59,7 @@ public:
     {
     }
 
-    virtual bool equals(const_ptr chromosome) const = 0;
+    virtual bool equals(const BaseChromosome<FITNESS_TYPE> &chromosome) const = 0;
 
     /**
      * Used to 'age' a chromosome. Increments the age of a chromosome by one
@@ -75,20 +78,16 @@ public:
 
     bool inline hasFitness() const
     {
-        return !(_fitness == NULL);
+        //Note (bewo) cast to bool will yield to boost::optional evaluation
+        //return _fitness.is_initialized();
+        return _fitness != nullptr;
     }
 
     /**
      * Gets the fitness value of a Chromosome.
      * Calls the fitness evaluator, if chromosome has no fitness yet.
      */
-    const typename Fitness<FITNESS_TYPE>::ptr getFitness();
-
-    /**
-     * Gets the fitness value of a Chromosome.
-     * Does not evaluate the fitness.
-     */
-    const typename Fitness<FITNESS_TYPE>::ptr getFitness() const;
+    const Fitness<FITNESS_TYPE>& getFitness() const;
 
     /**
      * If the chromosome was modified from outside and it's "cached" fitness can no no longer be
@@ -100,15 +99,24 @@ public:
      */
     void invalidateFitness();
 
+
+    //"Resets" the whole chromosome in case where the chromosome is recycled from the holdoff set.
+    inline void invalidate()
+    {
+        invalidateFitness();
+        setAge(CHROMOSOME_AGE_UNITIALIZED);
+        //Allow for child classes to do their own magic.
+        doInvalidate();
+    }
+
+    virtual void doInvalidate()
+    {
+    }
+
     /**
      * Sets fitness of a chromosome
      */
-    void setFitness(const typename Fitness<FITNESS_TYPE>::ptr& fitness);
-
-    bool inline hasFitnessEvaluator() const
-    {
-        return !(_fitnessEvaluator == NULL);
-    }
+    void setFitness(typename std::unique_ptr<Fitness<FITNESS_TYPE>> fitness);
 
     const typename FitnessEvaluator<FITNESS_TYPE>::ptr getFitnessEvaluator() const;
 
@@ -117,20 +125,23 @@ public:
     virtual chromsome_hash getHash() const = 0;
 
 protected:
-    virtual bool hashEquals(const_ptr chromosome) const;
+
+    virtual bool hashEquals(const BaseChromosome<FITNESS_TYPE> &chromosome) const;
+
     virtual void printHash(std::ostream& os) const;
 
 private:
-    typename Fitness<FITNESS_TYPE>::ptr _fitness;
+    mutable std::unique_ptr<Fitness<FITNESS_TYPE>> _fitness;
 
     typename FitnessEvaluator<FITNESS_TYPE>::ptr _fitnessEvaluator;
 
     chromosome_age _age;
 };
 
-} /* namespace chromomsome */
-} /* namespace population */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace chromosome */
+} /* private namespace population */
+} /* private namespace geneial */
 
 #include <geneial/core/population/chromosome/BaseChromosome.hpp>
 

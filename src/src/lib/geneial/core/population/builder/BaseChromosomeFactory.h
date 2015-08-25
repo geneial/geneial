@@ -1,16 +1,28 @@
 #pragma once
 
-namespace geneial
+#include <geneial/namespaces.h>
+#include <geneial/core/population/chromosome/BaseChromosome.h>
+#include <geneial/core/population/management/BaseManager.h>
+#include <geneial/core/population/management/ResourcePool.h>
+#include <geneial/utility/mixins/Buildable.h>
+
+geneial_private_namespace(geneial)
 {
-namespace population
+geneial_private_namespace(population)
 {
-namespace chromosome
+geneial_private_namespace(chromosome)
+{
+using ::geneial::population::management::BaseManager;
+using ::geneial::population::management::ResourcePool;
+using ::geneial::utility::Buildable;
+
+geneial_export_namespace
 {
 
 template<typename FITNESS_TYPE>
-class BaseChromosomeFactory
+class BaseChromosomeFactory : public virtual Buildable<BaseChromosomeFactory<FITNESS_TYPE>>
 {
-private:
+
 public:
 
     enum PopulateBehavior
@@ -18,19 +30,33 @@ public:
         CREATE_VALUES, LET_UNPOPULATED
     };
 
-    BaseChromosomeFactory()
-    {
-    }
 
     virtual ~BaseChromosomeFactory()
     {
     }
 
-    virtual typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome(
-            PopulateBehavior populateValues = CREATE_VALUES) = 0;
+    inline typename BaseChromosome<FITNESS_TYPE>::ptr createChromosome(
+                                                                        PopulateBehavior populateValues = CREATE_VALUES
+                                                                        )
+    {
+        return std::move(doCreateChromosome(populateValues));
+    }
+
+    class Builder : public Buildable<BaseChromosomeFactory<FITNESS_TYPE>>::Builder
+    {
+    };
+
+protected:
+    BaseChromosomeFactory()
+    {
+    }
+
+    virtual typename BaseChromosome<FITNESS_TYPE>::ptr doCreateChromosome(
+            PopulateBehavior populateValues
+        ) = 0;
 };
 
-} /* namespace chromomsome */
-} /* namespace population */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace chromosome */
+} /* private namespace population */
+} /* private namespace geneial */

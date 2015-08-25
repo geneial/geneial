@@ -1,37 +1,44 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/operations/choosing/ChooseRandom.h>
 #include <geneial/core/population/Population.h>
 #include <geneial/utility/Random.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace choosing
+geneial_private_namespace(choosing)
+{
+using ::geneial::population::Population;
+using ::geneial::utility::Random;
+
+geneial_export_namespace
+{
+template<typename FITNESS_TYPE>
+typename Population<FITNESS_TYPE>::chromosome_container ChooseRandom<FITNESS_TYPE>::doChoose(
+        const typename Population<FITNESS_TYPE>::chromosome_container &chromosomeInputSet) const
 {
 
-template<typename VALUE_TYPE, typename FITNESS_TYPE>
-typename Population<FITNESS_TYPE>::chromosome_container ChooseRandom<VALUE_TYPE, FITNESS_TYPE>::doChoose(
-        typename Population<FITNESS_TYPE>::chromosome_container chromosomeInputSet)
-{
-
-    typename Population<FITNESS_TYPE>::chromosome_container::iterator chromosomeInputContainer_it;
     typename Population<FITNESS_TYPE>::chromosome_container chromosomeOutputSet;
 
-    for (chromosomeInputContainer_it = chromosomeInputSet.begin();
-            chromosomeInputContainer_it != chromosomeInputSet.end(); ++chromosomeInputContainer_it)
+    //Reserve upper limit i.e. the input size, so we avoid resizing later.
+    chromosomeOutputSet.reserve(chromosomeInputSet.size());
+
+    //Iterate over all chromosomes in set and decide whether to keep it or not.
+    for (const auto &chromosome : chromosomeInputSet)
     {
-        //Uses Mutation Settings
-        if (Random::instance()->decision(this->getSettings()->getPropability()))
+        if (Random::decision(this->getProbability()))
         {
-            chromosomeOutputSet.push_back(*chromosomeInputContainer_it);
+            chromosomeOutputSet.emplace_back(chromosome);
         }
     }
     return chromosomeOutputSet;
 }
 
-} /* namespace choosing */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace choosing */
+} /* private namespace operation */
+} /* private namespace geneial */
 

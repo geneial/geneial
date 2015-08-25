@@ -1,21 +1,29 @@
 #pragma once
 
+#include <geneial/namespaces.h>
+
 #include <geneial/core/population/chromosome/MultiValueChromosome.h>
+
 #include <boost/functional/hash.hpp>
+
 #include <iterator>
 #include <algorithm>
 #include <limits>
 
-namespace geneial
+
+geneial_private_namespace(geneial)
 {
-namespace population
+geneial_private_namespace(population)
 {
-namespace chromosome
+geneial_private_namespace(chromosome)
+{
+
+geneial_export_namespace
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 bool MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::equals(
-        typename BaseChromosome<FITNESS_TYPE>::const_ptr chromosome) const
+        const BaseChromosome<FITNESS_TYPE> &chromosome) const
 {
     return this->hashEquals(chromosome);
 }
@@ -23,37 +31,17 @@ bool MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::equals(
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename BaseChromosome<FITNESS_TYPE>::chromsome_hash MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::getHash() const
 {
-
-    typename BaseChromosome<FITNESS_TYPE>::chromsome_hash result = 0; //(long) getSum();
-    /*
-
-     const int hash_bytes = sizeof(chromsome_hash);
-     this is too slow:
-
-     //TODO (bewo): Tests this on doubles, etc.
-     const int value_bytes = sizeof(VALUE_TYPE);
-
-     unsigned int shift_bit = 0;
-     unsigned int shift_byte = 0;
-
-     //NOTE(bewo): simple hash function
-     //1.) Iterate over all values in the chromosomes.
-     //2.) XOR the bits of the values with a circular bitshift - bytewise with a circular byteshift to the hash memory
-     for (MultiValueChromosome<VALUE_TYPE,FITNESS_TYPE>::const_it it = _container.begin() ; it != _container.end(); ++it){
-     VALUE_TYPE val = *it;
-     for(int i=0;i<value_bytes;i++){
-     char* ptr_hash = ((char*)&result)+((i+shift_byte)%hash_bytes);
-     char* ptr_value = ((char*)&val)+i;
-     //NOTE(bewo): xor what was previously there with a circular shift.
-     *ptr_hash ^= (*ptr_value << shift_bit) | (*ptr_value >> (sizeof(char) * 8 - shift_bit));
-     shift_bit = (shift_bit + 1) % sizeof(char) * CHAR_BIT;
-     }
-     shift_byte++;
-     }
-     */
-
-    result = boost::hash_range(_container.begin(), _container.end());
-
+#ifndef NMVCHASH_CACHE
+    if(!hasCache())
+    {
+#endif
+        //TODO (bewo): Introduce a mutex lock here for threading.
+        _hashCache = boost::hash_range(_container.begin(), _container.end());
+#ifndef NMVCHASH_CACHE
+        _cacheValid = true;
+        }
+#endif
+    typename BaseChromosome<FITNESS_TYPE>::chromsome_hash result = _hashCache;
     return result;
 }
 
@@ -66,20 +54,42 @@ unsigned int MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::getSize() const
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::value_container& MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::getContainer()
 {
+    invalidateHashCache();
     return _container;
 }
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::value_container MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::getContainer() const
+const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::value_container& MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::getContainer() const
 {
     return _container;
 }
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-void MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::setValueContainer(value_container container)
+bool inline MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::hasCache() const
 {
+    return _cacheValid;
+}
+
+template<typename VALUE_TYPE, typename FITNESS_TYPE>
+void inline MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::invalidateHashCache() const
+{
+    _cacheValid = false;
+}
+
+template<typename VALUE_TYPE, typename FITNESS_TYPE>
+void MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::setValueContainer(const value_container &container)
+{
+    invalidateHashCache();
     _container = container;
 }
+
+template<typename VALUE_TYPE, typename FITNESS_TYPE>
+void MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::setValueContainer(value_container&& container)
+{
+    invalidateHashCache();
+    std::swap(_container,container);
+}
+
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_it MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::getConstIt() const
@@ -90,19 +100,20 @@ typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_it MultiValueChro
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::it MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::getIt() const
 {
+    invalidateHashCache();
     return _container.begin();
 }
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::it MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::getMax() const
 {
-    return max_element(_container.begin(), _container.end());
+    return std::max_element(_container.begin(), _container.end());
 }
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::it MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::getMin() const
 {
-    return min_element(_container.begin(), _container.end());
+    return std::min_element(_container.begin(), _container.end());
 }
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
@@ -144,7 +155,7 @@ void MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::print(std::ostream& os) con
     os << "Fitness: ";
     if (this->hasFitness())
     {
-        os << *this->getFitness();
+        os << this->getFitness();
     }
     else
     {
@@ -163,7 +174,8 @@ void MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::print(std::ostream& os) con
     os << std::endl;
 }
 
-} /* namespace chromomsome */
-} /* namespace population */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace chromosome */
+} /* private namespace population */
+} /* private namespace geneial */
 

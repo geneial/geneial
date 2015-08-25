@@ -1,22 +1,23 @@
 #pragma once
 
-#include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace algorithm
+geneial_private_namespace(algorithm)
 {
-namespace stopping_criteria
+geneial_private_namespace(stopping_criteria)
 {
+using ::geneial::population::management::BaseManager;
 
-using namespace geneial::population::management;
+geneial_export_namespace
+{
 
 template<typename FITNESS_TYPE>
 class FitnessValueDeltaCriterion: public BaseStoppingCriterion<FITNESS_TYPE>
 {
 public:
-    FitnessValueDeltaCriterion(FITNESS_TYPE desiredFitness, FITNESS_TYPE delta) :
+    FitnessValueDeltaCriterion(const FITNESS_TYPE desiredFitness, const FITNESS_TYPE delta) :
             _desiredFitness(desiredFitness), _delta(delta)
     {
         assert(_delta <= _desiredFitness);
@@ -38,11 +39,11 @@ public:
     }
 
 private:
-    FITNESS_TYPE _desiredFitness;
-    FITNESS_TYPE _delta;
+    const FITNESS_TYPE _desiredFitness;
+    const FITNESS_TYPE _delta;
 };
 
-} /* namespace stopping_criteria */
-} /* namespace algorithm */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace stopping_criteria */
+} /* private namespace algorithm */
+} /* private namespace geneial */

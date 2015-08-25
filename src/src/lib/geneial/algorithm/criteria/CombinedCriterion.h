@@ -1,19 +1,20 @@
 #pragma once
 
-#include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 
-#include <list>
-#include <map>
+#include <vector>
+#include <utility>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace algorithm
+geneial_private_namespace(algorithm)
 {
-namespace stopping_criteria
+geneial_private_namespace(stopping_criteria)
 {
+using ::geneial::population::management::BaseManager;
 
-using namespace geneial::population::management;
+geneial_export_namespace
+{
 
 //Container that holds other Criteria which are connected by a logical condition (and/or), which propagate the condition by visitor pattern or sth.
 //Composite Pattern for hierarchies of criteria
@@ -31,59 +32,59 @@ public:
 
     typedef std::pair<glue, criterion> glue_criterion_pair;
 
-    typedef std::list<glue_criterion_pair> container;
+    typedef std::vector<glue_criterion_pair> container;
 
     virtual ~CombinedCriterion()
     {
     }
-    ;
+
+
+    //TODO (bewo): Constructor and initializer list
 
     /**
      * Returns true if empty.
      */
     virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager)
     {
-        bool result = true;
+        bool accumulatedResult = true;
 
         assert(std::count_if(_criteria.begin(), _criteria.end(), [](glue_criterion_pair const &b)
         {
             return b.first == INIT;
-        }) != 1
+        }) == 1 && "INIT type not found or there are more than one INIT glue for combined criterion!");
 
-        && "INIT type not found or there are more than one INIT glue for combined criterion!");
-
-        for (typename container::iterator it = _criteria.begin(); it != _criteria.end(); ++it)
+        for (const auto &criterionPair : _criteria)
         {
-            if (it->first == INIT)
+            if (criterionPair.first == INIT)
             {
-                result = it->second->wasReached(manager);
+                accumulatedResult = criterionPair.second->wasReached(manager);
             }
-            else if (it->first == AND)
+            else if (criterionPair.first == AND)
             {
-                result &= it->second->wasReached(manager);
+                accumulatedResult &= criterionPair.second->wasReached(manager);
             }
-            else if (it->first == XOR)
+            else if (criterionPair.first == XOR)
             {
-                result &= !it->second->wasReached(manager);
+                accumulatedResult &= !criterionPair.second->wasReached(manager);
             }
             else
             {
-                result |= it->second->wasReached(manager);
+                accumulatedResult |= criterionPair.second->wasReached(manager);
             }
         }
-        return result;
+        return accumulatedResult;
     }
 
     virtual void print(std::ostream& os) const
     {
         os << "Combined (";
-        for (typename container::const_iterator it = _criteria.begin(); it != _criteria.end(); ++it)
+        for (const auto &criterionPair : _criteria)
         {
-            if (it->first == AND)
+            if (criterionPair.first == AND)
             {
                 os << "(&&) ";
             }
-            else if (it->first == XOR)
+            else if (criterionPair.first == XOR)
             {
                 os << "(^^) ";
             }
@@ -91,20 +92,19 @@ public:
             {
                 os << "(||) ";
             }
-            os << *it->second;
+            os << criterionPair.second;
         }
         os << ")";
     }
 
     void add(const glue_criterion_pair newCriterion)
     {
-        _criteria.insert(_criteria.end(), newCriterion);
+        _criteria.emplace_back(newCriterion);
     }
 
     void add(const glue glue, const criterion criterion)
     {
-        glue_criterion_pair p(glue, criterion);
-        add(p);
+        add(glue_criterion_pair(glue, criterion));
     }
 
     const container& getCriteria() const
@@ -122,7 +122,8 @@ private:
 
 };
 
-} /* namespace stopping_criteria */
-} /* namespace algorithm */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace stopping_criteria */
+} /* private namespace algorithm */
+} /* private namespace geneial */
 

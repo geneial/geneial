@@ -7,18 +7,22 @@
 #include <map>
 #include <cassert>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace selection
+geneial_private_namespace(selection)
+{
+using ::geneial::utility::Random;
+
+geneial_export_namespace
 {
 
 //TODO (bewo) check whether all this will work with negative fitness values
 
 template<typename FITNESS_TYPE>
 typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set UniformRandomSelection<FITNESS_TYPE>::doSelect(
-        const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager)
+        const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager) const
 {
 
     //shorthands for type mess
@@ -27,7 +31,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set UniformRando
 
     result_set result;
 
-    unsigned int left_select = this->getSettings()->getNumberOfParents();
+    unsigned int left_select = this->getSettings().getNumberOfParents();
 
     //TODO (bewo) allow parameter for the best chromosomes to be selected (and skipped here)
     assert(population.getSize() >= left_select);
@@ -41,17 +45,20 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set UniformRando
         {
             rnditer = population.getFitnessMap().begin();
 
-            std::advance(rnditer, Random::instance()->generateInt(0, population.getFitnessMap().size() - 1));
+            std::advance(rnditer, Random::generate<int>(0, population.getFitnessMap().size() - 1));
 
         } while (allowDuplicates || std::find(result.begin(), result.end(), rnditer->second) != result.end());
 
         left_select--;
-        result.push_back(rnditer->second);
+
+        result.emplace_back(rnditer->second);
+
     }
     return result;
 }
 
-} /* namespace selection */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace selection */
+} /* private namespace operation */
+} /* private namespace geneial */
 

@@ -1,16 +1,19 @@
 #pragma once
 
-#include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace algorithm
+geneial_private_namespace(algorithm)
 {
-namespace stopping_criteria
+geneial_private_namespace(stopping_criteria)
 {
+using ::geneial::utility::Printable;
+using ::geneial::population::management::BaseManager;
 
-using namespace geneial::population::management;
+geneial_export_namespace
+{
+using namespace geneial::algorithm::stopping_criteria;
 
 //TODO (bewo) Think about this class semantics...
 template<typename FITNESS_TYPE>
@@ -61,7 +64,7 @@ private:
     unsigned int _lastGenerationYoungestAge;
 };
 
-} /* namespace stopping_criteria */
-} /* namespace algorithm */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace stopping_criteria */
+} /* private namespace algorithm */
+} /* private namespace geneial */

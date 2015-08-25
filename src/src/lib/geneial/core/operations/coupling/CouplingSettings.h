@@ -1,14 +1,17 @@
 #pragma once
 
+#include <geneial/namespaces.h>
+
 #include <cassert>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace coupling
+geneial_private_namespace(coupling)
 {
-
+geneial_export_namespace
+{
 /**
  * Generic class for coupling options
  */
@@ -17,11 +20,13 @@ class CouplingSettings
 private:
     unsigned int _numberOfOffspring;
 public:
+    const constexpr static unsigned int DEFAULT_NUMBER_OF_OFFSPRING = 20;
+
     virtual ~CouplingSettings()
     {
     }
 
-    CouplingSettings(unsigned int numberOfOffspring) :
+    explicit CouplingSettings(const unsigned int numberOfOffspring = DEFAULT_NUMBER_OF_OFFSPRING) :
             _numberOfOffspring(numberOfOffspring)
     {
         assert(numberOfOffspring > 0);
@@ -32,14 +37,15 @@ public:
         return _numberOfOffspring;
     }
 
-    void setNumberOfOffspring(unsigned int numberOfOffspring)
+    void setNumberOfOffspring(const unsigned int numberOfOffspring)
     {
         _numberOfOffspring = numberOfOffspring;
     }
 
 };
 
-} /* namespace coupling */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace coupling */
+} /* private namespace operation */
+} /* private namespace geneial */
 

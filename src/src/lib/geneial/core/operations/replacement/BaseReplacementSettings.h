@@ -1,27 +1,43 @@
 #pragma once
 
-namespace geneial
+#include <geneial/namespaces.h>
+
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace replacement
+geneial_private_namespace(replacement)
 {
 
+geneial_export_namespace
+{
 class BaseReplacementSettings
 {
 
 public:
     /**
      * Every selection operation should allow the following modes:
-     * 	REPLACE_ALL_OFFSPRING -- Replace every offspring
-     * 	REPLACE_FIXED_NUMBER -- Replace a given number in the existing Population with offspring
+     *     REPLACE_ALL_OFFSPRING -- Replace every offspring
+     *     REPLACE_FIXED_NUMBER -- Replace a given number in the existing Population with offspring
      */
     typedef enum
     {
         REPLACE_ALL_OFFSPRING, REPLACE_FIXED_NUMBER
     } replace_offspring_mode;
 
-    BaseReplacementSettings(replace_offspring_mode mode, unsigned int amountToReplace = 0, unsigned int amountElitism =
+    static const BaseReplacementSettings::replace_offspring_mode DEFAULT_REPLACEMENT_MODE = BaseReplacementSettings::REPLACE_ALL_OFFSPRING;
+    static const unsigned int DEFAULT_AMOUNT_TO_REPLACE = 0;
+    static const unsigned int DEFAULT_AMOUNT_ELTISIM = 1;
+
+    BaseReplacementSettings():
+        _mode(DEFAULT_REPLACEMENT_MODE),
+        _amountToReplace(DEFAULT_AMOUNT_TO_REPLACE),
+        _amountElitism(DEFAULT_AMOUNT_ELTISIM)
+    {
+    }
+
+
+    explicit BaseReplacementSettings(const replace_offspring_mode mode, const unsigned int amountToReplace = 0, const unsigned int amountElitism =
             0) :
             _mode(mode), _amountToReplace(amountToReplace), _amountElitism(amountElitism)
     {
@@ -32,7 +48,7 @@ public:
         return _amountToReplace;
     }
 
-    void setAmountToReplace(unsigned int amountToReplace)
+    void setAmountToReplace(const unsigned int amountToReplace)
     {
         _amountToReplace = amountToReplace;
     }
@@ -42,7 +58,7 @@ public:
         return _mode;
     }
 
-    void setMode(replace_offspring_mode mode)
+    void setMode(const replace_offspring_mode mode)
     {
         _mode = mode;
     }
@@ -52,7 +68,7 @@ public:
         return _amountElitism;
     }
 
-    void setAmountElitism(unsigned int amountElitism)
+    void setAmountElitism(const unsigned int amountElitism)
     {
         _amountElitism = amountElitism;
     }
@@ -63,7 +79,7 @@ private:
 
 };
 
-} /* namespace replacement */
-} /* namespace operation */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace replacement */
+} /* private namespace operation */
+} /* private namespace geneial */

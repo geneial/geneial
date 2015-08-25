@@ -1,28 +1,45 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/population/builder/MultiValueBuilderSettings.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace population
+geneial_private_namespace(population)
 {
-namespace chromosome
+geneial_private_namespace(chromosome)
+{
+
+geneial_export_namespace
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 class ContinousMultiValueBuilderSettings: public MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>
 {
 private:
+
     bool _hasStart; //Do we have a starting point?
+
     VALUE_TYPE _start; //the starting point from which to start the chromosome array
+
     VALUE_TYPE _eps; //eps delta deriation between values in the array
 
 public:
+
+    const static bool DEFAULT_HAS_START = false;
+    const static bool DEFAULT_START = 0;
+    const static bool DEFAULT_EPS = 1;
+
     ContinousMultiValueBuilderSettings(const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator,
-            unsigned int num, VALUE_TYPE random_max, VALUE_TYPE random_min, bool hasStart = false, VALUE_TYPE start = 0,
-            VALUE_TYPE eps = 1) :
-            MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>(fitnessEvaluator, num, random_max, random_min), _hasStart(
-                    hasStart), _start(start), //Start point for generating ContinousChromomsomes
+                                       const unsigned int num = MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>::DEFAULT_NUM,
+                                       const VALUE_TYPE random_max = MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>::DEFAULT_RANDOM_MAX,
+                                       const  VALUE_TYPE random_min = MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>::DEFAULT_RANDOM_MIN,
+                                       const bool hasStart = DEFAULT_HAS_START,
+                                       const VALUE_TYPE start = DEFAULT_START,
+                                       const VALUE_TYPE eps = DEFAULT_EPS) :
+            MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>(fitnessEvaluator, num, random_max, random_min),
+            _hasStart(hasStart),
+            _start(start), //Start point for generating ContinousChromomsomes
             _eps(eps) //Eps derivation from previous point per step
     {
     }
@@ -36,19 +53,33 @@ public:
         return _eps;
     }
 
-    VALUE_TYPE getStart() const
+    void setEps(VALUE_TYPE eps)
     {
-        return _start;
+        _eps = eps;
     }
 
-    bool hasStart() const
+    void setHasStart(bool hasStart)
+    {
+        _hasStart = hasStart;
+    }
+
+    VALUE_TYPE hasStart() const
     {
         return _hasStart;
     }
 
+    VALUE_TYPE getStartValue() const
+    {
+        return _start;
+    }
+
+    void setStartValue(VALUE_TYPE start)
+    {
+        _start = start;
+    }
 };
 
-} /* namespace chromomsome */
-} /* namespace population */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace chromosome */
+} /* private namespace population */
+} /* private namespace geneial */

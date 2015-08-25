@@ -1,16 +1,16 @@
 #pragma once
 
-#include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace algorithm
+geneial_private_namespace(algorithm)
 {
-namespace stopping_criteria
+geneial_private_namespace(stopping_criteria)
 {
-
-using namespace geneial::population::management;
+using ::geneial::population::management::BaseManager;
+geneial_export_namespace
+{
 
 //Encapsulates when a StoppingCriterion has a state and makes sure wasReached has no sideeffects
 //and ensures wasStatefully reached is only called once per generation
@@ -41,16 +41,22 @@ public:
         }
 
         _wasInvoked = true;
+
         return _cachedResult;
     }
 
 private:
+
     unsigned int _lastGenerationChecked;
+
     bool _cachedResult;
+
     bool _wasInvoked;
 };
 
-} /* namespace stopping_criteria */
-} /* namespace algorithm */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace stopping_criteria */
+} /* private namespace algorithm */
+} /* private namespace geneial */
+
 

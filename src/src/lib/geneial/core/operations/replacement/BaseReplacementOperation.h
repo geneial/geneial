@@ -1,28 +1,36 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/operations/replacement/BaseReplacementSettings.h>
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/core/population/Population.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace replacement
+geneial_private_namespace(replacement)
 {
+using ::geneial::population::Population;
+using ::geneial::operation::crossover::BaseCrossoverOperation;
+using ::geneial::operation::selection::BaseSelectionOperation;
+using ::geneial::population::management::BaseManager;
+using ::geneial::utility::Buildable;
 
-using namespace geneial::operation::selection;
-using namespace geneial::operation::coupling;
-using namespace geneial::population::management;
-
+geneial_export_namespace
+{
 template<typename FITNESS_TYPE>
-class BaseReplacementOperation
+class BaseReplacementOperation  : public Buildable<BaseReplacementOperation<FITNESS_TYPE>>
 {
-private:
-    BaseReplacementSettings * _settings;
+protected:
+    std::shared_ptr<const BaseReplacementSettings> _settings;
 
 public:
-    BaseReplacementOperation(BaseReplacementSettings* settings) :
+    using ptr = std::shared_ptr<BaseReplacementOperation<FITNESS_TYPE>>;
+
+    using const_ptr = std::shared_ptr<BaseReplacementOperation<FITNESS_TYPE>>;
+
+    explicit BaseReplacementOperation(const std::shared_ptr<const BaseReplacementSettings> &settings) :
             _settings(settings)
     {
     }
@@ -32,23 +40,47 @@ public:
     }
 
     virtual void doReplace(Population<FITNESS_TYPE> &population,
-            typename selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
+            const typename selection::BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &parents,
             typename coupling::BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set &offspring,
-            BaseManager<FITNESS_TYPE> &manager) = 0;
+            BaseManager<FITNESS_TYPE> &manager) const = 0;
 
-    BaseReplacementSettings* getSettings() const
+    const BaseReplacementSettings& getSettings() const
     {
-        return _settings;
+        return *_settings;
     }
 
-    void setSettings(BaseReplacementSettings* settings)
+    void setSettings(const BaseReplacementSettings& settings)
     {
         _settings = settings;
     }
 
+    class Builder : public Buildable<BaseReplacementOperation<FITNESS_TYPE>>::Builder
+    {
+    protected:
+        std::shared_ptr<BaseReplacementSettings> _settings;
+
+    public:
+        Builder():_settings(new BaseReplacementSettings)
+        {
+        }
+
+        BaseReplacementSettings& getSettings()
+        {
+            return *_settings;
+        }
+
+        void setSettings(const std::shared_ptr<BaseReplacementSettings>& settings)
+        {
+            _settings = settings;
+        }
+    };
+
+
+
 };
 
-} /* namespace replacement */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace replacement */
+} /* private namespace operation */
+} /* private namespace geneial */
 

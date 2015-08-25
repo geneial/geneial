@@ -1,53 +1,85 @@
 #pragma once
 
-#include <geneial/core/operations/selection/SelectionSettings.h>
+#include <geneial/namespaces.h>
+#include <geneial/core/operations/selection/BaseSelectionSettings.h>
+#include <geneial/core/population/management/BaseManager.h>
+#include <geneial/core/population/Population.h>
+#include <geneial/utility/mixins/Buildable.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace selection
+geneial_private_namespace(selection)
 {
+using ::geneial::population::Population;
+using ::geneial::population::management::BaseManager;
+using ::geneial::utility::Buildable;
 
-using namespace geneial::population::management;
+geneial_export_namespace
+{
 
 /**
  * Select a number of parents based on a certain criteria.
  */
 template<typename FITNESS_TYPE>
-class BaseSelectionOperation
+class BaseSelectionOperation : public Buildable<BaseSelectionOperation<FITNESS_TYPE>>
 {
 private:
-    SelectionSettings* _settings;
+    const std::shared_ptr<BaseSelectionSettings> _settings;
 
-public:
-    typedef typename Population<FITNESS_TYPE>::chromosome_container selection_result_set;
 
-    BaseSelectionOperation(SelectionSettings* settings) :
+protected:
+    BaseSelectionOperation(const std::shared_ptr<BaseSelectionSettings> &settings) :
             _settings(settings)
     {
     }
+
+public:
+    using selection_result_set = typename Population<FITNESS_TYPE>::chromosome_container;
 
     virtual ~BaseSelectionOperation()
     {
     }
 
     virtual selection_result_set doSelect(const Population<FITNESS_TYPE> &population,
-            BaseManager<FITNESS_TYPE> &manager) = 0;
+            BaseManager<FITNESS_TYPE> &manager) const = 0;
 
-    SelectionSettings* getSettings() const
+
+    const BaseSelectionSettings& getSettings() const
     {
-        return _settings;
+        return *_settings;
     }
 
-    void setSettings(SelectionSettings* settings)
+    void setSettings(const std::shared_ptr<BaseSelectionSettings> &settings)
     {
         _settings = settings;
     }
 
+    class Builder: Buildable<BaseSelectionOperation<FITNESS_TYPE>>::Builder
+    {
+    protected:
+        std::shared_ptr<BaseSelectionSettings> _settings;
+    public:
+        Builder() :
+                _settings(new BaseSelectionSettings)
+        {
+        }
+
+        Builder(const std::shared_ptr<BaseSelectionSettings>&settings) :
+                _settings(settings)
+        {
+        }
+
+        BaseSelectionSettings& getSettings()
+        {
+            return *_settings;
+        }
+    };
 };
 
-} /* namespace selection */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace selection */
+} /* private namespace operation */
+} /* private namespace geneial */
 

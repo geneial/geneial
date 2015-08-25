@@ -1,38 +1,40 @@
 #pragma once
 
-#include <geneial/core/operations/crossover/BaseCrossoverOperation.h>
+#include <geneial/namespaces.h>
+#include <geneial/core/operations/crossover/MultiValueChromosomeCrossoverOperation.h>
+#include <geneial/utility/mixins/EnableMakeShared.h>
 
 #include <cassert>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace crossover
+geneial_private_namespace(crossover)
+{
+using ::geneial::population::Population;
+using ::geneial::population::chromosome::MultiValueChromosome;
+using ::geneial::utility::EnableMakeShared;
+
+geneial_export_namespace
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-class MultiValueChromosomeAverageCrossover: public BaseCrossoverOperation<FITNESS_TYPE>
+class MultiValueChromosomeAverageCrossover: public MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>,
+                                            public virtual EnableMakeShared<MultiValueChromosomeAverageCrossover<VALUE_TYPE,FITNESS_TYPE>>
 {
-private:
-    MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> * _builderSettings;
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *_builderFactory;
-
 public:
-    MultiValueChromosomeAverageCrossover(MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *builderSettings,
-            MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *builderFactory) :
-            _builderSettings(builderSettings), _builderFactory(builderFactory)
+    MultiValueChromosomeAverageCrossover(
+            const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory
+            ) : MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>(builderFactory)
     {
-        assert(_builderSettings != NULL);
-        assert(_builderFactory != NULL);
-
     }
 
     virtual ~MultiValueChromosomeAverageCrossover()
     {
     }
 
-    virtual bool inline isSymmetric() const
+    bool inline isSymmetric() const override
     {
         return true;
     }
@@ -57,38 +59,40 @@ public:
      *
      * Child
      * ===================================
-     * |(A1+B1)/2|(A2+B2)/2| ... (A9+B9)/2
+     * |(A1+B1)/2|(A2+B2)/2| ... |(A9+B9)/2
      * ===================================
      *
      */
-    virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set
-    doCrossover(typename BaseChromosome<FITNESS_TYPE>::ptr mommy, typename BaseChromosome<FITNESS_TYPE>::ptr daddy);
+    virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set doMultiValueCrossover(
+            const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
+            const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const override;
 
-    MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderSettings() const
+
+    class Builder : public MultiValueChromosomeCrossoverOperation<VALUE_TYPE,FITNESS_TYPE>::Builder
     {
-        return _builderSettings;
-    }
+    public:
+        Builder(const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> & builderFactory) :
+                MultiValueChromosomeCrossoverOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(builderFactory)
+        {
+        }
 
-    void setBuilderSettings(const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>* & builderSettings)
-    {
-        _builderSettings = builderSettings;
-    }
 
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const
-    {
-        return _builderFactory;
-    }
+        virtual typename BaseCrossoverOperation<FITNESS_TYPE>::ptr create() override
+        {
+            if(! this->_builderFactory )
+            {
+                throw new std::runtime_error("Must set a Chromosome Factory to build MultiValueCrossover");
+            }
 
-    void setBuilderFactory(const MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* & builderFactory)
-    {
-        _builderFactory = builderFactory;
-    }
-
+            return MultiValueChromosomeAverageCrossover<VALUE_TYPE, FITNESS_TYPE>::makeShared(this->_builderFactory);
+        }
+    };
 };
 
-} /* namespace crossover */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace crossover */
+} /* private namespace operation */
+} /* private namespace geneial */
 
 #include <geneial/core/operations/crossover/MultiValueChromosomeAverageCrossover.hpp>
 

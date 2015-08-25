@@ -1,36 +1,44 @@
 #pragma once
 
-#include <geneial/core/operations/mutation/BaseMutationOperation.h>
+#include <geneial/core/operations/mutation/MultiValueChromosomeMutationOperation.h>
+#include <geneial/core/population/Population.h>
+#include <geneial/utility/mixins/EnableMakeShared.h>
 
 #include <cassert>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace mutation
+geneial_private_namespace(mutation)
+{
+using ::geneial::population::Population;
+using ::geneial::utility::EnableMakeShared;
+
+geneial_export_namespace
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-class UniformMutationOperation: public BaseMutationOperation<FITNESS_TYPE>
+class UniformMutationOperation: public MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>,
+                                public virtual EnableMakeShared<UniformMutationOperation<VALUE_TYPE,FITNESS_TYPE>>
 {
-
-private:
-    MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *_builderSettings;
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *_builderFactory;
-public:
+protected:
     /*
      * UniformMutationOperation Mutates a chromosome, by replacing some of it's values randomly.
      */
-    UniformMutationOperation(MutationSettings *settings, BaseChoosingOperation<FITNESS_TYPE> *choosingOperation,
-            MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> *builderSettings,
-            MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE> *builderFactory) :
-            BaseMutationOperation<FITNESS_TYPE>(settings, choosingOperation), _builderSettings(builderSettings), _builderFactory(
-                    builderFactory)
+    UniformMutationOperation(
+            const std::shared_ptr<const MultiValueMutationSettings> &settings,
+            const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
+            const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
+
+                MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>(
+                        settings,
+                        choosingOperation,
+                        builderFactory
+                        )
     {
-        assert(_builderSettings != NULL);
-        assert(_builderFactory != NULL);
     }
+public:
 
     virtual ~UniformMutationOperation()
     {
@@ -40,20 +48,45 @@ public:
      *  Returns a new chromosome which is a partially mutated version of the old one.
      *  */
     virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
-            typename Population<FITNESS_TYPE>::chromosome_container mutants, BaseManager<FITNESS_TYPE> &manager);
+            const typename Population<FITNESS_TYPE>::chromosome_container &mutants, BaseManager<FITNESS_TYPE> &manager) const override;
 
-    //TODO (lukas): copy paste from MultiValueChromosomeAvarageCrossover.h ...
-    MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>* const & getBuilderFactory() const
+
+    class Builder : public MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>::Builder
     {
-        return _builderFactory;
-    }
+    public:
+
+        Builder(const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
+                MultiValueChromosomeMutationOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(builderFactory)
+        {
+        }
+
+        Builder(const std::shared_ptr<MultiValueMutationSettings> &settings,
+                const std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
+                const std::shared_ptr<MultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
+                MultiValueChromosomeMutationOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(settings, choosingOperation,
+                        builderFactory)
+        {
+        }
+
+        virtual typename BaseMutationOperation<FITNESS_TYPE>::ptr create() override
+        {
+            return std::move(
+                    UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::makeShared
+                     (
+                        this->_settings,
+                        this->_choosingOperation,
+                        this->_builderFactory
+                     )
+                   );
+        }
+    };
 
 };
-//class
 
-} /* namespace mutation */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace mutation */
+} /* private namespace operation */
+} /* private namespace geneial */
 
 #include <geneial/core/operations/mutation/UniformMutationOperation.hpp>
 

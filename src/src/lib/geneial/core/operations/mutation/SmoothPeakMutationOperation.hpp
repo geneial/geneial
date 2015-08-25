@@ -2,108 +2,104 @@
 
 #include <geneial/core/operations/mutation/SmoothPeakMutationOperation.h>
 
-namespace geneial
-{
-namespace operation
-{
-namespace mutation
-{
+#include <unordered_set>
 
+geneial_private_namespace(geneial)
+{
+geneial_private_namespace(operation)
+{
+geneial_private_namespace(mutation)
+{
+using ::geneial::utility::Smoothing;
+using ::geneial::population::chromosome::BaseChromosomeFactory;
+using ::geneial::utility::Random;
+using ::geneial::population::Population;
+
+geneial_export_namespace
+{
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate(
-        typename Population<FITNESS_TYPE>::chromosome_container _chromosomeInputContainer,
-        BaseManager<FITNESS_TYPE> &manager)
+        const typename Population<FITNESS_TYPE>::chromosome_container &chromosomeInputContainer,
+        BaseManager<FITNESS_TYPE> &manager) const
 {
-
-    typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::value_container value_container;
-    typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr mvc_ptr;
 
     typename Population<FITNESS_TYPE>::chromosome_container resultset;
     typename Population<FITNESS_TYPE>::chromosome_container choosenChromosomeContainer;
     typename Population<FITNESS_TYPE>::chromosome_container notChoosenChromosomeContainer;
+    const auto maxNumMvc = this->getBuilderFactory().getSettings().getNum();
 
-    choosenChromosomeContainer = this->getChoosingOperation()->doChoose(_chromosomeInputContainer);
+    const auto continousBuilderSettings =
+            (
+            static_cast<const ContinousMultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>&>(this->getBuilderFactory().getSettings())
+            );
+
+
+    choosenChromosomeContainer = this->getChoosingOperation().doChoose(chromosomeInputContainer);
 
     //calculates difference: _notChoosenChromosomeContainer = _choosenChromosomeContainer - _chromosomeInputContainer
-    std::set_difference(_chromosomeInputContainer.begin(), _chromosomeInputContainer.end(),
-            choosenChromosomeContainer.begin(), choosenChromosomeContainer.end(),
-            std::inserter(notChoosenChromosomeContainer, notChoosenChromosomeContainer.begin()));
-
-    typename Population<FITNESS_TYPE>::chromosome_container::iterator choosenChromosomeContainer_it;
+    std::set_difference(chromosomeInputContainer.cbegin(), chromosomeInputContainer.cend(),
+            choosenChromosomeContainer.cbegin(), choosenChromosomeContainer.cend(),
+            std::back_inserter(notChoosenChromosomeContainer));
 
     //only mutate choosen chromosomes
-    for (choosenChromosomeContainer_it = choosenChromosomeContainer.begin();
-            choosenChromosomeContainer_it != choosenChromosomeContainer.end(); ++choosenChromosomeContainer_it)
+    for (const auto &chosenChromosome : choosenChromosomeContainer)
     {
+
+        const auto slotsToMutate = Random::generate<unsigned int>(this->getSettings().getMinimumPointsToMutate(),
+                this->getSettings().getMaximumPointsToMutate());
+
         //casting mutant to MVC
-        mvc_ptr mvcMutant = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
-                *choosenChromosomeContainer_it);
+        const auto mvcMutant = std::dynamic_pointer_cast < MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>
+                > (chosenChromosome);
         assert(mvcMutant);
 
         //creating a new MVC (to keep things reversible)
-        mvc_ptr mutatedChromosome = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
-                this->getBuilderFactory()->createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
+        auto mutatedChromosome = std::dynamic_pointer_cast < MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>
+                > (this->getBuilderFactory().createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
         assert(mutatedChromosome);
 
         //getting values
-        value_container &mutantChromosomeContainer = mvcMutant->getContainer();
-        value_container &result_container = mutatedChromosome->getContainer();
+        const auto &mutantChromosomeContainer = mvcMutant->getContainer();
+        auto &result_container = mutatedChromosome->getContainer();
 
-        //Copy over, result container is assumed to be empty at this point!
-        std::copy(mutantChromosomeContainer.begin(), mutantChromosomeContainer.end(),
-                std::back_inserter(result_container));
+        std::copy(mutantChromosomeContainer.cbegin(), mutantChromosomeContainer.cend(), result_container.begin());
 
-        //We have two choices here:
-        // A) Mutate a fixed amount of given points (getAmountOfPointsOfMutation > 0)
-        // B) Mutate every point based on a predetermined probability
-        if (this->getSettings()->getAmountOfPointsOfMutation() > 0)
+        //Predetermine Positions for Mutation:
+        std::unordered_set<unsigned int> positions;
+        while (positions.size() < slotsToMutate)
         {
-
-            std::set<unsigned int> positionsToPeak;
-
-            //We have an predetermined amount of points for introducing peaks...
-            for (unsigned int i = this->getSettings()->getAmountOfPointsOfMutation(); i > 0; i--)
-            {
-                unsigned int pos;
-                do
-                {
-                    pos = Random::instance()->generateInt(0, this->getBuilderSettings()->getNum() - 1);
-                } while (positionsToPeak.find(pos) != positionsToPeak.end());
-
-                const int sign = (Random::instance()->generateBit()) ? -1 : 1;
-                Smoothing::peakAt<VALUE_TYPE, FITNESS_TYPE>(pos, Random::instance()->generateInt(0, this->_maxLeftEps),
-                        Random::instance()->generateInt(0, this->_maxRightEps),
-                        sign * Random::instance()->generateInt(1, this->_maxElevation), mutatedChromosome);
-            }
+            const auto rand = Random::generate<unsigned int>(0, maxNumMvc - 1);
+            positions.emplace(rand);
         }
-        else
-        {
 
-            //Iterate the chromosome's value
-            for (typename value_container::iterator it = mutatedChromosome->getContainer().begin();
-                    it != mutatedChromosome->getContainer().end(); ++it)
-            {
-                const double value_choice = Random::instance()->generateDouble(0.0, 1.0);
-                if (value_choice < this->getSettings()->getAmountOfMutation())
-                {
-                    const int sign = (Random::instance()->generateBit()) ? -1 : 1;
-                    Smoothing::peakAt<VALUE_TYPE, FITNESS_TYPE>(
-                            std::distance(mutatedChromosome->getContainer().begin(), it),
-                            Random::instance()->generateInt(0, this->_maxLeftEps),
-                            Random::instance()->generateInt(0, this->_maxRightEps),
-                            sign * Random::instance()->generateInt(1, this->_maxElevation), mutatedChromosome);
-                }
-            }
+        //We have an predetermined amount of points for introducing peaks...
+        for (const auto pos : positions)
+        {
+            const int sign = (Random::generateBit()) ? -1 : 1;
+            const auto peak = sign * Random::generate<VALUE_TYPE>(0, this->_maxElevation);
+            Smoothing::peakAt<VALUE_TYPE, FITNESS_TYPE>(pos, Random::generate<int>(0, this->_maxLeftEps),
+                    Random::generate<int>(0, this->_maxRightEps),
+                    //TODO(bewo): Make minElevation another setting
+                    peak, mutatedChromosome);
+
 
         }
+
+
 
         //Correct smoothness in mutated chromosome
-        Smoothing::restoreSmoothness<VALUE_TYPE, FITNESS_TYPE>(mutatedChromosome, this->getBuilderSettings()->getEps(),
-                this->getBuilderSettings()->getRandomMin(), this->getBuilderSettings()->getRandomMax());
+        Smoothing::restoreSmoothness<VALUE_TYPE, FITNESS_TYPE>(mutatedChromosome,
+                continousBuilderSettings.getEps(),
+                continousBuilderSettings.getRandomMin(),
+                continousBuilderSettings.getRandomMax(),
+                continousBuilderSettings.hasStart(),
+                continousBuilderSettings.getStartValue());
+
+
 
         //Age reset
         mutatedChromosome->setAge(0);
-        resultset.push_back(mutatedChromosome);
+        resultset.emplace_back(mutatedChromosome);
     }
 
     //add not mutated chromosomes
@@ -113,7 +109,8 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
 
 }
 
-} /* namespace mutation */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace mutation */
+} /* private namespace operation */
+} /* private namespace geneial */
 

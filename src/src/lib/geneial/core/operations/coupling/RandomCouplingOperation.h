@@ -1,43 +1,61 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/operations/coupling/BaseCouplingOperation.h>
+#include <geneial/utility/mixins/EnableMakeShared.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace coupling
+geneial_private_namespace(coupling)
 {
+using ::geneial::population::Population;
+using ::geneial::operation::crossover::BaseCrossoverOperation;
+using ::geneial::operation::selection::BaseSelectionOperation;
+using ::geneial::population::management::BaseManager;
+using ::geneial::utility::EnableMakeShared;
 
-using namespace geneial::operation::selection;
-using namespace geneial::population::management;
+geneial_export_namespace
+{
 
 /**
  * RandomCouplingOperation will choose parents from the mating pool at random
  */
 template<typename FITNESS_TYPE>
-class RandomCouplingOperation: public BaseCouplingOperation<FITNESS_TYPE>
+class RandomCouplingOperation:  public BaseCouplingOperation<FITNESS_TYPE>,
+                                public virtual EnableMakeShared<RandomCouplingOperation<FITNESS_TYPE>>
 {
-
-public:
-    RandomCouplingOperation(CouplingSettings *settings) :
+protected:
+    explicit RandomCouplingOperation(const std::shared_ptr<const CouplingSettings> &settings) :
             BaseCouplingOperation<FITNESS_TYPE>(settings)
     {
     }
 
+public:
     virtual ~RandomCouplingOperation()
     {
     }
 
     virtual typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set doCopulate(
-            typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &mating_pool,
-            BaseCrossoverOperation<FITNESS_TYPE> *crossoverOperation, BaseManager<FITNESS_TYPE> &manager);
+            const typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &mating_pool,
+            const BaseCrossoverOperation<FITNESS_TYPE> &crossoverOperation, BaseManager<FITNESS_TYPE> &manager) override;
+
+    class Builder : public BaseCouplingOperation<FITNESS_TYPE>::Builder
+    {
+    public:
+        virtual typename BaseCouplingOperation<FITNESS_TYPE>::ptr create() override
+        {
+            return RandomCouplingOperation::makeShared(this->_settings);
+        }
+    };
 
 };
 
-} /* namespace coupling */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace coupling */
+} /* private namespace operation */
+} /* private namespace geneial */
 
 #include <geneial/core/operations/coupling/RandomCouplingOperation.hpp>
 

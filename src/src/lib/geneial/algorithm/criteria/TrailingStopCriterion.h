@@ -1,16 +1,17 @@
 #pragma once
 
-#include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace algorithm
+geneial_private_namespace(algorithm)
 {
-namespace stopping_criteria
+geneial_private_namespace(stopping_criteria)
 {
+using ::geneial::population::management::BaseManager;
 
-using namespace geneial::population::management;
+geneial_export_namespace
+{
 
 //TODO (bewo) Idea to implement here: -> c.f. TrailingStop in Stock market
 //Trace the best chromosome, when its gets worser as a given threshold abort.
@@ -22,7 +23,7 @@ public:
     virtual ~TrailingStopCriterion()
     {
     }
-    ;
+
     virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager)
     {
         //TODO (bewo): unimplemeted!
@@ -35,7 +36,7 @@ public:
     }
 };
 
-} /* namespace stopping_criteria */
-} /* namespace algorithm */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace stopping_criteria */
+} /* private namespace algorithm */
+} /* private namespace geneial */

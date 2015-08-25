@@ -1,50 +1,50 @@
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <geneial/core/fitness/Fitness.h>
 #include <geneial/core/fitness/FitnessEvaluator.h>
+
+#include <memory>
 
 namespace test_mock
 {
 
-using namespace geneial;
+using namespace ::geneial;
 
-class MockDoubleFitnessEvaluator: public FitnessEvaluator<double>
+template<typename T>
+class MockFitnessEvaluator: public FitnessEvaluator<double>
 {
+    mutable int _calls;
 public:
-    typedef boost::shared_ptr<MockDoubleFitnessEvaluator> ptr;
-    typedef boost::shared_ptr<const MockDoubleFitnessEvaluator> const_ptr;
-    MockDoubleFitnessEvaluator() :
-            FitnessEvaluator()
+
+    constexpr const static T MOCK_VALUE = 1;
+
+    using ptr = std::shared_ptr<MockFitnessEvaluator>;
+    using const_ptr = std::shared_ptr<const MockFitnessEvaluator>;
+
+
+    MockFitnessEvaluator() : FitnessEvaluator(), _calls(0)
     {
     }
-    Fitness<double>::ptr evaluate(const BaseChromosome<double>::ptr chromosome) const
+
+    std::unique_ptr<Fitness<T>> evaluate(const geneial::population::chromosome::BaseChromosome<T>& chromosome) const
     {
-        boost::shared_ptr<Fitness<double> > ptr(new Fitness<double>(1));
-        return ptr;
+        _calls++;
+        return std::move(std::unique_ptr<Fitness<T>>(new Fitness<T>(MOCK_VALUE)));
     }
-    virtual ~MockDoubleFitnessEvaluator()
+
+    virtual ~MockFitnessEvaluator()
     {
+    }
+
+    int getCalls() const
+    {
+        return _calls;
+    }
+
+    void setCalls(int calls = 0)
+    {
+        _calls = calls;
     }
 };
-
-class MockIntFitnessEvaluator: public FitnessEvaluator<int>
-{
-public:
-    typedef boost::shared_ptr<MockIntFitnessEvaluator> ptr;
-    typedef boost::shared_ptr<const MockIntFitnessEvaluator> const_ptr;
-    MockIntFitnessEvaluator()
-    {
-    }
-    Fitness<int>::ptr evaluate(const BaseChromosome<int>::ptr chromosome) const
-    {
-        boost::shared_ptr<Fitness<int> > ptr(new Fitness<int>(1));
-        return ptr;
-    }
-    virtual ~MockIntFitnessEvaluator()
-    {
-    }
-};
-
 } /* namespace test_mock */
 

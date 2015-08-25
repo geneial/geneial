@@ -7,145 +7,136 @@
 #include <algorithm>
 #include <iterator>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace crossover
+geneial_private_namespace(crossover)
 {
+using ::geneial::population::Population;
+using ::geneial::population::chromosome::MultiValueChromosome;
+using ::geneial::operation::coupling::BaseCouplingOperation;
+using ::geneial::utility::Random;
 
-using namespace geneial::operation::coupling;
+geneial_export_namespace
+{
 
 //TODO (bewo): reduce cyclomatic complexity...
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
 typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueChromosomeNPointCrossover<VALUE_TYPE,
-        FITNESS_TYPE>::doCrossover(typename BaseChromosome<FITNESS_TYPE>::ptr mommy,
-        typename BaseChromosome<FITNESS_TYPE>::ptr daddy)
+        FITNESS_TYPE>::doMultiValueCrossover(
+        const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr &mommy,
+        const typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_ptr &daddy) const
 {
-
-    typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::value_container value_container;
-    typedef typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr mvc_ptr;
 
     typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set resultset;
 
-    mvc_ptr mvc_mommy = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(mommy);
-    assert(mvc_mommy);
 
-    mvc_ptr mvc_daddy = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(daddy);
-    assert(mvc_daddy);
+    const unsigned int crossoverPoints = this->getCrossoverSettings().getCrossOverPoints();
+    const unsigned int totalWidth = this->getBuilderFactory().getSettings().getNum();
 
-    const unsigned int crossoverPoints = this->getCrossoverSettings()->getCrossOverPoints();
-    const unsigned int totalWidth = this->getBuilderSettings()->getNum();
-    std::set<unsigned int> crossoverPositions;
-    if (this->getCrossoverSettings()->getWidthSetting()
+    //std::set<unsigned int> crossoverPositions;
+
+    std::vector<unsigned int> crossoverPositions;
+    crossoverPositions.reserve(crossoverPoints);
+
+
+
+    if (this->getCrossoverSettings().getWidthSetting()
             == MultiValueChromosomeNPointCrossoverSettings::EQUIDISTANT_WIDTH)
     {
+        const unsigned int equidistantwidth = totalWidth / (crossoverPoints + 1);
 
-        const unsigned int equidistantwidth = totalWidth / crossoverPoints;
-
-        for (unsigned int i = 0; i < crossoverPoints - 1; i++)
+        for (unsigned int i = 0; i < crossoverPoints; i++)
         {
-            crossoverPositions.insert(i * equidistantwidth);
+            crossoverPositions.emplace_back(i * equidistantwidth);
         }
 
     }
-    else if (this->getCrossoverSettings()->getWidthSetting()
+    else if (this->getCrossoverSettings().getWidthSetting()
             == MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH
-            || this->getCrossoverSettings()->getWidthSetting()
+            || this->getCrossoverSettings().getWidthSetting()
                     == MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH)
     {
 
         unsigned int minWidth;
-        if (this->getCrossoverSettings()->getWidthSetting()
+        if (this->getCrossoverSettings().getWidthSetting()
                 == MultiValueChromosomeNPointCrossoverSettings::RANDOM_WIDTH)
         {
             minWidth = 1;
         }
         else
         {
-            minWidth = this->getCrossoverSettings()->getMinWidth();
+            minWidth = this->getCrossoverSettings().getMinWidth();
         }
 
-        for (unsigned int i = 0; i < crossoverPoints; i++)
+        //TODO(bewo) make some assertions about minwidth, crossoverPositions and size
+
+        const auto max = this->getBuilderFactory().getSettings().getNum();
+        while (crossoverPositions.size() < crossoverPoints)
         {
-            //Pick a random number in the interval
-            unsigned int rnd_pos;
-            bool valid;
+            const unsigned int rnd_pos = Random::generate<int>(0, max);
+            bool valid = true;
 
-            do
+            valid &= rnd_pos >= minWidth; //ensure there is enough space on the interval boundaries
+            if (!valid)
             {
-                rnd_pos = Random::instance()->generateInt(0, this->getBuilderSettings()->getNum());
+                continue;
+            }
 
-                std::set<unsigned int>::iterator itlow = std::lower_bound(crossoverPositions.begin(),
-                        crossoverPositions.end(), rnd_pos);
+            valid &= rnd_pos <= totalWidth - minWidth;
+            if (!valid)
+            {
+                continue;
+            }
 
-                if (itlow != crossoverPositions.end())
-                {
-                    std::advance(itlow, -1);
-                }
+            const auto pos = std::find(crossoverPositions.begin(), crossoverPositions.end(), rnd_pos);
+            valid &= pos == crossoverPositions.end(); //element is not contained within the set
+            if (!valid)
+            {
+                continue;
+            }
 
-                std::set<unsigned int>::const_iterator itup = crossoverPositions.upper_bound(rnd_pos);
-                std::set<unsigned int>::const_iterator pos = crossoverPositions.find(rnd_pos);
+            const auto itlow = std::lower_bound(crossoverPositions.begin(), crossoverPositions.end(), rnd_pos);
+            const auto itup = std::upper_bound(crossoverPositions.begin(), crossoverPositions.end(), rnd_pos);
+            //is the picked element too near to another element already contained?
+            //ensure between two values there is enough width, i.e. either we have a lower or upper neighbor and the distance is correct or not.
+            valid &= itlow == crossoverPositions.end()
+                    || (itlow != crossoverPositions.end() && rnd_pos - *itlow >= minWidth);
+            if (!valid)
+            {
+                continue;
+            }
 
-                valid = true;
-
-                valid &= rnd_pos >= minWidth; //ensure there is enough space on the interval boundaries
-                if (!valid)
-                {
-                    continue;
-                }
-
-                valid &= rnd_pos <= totalWidth - minWidth;
-                if (!valid)
-                {
-                    continue;
-                }
-
-                valid &= pos == crossoverPositions.end(); //element is not contained within the set
-                if (!valid)
-                {
-                    continue;
-                }
-
-                //is the picked element too near to another element already contained?
-                //ensure between two values there is enough width, i.e. either we have a lower or upper neighbor and the distance is correct or not.
-                valid &= itlow == crossoverPositions.end()
-                        || (itlow != crossoverPositions.end() && rnd_pos - *itlow >= minWidth);
-                if (!valid)
-                {
-                    continue;
-                }
-                valid &= itup == crossoverPositions.end()
-                        || (itup != crossoverPositions.end() && *itup - rnd_pos >= minWidth);
-                if (!valid)
-                {
-                    continue;
-                }
-
-            } while (!valid);
-
-            crossoverPositions.insert(rnd_pos);
+            valid &= itup == crossoverPositions.end()
+                    || (itup != crossoverPositions.end() && *itup - rnd_pos >= minWidth);
+            if (!valid)
+            {
+                continue;
+            }
+            crossoverPositions.emplace_back(rnd_pos);
         }
+
+    std::sort(crossoverPositions.begin(),crossoverPositions.end());
     }
+
+
     assert(crossoverPositions.size() == crossoverPoints);
 
-    mvc_ptr child_candidate = boost::dynamic_pointer_cast<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> >(
-            this->getBuilderFactory()->createChromosome(BaseChromosomeFactory<FITNESS_TYPE>::LET_UNPOPULATED));
-    assert(child_candidate);
+    auto child_candidate = this->createChildCandidate();
 
-    value_container &daddy_container = mvc_daddy->getContainer();
-    value_container &mommy_container = mvc_mommy->getContainer();
-    value_container &child_container = child_candidate->getContainer();
-
-    child_container.clear();
+    const auto &daddy_container = daddy->getContainer();
+    const auto &mommy_container = mommy->getContainer();
+    auto &child_container = child_candidate->getContainer();
 
     assert(daddy_container.size() == mommy_container.size());
 
-    typename std::back_insert_iterator<value_container> target_it = std::back_inserter(child_container);
-    std::set<unsigned int>::const_iterator widthIterator = crossoverPositions.begin();
     bool flip = true; //copy from ladies first.
 
-    crossoverPositions.insert(daddy_container.size());
+    //push back to end so its ok, does not destroy sortedness
+    crossoverPositions.push_back(daddy_container.size());
+
+    auto widthIterator = crossoverPositions.cbegin();
 
     unsigned int i = 0;
 
@@ -153,23 +144,23 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValueCh
     {
         if (flip)
         {
-            std::copy(mommy_container.begin() + i, mommy_container.begin() + *widthIterator, target_it);
+            std::copy(mommy_container.begin() + i, mommy_container.begin() + *widthIterator, child_container.begin()+i);
         }
         else
         {
-            std::copy(daddy_container.begin() + i, daddy_container.begin() + *widthIterator, target_it);
+            std::copy(daddy_container.begin() + i, daddy_container.begin() + *widthIterator, child_container.begin()+i);
         }
         i = *widthIterator;
         flip = !flip;
     }
     assert(child_container.size() == mommy_container.size());
 
-    resultset.push_back(child_candidate);
+    resultset.emplace_back(std::move(child_candidate));
 
-    return resultset;
+    return std::move(resultset);
 }
 
-} /* namespace crossover */
-} /* namespace operation */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace crossover */
+} /* private namespace operation */
+} /* private namespace geneial */

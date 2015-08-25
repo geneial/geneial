@@ -13,6 +13,10 @@ function cleanup_and_exit {
    exit
 }
 #stop on any nonzero error
+
+#TODO (bewo) optimize this script
+#TODO (bewo) set -e not reliable?
+#TODO (bewo) cleanup_and_exit is wrong (cd...)
 set -e 
 mkdir -p $BUILDDIR
 cd $BUILDDIR

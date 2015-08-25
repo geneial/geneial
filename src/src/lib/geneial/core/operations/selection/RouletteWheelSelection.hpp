@@ -4,43 +4,27 @@
 #include <geneial/core/population/chromosome/BaseChromosome.h>
 #include <geneial/utility/Random.h>
 
-#include <map>
+#include <vector>
+#include <algorithm>
 #include <cassert>
+#include <utility>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace selection
+geneial_private_namespace(selection)
 {
 
-//TODO (bewo) check whether all this will work with negative fitness values
+using ::geneial::population::Population;
+using ::geneial::population::management::BaseManager;
+using ::geneial::utility::Random;
 
-template<typename FITNESS_TYPE>
-class RouletteWheelComparator
+geneial_export_namespace
 {
-public:
-    bool operator()(const std::pair<FITNESS_TYPE, FITNESS_TYPE> &a, const std::pair<FITNESS_TYPE, FITNESS_TYPE> &b)
-    {
-        if (b.first == -1)
-        {
-            if (b.second >= a.first && b.second < a.second)
-                return false;
-            return (b.second >= a.second);
-        }
 
-        if (a.first == -1)
-        {
-            if (a.second >= b.first && a.second < b.second)
-                return false;
-            return (a.second >= b.second);
-        }
+//TODO (bewo): This is not very efficient for large populations.
 
-        return a.first < b.first;
-    }
-};
-
-//TODO(bewo): This seems not work with negative Fitness values!
 template<typename FITNESS_TYPE>
 class RouletteWheel
 {
@@ -53,28 +37,84 @@ private:
 
     FITNESS_TYPE _sum;
 
-    std::map<std::pair<FITNESS_TYPE, FITNESS_TYPE>, chrom_ptr_type, RouletteWheelComparator<FITNESS_TYPE> > ranges;
+    //NOTE (bewo): Benchmarked this against a map, however the RBTree and all the recurring mallocs are very costly, hence vector.
+    std::vector<std::pair<FITNESS_TYPE, chrom_ptr_type>> _ranges;
+
+    struct RouletteWheelComparator
+    {
+        bool operator()(const std::pair<FITNESS_TYPE, chrom_ptr_type>& v1,
+                const std::pair<FITNESS_TYPE, chrom_ptr_type>& v2) const
+        {
+            return v1.first < v2.first;
+        }
+
+        bool operator()(const std::pair<FITNESS_TYPE, chrom_ptr_type>& v1, const FITNESS_TYPE v2) const
+        {
+            return v1.first < v2;
+        }
+
+        bool operator()(const FITNESS_TYPE v1, const FITNESS_TYPE v2) const
+        {
+            return v1 < v2;
+        }
+
+        bool operator()(const FITNESS_TYPE v1, const std::pair<FITNESS_TYPE, chrom_ptr_type>& v2) const
+        {
+            return v1 < v2.first;
+        }
+    };
 
 public:
+    //minimal place on the wheel
+    constexpr const static FITNESS_TYPE CONST_INC_BY = 1;
+
     RouletteWheel(const Population<FITNESS_TYPE> &population) :
             _sum(0)
     {
-        for (const_pop_itr it = population.getFitnessMap().begin(); it != population.getFitnessMap().end(); ++it)
+
+        _ranges.reserve(population.getSize());
+
+        //Worst value:
+        const FITNESS_TYPE worstFitness = population.getFitnessMap().cbegin()->first;
+        FITNESS_TYPE positiveTranslation = 0;
+
+        if(worstFitness <= 0)
         {
-            ranges[std::pair<FITNESS_TYPE, FITNESS_TYPE>(_sum, it->first + _sum)] = it->second;
-            _sum += it->first;
+            positiveTranslation = std::abs(worstFitness);
+        }
+
+        for (const auto &it : population.getFitnessMap())
+        {
+            _sum += CONST_INC_BY;
+
+            if(it.first < 0)
+            {
+                _sum += std::abs(it.first);
+            }
+            else
+            {
+                //In case we had negative fitness values in the population,
+                //we offset of the positive fitness values by the amount of the worst negative fitness,
+                //so that the positive fitness values have higher probability than the negative ones.
+                _sum += positiveTranslation + it.first;
+            }
+
+            _ranges.emplace_back(_sum, it.second);
         }
     }
 
-    chrom_ptr_type spin(FITNESS_TYPE random)
+    chrom_ptr_type spin(double random)
     {
-        return ranges.find(std::pair<FITNESS_TYPE, FITNESS_TYPE>(-1, random * _sum))->second;
+        return std::lower_bound(_ranges.begin(), _ranges.end(),
+                static_cast<FITNESS_TYPE>(random * _sum),RouletteWheelComparator())->second;
     }
+
+
 };
 
 template<typename FITNESS_TYPE>
 typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWheelSelection<FITNESS_TYPE>::doSelect(
-        const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager)
+        const Population<FITNESS_TYPE> &population, BaseManager<FITNESS_TYPE> &manager) const
 {
 
     //shorthands for type mess
@@ -83,7 +123,7 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
 
     result_set result;
 
-    unsigned int left_select = this->getSettings()->getNumberOfParents();
+    unsigned int left_select = this->getSettings().getNumberOfParents();
 
     RouletteWheel<FITNESS_TYPE> rouletteWheel(population);
 
@@ -97,17 +137,17 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set RouletteWhee
         chrom_ptr_type ptr;
         do
         {
-            //TODO (bewo) this is suboptimal:
-            FITNESS_TYPE random = (FITNESS_TYPE) Random::instance()->generateDouble(0.0, 1.0);
+            //TODO (bewo) Benchmark this for duplicates
+            const double random = Random::generate<double>(0.0, 1.0);
             ptr = rouletteWheel.spin(random);
         } while (allowDuplicates || std::find(result.begin(), result.end(), ptr) != result.end());
         left_select--;
-        result.push_back(ptr);
+        result.emplace_back(ptr);
     }
     return result;
 }
 
-} /* namespace selection */
-} /* namespace operation */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace selection */
+} /* private namespace operation */
+} /* private namespace geneial */

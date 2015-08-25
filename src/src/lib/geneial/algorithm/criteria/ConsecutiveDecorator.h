@@ -1,18 +1,19 @@
 #pragma once
 
-#include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
+
 #include <deque>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace algorithm
+geneial_private_namespace(algorithm)
 {
-namespace stopping_criteria
+geneial_private_namespace(stopping_criteria)
 {
+using ::geneial::population::management::BaseManager;
 
-using namespace geneial::population::management;
-
+geneial_export_namespace
+{
 /**
  * Decorator that checks whether a given criterion has been reached several times.
  */
@@ -21,11 +22,11 @@ class ConsecutiveDecorator: public StatefulStoppingCriterion<FITNESS_TYPE>
 {
 
 public:
-    typedef typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion;
+    using criterion = BaseStoppingCriterion<FITNESS_TYPE>;
 
-    ConsecutiveDecorator(unsigned int windowSize, unsigned int consecutiveHits,
-            typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion) :
-            _windowSize(windowSize), _consecutiveHits(consecutiveHits), _criterion(criterion)
+    ConsecutiveDecorator(const unsigned int windowSize, const unsigned int consecutiveHits,
+            const std::shared_ptr<criterion> & criterion) :
+            _criterion(criterion), _windowSize(windowSize), _consecutiveHits(consecutiveHits)
     {
         assert(windowSize >= 1); //Allow wrapper valuss of 1 here, make it as flexible as possible
         assert(consecutiveHits > 0);
@@ -76,28 +77,30 @@ protected:
 
     virtual void print(std::ostream& os) const
     {
-        os << "Consecutive (criterion:" << _criterion << ", win: " << _windowSize << ")";
+        os << "Consecutive (criterion:" << *_criterion << ", win: " << _windowSize << ")";
     }
 
     const criterion& getCriterion() const
     {
-        return _criterion;
+        return *_criterion;
     }
 
-    void setCriterion(const criterion& criterion)
+    void setCriterion(const std::shared_ptr<criterion> & criterion)
     {
         _criterion = criterion;
     }
 
 private:
-    criterion _criterion;
-    unsigned int _windowSize;
-    unsigned int _consecutiveHits;
+    std::shared_ptr<criterion> _criterion;
+    const unsigned int _windowSize;
+    const unsigned int _consecutiveHits;
     std::deque<bool> _window;
 
 };
 
-} /* namespace stopping_criteria */
-} /* namespace algorithm */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace stopping_criteria */
+} /* private namespace algorithm */
+} /* private namespace geneial */
+
 

@@ -1,33 +1,41 @@
 #pragma once
 
-#include <geneial/core/operations/mutation/MutationSettings.h>
+#include <geneial/namespaces.h>
 #include <geneial/core/population/management/BaseManager.h>
 #include <geneial/core/population/Population.h>
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
+#include <geneial/core/operations/choosing/ChooseRandom.h>
+#include <geneial/utility/mixins/Buildable.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace mutation
+geneial_private_namespace(mutation)
 {
+using ::geneial::operation::choosing::BaseChoosingOperation;
+using ::geneial::operation::choosing::ChooseRandom;
+using ::geneial::population::Population;
+using ::geneial::population::management::BaseManager;
+using ::geneial::utility::Buildable;
 
-using namespace geneial::operation::choosing;
-using namespace geneial::population::management;
-
+geneial_export_namespace
+{
 template<typename FITNESS_TYPE>
-class BaseMutationOperation
+class BaseMutationOperation : public Buildable<BaseMutationOperation<FITNESS_TYPE>>
 {
-private:
-    MutationSettings* _settings;
-    BaseChoosingOperation<FITNESS_TYPE>* _choosingOperation;
-public:
+protected:
+    std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> _choosingOperation;
+
     //Constructor
-    BaseMutationOperation(MutationSettings *settings, BaseChoosingOperation<FITNESS_TYPE> *choosingOperation) :
-            _settings(settings), _choosingOperation(choosingOperation)
+    BaseMutationOperation(
+            const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation
+            ) :
+            _choosingOperation(choosingOperation)
     {
     }
 
+public:
     //Destructor
     virtual ~BaseMutationOperation()
     {
@@ -35,25 +43,42 @@ public:
 
     typedef typename Population<FITNESS_TYPE>::chromosome_container mutation_result_set;
     virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
-            typename Population<FITNESS_TYPE>::chromosome_container mutants, BaseManager<FITNESS_TYPE> &manager) = 0;
+            const typename Population<FITNESS_TYPE>::chromosome_container &mutants, BaseManager<FITNESS_TYPE> &manager) const = 0;
 
-    MutationSettings* const & getSettings() const
+    BaseChoosingOperation<FITNESS_TYPE> const & getChoosingOperation() const
     {
-        return _settings;
+        return *_choosingOperation;
     }
 
-    void setSettings(const MutationSettings*& settings)
+    class Builder : public Buildable<BaseMutationOperation<FITNESS_TYPE>>::Builder
     {
-        _settings = settings;
-    }
 
-    BaseChoosingOperation<FITNESS_TYPE>* getChoosingOperation() const
-    {
-        return _choosingOperation;
-    }
+    protected:
+        std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE>> _choosingOperation;
+
+    public:
+        Builder() :
+                _choosingOperation(typename ChooseRandom<FITNESS_TYPE>::Builder().create())
+        {
+        }
+
+        Builder(const std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation) :
+                _choosingOperation(choosingOperation)
+        {
+        }
+
+        Builder& setChoosingOperation(const std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE> >& choosingOperation)
+        {
+            _choosingOperation = choosingOperation;
+            return *this;
+        }
+    };
+
 };
 
-} /* namespace mutation */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace mutation */
+} /* private namespace operation */
+} /* private namespace geneial */
+
 

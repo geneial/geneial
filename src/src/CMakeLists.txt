@@ -2,8 +2,9 @@ cmake_minimum_required(VERSION 2.8)
 
 
 #Ensure we set the current git version
-find_package(Git)
-   if(GIT_FOUND)
+find_package(Git QUIET)
+
+if(GIT_FOUND)
     
     # Get the current working branch
     execute_process(
@@ -20,6 +21,7 @@ find_package(Git)
       OUTPUT_VARIABLE GIT_COMMIT_HASH
       OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+    message(STATUS "GIT_BRANCH: ${BoldGreen}${GIT_BRANCH}${ColourReset}")
 else()
     set(GIT_COMMIT_HASH "no-rev")
     set(GIT_BRANCH "no-branch")

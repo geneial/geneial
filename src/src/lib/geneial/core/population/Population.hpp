@@ -1,20 +1,33 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/population/Population.h>
 #include <geneial/core/fitness/Fitness.h>
 
 #include <cassert>
 #include <iostream>
+#include <algorithm>
 #include <set>
 #include <utility>
+#include <memory>
 
-namespace geneial
+
+geneial_private_namespace(geneial)
 {
-namespace population
+geneial_private_namespace(population)
+{
+using ::geneial::population::chromosome::BaseChromosome;
+using ::geneial::population::management::BaseManager;
+using ::geneial::Fitness;
+
+geneial_export_namespace
 {
 
 template<typename FITNESS_TYPE>
 Population<FITNESS_TYPE>::Population() :
+        _fitnessMap(),
+        _hashMap(),
+//        _fitnessCache(),
         _age(0)
 {
 }
@@ -30,15 +43,13 @@ void Population<FITNESS_TYPE>::print(std::ostream& os) const
     os << "Population: Age (" << _age << "), #Chromosomes (" << _fitnessMap.size() << "):" << std::endl;
     os << "  Chromosomes" << std::endl;
 
-    //TODO (bewo) maybe use outstream iterator instead here.
-    for (typename fitness_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
-    {
-        os << *(chrom_it->second);
-    }
+    std::for_each (_fitnessMap.cbegin(), _fitnessMap.cend(), [&os](const typename Population<FITNESS_TYPE>::fitnessmap_value_type &c){
+        os << *(c.second);
+    });
 }
 
 /**
- * @return The amount of chomosones wich are part of the population.
+ * @return The amount of chomosones which are currently within the population.
  */
 template<typename FITNESS_TYPE>
 typename Population<FITNESS_TYPE>::population_size Population<FITNESS_TYPE>::getSize() const
@@ -64,29 +75,30 @@ void Population<FITNESS_TYPE>::setAge(unsigned int age)
 template<typename FITNESS_TYPE>
 void Population<FITNESS_TYPE>::doAge()
 {
-    for (typename fitness_map::iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
-    {
-        chrom_it->second->doAge();
-    }
+    //For each Chromosome increment age
+    std::for_each (_hashMap.cbegin(), _hashMap.cend(), [](const typename Population<FITNESS_TYPE>::hashmap_value_type &c){
+        c.second->doAge();
+    });
+
+    //Age the population itself
     ++_age;
 }
 
 /**
  * Removes any duplicates from within the container, which are
- * 	- appearing twice in the container
- * 	- appearing already in the container
+ *     - appearing twice in the container
+ *     - appearing already in the container
  *
- * 	NOTE: This function only considers a chromosome hash value,
- * 	and does not take the age into consideration.
+ *     NOTE: This function only considers a chromosome hash value,
+ *     and does not take the age into consideration.
  */
 template<typename FITNESS_TYPE>
 inline unsigned int Population<FITNESS_TYPE>::removeDuplicates(chromosome_container &toCheck)
 {
     unsigned int removed = 0;
-    typename chromosome_container::iterator it = toCheck.begin();
     std::set<typename BaseChromosome<FITNESS_TYPE>::chromsome_hash> tmpHashSet;
 
-    for (; it != toCheck.end();)
+    for (auto it = toCheck.begin(); it != toCheck.end();)
     {
         const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue = (*it)->getHash();
         //Check whether hash is already contained in the container, or in the population
@@ -109,17 +121,17 @@ template<typename FITNESS_TYPE>
 typename BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getOldestChromosome()
 {
     typename BaseChromosome<FITNESS_TYPE>::ptr oldest;
-    for (typename fitness_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
+    for (const auto& fmv : _fitnessMap)
     {
         if (!oldest)
         {
-            oldest = chrom_it->second;
+            oldest = fmv.second;
         }
         else
         {
-            if (oldest->getAge() < chrom_it->second->getAge())
+            if (oldest->getAge() < fmv.second->getAge())
             {
-                oldest = chrom_it->second;
+                oldest = fmv.second;
             }
         }
     }
@@ -130,17 +142,17 @@ template<typename FITNESS_TYPE>
 typename BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getYoungestChromosome()
 {
     typename BaseChromosome<FITNESS_TYPE>::ptr youngest;
-    for (typename fitness_map::const_iterator chrom_it = _fitnessMap.begin(); chrom_it != _fitnessMap.end(); ++chrom_it)
+    for (const auto& fmv : _fitnessMap)
     {
         if (!youngest)
         {
-            youngest = chrom_it->second;
+            youngest = fmv.second;
         }
         else
         {
-            if (youngest->getAge() > chrom_it->second->getAge())
+            if (youngest->getAge() > fmv.second->getAge())
             {
-                youngest = chrom_it->second;
+                youngest = fmv.second;
             }
         }
     }
@@ -148,11 +160,10 @@ typename BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getYoungest
 }
 
 template<typename FITNESS_TYPE>
-inline bool Population<FITNESS_TYPE>::insertChromosome(typename BaseChromosome<FITNESS_TYPE>::ptr chromosome)
+inline bool Population<FITNESS_TYPE>::insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr& chromosome)
 {
     //Insert into hash map
     typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue = chromosome->getHash();
-
     if (!hashExists(hashValue))
     {
         _insertChromosome(chromosome, hashValue);
@@ -165,12 +176,23 @@ inline bool Population<FITNESS_TYPE>::insertChromosome(typename BaseChromosome<F
 }
 
 template<typename FITNESS_TYPE>
-inline void Population<FITNESS_TYPE>::_insertChromosome(typename BaseChromosome<FITNESS_TYPE>::ptr chromosome,
+inline void Population<FITNESS_TYPE>::_insertChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr& chromosome,
         typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue)
 {
+//    const auto it = this->_fitnessCache.find(chromosome->getHash());
+
+//    if(it != this->_fitnessCache.end())
+//    {
+//        chromosome->setFitness(std::move(std::unique_ptr<Fitness<FITNESS_TYPE>>(new Fitness<FITNESS_TYPE>(it->second))));
+//    }
+
+    // TODO(bewo) enable this by setting @{
+//    _fitnessCache[hashValue] = chromosome->getFitness().get();
+    // @}
+
     assert(chromosome);
     //Insert into fitness map
-    fitnessmap_value_type fitness_map_value(chromosome->getFitness()->get(), chromosome);
+    fitnessmap_value_type fitness_map_value(chromosome->getFitness().get(), chromosome);
     _fitnessMap.insert(fitness_map_value);
 
     hashmap_value_type hash_map_value(hashValue, chromosome);
@@ -180,51 +202,70 @@ inline void Population<FITNESS_TYPE>::_insertChromosome(typename BaseChromosome<
 template<typename FITNESS_TYPE>
 inline unsigned int Population<FITNESS_TYPE>::insertChromosomeContainer(chromosome_container &container)
 {
-
     std::vector<typename BaseChromosome<FITNESS_TYPE>::chromsome_hash> hashCache;
     hashCache.reserve(container.size());
-
     for (typename chromosome_container::iterator it = container.begin(); it != container.end();)
     {
         const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue = (*it)->getHash();
         const bool inHashCache = std::find(hashCache.begin(), hashCache.end(), hashValue) != hashCache.end();
         if (!hashExists(hashValue) && !inHashCache)
         {
-            hashCache.push_back(hashValue);
+            hashCache.emplace_back(hashValue);
             it++;
         }
         else
         {
+            //getManager().deleteOrHoldOffReference(*it);
             it = container.erase(it);
         }
     }
 
-    //Use processing Strategy if not null, otherwise lazy evaluation will ensure Fitness at insertion
-    if (processingStrategy)
+    for (size_t i = 0; i < container.size(); i++)
     {
-        processingStrategy->ensureHasFitness(container);
+        if (!container[i]->hasFitness())
+        {
+            getManager().getExecutionManager().addTask([i,&container]
+            {
+//                const auto it = this->_fitnessCache.find(chromosome->getHash());
+//                if(it == this->_fitnessCache.end())
+//                {
+                    container[i]->getFitness().get();
+//                }
+//                else
+//                {
+//                    //std::cout << "fitness_cache hit"<<std::endl;
+//                    //TODO (bewo) If the user defined Fitness Evaluator might choose to override Fitness, we have a problem here..
+//                    chromosome->setFitness(std::move(std::unique_ptr<Fitness<FITNESS_TYPE>>(new Fitness<FITNESS_TYPE>(it->second))));
+//                }
+            });
+        }
     }
 
+    getManager().getExecutionManager().waitForTasks();
+
     unsigned int i = 0;
-    for (typename chromosome_container::const_iterator it = container.begin(); it != container.end(); ++it)
-    {
-        this->_insertChromosome(*it, hashCache[i]);
-        i++;
-    }
+    std::for_each(container.cbegin(),container.cend(),
+            [&i,this,&hashCache]
+                (const typename chromosome_container::value_type &it)
+            {
+                this->_insertChromosome(it, hashCache[i]);
+                ++i;
+            }
+    );
     return hashCache.size(); //TODO (bewo): This is a safe world assumption
 }
 
 template<typename FITNESS_TYPE>
-inline void Population<FITNESS_TYPE>::removeChromosome(typename BaseChromosome<FITNESS_TYPE>::ptr chromosome)
+inline void Population<FITNESS_TYPE>::removeChromosome(const typename BaseChromosome<FITNESS_TYPE>::ptr &chromosome)
 {
-    const FITNESS_TYPE fitness = chromosome->getFitness()->get();
-    const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hash = chromosome->getHash();
+    const FITNESS_TYPE fitness = chromosome->getFitness().get();
 
-    const std::pair<typename fitness_map::iterator, typename fitness_map::iterator> range = _fitnessMap.equal_range(
-            fitness);
+    const auto hash = chromosome->getHash();
+    const auto range = _fitnessMap.equal_range(fitness);
+
     bool candidateFound = false;
 
-    typename fitness_map::iterator it = range.first;
+    auto it = range.first;
     assert(range.first != _fitnessMap.end());
 
     //we might have multiple chromosomes with the same key, advance until pointer is candidateFound
@@ -239,12 +280,14 @@ inline void Population<FITNESS_TYPE>::removeChromosome(typename BaseChromosome<F
             ++it;
         }
     }
+
     assert(candidateFound);
-    typename hash_map::iterator hit = _hashMap.find(hash);
+    const auto hit = _hashMap.find(hash);
     assert(hit != _hashMap.end());
 
     _fitnessMap.erase(it);
     _hashMap.erase(hit);
+
     //assert(_fitnessMap.find(hash) == _fitnessMap.end());
     //assert(_hashMap.find(hash) == _hashMap.end());
 
@@ -260,10 +303,10 @@ template<typename FITNESS_TYPE>
 inline typename BaseChromosome<FITNESS_TYPE>::ptr Population<FITNESS_TYPE>::getChromosomeByHash(
         const typename BaseChromosome<FITNESS_TYPE>::chromsome_hash hashValue)
 {
-    typename hash_map::iterator it = _hashMap.find - (hashValue);
+    const auto it = _hashMap.find - (hashValue);
     if (it == _hashMap.end())
     {
-        typename BaseChromosome<FITNESS_TYPE>::ptr null_ptr;
+        typename BaseChromosome<FITNESS_TYPE>::ptr null_ptr(nullptr);
         return (null_ptr);
     }
     else
@@ -282,9 +325,9 @@ inline void Population<FITNESS_TYPE>::replacePopulation(chromosome_container &re
 template<typename FITNESS_TYPE>
 inline void Population<FITNESS_TYPE>::removeChromosomeContainer(const chromosome_container &container)
 {
-    for (typename chromosome_container::const_iterator it = container.begin(); it != container.end(); ++it)
+    for(const auto& chromosomomeToRemove: container)
     {
-        removeChromosome(*it);
+        removeChromosome(chromosomomeToRemove);
     }
 }
 
@@ -295,6 +338,6 @@ inline void Population<FITNESS_TYPE>::clearChromosomes()
     _hashMap.clear();
 }
 
-} /* namespace population */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace population */
+} /* private namespace geneial */

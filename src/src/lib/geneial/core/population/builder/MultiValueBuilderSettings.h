@@ -1,12 +1,16 @@
 #pragma once
 
+#include <geneial/namespaces.h>
 #include <geneial/core/population/builder/BuilderSettings.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace population
+geneial_private_namespace(population)
 {
-namespace chromosome
+geneial_private_namespace(chromosome)
+{
+
+geneial_export_namespace
 {
 
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
@@ -17,12 +21,24 @@ private:
 
     VALUE_TYPE _random_min;
 
-    unsigned int _num;
+    unsigned int _numberallee;
 
 public:
-    MultiValueBuilderSettings(const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator, unsigned int num,
-            VALUE_TYPE random_max, VALUE_TYPE random_min) :
-            BuilderSettings<FITNESS_TYPE>(fitnessEvaluator), _random_max(random_max), _random_min(random_min), _num(num)
+
+    static constexpr const VALUE_TYPE DEFAULT_RANDOM_MAX = 100;
+
+    static constexpr const VALUE_TYPE DEFAULT_RANDOM_MIN = 0;
+
+    static constexpr const unsigned int DEFAULT_NUM = 2;
+
+    MultiValueBuilderSettings( const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator,
+                               const unsigned int num = DEFAULT_NUM,
+                               const VALUE_TYPE random_max = DEFAULT_RANDOM_MAX,
+                               const VALUE_TYPE random_min = DEFAULT_RANDOM_MIN ) :
+            BuilderSettings<FITNESS_TYPE>(fitnessEvaluator),
+            _random_max(random_max),
+            _random_min(random_min),
+            _numberallee(num)
     {
     }
 
@@ -32,12 +48,12 @@ public:
 
     inline unsigned int getNum() const
     {
-        return _num;
+        return _numberallee;
     }
 
     void setNum(unsigned int num)
     {
-        _num = num;
+        _numberallee = num;
     }
 
     inline VALUE_TYPE getRandomMax() const
@@ -61,7 +77,8 @@ public:
     }
 };
 
-} /* namespace chromomsome */
-} /* namespace population */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace chromosome */
+} /* private namespace population */
+} /* private namespace geneial */
 

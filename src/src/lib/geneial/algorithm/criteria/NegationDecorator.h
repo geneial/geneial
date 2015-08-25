@@ -1,17 +1,19 @@
 #pragma once
 
-#include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 #include <geneial/core/population/Population.h>
 
-namespace geneial
-{
-namespace algorithm
-{
-namespace stopping_criteria
-{
 
-using namespace geneial::population::management;
+geneial_private_namespace(geneial)
+{
+geneial_private_namespace(algorithm)
+{
+geneial_private_namespace(stopping_criteria)
+{
+using ::geneial::population::management::BaseManager;
+
+geneial_export_namespace
+{
 
 /**
  * Decorator that negates a criterion
@@ -56,7 +58,7 @@ private:
 
 };
 
-} /* namespace stopping_criteria */
-} /* namespace algorithm */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace stopping_criteria */
+} /* private namespace algorithm */
+} /* private namespace geneial */

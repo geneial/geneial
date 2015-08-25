@@ -2,17 +2,24 @@
 
 #include <geneial/core/operations/coupling/SimpleCouplingOperation.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace coupling
+geneial_private_namespace(coupling)
+{
+using ::geneial::population::Population;
+using ::geneial::operation::crossover::BaseCrossoverOperation;
+using ::geneial::operation::selection::BaseSelectionOperation;
+using ::geneial::population::management::BaseManager;
+
+geneial_export_namespace
 {
 
 template<typename FITNESS_TYPE>
 typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplingOperation<FITNESS_TYPE>::doCopulate(
-        typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &mating_pool,
-        BaseCrossoverOperation<FITNESS_TYPE> *crossoverOperation, BaseManager<FITNESS_TYPE> &manager)
+        const typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set &mating_pool,
+        const BaseCrossoverOperation<FITNESS_TYPE> &crossoverOperation, BaseManager<FITNESS_TYPE> &manager)
 {
 
     typedef typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set offspring_container;
@@ -20,9 +27,11 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
     typedef typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set mating_container;
     typedef typename BaseChromosome<FITNESS_TYPE>::ptr chrom_ptr;
 
-    offspring_container offspring; //A small container for all the little children :-)
+    unsigned int offspring_left = this->getSettings().getNumberOfOffspring();
 
-    unsigned int offspring_left = this->getSettings()->getNumberOfOffspring();
+    offspring_container offspring; //A small container for all the little children :-)
+    offspring.reserve(offspring_left);
+
 
     assert(mating_pool.size() > 1);
     //iterate over mating candidates and create a pairwise mapping.
@@ -41,10 +50,10 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
      *  Parent2 \/ Child8
      *  Parent3 /
      */
-    for (typename mating_container::iterator it = mating_pool.begin(); offspring_left > 0;)
+    for (typename mating_container::const_iterator it = mating_pool.begin(); offspring_left > 0;)
     {
         //TODO (bewo) REFACTOR: research cyclic iterators to avoid all those ugly case distinctions
-        chrom_ptr parent1 = *it;
+        chrom_ptr parent1(*it);
         it++;
         //wrap around if necessary
         if (it == mating_pool.end())
@@ -52,38 +61,28 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
             it = mating_pool.begin();
         }
 
-        chrom_ptr parent2 = *it;
+        chrom_ptr parent2(*it);
         it++;
         if (it == mating_pool.end())
         {
             it = mating_pool.begin();
         }
 
-        //TODO (bewo) BEAUTIFY: use copy+backinserter and min(vec.size(),offspring_left) ?!
-        children_container children1 = crossoverOperation->doCrossover(parent1, parent2);
+        const children_container children(crossoverOperation.doCrossover(parent1, parent2));
+        offspring_left -= this->copyUnlessMaximumReached(offspring,children,offspring_left);
 
-        for (typename children_container::iterator it = children1.begin(); offspring_left > 0 && it != children1.end();
-                ++it)
+        if (offspring_left > 0 && !crossoverOperation.isSymmetric())
         {
-            offspring.push_back(*it);
-            offspring_left--;
-        }
-        if (offspring_left && crossoverOperation->isSymmetric())
-        {
-            children_container children2 = crossoverOperation->doCrossover(parent2, parent1);
-            for (typename children_container::iterator it = children2.begin();
-                    offspring_left > 0 && it != children2.end(); ++it)
-            {
-                offspring.push_back(*it);
-                offspring_left--;
-            }
+            const children_container assymetricChildren(crossoverOperation.doCrossover(parent2, parent1));
+            offspring_left -= this->copyUnlessMaximumReached(offspring,assymetricChildren,offspring_left);
         }
     }
 
     return offspring;
 }
 
-} /* namespace coupling */
-} /* namespace operation */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace coupling */
+} /* private namespace operation */
+} /* private namespace geneial */
 

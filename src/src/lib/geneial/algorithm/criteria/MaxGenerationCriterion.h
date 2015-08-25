@@ -1,27 +1,28 @@
 #pragma once
 
-#include <geneial/core/population/management/BaseManager.h>
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 #include <geneial/core/population/Population.h>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace algorithm
+geneial_private_namespace(algorithm)
 {
-namespace stopping_criteria
+geneial_private_namespace(stopping_criteria)
 {
+using ::geneial::population::management::BaseManager;
+using ::geneial::population::Population;
 
-using namespace geneial::population;
-using namespace geneial::population::management;
+geneial_export_namespace
+{
 
 template<typename FITNESS_TYPE>
 class MaxGenerationCriterion: public BaseStoppingCriterion<FITNESS_TYPE>
 {
 private:
-    typename Population<FITNESS_TYPE>::population_age _max;
+    const typename Population<FITNESS_TYPE>::population_age _max;
 
 public:
-    MaxGenerationCriterion(long num_max_iterations) :
+    explicit MaxGenerationCriterion(const long num_max_iterations) :
             _max(num_max_iterations)
     {
     }
@@ -42,7 +43,8 @@ public:
 
 };
 
-} /* namespace stopping_criteria */
-} /* namespace algorithm */
-} /* namespace geneial */
+} /* geneial_export_namespace */
+} /* private namespace stopping_criteria */
+} /* private namespace algorithm */
+} /* private namespace geneial */
 

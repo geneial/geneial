@@ -1,23 +1,30 @@
 #pragma once
 
+#include <geneial/namespaces.h>
+
 #include <cassert>
 
-namespace geneial
+geneial_private_namespace(geneial)
 {
-namespace operation
+geneial_private_namespace(operation)
 {
-namespace crossover
+geneial_private_namespace(crossover)
 {
+using ::geneial::population::Population;
+using ::geneial::population::chromosome::MultiValueChromosome;
+using ::geneial::operation::coupling::BaseCouplingOperation;
 
+geneial_export_namespace
+{
 class MultiValueChromosomeNPointCrossoverSettings
 {
 public:
 
     /**
      * Every selection operation should allow the following modes:
-     * 	RANDOM_WIDTH -- Crossoverwidth are chosen at random
-     * 	RANDOM_MIN_WIDTH -- Crossoverwidth are chosen at random, but a min width has to be respected
-     * 	EQUIDISTANT_WIDTH -- Crossoverwith is equidistant
+     *     RANDOM_WIDTH -- Crossoverwidth are chosen at random
+     *     RANDOM_MIN_WIDTH -- Crossoverwidth are chosen at random, but a min width has to be respected
+     *     EQUIDISTANT_WIDTH -- Crossoverwith is equidistant
      *
      *
      * Example:
@@ -50,8 +57,8 @@ public:
         RANDOM_WIDTH, RANDOM_MIN_WIDTH, EQUIDISTANT_WIDTH
     } width_settings;
 
-    MultiValueChromosomeNPointCrossoverSettings(unsigned int crossOverPoints, width_settings width_setting,
-            unsigned int min_width = 1) :
+    MultiValueChromosomeNPointCrossoverSettings(const unsigned int crossOverPoints, const width_settings width_setting,
+            const unsigned int min_width = 1) :
             _crossOverPoints(crossOverPoints), _width_setting(width_setting), _min_width(min_width)
     {
         assert(crossOverPoints > 0);
@@ -67,16 +74,17 @@ public:
         return _crossOverPoints;
     }
 
-    void setCrossOverPoints(unsigned int crossOverPoints)
+    void setCrossOverPoints(const unsigned int crossOverPoints)
     {
         _crossOverPoints = crossOverPoints;
     }
+
     unsigned int getMinWidth() const
     {
         return _min_width;
     }
 
-    void setMinWidth(unsigned int minWidth)
+    void setMinWidth(const unsigned int minWidth)
     {
         _min_width = minWidth;
     }
@@ -86,7 +94,7 @@ public:
         return _width_setting;
     }
 
-    void setWidthSetting(width_settings widthSetting)
+    void setWidthSetting(const width_settings widthSetting)
     {
         _width_setting = widthSetting;
     }
@@ -98,7 +106,7 @@ private:
 
 };
 
-} /* namespace crossover */
-} /* namespace operation */
-} /* namespace geneial */
-
+} /* geneial_export_namespace */
+} /* private namespace crossover */
+} /* private namespace operation */
+} /* private namespace geneial */
