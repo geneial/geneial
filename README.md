@@ -3,8 +3,8 @@ This file uses markdown syntax, adhere when fiddling!
 http://en.wikipedia.org/wiki/Markdown
 -->
 
-libGENEIAL - Elitism and RWTH: Yin and Yang
-===========================================
+libGeneiAL - A C++ Genetic Algorithm Library
+============================================
 
 
 ##1. Building the library
