@@ -55,8 +55,7 @@ typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiValueChromosomeFactory<
             const VALUE_TYPE upper_limited = std::min(_settings.getRandomMax(), lastVal + _settings.getEps());
 
             const VALUE_TYPE val = Random::generate<VALUE_TYPE>(lower_limited,
-                                                                upper_limited,
-                                                                lastVal + _settings.getEps());
+                                                                upper_limited);
 
             new_chromosome->getContainer()[i] = upper_limited;
 
