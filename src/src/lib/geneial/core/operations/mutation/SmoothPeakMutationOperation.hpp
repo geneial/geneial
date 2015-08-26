@@ -81,8 +81,6 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
                     Random::generate<int>(0, this->_maxRightEps),
                     //TODO(bewo): Make minElevation another setting
                     peak, mutatedChromosome);
-
-
         }
 
 
