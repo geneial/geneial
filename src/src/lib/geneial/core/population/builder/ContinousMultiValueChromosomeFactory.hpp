@@ -57,7 +57,7 @@ typename BaseChromosome<FITNESS_TYPE>::ptr ContinousMultiValueChromosomeFactory<
             const VALUE_TYPE val = Random::generate<VALUE_TYPE>(lower_limited,
                                                                 upper_limited);
 
-            new_chromosome->getContainer()[i] = upper_limited;
+            new_chromosome->getContainer()[i] = val;
 
             lastVal = upper_limited;
             i++;
