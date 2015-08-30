@@ -16,8 +16,8 @@ However, there are some derivations
 
 ###1.1 Derivations from Google C++ Styleguide
 
- * We fordbid the omittance of `{` and `}` respectively. 
- * Always declare any private members, before public members
+ * We fordbid the omittance of `{` and `}`, respectively. 
+ * Always declare any private members before public members
  * We restrict the use of inline to functions containing less than 5 SLOC
 
 
@@ -34,6 +34,7 @@ However, there are some derivations
    //NOTE (abbr): Your very important note.
 
    Whereas abbr is a shorthand symbol for the author of the note.
+   
 ### 1.2.2 A note on important notes
 
    //IMPORTANT (abbr): Your very important note.
@@ -53,4 +54,4 @@ However, there are some derivations
 
 ### 1.4 A note on tabs vs. spaces
 1 tab = 4 spaces, expand tabs, do not use the tab character, its from acient times where printers where still a thing. Every clever douchebag has a different customize tabwidth, there is no ocd sanity here...
-each time a tab is not expanded 4 happy kittens will certainly die, do not be a mass murderer, configure your ide to protect kittehs
+each time a tab is not expanded 4 happy kittens will certainly die, do not be a mass murderer, configure your ide to protect kittens
