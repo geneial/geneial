@@ -1,5 +1,5 @@
 INPUT = @CMAKE_CURRENT_SOURCE_DIR@/src/lib/
-
+INPUT += @CMAKE_CURRENT_SOURCE_DIR@/../docs/
 #---------------------------------------------------------------------------
 # Project related configuration options
 #---------------------------------------------------------------------------
@@ -8,6 +8,7 @@ INPUT = @CMAKE_CURRENT_SOURCE_DIR@/src/lib/
 # by quotes) that should identify the project.
 
 PROJECT_NAME           = @PROJECT_NAME@
+
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number.
 # This could be handy for archiving the generated documentation or
