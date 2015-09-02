@@ -1,5 +1,6 @@
 INPUT = @CMAKE_CURRENT_SOURCE_DIR@/src/lib/
 INPUT += @CMAKE_CURRENT_SOURCE_DIR@/../docs/
+INPUT += @CMAKE_CURRENT_SOURCE_DIR@/../
 #---------------------------------------------------------------------------
 # Project related configuration options
 #---------------------------------------------------------------------------

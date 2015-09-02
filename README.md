@@ -3,9 +3,8 @@ This file uses markdown syntax, adhere when fiddling!
 http://en.wikipedia.org/wiki/Markdown
 -->
 
-libGENEIAL - Elitism and RWTH: Yin and Yang
-===========================================
-
+libGENEIAL - Installation Guide {#readme}
+===============================
 
 ##1. Building the library
 
