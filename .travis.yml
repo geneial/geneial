@@ -1,20 +1,27 @@
 language: cpp
-sudo: required
+
+sudo: false
+
 compiler:
-- gcc
 - clang
-before_install:
-- source .travis/setup_travis.sh
+#- gcc
+
+addons:
+  apt:
+    packages:
+    - cmake
+    - doxygen
+    - libboost1.55-all-dev
+    - libstdc++-4.9-dev
+
 script:
 - source .travis/build.sh
+
 notifications:
   email:
     on_failure: always
     on_success: change
 env:
-  - USE=g++-4.8
-  - USE=g++-4.9
-  - USE=clang++-3.4
   - USE=clang++-3.5
   - USE=clang++-3.5 TASK=doxygen
 env:
