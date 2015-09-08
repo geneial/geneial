@@ -58,7 +58,11 @@ if (NOT DEFINED UNITTEST OR ${UNITTEST})
     enable_testing()
 endif()
 
-
+#
+# Boost Support 
+#
+find_package(Boost COMPONENTS unit_test_framework system REQUIRED)
+include_directories (${Boost_INCLUDE_DIRS})
 
 #
 # Compiler switches
