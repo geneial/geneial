@@ -14,8 +14,8 @@ matrix:
     - env: COMPILER=clang++-3.7
 
   include:
-
-  	- env COMPILER=clang++-3.5 DOCUMENTATION=true
+    # docs
+    - env: COMPILER=clang++-3.5 DOCUMENTATION=true
     # clang 3.5
     - env: COMPILER=clang++-3.5 BOOST_VERSION=1.57.0 BUILD_TYPE=Release UNIT_TESTS=true
       addons: &clang35
@@ -76,6 +76,7 @@ install:
   ############################################################################
   # Install Boost headers
   ############################################################################
+  - BOOST_URL="http://github.com/boostorg/boost.git"
   - if [[ "${BOOST_VERSION}" == "1.57.0" ]]; then BOOST_URL="http://sourceforge.net/projects/boost/files/boost/1.57.0/boost_1_57_0.tar.gz"; fi
   - if [[ "${BOOST_VERSION}" == "1.58.0" ]]; then BOOST_URL="http://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.gz"; fi
   - if [[ "${BOOST_VERSION}" == "trunk" ]];  then BOOST_URL="http://github.com/boostorg/boost.git"; fi
