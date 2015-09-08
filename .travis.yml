@@ -1,6 +1,19 @@
 language: cpp
+
+sudo: required
+
 compiler: 
   - gcc
   - clang
-install: make get-deps
-script: mkdir build/ && cd build && cmake ../src && make
+
+before_install:
+  - source .travis/setup_travis.sh
+
+script:
+  - source .travis/build.sh
+
+notifications:
+  email:
+    on_failure: always
+    on_success: change
+
