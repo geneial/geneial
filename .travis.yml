@@ -15,7 +15,7 @@ matrix:
 
   include:
     # clang 3.5
-    - env: COMPILER=clang++-3.5 BOOST_VERSION=1.57.0
+    - env: COMPILER=clang++-3.5 BOOST_VERSION=1.57.0 BUILD_TYPE=Release
       addons: &clang35
         apt:
           packages:
@@ -24,14 +24,23 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.5
 
-    - env: COMPILER=clang++-3.5 BOOST_VERSION=1.58.0
+    - env: COMPILER=clang++-3.5 BOOST_VERSION=1.58.0 BUILD_TYPE=Release
       addons: *clang35
 
-    - env: COMPILER=clang++-3.5 BOOST_VERSION=trunk
+    - env: COMPILER=clang++-3.5 BOOST_VERSION=trunk BUILD_TYPE=Release
+      addons: *clang35
+
+    - env: COMPILER=clang++-3.5 BOOST_VERSION=1.57.0 BUILD_TYPE=Debug
+      addons: *clang35
+
+    - env: COMPILER=clang++-3.5 BOOST_VERSION=1.58.0 BUILD_TYPE=Debug
+      addons: *clang35
+
+    - env: COMPILER=clang++-3.5 BOOST_VERSION=trunk BUILD_TYPE=Debug
       addons: *clang35
 
     # clang 3.6
-    - env: COMPILER=clang++-3.6 BOOST_VERSION=1.57.0
+    - env: COMPILER=clang++-3.6 BOOST_VERSION=1.57.0 BUILD_TYPE=Release
       addons: &clang36
         apt:
           packages:
@@ -40,10 +49,19 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.6
 
-    - env: COMPILER=clang++-3.6 BOOST_VERSION=1.58.0
+    - env: COMPILER=clang++-3.6 BOOST_VERSION=1.58.0 BUILD_TYPE=Release
       addons: *clang36
 
-    - env: COMPILER=clang++-3.6 BOOST_VERSION=trunk
+    - env: COMPILER=clang++-3.6 BOOST_VERSION=trunk BUILD_TYPE=Release
+      addons: *clang36
+
+    - env: COMPILER=clang++-3.6 BOOST_VERSION=1.57.0 BUILD_TYPE=Debug
+       addons: *clang36
+
+    - env: COMPILER=clang++-3.6 BOOST_VERSION=1.58.0 BUILD_TYPE=Debug
+      addons: *clang36
+
+    - env: COMPILER=clang++-3.6 BOOST_VERSION=trunk BUILD_TYPE=Debug
       addons: *clang36
 
 install:
@@ -110,9 +128,7 @@ before_script:
   # something like that, it's either a compiler bug or an error that will show
   # up regardless of the Boost version. Hence, we use the memory checker only
   # once for each compiler.
-  - cmake .. -DCMAKE_CXX_COMPILER=${COMPILER} -DBOOST_ROOT=${DEPS_DIR}/boost -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBOOST_HANA_ENABLE_WERROR=ON
-  - if [[ "${ENABLE_MEMCHECK}" == "true" ]]; then cmake .. -DBOOST_HANA_ENABLE_MEMCHECK=ON; fi
-  - if [[ "${DISABLE_CONCEPT_CHECKS}" == "true" ]]; then cmake .. -DBOOST_HANA_ENABLE_CONCEPT_CHECKS=OFF; fi
+  - cmake ../src -DCMAKE_CXX_COMPILER=${COMPILER} -DBOOST_ROOT=${DEPS_DIR}/boost -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
 
 
 script:
