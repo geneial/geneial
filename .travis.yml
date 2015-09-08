@@ -1,19 +1,22 @@
 language: cpp
-
 sudo: required
-
-compiler: 
-  - gcc
-  - clang
-
+compiler:
+- gcc
+- clang
 before_install:
-  - source .travis/setup_travis.sh
-
+- source .travis/setup_travis.sh
 script:
-  - source .travis/build.sh
-
+- source .travis/build.sh
 notifications:
   email:
     on_failure: always
     on_success: change
-
+env:
+  - USE=g++-4.8
+  - USE=g++-4.9
+  - USE=clang++-3.4
+  - USE=clang++-3.5
+  - USE=clang++-3.5 TASK=doxygen
+env:
+  matrix:
+    secure: Vmw+Hg9AxtivUH6N7FOlm17gHdENPmpoGhnetRslQM8p6UlK/HrsigS8ektD3FagVyn0BeMIU896aQgCCCV+cXSIFqyk2gS6LRvTC8M8QMkD5VtGvN8NCoUoEU+aCiOv/nI33p54787/4AnxSAgIFrGNUZf5ogKckJbnIwgDw0Iz1L8HPb2tnTb2Y7G+qSp+g+QpJh+mcTLXzTBFJ0irPIVvn15EBZtvV3avVSuiZY+PidUJnZLm/CNJnwysY9QuBDTJRPUSVbGr23vrCDVrCNl5YvnlVFY4TJzM+l4x0Ln6Y1lrvLRmp7VUS9aIf8NQ99X/txOMIPt/YMkiQSLdGI4R2FvcjtsWN+UnG93H+KIGWcggSKUkradmuY6pwB0GWjXUGjzKaDIrgUs9b3VUTdxscBKmW+/bFZBOF3m5/71lGiKNSJ6N21vlwWiXdgX5Y2mOCIzD4dFrgfiCUCEM6ISIx6RZzWvw5wYPxjoLF/eNywKtMODlQdo9170ckh26zctA3nLvwi+zOcMNqUTg+r4/eMPf0W99P2gih5kdx9WqWzKMQdVrGDDy/GlOi6gb2tUcsagCYxhD7KJ4Ejl16ogENXFBb28dH8RX3r7CPdlav2yDA+TYzqQmtYENEFUIVxCT1XNORD2/bZ2qcNI2qmmANubEBUHwGPhWc49WOQw=
