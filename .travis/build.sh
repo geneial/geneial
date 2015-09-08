@@ -1,8 +1,30 @@
 #!/usr/bin/env bash
 
+function defCXX {
+	export CC="$1"
+	export CXX="$2"
+}
+
 mkdir build || return 1
 cd build/ || return 1
 cmake ../src || return 1
+
+
+if [[ ${USE} == "g++-4.8" ]]; then
+	install gcc-4.8 g++-4.8
+	defCXX gcc-4.8 g++-4.8
+elif [[ ${USE} == "g++-4.9" ]]; then
+	install gcc-4.9 g++-4.9
+	defCXX gcc-4.9 g++-4.9
+elif [[ ${USE} == "clang++-3.5" ]]; then
+	defCXX clang-3.5 clang++-3.5
+elif [[ ${USE} == "clang++-3.6" ]]; then
+	defCXX clang-3.6 clang++-3.6
+elif [[ ${USE} == "clang++-3.7" ]]; then
+	defCXX clang-3.7 clang++-3.7
+fi
+
+
 
 if [[ ${TASK} == "doxygen" ]]; then
 	make doc
