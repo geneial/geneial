@@ -58,7 +58,7 @@ matrix:
       addons: *clang36
 
     - env: COMPILER=clang++-3.6 BOOST_VERSION=1.57.0 BUILD_TYPE=Debug UNIT_TESTS=true
-       addons: *clang36
+      addons: *clang36
 
     - env: COMPILER=clang++-3.6 BOOST_VERSION=1.58.0 BUILD_TYPE=Debug UNIT_TESTS=true
       addons: *clang36
