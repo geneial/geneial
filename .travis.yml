@@ -8,6 +8,17 @@ compiler:
 
 
 before_install:
+  # Get Clang 3.4
+  - if [ "$CXX" == "clang++" ]; then wget https://github.com/Viq111/travis-container-packets/releases/download/clang%2Blibcxx-3.4.2/clang_libcxx.tar.bz2; fi
+  - if [ "$CXX" == "clang++" ]; then tar -xjf clang_libcxx.tar.bz2; fi
+  - if [ "$CXX" == "clang++" ]; then rm clang_libcxx.tar.bz2 && mv clang_libcxx clang; fi
+  - if [ "$CXX" == "clang++" ]; then export PATH=$(pwd)/clang/bin:$PATH; fi
+  - if [ "$CXX" == "clang++" ]; then export LIBRARY_PATH=$(pwd)/clang/lib:$LIBRARY_PATH; fi
+  - if [ "$CXX" == "clang++" ]; then export LD_LIBRARY_PATH=$(pwd)/clang/lib:$LD_LIBRARY_PATH; fi
+  - if [ "$CXX" == "clang++" ]; then export CPLUS_INCLUDE_PATH=$(pwd)/clang/include/c++/v1:$CPLUS_INCLUDE_PATH; fi
+  - if [ "$CXX" == "clang++" ]; then export CXXFLAGS="-stdlib=libc++"; fi
+
+
   # Get CMake 3.1
   - wget https://github.com/Viq111/travis-container-packets/releases/download/cmake-3.1.2/cmake.tar.bz2
   - tar -xjf cmake.tar.bz2
