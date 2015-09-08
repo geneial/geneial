@@ -19,6 +19,7 @@ addons:
     packages:
     - cmake
     - doxygen
+    - libboost-all-dev
     - libboost1.55-all-dev
     - libstdc++-4.9-dev
 
