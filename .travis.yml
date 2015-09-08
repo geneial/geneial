@@ -120,8 +120,8 @@ before_script:
   ############################################################################
   # Setup the build directory
   ############################################################################
-  - mkdir build
-  - cd build
+  - mkdir build/
+  - cd build/
 
   # We only use the memory checker for some builds, because otherwise it takes
   # too long for very little benefit. Concretely, if we have a memory leak or
