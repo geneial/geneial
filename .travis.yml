@@ -4,21 +4,10 @@ sudo: false
 
 compiler:
 - clang
-#- gcc
+- gcc
 
 
 before_install:
-  # Get Clang 3.4
-  - if [ "$CXX" == "clang++" ]; then wget https://github.com/Viq111/travis-container-packets/releases/download/clang%2Blibcxx-3.4.2/clang_libcxx.tar.bz2; fi
-  - if [ "$CXX" == "clang++" ]; then tar -xjf clang_libcxx.tar.bz2; fi
-  - if [ "$CXX" == "clang++" ]; then rm clang_libcxx.tar.bz2 && mv clang_libcxx clang; fi
-  - if [ "$CXX" == "clang++" ]; then export PATH=$(pwd)/clang/bin:$PATH; fi
-  - if [ "$CXX" == "clang++" ]; then export LIBRARY_PATH=$(pwd)/clang/lib:$LIBRARY_PATH; fi
-  - if [ "$CXX" == "clang++" ]; then export LD_LIBRARY_PATH=$(pwd)/clang/lib:$LD_LIBRARY_PATH; fi
-  - if [ "$CXX" == "clang++" ]; then export CPLUS_INCLUDE_PATH=$(pwd)/clang/include/c++/v1:$CPLUS_INCLUDE_PATH; fi
-  - if [ "$CXX" == "clang++" ]; then export CXXFLAGS="-stdlib=libc++"; fi
-
-
   # Get CMake 3.1
   - wget https://github.com/Viq111/travis-container-packets/releases/download/cmake-3.1.2/cmake.tar.bz2
   - tar -xjf cmake.tar.bz2
@@ -35,7 +24,9 @@ install:
 addons:
   apt:
     packages:
-    - cmake
+    - clang-3.5
+    - clang-3.6
+    - clang-3.7
     - doxygen
 
 script:
@@ -47,7 +38,9 @@ notifications:
     on_success: change
 env:
   - USE=clang++-3.5
-  - USE=clang++-3.5 TASK=doxygen
+  - USE=clang++-3.6
+  - USE=clang++-3.7
+  - USE=clang++-3.7 TASK=doxygen
 env:
   matrix:
     secure: Vmw+Hg9AxtivUH6N7FOlm17gHdENPmpoGhnetRslQM8p6UlK/HrsigS8ektD3FagVyn0BeMIU896aQgCCCV+cXSIFqyk2gS6LRvTC8M8QMkD5VtGvN8NCoUoEU+aCiOv/nI33p54787/4AnxSAgIFrGNUZf5ogKckJbnIwgDw0Iz1L8HPb2tnTb2Y7G+qSp+g+QpJh+mcTLXzTBFJ0irPIVvn15EBZtvV3avVSuiZY+PidUJnZLm/CNJnwysY9QuBDTJRPUSVbGr23vrCDVrCNl5YvnlVFY4TJzM+l4x0Ln6Y1lrvLRmp7VUS9aIf8NQ99X/txOMIPt/YMkiQSLdGI4R2FvcjtsWN+UnG93H+KIGWcggSKUkradmuY6pwB0GWjXUGjzKaDIrgUs9b3VUTdxscBKmW+/bFZBOF3m5/71lGiKNSJ6N21vlwWiXdgX5Y2mOCIzD4dFrgfiCUCEM6ISIx6RZzWvw5wYPxjoLF/eNywKtMODlQdo9170ckh26zctA3nLvwi+zOcMNqUTg+r4/eMPf0W99P2gih5kdx9WqWzKMQdVrGDDy/GlOi6gb2tUcsagCYxhD7KJ4Ejl16ogENXFBb28dH8RX3r7CPdlav2yDA+TYzqQmtYENEFUIVxCT1XNORD2/bZ2qcNI2qmmANubEBUHwGPhWc49WOQw=
