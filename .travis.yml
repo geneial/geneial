@@ -1,0 +1,6 @@
+language: cpp
+compiler: 
+  - gcc
+  - clang
+install: make get-deps
+script: mkdir build/ && cd build && cmake ../src && make
