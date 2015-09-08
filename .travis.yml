@@ -14,12 +14,17 @@ before_install:
   - rm cmake.tar.bz2
   - export PATH=$(pwd)/cmake/bin:$PATH
 
+  # Get boost
+  - wget https://github.com/Viq111/travis-container-packets/releases/download/boost-1.57.0/boost.tar.bz2
+  - tar -xjf boost.tar.bz2
+  - rm boost.tar.bz2
+  - export BOOST_ROOT=$(pwd)/boost
+
 addons:
   apt:
     packages:
     - cmake
     - doxygen
-    - libboost-all-dev
 
 script:
 - source .travis/build.sh
