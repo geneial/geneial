@@ -131,6 +131,8 @@ before_script:
   # something like that, it's either a compiler bug or an error that will show
   # up regardless of the Boost version. Hence, we use the memory checker only
   # once for each compiler.
+  - export BOOST_ROOT=${DEPS_DIR}/boost
+  - echo ${BOOST_ROOT}
   - cmake ../src -DCMAKE_CXX_COMPILER=${COMPILER} -DBOOST_ROOT=${DEPS_DIR}/boost -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
 
 
