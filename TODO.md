@@ -1,4 +1,6 @@
-#TODOs
+TODOs {#todos}
+=====
+
 Note that most of the TODOs are reflected within the code, simply grep the source files for TODO or use the Eclipse Task View
 
 * extract nontrivial methods to hpp files

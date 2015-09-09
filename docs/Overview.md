@@ -9,6 +9,7 @@ The library offers the user high flexibility and extensibility while simultaneou
  * Additional information on the delivered demos: @subpage demos.
  * Documentation guidelines: @subpage guidelines.
  * Coding guidelines: @subpage coding.
+ * Licence: @subpage licence.
  
 ## Implemented Features
  * support for user-defined chromosome types (e.g., the optimization of sequences of genes)
