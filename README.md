@@ -3,9 +3,8 @@ This file uses markdown syntax, adhere when fiddling!
 http://en.wikipedia.org/wiki/Markdown
 -->
 
-libGeneiAL - A C++ Genetic Algorithm Library
+libGeneiAL - A C++ Genetic Algorithm Library  {#readme}
 ============================================
-
 
 ##1. Building the library
 
@@ -211,9 +210,3 @@ You can then see  the latest run using.
 Currently, libGENEIAL is mainly a template-based library. Hence, it is essential that the demos compile to ensure 
 that the library itself is compiling.
 The demos are also compiled by either running the all-encompassing `make` or the more unequivocal `make demo{X}` , respectively where `{X}` denotes the demo number to build.
-
-
-
-
-
-
