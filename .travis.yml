@@ -13,12 +13,12 @@ env:
     - CXX_COMPILER=clang++-3.5
     - UNIT_TESTS=true
   matrix:
-  	- BUILD_TYPE=Release
-  	- BUILD_TYPE=Debug
+    - BUILD_TYPE=Release
+    - BUILD_TYPE=Debug
 
-  	- BOOST_VERSION=1.57.0
-  	- BOOST_VERSION=1.58.0
-  	- BOOST_VERSION=trunk
+    - BOOST_VERSION=1.57.0
+    - BOOST_VERSION=1.58.0
+    - BOOST_VERSION=trunk
 
 matrix:
   allow_failures:
