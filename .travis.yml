@@ -76,16 +76,16 @@ matrix:
           packages: ['g++-5']
 
 
-    - env: C_COMPILER=clang-3.5 CXX_COMPILER=clang++-3.7 BUILD_TYPE=Debug
+    - env: C_COMPILER=clang-3.5 CXX_COMPILER=clang++-3.5 BUILD_TYPE=Debug
       addons: *clang35
-    - env: C_COMPILER=clang-3.6 CXX_COMPILER=clang++-3.7 BUILD_TYPE=Debug
+    - env: C_COMPILER=clang-3.6 CXX_COMPILER=clang++-3.6 BUILD_TYPE=Debug
       addons: *clang36
     - env: C_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7 BUILD_TYPE=Debug
       addons: *clang37
 
-    - env: C_COMPILER=gcc-4.8 CXX_COMPILER=g++-4.9 BUILD_TYPE=Debug
+    - env: C_COMPILER=gcc-4.8 CXX_COMPILER=g++-4.8 BUILD_TYPE=Debug
       addons: *gcc48
-    - env: C_COMPILER=gcc-4.9 CXX_COMPILER=g++-4.9 BUILD_TYPE=Debug
+    - env: C_COMPILER=gcc-4.9 CXX_COMPILER=g++-4.8 BUILD_TYPE=Debug
       addons: *gcc49
     - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 BUILD_TYPE=Debug
       addons: *gcc50
