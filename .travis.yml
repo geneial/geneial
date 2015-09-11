@@ -38,7 +38,7 @@ matrix:
           sources: &sources ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.5", "llvm-toolchain-precise-3.6"]
 
     # clang 3.6
-    - env: C_COMPILER=clang3.6 CXX_COMPILER=clang++-3.6
+    - env: C_COMPILER=clang-3.6 CXX_COMPILER=clang++-3.6
       addons: &clang36
         apt:
           packages: ["clang-3.6"]
@@ -48,29 +48,10 @@ matrix:
 addons: *clang35
 
 install:
-  - echo ${CXX_COMPILER}
-  - echo ${C_COMPILER}
   - export CXX=`which ${CXX_COMPILER}`
   - echo $CXX
   - export CC=`which ${C_COMPILER}`
   - echo $CC
-  ############################################################################
-  # All the dependencies are installed to the deps/ subdirectory.
-  ############################################################################
-  - DEPS_DIR="${PWD}/deps"
-  - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
-
-  ############################################################################
-  # Install Boost headers
-  ############################################################################
-  - BOOST_URL="http://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.gz"
-  - if [[ "${BOOST_VERSION}" == "1.57.0" ]]; then BOOST_URL="http://sourceforge.net/projects/boost/files/boost/1.57.0/boost_1_57_0.tar.gz"; fi
-  - if [[ "${BOOST_VERSION}" == "1.58.0" ]]; then BOOST_URL="http://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.gz"; fi
-  - if [[ "${BOOST_VERSION}" == "trunk" ]];  then BOOST_URL="http://github.com/boostorg/boost.git"; fi
-
-  - if [[ "${BOOST_VERSION}" != "trunk" ]]; then mkdir boost && travis_retry wget --quiet -O - ${BOOST_URL} | tar --strip-components=1 -xz -C boost; fi
-  - if [[ "${BOOST_VERSION}" == "trunk" ]]; then travis_retry git clone --depth 1 --recursive --quiet ${BOOST_URL}; fi
-  - (cd boost && ./bootstrap.sh && ./b2 --with-system --with-test)
 
   ############################################################################
   # Install a recent CMake
