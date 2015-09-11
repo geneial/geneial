@@ -46,7 +46,7 @@ matrix:
     # clang 3.7
     - env: C_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7
       compiler: clang
-      addons: &clang36
+      addons: &clang37
         apt:
           packages: ["clang-3.7"]
           sources: &sources ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.7"]
