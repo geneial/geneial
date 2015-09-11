@@ -65,6 +65,9 @@ matrix:
 addons: *clang36
 
 install:
+  - export CXX=`which ${CXX_COMPILER}`
+  - export CC=`which ${C_COMPILER}`
+  
   ############################################################################
   # All the dependencies are installed to the deps/ subdirectory.
   ############################################################################
