@@ -1,7 +1,10 @@
-libGeneiAL - A C++ Genetic Algorithm Library  {#readme}
+libGeneiAL - A C++ Genetic Algorithm Library
 ============================================
 
 ##1. Building the library
+
+Compability: We require a C++ 11 compiler such as clang-3.5+ or gcc-4.7+.
+Furthermore, we require the Boost Library >= 1.55 to be installed.
 
 ###1.1 The easy way
 There is a script that takes care of the building and installation process.
