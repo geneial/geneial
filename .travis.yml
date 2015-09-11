@@ -11,7 +11,7 @@ env:
 matrix:
   allow_failures:
     - env: BOOST_VERSION=trunk
-    - env: COMPILER=clang++-3.7
+    - env: CXX_COMPILER=clang++-3.7
 
   include:
     # docs
@@ -133,8 +133,8 @@ before_script:
   # once for each compiler.
 
   - export BOOST_ROOT=${DEPS_DIR}/boost
-  - ls ${BOOST_ROOT}
-  - cmake ../src -DCMAKE_C_COMPILER=${C_COMPILER} -DCMAKE_CXX_COMPILER=${CXX_COMPILER} -DBOOST_LIBRARYDIR=${DEPS_DIR}/boost/lib -DBOOST_ROOT=${DEPS_DIR}/boost -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+
+  - cmake ../src -DCMAKE_C_COMPILER=`which ${C_COMPILER}` -DCMAKE_CXX_COMPILER=`which ${CXX_COMPILER}` -DBOOST_LIBRARYDIR=${DEPS_DIR}/boost/lib -DBOOST_ROOT=${DEPS_DIR}/boost -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
 
 
 script:
