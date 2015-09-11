@@ -54,9 +54,9 @@ public:
     {
     }
 
-    bool inline isSymmetric() const override
+    bool isSymmetric() const override
     {
-        return true;
+        return false;
     }
 
     virtual typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set doMultiValueCrossover(

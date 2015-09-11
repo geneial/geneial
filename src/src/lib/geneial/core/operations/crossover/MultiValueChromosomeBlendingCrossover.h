@@ -53,7 +53,7 @@ public:
     {
     }
 
-    virtual bool inline isSymmetric() const override
+    virtual bool isSymmetric() const override
     {
         return false;
     }

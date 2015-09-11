@@ -42,7 +42,7 @@ public:
 
     //Is the order of mommy for and daddy for doCrossover() relevant?, true if yes.
     //TODO(bewo): Think about encoding this property via inheritance?
-    virtual bool inline isSymmetric() const = 0;
+    virtual bool isSymmetric() const = 0;
 
     class Builder : public Buildable<BaseCrossoverOperation<FITNESS_TYPE>>::Builder
     {

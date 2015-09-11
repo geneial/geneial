@@ -6,14 +6,14 @@
  * @brief Initialization is used to ensure all the geneial code compiles,
  * regardless of whether it is being used in some demo program or not.
  *
- * This Test ensures the whole library is kept at a compiling state, even
+ * This test ensures the whole library is kept at a compiling state, even
  * if there are functions that are not currently being utilized by some test
  * program, benchmark or demo. Those functions might be used by some client which
  * then will discover the compile time error.
  *
- * This test is only compiled in the Debug mode.
+ * This test is only compiled in the debug mode.
  *
- * This test can be compiled "exhaustively" to ensure max. compability
+ * This test can be compiled "exhaustively" to ensure max. compatability
  * with int, double, float instanciations of all templates.
  *
  */

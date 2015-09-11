@@ -34,7 +34,7 @@ public:
     {
     }
 
-    bool inline isSymmetric() const override
+    bool isSymmetric() const override
     {
         return true;
     }
