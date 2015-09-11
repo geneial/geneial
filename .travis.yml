@@ -83,7 +83,7 @@ before_install:
 
   - if [[ "${BOOST_VERSION}" != "trunk" ]]; then mkdir boost && travis_retry wget --quiet -O - ${BOOST_URL} | tar --strip-components=1 -xz -C boost; fi
   - if [[ "${BOOST_VERSION}" == "trunk" ]]; then travis_retry git clone --depth 1 --recursive --quiet ${BOOST_URL}; fi
-  - if [[ "${BOOST_VERSION}" == "trunk" ]]; then (cd boost && ./bootstrap.sh && ./b2 headers); fi
+  - (cd boost && ./bootstrap.sh && ./b2 --with-system --with-test)
 
   ############################################################################
   # Install a recent CMake
@@ -126,14 +126,17 @@ before_script:
   - mkdir build/
   - cd build/
 
+  - git config --global user.name "Travis bot"
+  
   # We only use the memory checker for some builds, because otherwise it takes
   # too long for very little benefit. Concretely, if we have a memory leak or
   # something like that, it's either a compiler bug or an error that will show
   # up regardless of the Boost version. Hence, we use the memory checker only
   # once for each compiler.
+
   - export BOOST_ROOT=${DEPS_DIR}/boost
-  - echo ${BOOST_ROOT}
-  - cmake ../src -DCMAKE_CXX_COMPILER=${COMPILER} -DBOOST_ROOT=${DEPS_DIR}/boost -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+  - ls ${BOOST_ROOT}
+  - cmake ../src -DCMAKE_CXX_COMPILER=${COMPILER} -DBOOST_LIBRARYDIR=${DEPS_DIR}/boost/lib -DBOOST_ROOT=${DEPS_DIR}/boost -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
 
 
 script:
