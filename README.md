@@ -1,5 +1,5 @@
 libGeneiAL - A C++ Genetic Algorithm Library
-============================================
+--------------------------------------------
 
 ##1. Building the library
 
