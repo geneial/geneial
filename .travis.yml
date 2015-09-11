@@ -44,7 +44,7 @@ matrix:
           sources: &sources ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.5", "llvm-toolchain-precise-3.6"]
 
 # Those addons apply only to the documentation job.
-addons: *clang36
+addons: *clang35
 
 install:
   - echo ${CXX_COMPILER}
