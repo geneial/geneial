@@ -88,9 +88,6 @@
 
 #endif
 
-//Algorithm
-Expander1D(geneial::algorithm::SteadyStateAlgorithm)
-
 Expander1D(geneial::algorithm::stopping_criteria::CombinedCriterion)
 Expander1D(geneial::algorithm::stopping_criteria::ConsecutiveDecorator)
 Expander1D(geneial::algorithm::stopping_criteria::FitnessValueDeltaCriterion)
@@ -128,6 +125,9 @@ Expander1D(geneial::operation::replacement::ReplaceWorstOperation)
 Expander1D(geneial::operation::selection::RouletteWheelSelection)
 Expander1D(geneial::operation::selection::FitnessProportionalSelection)
 Expander1D(geneial::operation::selection::UniformRandomSelection)
+
+//Algorithm
+Expander1D(geneial::algorithm::SteadyStateAlgorithm)
 
 //Auxiliary
 Expander1D(geneial::algorithm::Diagnostics)
