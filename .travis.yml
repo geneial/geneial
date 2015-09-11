@@ -11,7 +11,8 @@ env:
     # DEFAULTS FOR COMPILERS
     - C_COMPILER=clang-3.5
     - CXX_COMPILER=clang++-3.5
-    - UNIT_TESTS=true
+    # TODO (bewo): Reenable Unit tests
+    - UNIT_TESTS=false
   matrix:
     - BUILD_TYPE=Release
     - BUILD_TYPE=Debug
