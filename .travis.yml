@@ -140,7 +140,7 @@ script:
   # Only push the documentation when we're on master, otherwise just make sure
   # it builds properly. 
   ############################################################################
-  - if [[ "${DOCUMENTATION}" == "true" ]]; then make doc; git config --global user.email "benedikt.wolters@rwth-aachen.de"; git config --global user.name "Travis Doxygen Builder"; git clone https://${SECRET_ACCESS_TOKEN}@github.com/geneial/geneial.github.io.git; cd geneial.github.io/; cp ../doc/html/* ./;  git add .;  git commit -m "Updated documentation for geneial"; git push origin master; fi 
+  - if [[ "${DOCUMENTATION}" == "true" ]]; then make doc; git config --global user.email "benedikt.wolters@rwth-aachen.de"; git config --global user.name "Travis Doxygen Builder"; git clone https://${SECRET_ACCESS_TOKEN}@github.com/geneial/geneial.github.io.git; cd geneial.github.io/; mkdir -p doc; cp -r ../doc/html ./doc/;  git add .;  git commit -m "Updated documentation for geneial"; git push origin master; fi 
 
   ############################################################################
   # Build and run the unit tests and examples.
