@@ -140,6 +140,7 @@ before_script:
 
 
 script:
+  - make
   ############################################################################
   # Only push the documentation when we're on master, otherwise just make sure
   # it builds properly. 
