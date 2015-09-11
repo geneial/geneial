@@ -10,7 +10,6 @@ env:
     # DEFAULTS FOR COMPILERS
     - C_COMPILER=clang-3.5
     - CXX_COMPILER=clang++-3.5
-    
     # TODO (bewo): Reenable Unit tests
     - UNIT_TESTS=false
     - BUILD_TYPE=Release
@@ -68,8 +67,8 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-4.9']
-   
-    - env: C_COMPILER=gcc-5.0 CXX_COMPILER=g++-5.0
+
+    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5
       compiler: gcc
       addons: &gcc50
         apt:
