@@ -1,6 +1,5 @@
 language: cpp
 sudo: false
-compiler: clang
 env:
   global:
     # GitHub token for pushing the documentation, logging in with the
@@ -11,12 +10,11 @@ env:
     # DEFAULTS FOR COMPILERS
     - C_COMPILER=clang-3.5
     - CXX_COMPILER=clang++-3.5
+    
     # TODO (bewo): Reenable Unit tests
     - UNIT_TESTS=false
-  matrix:
     - BUILD_TYPE=Release
-    - BUILD_TYPE=Debug
-
+  matrix:
     - BOOST_VERSION=1.57.0
     - BOOST_VERSION=1.58.0
     - BOOST_VERSION=trunk
@@ -32,6 +30,7 @@ matrix:
 
     # clang 3.5
     - env: C_COMPILER=clang-3.5 CXX_COMPILER=clang++-3.5
+      compiler: clang
       addons: &clang35
         apt:
           packages: ["clang-3.5"]
@@ -39,6 +38,7 @@ matrix:
 
     # clang 3.6
     - env: C_COMPILER=clang-3.6 CXX_COMPILER=clang++-3.6
+      compiler: clang
       addons: &clang36
         apt:
           packages: ["clang-3.6"]
@@ -46,10 +46,51 @@ matrix:
 
     # clang 3.6
     - env: C_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7
+      compiler: clang
       addons: &clang36
         apt:
           packages: ["clang-3.7"]
           sources: &sources ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.7"]
+
+    # gcc 4.8
+    # gcc 4.9
+    # gcc 5.0
+    - env: C_COMPILER=gcc-4.8 CXX_COMPILER=g++-4.8
+      compiler: gcc
+      addons: &gcc48
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.8']
+
+    - env: C_COMPILER=gcc-4.9 CXX_COMPILER=g++-4.9
+      compiler: gcc
+      addons: &gcc49
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.9']
+   
+    - env: C_COMPILER=gcc-5.0 CXX_COMPILER=g++-5.0
+      compiler: gcc
+      addons: &gcc50
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5']
+
+
+    - env: C_COMPILER=clang-3.5 CXX_COMPILER=clang++-3.7 BUILD_TYPE=Debug
+      addons: *clang35
+    - env: C_COMPILER=clang-3.6 CXX_COMPILER=clang++-3.7 BUILD_TYPE=Debug
+      addons: *clang36
+    - env: C_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7 BUILD_TYPE=Debug
+      addons: *clang37
+
+    - env: C_COMPILER=gcc-4.8 CXX_COMPILER=g++-4.9 BUILD_TYPE=Debug
+      addons: *gcc48
+    - env: C_COMPILER=gcc-4.9 CXX_COMPILER=g++-4.9 BUILD_TYPE=Debug
+      addons: *gcc49
+    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 BUILD_TYPE=Debug
+      addons: *gcc50
+
 
 # Those addons apply only to the documentation job.
 addons: *clang35
@@ -133,8 +174,12 @@ before_script:
 
 
 script:
+
+  ############################################################################
+  # Build Project if DOCUMENTATION=true 
+  ############################################################################
   
-  - make
+  - if [[ "${DOCUMENTATION}" != "true" ]]; then make; fi 
 
   ############################################################################
   # Only push the documentation when we're on master, otherwise just make sure
