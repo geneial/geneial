@@ -15,49 +15,50 @@ matrix:
 
   include:
     # docs
-    - env: COMPILER=clang++-3.5 DOCUMENTATION=true
+    - env: C_COMPILER=clang-3.5 CXX_COMPILER=clang++-3.5 DOCUMENTATION=true
+
     # clang 3.5
-    - env: COMPILER=clang++-3.5 BOOST_VERSION=1.57.0 BUILD_TYPE=Release UNIT_TESTS=true
+    - env: C_COMPILER=clang-3.5 CXX_COMPILER=clang++-3.5 BOOST_VERSION=1.57.0 BUILD_TYPE=Release UNIT_TESTS=true
       addons: &clang35
         apt:
           packages: ["clang-3.5"]
           sources: &sources ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.5", "llvm-toolchain-precise-3.6"]
 
-    - env: COMPILER=clang++-3.5 BOOST_VERSION=1.58.0 BUILD_TYPE=Release UNIT_TESTS=true
+    - env: C_COMPILER=clang-3.5 CXX_COMPILER=clang++-3.5 BOOST_VERSION=1.58.0 BUILD_TYPE=Release UNIT_TESTS=true
       addons: *clang35
 
-    - env: COMPILER=clang++-3.5 BOOST_VERSION=trunk BUILD_TYPE=Release UNIT_TESTS=true
+    - env: C_COMPILER=clang-3.5 CXX_COMPILER=clang++-3.5 BOOST_VERSION=trunk BUILD_TYPE=Release UNIT_TESTS=true
       addons: *clang35
 
-    - env: COMPILER=clang++-3.5 BOOST_VERSION=1.57.0 BUILD_TYPE=Debug UNIT_TESTS=true
+    - env: C_COMPILER=clang-3.5 CXX_COMPILER=clang++-3.5 BOOST_VERSION=1.57.0 BUILD_TYPE=Debug UNIT_TESTS=true
       addons: *clang35
 
-    - env: COMPILER=clang++-3.5 BOOST_VERSION=1.58.0 BUILD_TYPE=Debug UNIT_TESTS=true
+    - env: C_COMPILER=clang-3.5 CXX_COMPILER=clang++-3.5 BOOST_VERSION=1.58.0 BUILD_TYPE=Debug UNIT_TESTS=true
       addons: *clang35
 
-    - env: COMPILER=clang++-3.5 BOOST_VERSION=trunk BUILD_TYPE=Debug UNIT_TESTS=true
+    - env: C_COMPILER=clang-3.5 CXX_COMPILER=clang++-3.5 BOOST_VERSION=trunk BUILD_TYPE=Debug UNIT_TESTS=true
       addons: *clang35
 
     # clang 3.6
-    - env: COMPILER=clang++-3.6 BOOST_VERSION=1.57.0 BUILD_TYPE=Release UNIT_TESTS=true
+    - env: C_COMPILER=clang3.6 CXX_COMPILER=clang++-3.6 BOOST_VERSION=1.57.0 BUILD_TYPE=Release UNIT_TESTS=true
       addons: &clang36
         apt:
           packages: ["clang-3.6"]
           sources: &sources ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.5", "llvm-toolchain-precise-3.6"]
 
-    - env: COMPILER=clang++-3.6 BOOST_VERSION=1.58.0 BUILD_TYPE=Release UNIT_TESTS=true
+    - env: C_COMPILER=clang3.6 CXX_COMPILER=clang++-3.6 BOOST_VERSION=1.58.0 BUILD_TYPE=Release UNIT_TESTS=true
       addons: *clang36
 
-    - env: COMPILER=clang++-3.6 BOOST_VERSION=trunk BUILD_TYPE=Release UNIT_TESTS=true
+    - env: C_COMPILER=clang3.6 CXX_COMPILER=clang++-3.6 BOOST_VERSION=trunk BUILD_TYPE=Release UNIT_TESTS=true
       addons: *clang36
 
-    - env: COMPILER=clang++-3.6 BOOST_VERSION=1.57.0 BUILD_TYPE=Debug UNIT_TESTS=true
+    - env: C_COMPILER=clang3.6 CXX_COMPILER=clang++-3.6 BOOST_VERSION=1.57.0 BUILD_TYPE=Debug UNIT_TESTS=true
       addons: *clang36
 
-    - env: COMPILER=clang++-3.6 BOOST_VERSION=1.58.0 BUILD_TYPE=Debug UNIT_TESTS=true
+    - env: C_COMPILER=clang3.6 CXX_COMPILER=clang++-3.6 BOOST_VERSION=1.58.0 BUILD_TYPE=Debug UNIT_TESTS=true
       addons: *clang36
 
-    - env: COMPILER=clang++-3.6 BOOST_VERSION=trunk BUILD_TYPE=Debug UNIT_TESTS=true
+    - env: C_COMPILER=clang3.6 CXX_COMPILER=clang++-3.6 BOOST_VERSION=trunk BUILD_TYPE=Debug UNIT_TESTS=true
       addons: *clang36
 
 # Those addons apply only to the documentation job.
@@ -133,7 +134,7 @@ before_script:
 
   - export BOOST_ROOT=${DEPS_DIR}/boost
   - ls ${BOOST_ROOT}
-  - cmake ../src -DCMAKE_CXX_COMPILER=${COMPILER} -DBOOST_LIBRARYDIR=${DEPS_DIR}/boost/lib -DBOOST_ROOT=${DEPS_DIR}/boost -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+  - cmake ../src -DCMAKE_C_COMPILER=${C_COMPILER} -DCMAKE_CXX_COMPILER=${CXX_COMPILER} -DBOOST_LIBRARYDIR=${DEPS_DIR}/boost/lib -DBOOST_ROOT=${DEPS_DIR}/boost -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
 
 
 script:
