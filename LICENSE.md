@@ -1,4 +1,5 @@
-The MIT License (MIT)
+The MIT License (MIT) {#licence}
+=====================
 
 Copyright (c) 2015 geneial - RWTH Aachen University 
 

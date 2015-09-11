@@ -1,12 +1,7 @@
-<!---
-This file uses markdown syntax, adhere when fiddling!
-http://en.wikipedia.org/wiki/Markdown
--->
-
-libGENEIAL - Documentation Guidelines
+libGENEIAL - Documentation Guidelines {#guidelines}
 =====================================
 
-We stipulate the use of JavaDoc Doxygen syntax as depicted in the following example from the (Doxygen Manual)[http://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#cppblock].
+We stipulate the use of JavaDoc Doxygen syntax as depicted in the following example from the [Doxygen Manual](http://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#cppblock).
 
 Note: Whilst Doxygen support other documentation syntax formats (e.g., QT style) , we strongly discourage their use in this projects!
 
