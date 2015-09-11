@@ -65,6 +65,8 @@ matrix:
 addons: *clang36
 
 install:
+  - echo ${CXX_COMPILER}
+  - echo ${C_COMPILER}
   - export CXX=`which ${CXX_COMPILER}`
   - export CC=`which ${C_COMPILER}`
   
