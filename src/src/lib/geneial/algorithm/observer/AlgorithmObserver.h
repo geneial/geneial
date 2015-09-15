@@ -22,16 +22,21 @@ class AlgorithmObserver
 public:
     enum ObserveableEvent
     {
-        GENERATION_DONE, CRITERIA_REACHED
+        BEFORE_GENERATION, AFTER_GENERATION, CRITERIA_REACHED
     };
 
     virtual ~AlgorithmObserver()
     {
     }
 
-    virtual void updateGeneration(BaseManager<FITNESS_TYPE> &manager)
+    virtual void updateBeforeGeneration(BaseManager<FITNESS_TYPE> &manager)
     {
     }
+
+    virtual void updateAfterGeneration(BaseManager<FITNESS_TYPE> &manager)
+    {
+    }
+
 
     virtual void updateCriteriaReached(BaseManager<FITNESS_TYPE> &manager,
             const BaseStoppingCriterion<FITNESS_TYPE>& criteria)

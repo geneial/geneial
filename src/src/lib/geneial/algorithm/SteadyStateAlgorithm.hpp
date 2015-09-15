@@ -30,6 +30,12 @@ void SteadyStateAlgorithm<FITNESS_TYPE>::solve()
     while (!wasReached)
     {
         {
+            //Notify algorithm observers about new generation change.
+            {
+                ScopedEvent trace_criteria("TIME_OBSERVERS",*bookkeeper);
+                this->notifyObservers(AlgorithmObserver<FITNESS_TYPE>::BEFORE_GENERATION);
+            }
+
             ScopedEvent trace_iteration("TIME_ITERATION",*bookkeeper);
 
             ++iterationCounter;
@@ -90,7 +96,7 @@ void SteadyStateAlgorithm<FITNESS_TYPE>::solve()
             //Notify algorithm observers about new generation change.
             {
                 ScopedEvent trace_criteria("TIME_OBSERVERS",*bookkeeper);
-                this->notifyObservers(AlgorithmObserver<FITNESS_TYPE>::GENERATION_DONE);
+                this->notifyObservers(AlgorithmObserver<FITNESS_TYPE>::AFTER_GENERATION);
             }
         }
 

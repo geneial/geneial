@@ -21,13 +21,13 @@ public:
     BestChromosomeObserver() :
             _foundBest(false)
     {
-        this->addSubscribedEvent(AlgorithmObserver<FITNESS_TYPE>::GENERATION_DONE);
+        this->addSubscribedEvent(AlgorithmObserver<FITNESS_TYPE>::AFTER_GENERATION);
     }
     virtual ~BestChromosomeObserver()
     {
     }
 
-    virtual void updateGeneration(BaseManager<FITNESS_TYPE> &manager)
+    virtual void updateAfterGeneration(BaseManager<FITNESS_TYPE> &manager) override
     {
         const FITNESS_TYPE lastBest = manager.getHighestFitness();
         if (lastBest > _best || !_foundBest)

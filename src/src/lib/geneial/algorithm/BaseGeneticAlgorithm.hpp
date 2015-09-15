@@ -33,15 +33,23 @@ inline void BaseGeneticAlgorithm<FITNESS_TYPE>::notifyObservers(typename Algorit
         switch (event)
         {
 
-            case AlgorithmObserver<FITNESS_TYPE>::GENERATION_DONE:
+            case AlgorithmObserver<FITNESS_TYPE>::AFTER_GENERATION:
             {
                 for (const auto& it : lb->second)
                 {
-                    it->updateGeneration(*_manager);
+                    it->updateAfterGeneration(*_manager);
                 }
                 break;
             }
 
+            case AlgorithmObserver<FITNESS_TYPE>::BEFORE_GENERATION:
+            {
+                for (const auto& it : lb->second)
+                {
+                    it->updateBeforeGeneration(*_manager);
+                }
+                break;
+            }
             case AlgorithmObserver<FITNESS_TYPE>::CRITERIA_REACHED:
             {
                 for (const auto& it : lb->second)
