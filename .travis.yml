@@ -1,5 +1,5 @@
 language: cpp
-sudo: false
+sudo: required
 env:
   global:
     # GitHub token for pushing the documentation, logging in with the
@@ -10,6 +10,7 @@ env:
     # DEFAULTS FOR COMPILERS
     - C_COMPILER=clang-3.5
     - CXX_COMPILER=clang++-3.5
+    - LLVM_VERSION=3.8.0
     # TODO (bewo): Reenable Unit tests
     - UNIT_TESTS=false
     - BUILD_TYPE=Release
@@ -17,6 +18,23 @@ env:
     - BOOST_VERSION=1.57.0
     - BOOST_VERSION=1.58.0
     - BOOST_VERSION=trunk
+
+cache:
+  directories:
+    - llvm-3.8.0
+
+before_install:
+  -
+    if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+      if [ -z "$(ls -A llvm-$LLVM_VERSION)" ]; then
+        wget -O llvm-$LLVM_VERSION.tar.xz http://llvm.org/releases/$LLVM_VERSION/clang+llvm-$LLVM_VERSION-x86_64-linux-gnu-ubuntu-14.04.tar.xz;
+        mkdir llvm-$LLVM_VERSION;
+        xzcat llvm-$LLVM_VERSION.tar.xz | tar -xvf - --strip 1 -C llvm-$LLVM_VERSION;
+      fi;
+      llvm-$LLVM_VERSION/bin/llvm-config --version;
+      export LLVM_CONFIG="llvm-$LLVM_VERSION/bin/llvm-config";
+    fi
+
 
 matrix:
   allow_failures:
@@ -33,7 +51,7 @@ matrix:
       addons: &clang35
         apt:
           packages: ["clang-3.5"]
-          sources: &sources ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.5", "llvm-toolchain-precise-3.6"]
+          sources: &sources ["ubuntu-toolchain-r-test"]
 
     # clang 3.6
     - env: C_COMPILER=clang-3.6 CXX_COMPILER=clang++-3.6
@@ -41,7 +59,7 @@ matrix:
       addons: &clang36
         apt:
           packages: ["clang-3.6"]
-          sources: &sources ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.6"]
+          sources: &sources ["ubuntu-toolchain-r-test"]
 
     # clang 3.7
     - env: C_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7
@@ -49,7 +67,7 @@ matrix:
       addons: &clang37
         apt:
           packages: ["clang-3.7"]
-          sources: &sources ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.7"]
+          sources: &sources ["ubuntu-toolchain-r-test"]
 
     # gcc 4.8
     - env: C_COMPILER=gcc-4.8 CXX_COMPILER=g++-4.8
