@@ -8,6 +8,8 @@
 #include <geneial/core/population/Population.h>
 
 #include <unordered_set>
+#include <iterator>
+#include <algorithm>
 
 geneial_private_namespace(geneial)
 {
@@ -50,9 +52,21 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
     choosenChromosomeContainer = this->getChoosingOperation().doChoose(chromosomeInputContainer);
 
     //calculates difference: _notChoosenChromosomeContainer = _choosenChromosomeContainer - _chromosomeInputContainer
-    std::set_difference(chromosomeInputContainer.begin(), chromosomeInputContainer.end(),
+    /*std::set_difference(chromosomeInputContainer#include <iterator>.begin(), chromosomeInputContainer.end(),
             choosenChromosomeContainer.begin(), choosenChromosomeContainer.end(),
             std::inserter(notChoosenChromosomeContainer, notChoosenChromosomeContainer.begin()));
+            */
+
+    for(auto it: chromosomeInputContainer)
+    {
+    	    auto result1 = std::find(std::begin(choosenChromosomeContainer), std::end(choosenChromosomeContainer), it);
+
+    	    if (result1 == std::end(choosenChromosomeContainer))
+    	    {
+    	    	notChoosenChromosomeContainer.emplace_back(it);
+    	    }
+    }
+
 
 
     const auto randomMin = this->getBuilderFactory().getSettings().getRandomMin();

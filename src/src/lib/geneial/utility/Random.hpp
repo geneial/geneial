@@ -123,13 +123,14 @@ bool Random::decision(const double probability)
     }
     else
     {
-        return (reference <= probability);
+    	bool val = (reference - probability) <= 0.0;
+        return val;
     }
 }
 
 inline void Random::initialize()
 {
-    srand(static_cast<unsigned>(time(0)));
+    //srand(static_cast<unsigned>(time(0)));
     sInitialized = true;
 }
 } /* geneial_export_namespace */
