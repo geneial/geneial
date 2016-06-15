@@ -40,8 +40,8 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
 
     for(auto it: chromosomeInputContainer)
     {
-            auto result1 = std::find(std::begin(choosenChromosomeContainer), std::end(choosenChromosomeContainer), it);
-            if (result1 == std::end(choosenChromosomeContainer))
+            auto result = std::find(std::begin(choosenChromosomeContainer), std::end(choosenChromosomeContainer), it);
+            if (result == std::end(choosenChromosomeContainer))
             {
                  notChoosenChromosomeContainer.emplace_back(it);
             }
