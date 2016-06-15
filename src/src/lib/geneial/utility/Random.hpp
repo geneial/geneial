@@ -123,8 +123,7 @@ bool Random::decision(const double probability)
     }
     else
     {
-    	bool val = (reference - probability) <= 0.0;
-        return val;
+    	return reference <= probability;
     }
 }
 

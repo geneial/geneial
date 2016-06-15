@@ -51,20 +51,13 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
 
     choosenChromosomeContainer = this->getChoosingOperation().doChoose(chromosomeInputContainer);
 
-    //calculates difference: _notChoosenChromosomeContainer = _choosenChromosomeContainer - _chromosomeInputContainer
-    /*std::set_difference(chromosomeInputContainer#include <iterator>.begin(), chromosomeInputContainer.end(),
-            choosenChromosomeContainer.begin(), choosenChromosomeContainer.end(),
-            std::inserter(notChoosenChromosomeContainer, notChoosenChromosomeContainer.begin()));
-            */
-
     for(auto it: chromosomeInputContainer)
     {
-    	    auto result1 = std::find(std::begin(choosenChromosomeContainer), std::end(choosenChromosomeContainer), it);
-
-    	    if (result1 == std::end(choosenChromosomeContainer))
-    	    {
-    	    	notChoosenChromosomeContainer.emplace_back(it);
-    	    }
+            auto result1 = std::find(std::begin(choosenChromosomeContainer), std::end(choosenChromosomeContainer), it);
+            if (result1 == std::end(choosenChromosomeContainer))
+            {
+                 notChoosenChromosomeContainer.emplace_back(it);
+            }
     }
 
 

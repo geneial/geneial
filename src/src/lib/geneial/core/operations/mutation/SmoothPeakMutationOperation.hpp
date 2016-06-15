@@ -36,10 +36,14 @@ typename Population<FITNESS_TYPE>::chromosome_container SmoothPeakMutationOperat
 
     choosenChromosomeContainer = this->getChoosingOperation().doChoose(chromosomeInputContainer);
 
-    //calculates difference: _notChoosenChromosomeContainer = _choosenChromosomeContainer - _chromosomeInputContainer
-    std::set_difference(chromosomeInputContainer.cbegin(), chromosomeInputContainer.cend(),
-            choosenChromosomeContainer.cbegin(), choosenChromosomeContainer.cend(),
-            std::back_inserter(notChoosenChromosomeContainer));
+    for(auto it: chromosomeInputContainer)
+    {
+            auto result1 = std::find(std::begin(choosenChromosomeContainer), std::end(choosenChromosomeContainer), it);
+            if (result1 == std::end(choosenChromosomeContainer))
+            {
+                 notChoosenChromosomeContainer.emplace_back(it);
+            }
+    }
 
     //only mutate choosen chromosomes
     for (const auto &chosenChromosome : choosenChromosomeContainer)
