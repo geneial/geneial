@@ -3,6 +3,8 @@
 #include <geneial/core/operations/mutation/SmoothPeakMutationOperation.h>
 
 #include <unordered_set>
+#include <iterator>
+#include <algorithm>
 
 geneial_private_namespace(geneial)
 {

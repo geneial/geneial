@@ -24,13 +24,14 @@ geneial_export_namespace
 {
 /*
  *  Returns a chromosome container with some new chromosomes which are partially mutated versions of the old ones.
- *
+ *#include <tuple>
+#include <utility>
  *  Targetpoints for mutation represent the choosen values within an Chromosome to be changed
  *  Example for 3 Points of Mutation:
  *
  *   Old Chrom.                      New Chrom.
  *      (X) <- Mutate this value --> (Y)
- *         (X)                             (X)
+ *      (X)                             (X)
  *      (X)                             (X)
  *      (X) <- Mutate this value --> (Y)
  *      (X)                             (X)
