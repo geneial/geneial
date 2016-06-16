@@ -22,27 +22,22 @@ addons:
     sources:
       - boost-latest
       - george-edison55-precise-backports
-      - llvm-toolchain-precise
-      - llvm-toolchain-precise-3.6
-      - llvm-toolchain-precise-3.7
-      - llvm-toolchain-precise-3.8
+#      - llvm-toolchain-precise
+#      - llvm-toolchain-precise-3.6
+#      - llvm-toolchain-precise-3.7
+#      - llvm-toolchain-precise-3.8
       - ubuntu-toolchain-r-test
     packages:
       - cmake
       - cmake-data
       - doxygen
       - libboost1.55-all-dev
-      - libcln-dev
-      - libeigen3-dev
-      - libgmp-dev
-      - libgmp
-      - libgtest-dev
       - g++-4.8
       - g++-4.9
       - g++-5
-      - clang-3.6
-      - clang-3.7
-      - clang-3.8
+#      - clang-3.6
+#      - clang-3.7
+#      - clang-3.8
       - time
 
 matrix:
