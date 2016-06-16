@@ -10,6 +10,13 @@ env:
     # ${SECRET_ACCESS_TOKEN} environment variable.
     - secure: Vmw+Hg9AxtivUH6N7FOlm17gHdENPmpoGhnetRslQM8p6UlK/HrsigS8ektD3FagVyn0BeMIU896aQgCCCV+cXSIFqyk2gS6LRvTC8M8QMkD5VtGvN8NCoUoEU+aCiOv/nI33p54787/4AnxSAgIFrGNUZf5ogKckJbnIwgDw0Iz1L8HPb2tnTb2Y7G+qSp+g+QpJh+mcTLXzTBFJ0irPIVvn15EBZtvV3avVSuiZY+PidUJnZLm/CNJnwysY9QuBDTJRPUSVbGr23vrCDVrCNl5YvnlVFY4TJzM+l4x0Ln6Y1lrvLRmp7VUS9aIf8NQ99X/txOMIPt/YMkiQSLdGI4R2FvcjtsWN+UnG93H+KIGWcggSKUkradmuY6pwB0GWjXUGjzKaDIrgUs9b3VUTdxscBKmW+/bFZBOF3m5/71lGiKNSJ6N21vlwWiXdgX5Y2mOCIzD4dFrgfiCUCEM6ISIx6RZzWvw5wYPxjoLF/eNywKtMODlQdo9170ckh26zctA3nLvwi+zOcMNqUTg+r4/eMPf0W99P2gih5kdx9WqWzKMQdVrGDDy/GlOi6gb2tUcsagCYxhD7KJ4Ejl16ogENXFBb28dH8RX3r7CPdlav2yDA+TYzqQmtYENEFUIVxCT1XNORD2/bZ2qcNI2qmmANubEBUHwGPhWc49WOQw=
 
+cache:
+  directories:
+    - llvm-3.8.0
+    - llvm-3.7.1
+    - llvm-3.6.2
+    - llvm-3.5.2
+
 addons:
   apt:
     sources:
@@ -46,16 +53,30 @@ matrix:
       env: USE=g++-5
 
     - os: linux
-      env: USE=clang++-3.6
+      env: LLVM_VERSION=3.6.2 USE=clang++-3.6
     - os: linux
-      env: USE=clang++-3.7
+      env: LLVM_VERSION=3.7.1 USE=clang++-3.7
     - os: linux
-      env: USE=clang++-3.8
+      env: LLVM_VERSION=3.8.0 USE=clang++-3.8
 
     - os: linux
-      env: USE=clang++-3.6 TASK=doxygen
+      env: LLVM_VERSION=3.6.2 USE=clang++-3.6 DOCUMENTATION=true
 
 before_script:
+
+  -
+    if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+      if [ -z "$(ls -A llvm-$LLVM_VERSION)" ]; then
+        wget -O llvm-$LLVM_VERSION.tar.xz http://llvm.org/releases/$LLVM_VERSION/clang+llvm-$LLVM_VERSION-x86_64-linux-gnu-ubuntu-14.04.tar.xz;
+        mkdir llvm-$LLVM_VERSION;
+        xzcat llvm-$LLVM_VERSION.tar.xz | tar -xvf - --strip 1 -C llvm-$LLVM_VERSION;
+      fi;
+      llvm-$LLVM_VERSION/bin/llvm-config --version;
+      export LLVM_CONFIG="llvm-$LLVM_VERSION/bin/llvm-config";
+    fi
+
+
+
   
   ############################################################################
   # Go back to the root of the project.
