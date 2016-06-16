@@ -42,16 +42,6 @@ addons:
 matrix:
   include:
     - os: linux
-      env: USE=g++-4.9 BUILD_TYPE=Debug
-    - os: linux
-      env: USE=g++-4.9 BUILD_TYPE=Release
-
-    - os: linux
-      env: USE=g++-5 BUILD_TYPE=Debug
-    - os: linux
-      env: USE=g++-5 BUILD_TYPE=Release
-
-    - os: linux
       env: LLVM_VERSION=3.6.2 USE=clang++-3.6 BUILD_TYPE=Debug
     - os: linux
       env: LLVM_VERSION=3.6.2 USE=clang++-3.6 BUILD_TYPE=Release
@@ -67,6 +57,16 @@ matrix:
       env: LLVM_VERSION=3.8.0 USE=clang++-3.8 BUILD_TYPE=Debug
     - os: linux
       env: LLVM_VERSION=3.8.0 USE=clang++-3.8 BUILD_TYPE=Release
+
+    - os: linux
+      env: USE=g++-4.9 BUILD_TYPE=Debug
+    - os: linux
+      env: USE=g++-4.9 BUILD_TYPE=Release
+
+    - os: linux
+      env: USE=g++-5 BUILD_TYPE=Debug
+    - os: linux
+      env: USE=g++-5 BUILD_TYPE=Release
 
 
     - os: linux
@@ -119,7 +119,7 @@ before_script:
 
   - if [[ "${LLVM_VERSION}" == 3* ]]; then
       echo "LLVM Build";
-      cmake ../src-DLLVM_CONFIG=$(which ${LLVM_CONFIG}) -DCMAKE_BUILD_TYPE=${BUILD_TYPE};
+      cmake ../src -DLLVM_CONFIG=$(which ${LLVM_CONFIG}) -DCMAKE_BUILD_TYPE=${BUILD_TYPE};
     else
       cmake ../src -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_BUILD_TYPE=${BUILD_TYPE};
     fi
