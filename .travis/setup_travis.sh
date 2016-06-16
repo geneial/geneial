@@ -23,9 +23,9 @@ elif [[ ${USE} == "clang++-3.5" ]]; then
 	defCXX clang-3.5 clang++-3.5
 	export CXXFLAGS="-stdlib=libc++"
 elif [[ ${USE} == "clang++-3.6" ]]; then
-	defCXX clang-3.6 clang++-3.6
+	defCXX clang clang++
 elif [[ ${USE} == "clang++-3.7" ]]; then
-	defCXX clang-3.7 clang++-3.7
+	defCXX clang clang++
 elif [[ ${USE} == "clang++-3.8" ]]; then
-	defCXX clang-3.8 clang++-3.8
+	defCXX clang clang++
 fi

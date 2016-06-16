@@ -32,7 +32,6 @@ addons:
       - cmake-data
       - doxygen
       - libboost1.55-all-dev
-      - g++-4.8
       - g++-4.9
       - g++-5
 #      - clang-3.6
@@ -117,8 +116,13 @@ before_script:
   ############################################################################
   - mkdir build/
   - cd build/
-  
-  - cmake ../src -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+
+  - if [[ "${LLVM_VERSION}" == 3* ]]; then
+      echo "LLVM Build"
+      cmake ../src-DLLVM_CONFIG=$(which ${LLVM_CONFIG}) -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+    else
+      cmake ../src -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+    fi
 
 
   - git config --global user.name "Travis bot"
