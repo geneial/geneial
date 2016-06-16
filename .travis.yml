@@ -1,5 +1,8 @@
 language: cpp
-sudo: required
+
+#sudo: required
+dist: trusty
+
 env:
   global:
     # GitHub token for pushing the documentation, logging in with the
@@ -7,158 +10,63 @@ env:
     # ${SECRET_ACCESS_TOKEN} environment variable.
     - secure: Vmw+Hg9AxtivUH6N7FOlm17gHdENPmpoGhnetRslQM8p6UlK/HrsigS8ektD3FagVyn0BeMIU896aQgCCCV+cXSIFqyk2gS6LRvTC8M8QMkD5VtGvN8NCoUoEU+aCiOv/nI33p54787/4AnxSAgIFrGNUZf5ogKckJbnIwgDw0Iz1L8HPb2tnTb2Y7G+qSp+g+QpJh+mcTLXzTBFJ0irPIVvn15EBZtvV3avVSuiZY+PidUJnZLm/CNJnwysY9QuBDTJRPUSVbGr23vrCDVrCNl5YvnlVFY4TJzM+l4x0Ln6Y1lrvLRmp7VUS9aIf8NQ99X/txOMIPt/YMkiQSLdGI4R2FvcjtsWN+UnG93H+KIGWcggSKUkradmuY6pwB0GWjXUGjzKaDIrgUs9b3VUTdxscBKmW+/bFZBOF3m5/71lGiKNSJ6N21vlwWiXdgX5Y2mOCIzD4dFrgfiCUCEM6ISIx6RZzWvw5wYPxjoLF/eNywKtMODlQdo9170ckh26zctA3nLvwi+zOcMNqUTg+r4/eMPf0W99P2gih5kdx9WqWzKMQdVrGDDy/GlOi6gb2tUcsagCYxhD7KJ4Ejl16ogENXFBb28dH8RX3r7CPdlav2yDA+TYzqQmtYENEFUIVxCT1XNORD2/bZ2qcNI2qmmANubEBUHwGPhWc49WOQw=
 
-    # DEFAULTS FOR COMPILERS
-    - C_COMPILER=clang-3.5
-    - CXX_COMPILER=clang++-3.5
-    - LLVM_VERSION=3.8.0
-    # TODO (bewo): Reenable Unit tests
-    - UNIT_TESTS=false
-    - BUILD_TYPE=Release
-  matrix:
-    - BOOST_VERSION=1.57.0
-    - BOOST_VERSION=1.58.0
-    - BOOST_VERSION=trunk
-
-cache:
-  directories:
-    - llvm-3.8.0
-
-before_install:
-  -
-    if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-      if [ -z "$(ls -A llvm-$LLVM_VERSION)" ]; then
-        wget -O llvm-$LLVM_VERSION.tar.xz http://llvm.org/releases/$LLVM_VERSION/clang+llvm-$LLVM_VERSION-x86_64-linux-gnu-ubuntu-14.04.tar.xz;
-        mkdir llvm-$LLVM_VERSION;
-        xzcat llvm-$LLVM_VERSION.tar.xz | tar -xvf - --strip 1 -C llvm-$LLVM_VERSION;
-      fi;
-      llvm-$LLVM_VERSION/bin/llvm-config --version;
-      export LLVM_CONFIG="llvm-$LLVM_VERSION/bin/llvm-config";
-    fi
-
+addons:
+  apt:
+    sources:
+      - boost-latest
+      - george-edison55-precise-backports
+      - llvm-toolchain-precise
+      - llvm-toolchain-precise-3.6
+      - llvm-toolchain-precise-3.7
+      - llvm-toolchain-precise-3.8
+      - ubuntu-toolchain-r-test
+    packages:
+      - cmake
+      - cmake-data
+      - doxygen
+      - libboost1.55-all-dev
+      - libcln-dev
+      - libeigen3-dev
+      - libgmp-dev
+      - libgmp
+      - libgtest-dev
+      - g++-4.8
+      - g++-4.9
+      - g++-5
+      - clang-3.6
+      - clang-3.7
+      - clang-3.8
+      - time
 
 matrix:
-  allow_failures:
-    - env: BOOST_VERSION=trunk
-    - env: CXX_COMPILER=clang++-3.7
-
   include:
-    # docs
-    - env: DOCUMENTATION=true
+    - os: linux
+      env: USE=g++-4.9
+    - os: linux
+      env: USE=g++-5
 
-    # clang 3.5
-    - env: C_COMPILER=clang-3.5 CXX_COMPILER=clang++-3.5
-      compiler: clang
-      addons: &clang35
-        apt:
-          packages: ["clang-3.5","cmake","cmake-data"]
-          sources: &sources ["ubuntu-toolchain-r-test","george-edison55-precise-backports"]
+    - os: linux
+      env: USE=clang++-3.6
+    - os: linux
+      env: USE=clang++-3.7
+    - os: linux
+      env: USE=clang++-3.8
 
-    # clang 3.6
-    - env: C_COMPILER=clang-3.6 CXX_COMPILER=clang++-3.6
-      compiler: clang
-      addons: &clang36
-        apt:
-          packages: ["clang-3.6","cmake","cmake-data"]
-          sources: &sources ["ubuntu-toolchain-r-test","george-edison55-precise-backports"]
-
-    # clang 3.7
-    - env: C_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7
-      compiler: clang
-      addons: &clang37
-        apt:
-          packages: ["clang-3.7","cmake","cmake-data"]
-          sources: &sources ["ubuntu-toolchain-r-test","george-edison55-precise-backports"]
-
-    # gcc 4.8
-    - env: C_COMPILER=gcc-4.8 CXX_COMPILER=g++-4.8
-      compiler: gcc
-      addons: &gcc48
-        apt:
-          sources: ['ubuntu-toolchain-r-test',"george-edison55-precise-backports"]
-          packages: ['g++-4.8',"cmake","cmake-data"]
-    # gcc 4.9
-    - env: C_COMPILER=gcc-4.9 CXX_COMPILER=g++-4.9
-      compiler: gcc
-      addons: &gcc49
-        apt:
-          sources: ['ubuntu-toolchain-r-test',"george-edison55-precise-backports"]
-          packages: ['g++-4.9',"cmake","cmake-data"]
-
-    # gcc 5.0
-    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5
-      compiler: gcc
-      addons: &gcc50
-        apt:
-          sources: ['ubuntu-toolchain-r-test',"george-edison55-precise-backports"]
-          packages: ['g++-5',"cmake","cmake-data"]
-
-
-    - env: C_COMPILER=clang-3.5 CXX_COMPILER=clang++-3.5 BUILD_TYPE=Debug
-      compiler: clang
-      addons: *clang35
-
-    - env: C_COMPILER=clang-3.6 CXX_COMPILER=clang++-3.6 BUILD_TYPE=Debug
-      compiler: clang
-      addons: *clang36
-
-    - env: C_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7 BUILD_TYPE=Debug
-      compiler: clang
-      addons: *clang37
-
-    - env: C_COMPILER=gcc-4.8 CXX_COMPILER=g++-4.8 BUILD_TYPE=Debug
-      compiler: gcc
-      addons: *gcc48
-
-    - env: C_COMPILER=gcc-4.9 CXX_COMPILER=g++-4.9 BUILD_TYPE=Debug
-      compiler: gcc
-      addons: *gcc49
-
-    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 BUILD_TYPE=Debug
-      compiler: gcc
-      addons: *gcc50
-
-
-# Those addons apply only to the documentation job.
-addons: *clang35
-
-install:
-  - export CXX=`which ${CXX_COMPILER}`
-  - echo $CXX
-  - export CC=`which ${C_COMPILER}`
-  - echo $CC
-
-  ############################################################################
-  # All the dependencies are installed to the deps/ subdirectory.
-  ############################################################################
-  - DEPS_DIR="${PWD}/deps"
-  - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
-
-  ############################################################################
-  # Install Boost headers
-  ############################################################################
-  - BOOST_URL="http://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.gz"
-  - if [[ "${BOOST_VERSION}" == "1.57.0" ]]; then BOOST_URL="http://sourceforge.net/projects/boost/files/boost/1.57.0/boost_1_57_0.tar.gz"; fi
-  - if [[ "${BOOST_VERSION}" == "1.58.0" ]]; then BOOST_URL="http://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.gz"; fi
-  - if [[ "${BOOST_VERSION}" == "trunk" ]];  then BOOST_URL="http://github.com/boostorg/boost.git"; fi
-
-  - if [[ "${BOOST_VERSION}" != "trunk" ]]; then mkdir boost && travis_retry wget --quiet -O - ${BOOST_URL} | tar --strip-components=1 -xz -C boost; fi
-  - if [[ "${BOOST_VERSION}" == "trunk" ]]; then travis_retry git clone --depth 1 --recursive --quiet ${BOOST_URL}; fi
-  - (cd boost && ./bootstrap.sh && ./b2 --with-system --with-test)
-
-
-  ############################################################################
-  # Install a recent Doxygen
-  ############################################################################
-  - DOXYGEN_URL="http://ftp.stack.nl/pub/users/dimitri/doxygen-1.8.9.1.linux.bin.tar.gz"
-  - mkdir doxygen && travis_retry wget --quiet -O - ${DOXYGEN_URL} | tar --strip-components=1 -xz -C doxygen
-  - export PATH=${PWD}/doxygen/bin:${PATH}
-
+    - os: linux
+      env: USE=clang++-3.6 TASK=doxygen
 
 before_script:
+  
   ############################################################################
   # Go back to the root of the project.
   ############################################################################
   - cd ${TRAVIS_BUILD_DIR}
+
+  ############################################################################
+  # Invoke Setup Script 
+  ############################################################################
+
+  - cd .travis/ && source setup_travis.sh && cd ../
 
   ############################################################################
   # Set the git identity (for pushing the documentation and the benchmarks)
@@ -185,10 +93,6 @@ before_script:
   # something like that, it's either a compiler bug or an error that will show
   # up regardless of the Boost version. Hence, we use the memory checker only
   # once for each compiler.
-
-  - export BOOST_ROOT=${DEPS_DIR}/boost
-
-  - cmake ../src -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DBOOST_LIBRARYDIR=${DEPS_DIR}/boost/lib -DBOOST_ROOT=${DEPS_DIR}/boost -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
 
 
 script:
