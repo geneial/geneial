@@ -41,22 +41,22 @@ addons:
 
 matrix:
   include:
-    - os: linux
-      env: LLVM_VERSION=3.6.2 USE=clang++-3.6 BUILD_TYPE=Debug
-    - os: linux
-      env: LLVM_VERSION=3.6.2 USE=clang++-3.6 BUILD_TYPE=Release
+#    - os: linux
+#      env: LLVM_VERSION=3.6.2 USE=clang++-3.6 BUILD_TYPE=Debug
+#    - os: linux
+#      env: LLVM_VERSION=3.6.2 USE=clang++-3.6 BUILD_TYPE=Release
 
 
-    - os: linux
-      env: LLVM_VERSION=3.7.1 USE=clang++-3.7 BUILD_TYPE=Debug
-    - os: linux
-      env: LLVM_VERSION=3.7.1 USE=clang++-3.7 BUILD_TYPE=Release
+#    - os: linux
+#      env: LLVM_VERSION=3.7.1 USE=clang++-3.7 BUILD_TYPE=Debug
+#    - os: linux
+#      env: LLVM_VERSION=3.7.1 USE=clang++-3.7 BUILD_TYPE=Release
 
 
-    - os: linux
-      env: LLVM_VERSION=3.8.0 USE=clang++-3.8 BUILD_TYPE=Debug
-    - os: linux
-      env: LLVM_VERSION=3.8.0 USE=clang++-3.8 BUILD_TYPE=Release
+#    - os: linux
+#      env: LLVM_VERSION=3.8.0 USE=clang++-3.8 BUILD_TYPE=Debug
+#    - os: linux
+#      env: LLVM_VERSION=3.8.0 USE=clang++-3.8 BUILD_TYPE=Release
 
     - os: linux
       env: USE=g++-4.9 BUILD_TYPE=Debug
@@ -70,7 +70,7 @@ matrix:
 
 
     - os: linux
-      env: LLVM_VERSION=3.6.2 USE=clang++-3.6 DOCUMENTATION=true BUILD_TYPE=Release
+      env: USE=g++-5 DOCUMENTATION=true BUILD_TYPE=Release
 
 before_script:
 
