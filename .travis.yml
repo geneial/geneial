@@ -50,47 +50,47 @@ matrix:
       compiler: clang
       addons: &clang35
         apt:
-          packages: ["clang-3.5"]
-          sources: &sources ["ubuntu-toolchain-r-test"]
+          packages: ["clang-3.5","cmake","cmake-data"]
+          sources: &sources ["ubuntu-toolchain-r-test","george-edison55-precise-backports"]
 
     # clang 3.6
     - env: C_COMPILER=clang-3.6 CXX_COMPILER=clang++-3.6
       compiler: clang
       addons: &clang36
         apt:
-          packages: ["clang-3.6"]
-          sources: &sources ["ubuntu-toolchain-r-test"]
+          packages: ["clang-3.6","cmake","cmake-data"]
+          sources: &sources ["ubuntu-toolchain-r-test","george-edison55-precise-backports"]
 
     # clang 3.7
     - env: C_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7
       compiler: clang
       addons: &clang37
         apt:
-          packages: ["clang-3.7"]
-          sources: &sources ["ubuntu-toolchain-r-test"]
+          packages: ["clang-3.7","cmake","cmake-data"]
+          sources: &sources ["ubuntu-toolchain-r-test","george-edison55-precise-backports"]
 
     # gcc 4.8
     - env: C_COMPILER=gcc-4.8 CXX_COMPILER=g++-4.8
       compiler: gcc
       addons: &gcc48
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.8']
+          sources: ['ubuntu-toolchain-r-test',"george-edison55-precise-backports"]
+          packages: ['g++-4.8',"cmake","cmake-data"]
     # gcc 4.9
     - env: C_COMPILER=gcc-4.9 CXX_COMPILER=g++-4.9
       compiler: gcc
       addons: &gcc49
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.9']
+          sources: ['ubuntu-toolchain-r-test',"george-edison55-precise-backports"]
+          packages: ['g++-4.9',"cmake","cmake-data"]
 
     # gcc 5.0
     - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5
       compiler: gcc
       addons: &gcc50
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-5']
+          sources: ['ubuntu-toolchain-r-test',"george-edison55-precise-backports"]
+          packages: ['g++-5',"cmake","cmake-data"]
 
 
     - env: C_COMPILER=clang-3.5 CXX_COMPILER=clang++-3.5 BUILD_TYPE=Debug
@@ -144,14 +144,6 @@ install:
   - if [[ "${BOOST_VERSION}" != "trunk" ]]; then mkdir boost && travis_retry wget --quiet -O - ${BOOST_URL} | tar --strip-components=1 -xz -C boost; fi
   - if [[ "${BOOST_VERSION}" == "trunk" ]]; then travis_retry git clone --depth 1 --recursive --quiet ${BOOST_URL}; fi
   - (cd boost && ./bootstrap.sh && ./b2 --with-system --with-test)
-
-  ############################################################################
-  # Install a recent CMake
-  ############################################################################
-  - CMAKE_URL=http://www.cmake.org/files/v3.2/cmake-3.2.1-Linux-x86_64.tar.gz
-  - mkdir cmake
-  - travis_retry wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
-  - export PATH=${PWD}/cmake/bin:${PATH}
 
 
   ############################################################################
