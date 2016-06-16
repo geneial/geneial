@@ -43,19 +43,35 @@ addons:
 matrix:
   include:
     - os: linux
-      env: USE=g++-4.9
+      env: USE=g++-4.9 BUILD_TYPE=Debug
     - os: linux
-      env: USE=g++-5
+      env: USE=g++-4.9 BUILD_TYPE=Release
 
     - os: linux
-      env: LLVM_VERSION=3.6.2 USE=clang++-3.6
+      env: USE=g++-5 BUILD_TYPE=Debug
     - os: linux
-      env: LLVM_VERSION=3.7.1 USE=clang++-3.7
-    - os: linux
-      env: LLVM_VERSION=3.8.0 USE=clang++-3.8
+      env: USE=g++-5 BUILD_TYPE=Release
 
     - os: linux
-      env: LLVM_VERSION=3.6.2 USE=clang++-3.6 DOCUMENTATION=true
+      env: LLVM_VERSION=3.6.2 USE=clang++-3.6 BUILD_TYPE=Debug
+    - os: linux
+      env: LLVM_VERSION=3.6.2 USE=clang++-3.6 BUILD_TYPE=Release
+
+
+    - os: linux
+      env: LLVM_VERSION=3.7.1 USE=clang++-3.7 BUILD_TYPE=Debug
+    - os: linux
+      env: LLVM_VERSION=3.7.1 USE=clang++-3.7 BUILD_TYPE=Release
+
+
+    - os: linux
+      env: LLVM_VERSION=3.8.0 USE=clang++-3.8 BUILD_TYPE=Debug
+    - os: linux
+      env: LLVM_VERSION=3.8.0 USE=clang++-3.8 BUILD_TYPE=Release
+
+
+    - os: linux
+      env: LLVM_VERSION=3.6.2 USE=clang++-3.6 DOCUMENTATION=true BUILD_TYPE=Release
 
 before_script:
 
@@ -101,6 +117,9 @@ before_script:
   ############################################################################
   - mkdir build/
   - cd build/
+  
+  - cmake ../src -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+
 
   - git config --global user.name "Travis bot"
   
