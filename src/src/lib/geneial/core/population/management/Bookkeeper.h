@@ -66,7 +66,9 @@ public:
 
     static inline void create(BaseBookkeeper &bookkeeper, const char* name, const T value)
     {
-        bookkeeper.traceEvent(name,new EventValueData(value));
+        EventValueData * evd = new EventValueData(value);
+        bookkeeper.traceEvent(name,evd);
+        delete evd;
     }
 
     T getValue() const
