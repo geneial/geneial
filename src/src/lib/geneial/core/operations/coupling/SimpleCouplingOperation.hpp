@@ -45,9 +45,9 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
      *  Parent4 /\ Child4
      *
      *  Parent5 \/ Child5
-     *  Parent1 /\ Child7
+     *  Parent1 /\ Child6
      *
-     *  Parent2 \/ Child8
+     *  Parent2 \/ Child7
      *  Parent3 /
      */
     for (typename mating_container::const_iterator it = mating_pool.begin(); offspring_left > 0;)
