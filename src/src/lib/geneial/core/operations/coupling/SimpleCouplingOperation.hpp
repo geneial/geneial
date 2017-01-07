@@ -36,7 +36,7 @@ typename BaseCouplingOperation<FITNESS_TYPE>::offspring_result_set SimpleCouplin
     assert(mating_pool.size() > 1);
     //iterate over mating candidates and create a pairwise mapping.
     /**
-     * Example getNumberOfOffspring: 8, #mating_pool = 5
+     * Example getNumberOfOffspring: 7, #mating_pool = 5
      *
      *  Parent1 \/ Child1
      *  Parent2 /\ Child2
