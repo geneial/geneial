@@ -78,20 +78,19 @@ matrix:
     - os: linux
       env: USE=g++-5 DOCKER=true BUILD_TYPE=Release
 
-before_install:
+
+before_script:
    - if [ "$TRAVIS_BRANCH" == "master" ]; then
        if [[ "${DOCKER}" == "true" ]]; then 
          cd ${TRAVIS_BUILD_DIR}
          docker build -t geneial/geneial .
          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
          docker push geneial/geneial;
+         exit
        fi
     fi
-
-before_script:
-
-  -
-    if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+    
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
       if [ -z "$(ls -A llvm-$LLVM_VERSION)" ]; then
         wget -O llvm-$LLVM_VERSION.tar.xz http://llvm.org/releases/$LLVM_VERSION/clang+llvm-$LLVM_VERSION-x86_64-linux-gnu-ubuntu-14.04.tar.xz;
         mkdir llvm-$LLVM_VERSION;
