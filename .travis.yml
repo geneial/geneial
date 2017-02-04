@@ -82,11 +82,11 @@ matrix:
 before_script:
    - if [ "$TRAVIS_BRANCH" == "master" ]; then
        if [[ "${DOCKER}" == "true" ]]; then 
-         cd ${TRAVIS_BUILD_DIR}
-         docker build -t geneial/geneial .
+         cd ${TRAVIS_BUILD_DIR};
+         docker build -t geneial/geneial .;
          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
          docker push geneial/geneial;
-         exit
+         exit;
        fi
     fi
     
