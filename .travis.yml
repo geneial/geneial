@@ -65,7 +65,7 @@ matrix:
     - os: linux
       env: USE=g++-5 DOCKER=true BUILD_TYPE=Release
 
-- os: linux
+    - os: linux
       env: USE=g++-5 DOCUMENTATION=true BUILD_TYPE=Release
 
 
