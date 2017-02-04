@@ -1,3 +1,11 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t carlad/sinatra .
+
 language: cpp
 
 #sudo: required
@@ -68,9 +76,10 @@ matrix:
     - os: linux
       env: USE=g++-5 BUILD_TYPE=Release
 
-
     - os: linux
       env: USE=g++-5 DOCUMENTATION=true BUILD_TYPE=Release
+    - os: linux
+      env: USE=g++-5 DOCKER=true BUILD_TYPE=Release
 
 before_script:
 
@@ -146,7 +155,9 @@ script:
   # Only push the documentation when we're on master, otherwise just make sure
   # it builds properly. 
   ############################################################################
-  - if [[ "${DOCUMENTATION}" == "true" ]]; then make doc; git config --global user.email "benedikt.wolters@rwth-aachen.de"; git config --global user.name "Travis Doxygen Builder"; git clone https://${SECRET_ACCESS_TOKEN}@github.com/geneial/geneial.github.io.git; cd geneial.github.io/; mkdir -p doc; cp -r ../doc/html ./doc/;  git add .;  git commit -m "Updated documentation for geneial"; git push origin master; fi 
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+       if [[ "${DOCUMENTATION}" == "true" ]]; then make doc; git config --global user.email "benedikt.wolters@rwth-aachen.de"; git config --global user.name "Travis Doxygen Builder"; git clone https://${SECRET_ACCESS_TOKEN}@github.com/geneial/geneial.github.io.git; cd geneial.github.io/; mkdir -p doc; cp -r ../doc/html ./doc/;  git add .;  git commit -m "Updated documentation for geneial"; git push origin master; fi 
+    fi
 
   ############################################################################
   # Build and run the unit tests and examples.
@@ -158,3 +169,14 @@ notifications:
   email:
     on_failure: always
     on_success: change
+
+
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+       if [[ "${DOCKER}" == "true" ]]; then 
+         cd ${TRAVIS_BUILD_DIR}
+         docker build -t geneial/geneial .
+         docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+         docker push geneial/geneial;
+       fi
+    fi
