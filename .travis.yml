@@ -3,9 +3,6 @@ sudo: required
 services:
   - docker
 
-before_install:
-  - docker build -t carlad/sinatra .
-
 language: cpp
 
 #sudo: required
@@ -80,6 +77,16 @@ matrix:
       env: USE=g++-5 DOCUMENTATION=true BUILD_TYPE=Release
     - os: linux
       env: USE=g++-5 DOCKER=true BUILD_TYPE=Release
+
+before_install:
+   - if [ "$TRAVIS_BRANCH" == "master" ]; then
+       if [[ "${DOCKER}" == "true" ]]; then 
+         cd ${TRAVIS_BUILD_DIR}
+         docker build -t geneial/geneial .
+         docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+         docker push geneial/geneial;
+       fi
+    fi
 
 before_script:
 
@@ -171,12 +178,3 @@ notifications:
     on_success: change
 
 
-after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-       if [[ "${DOCKER}" == "true" ]]; then 
-         cd ${TRAVIS_BUILD_DIR}
-         docker build -t geneial/geneial .
-         docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-         docker push geneial/geneial;
-       fi
-    fi
