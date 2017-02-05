@@ -2,7 +2,8 @@ libGeneiAL - A C++ Genetic Algorithm Library
 --------------------------------------------
 
 [![Build Status](https://travis-ci.org/geneial/geneial.svg?branch=master)](https://travis-ci.org/geneial/geneial)
-
+[![DUB](https://img.shields.io/dub/l/vibe-d.svg)]()
+[![Docker Automated buil](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)](https://hub.docker.com/r/geneial/geneial/)
 
 ##1. Building the library
 
