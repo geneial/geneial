@@ -20,7 +20,7 @@ void printTiming(const char* string, std::unordered_multimap<std::string, std::u
             [&os,&cma,&n,&min,&max](
                     std::pair<const std::string, std::unique_ptr<EventData>> &event)
             {
-                //static int n = 0;
+			//static int n = 0;
             EventValueData<double> *derivedPointer = dynamic_cast<EventValueData<double>*>(event.second.get());
             const double time = derivedPointer->getValue();
             max = std::max(max,time);

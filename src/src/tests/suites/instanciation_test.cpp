@@ -13,8 +13,8 @@
  *
  * This test is only compiled in the debug mode.
  *
- * This test can be compiled "exhaustively" to ensure max. compatability
- * with int, double, float instanciations of all templates.
+ * This test can be compiled "exhaustively" to ensure max. compatibility
+ * with int, double, float instantiations of all templates.
  *
  */
 
@@ -37,10 +37,11 @@
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
 
 #include <geneial/core/operations/choosing/ChooseRandom.h>
-//#include <geneial/core/operations/choosing/LambdaChoosingAdapter.h>
+#include <geneial/core/operations/choosing/LambdaChoosingAdapter.h>
 
 #include <geneial/core/operations/mutation/SmoothPeakMutationOperation.h>
 #include <geneial/core/operations/mutation/UniformMutationOperation.h>
+#include <geneial/core/operations/mutation/ValueSwapMutationOperation.h>
 
 #include <geneial/core/operations/coupling/SimpleCouplingOperation.h>
 #include <geneial/core/operations/coupling/RandomCouplingOperation.h>
@@ -50,6 +51,9 @@
 #include <geneial/core/operations/crossover/MultiValueChromosomeBlendingCrossover.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeNPointCrossover.h>
 #include <geneial/core/operations/crossover/SmoothedMultiValueChromosomeNPointCrossover.h>
+#include <geneial/core/operations/crossover/MultiValuePermutationCrossover.h>
+
+
 
 #include <geneial/core/operations/replacement/ReplaceRandomOperation.h>
 #include <geneial/core/operations/replacement/ReplaceWorstOperation.h>
@@ -100,11 +104,12 @@ Expander1D(geneial::algorithm::stopping_criteria::StatefulStoppingCriterion)
 
 //Choosing
 Expander1D(geneial::operation::choosing::ChooseRandom)
-//Expander1D(geneial::operation::choosing::LambdaChoosingAdapter)
+Expander1D(geneial::operation::choosing::LambdaChoosingAdapter)
 
 //Mutation
 Expander2D(geneial::operation::mutation::SmoothPeakMutationOperation)
 Expander2D(geneial::operation::mutation::UniformMutationOperation)
+Expander2D(geneial::operation::mutation::ValueSwapMutationOperation)
 
 //Coupling
 Expander1D(geneial::operation::coupling::RandomCouplingOperation)
@@ -116,6 +121,7 @@ Expander2D(geneial::operation::crossover::SmoothedMultiValueChromosomeNPointCros
 Expander2D(geneial::operation::crossover::MultiValueChromosomeAverageCrossover)
 Expander2D(geneial::operation::crossover::MultiValueChromosomeBlendingCrossover)
 Expander2D(geneial::operation::crossover::MultiValueChromosomeNPointCrossover)
+Expander2D(geneial::operation::crossover::MultiValuePermutationCrossover)
 
 //Replacement
 Expander1D(geneial::operation::replacement::ReplaceRandomOperation)

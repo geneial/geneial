@@ -8,6 +8,7 @@
 #include <ratio>
 #include <functional>
 #include <memory>
+#include <iostream>
 
 //TODO(bewo): Clean this up.
 
@@ -68,7 +69,6 @@ public:
     {
         EventValueData * evd = new EventValueData(value);
         bookkeeper.traceEvent(name,evd);
-        delete evd;
     }
 
     T getValue() const
@@ -93,8 +93,9 @@ public:
     {
     }
 
-    virtual void traceEvent(const char*, EventData*) override
+    virtual void traceEvent(const char*, EventData* evd) override
     {
+    	delete evd;
     }
 };
 

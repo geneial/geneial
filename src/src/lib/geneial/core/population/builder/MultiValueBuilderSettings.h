@@ -51,7 +51,7 @@ public:
         return _numberallee;
     }
 
-    void setNum(unsigned int num)
+    inline void setNum(unsigned int num)
     {
         _numberallee = num;
     }
@@ -61,7 +61,7 @@ public:
         return _random_max;
     }
 
-    void inline setRandomMax(VALUE_TYPE randomMax)
+    inline void setRandomMax(VALUE_TYPE randomMax)
     {
         _random_max = randomMax;
     }
@@ -71,7 +71,7 @@ public:
         return _random_min;
     }
 
-    void setRandomMin(VALUE_TYPE randomMin)
+    inline void setRandomMin(VALUE_TYPE randomMin)
     {
         _random_min = randomMin;
     }

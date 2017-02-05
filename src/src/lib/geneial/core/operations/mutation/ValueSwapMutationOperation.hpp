@@ -1,11 +1,13 @@
 #pragma once
 
-#include <geneial/core/operations/mutation/UniformMutationOperation.h>
+#include <geneial/core/operations/mutation/ValueSwapMutationOperation.h>
 #include <geneial/core/population/builder/BuilderSettings.h>
 #include <geneial/core/operations/mutation/BaseMutationOperation.h>
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
 #include <geneial/core/operations/mutation/MultiValueMutationSettings.h>
 #include <geneial/core/population/Population.h>
+
+#include <geneial/utility/mixins/Hasher.h>
 
 #include <unordered_set>
 #include <iterator>
@@ -19,28 +21,27 @@ geneial_private_namespace(mutation)
 {
 using ::geneial::population::chromosome::BaseChromosomeFactory;
 using ::geneial::utility::Random;
+using ::geneial::utility::PairHasher;
 
 geneial_export_namespace
 {
 /*
  *  Returns a chromosome container with some new chromosomes which are partially mutated versions of the old ones.
  *
- *  Targetpoints for mutation represent the choosen values within an Chromosome to be changed
- *  Example for 3 Points of Mutation:
+ *  This mutation swaps elements at random and is intended for permutation chromosomes
  *
  *   Old Chrom.                      New Chrom.
- *      (X)  <-- Mutate this value -->  (Y)
- *      (X)                             (X)
- *      (X)                             (X)
- *      (X)  <-- Mutate this value -->  (Y)
- *      (X)                             (X)
- *      (X)  <-- Mutate this value -->  (Y)
- *      (X)                             (X)
- *
+ *      (1)                            (1)
+ *      (2) <---\                      (5)
+ *      (3)     |                      (3)
+ *      (4)     | Swap those Values    (4)
+ *      (5) <---/                      (2)
+ *      (6)                            (6)
+ *      (7)                            (7)
  *
  **/
 template<typename VALUE_TYPE, typename FITNESS_TYPE>
-typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate(
+typename Population<FITNESS_TYPE>::chromosome_container ValueSwapMutationOperation<VALUE_TYPE, FITNESS_TYPE>::doMutate(
         const typename Population<FITNESS_TYPE>::chromosome_container &chromosomeInputContainer,
         BaseManager<FITNESS_TYPE> &manager) const
 {
@@ -62,8 +63,6 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
 
 
 
-    const auto randomMin = this->getBuilderFactory().getSettings().getRandomMin();
-    const auto randomMax = this->getBuilderFactory().getSettings().getRandomMax() ;
     const auto maxNumMvc = this->getBuilderFactory().getSettings().getNum();
 
 
@@ -89,18 +88,22 @@ typename Population<FITNESS_TYPE>::chromosome_container UniformMutationOperation
         std::copy(mutantChromosomeContainer.begin(),mutantChromosomeContainer.end(),result_container.begin());
 
         //Predetermine Positions for Mutation:
-        std::unordered_set<unsigned int> positions;
-        while (positions.size() < slotsToMutate)
+        std::unordered_set<std::pair<unsigned int,unsigned int>,PairHasher> positionsToSwap;
+        while (positionsToSwap.size() < slotsToMutate)
         {
-            positions.emplace(Random::generate<unsigned int>(0, maxNumMvc - 1));
+        	unsigned int swapA = Random::generate<unsigned int>(0,maxNumMvc - 1);
+			unsigned int swapB;
+			do{
+				swapB = Random::generate<unsigned int>(0, maxNumMvc - 1);
+			}while(swapA == swapB);
+        	positionsToSwap.emplace(std::make_pair(swapA,swapB));
         }
 
-        for(const auto pos : positions)
+        for(const auto posPair : positionsToSwap)
         {
-            const VALUE_TYPE randomMutation = Random::generate<VALUE_TYPE>(randomMin, randomMax);
-            result_container[pos] = randomMutation;
+        	auto iterBegin = result_container.begin();
+        	iter_swap(iterBegin + posPair.first, iterBegin + posPair.second);
         }
-
 
         //Age reset
         mutatedChromosome->setAge(0);

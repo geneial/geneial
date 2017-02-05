@@ -1,7 +1,6 @@
 #pragma once
 
 #include <geneial/namespaces.h>
-#include <geneial/core/operations/mutation/MutationSettings.h>
 #include <geneial/core/operations/choosing/BaseChoosingOperation.h>
 
 #include <geneial/utility/mixins/Buildable.h>
@@ -14,7 +13,6 @@ geneial_private_namespace(operation)
 geneial_private_namespace(choosing)
 {
 using ::geneial::population::Population;
-using ::geneial::operation::mutation::MutationSettings;
 using ::geneial::utility::EnableMakeShared;
 
 geneial_export_namespace
@@ -25,20 +23,10 @@ template<typename FITNESS_TYPE>
 class LambdaChoosingAdapter:    public BaseChoosingOperation<FITNESS_TYPE>,
                                 public EnableMakeShared<LambdaChoosingAdapter<FITNESS_TYPE>>
 {
-private:
-    function_type _function;
-
-protected:
-    explicit LambdaChoosingAdapter(const function_type& function) :
-            BaseChoosingOperation<FITNESS_TYPE>(),
-            _function(function)
-    {
-    }
-
 public:
     using input_set = typename Population<FITNESS_TYPE>::chromosome_container;
     using output_set = typename Population<FITNESS_TYPE>::chromosome_container;
-    using function_type = typename std::function<offspring_result_set(const input_set&)>;
+    using function_type = typename std::function<output_set(const input_set&)>;
 
     virtual ~LambdaChoosingAdapter()
     {
@@ -77,7 +65,14 @@ public:
             return *this;
         }
     };
-
+private:
+	function_type _function;
+protected:
+    explicit LambdaChoosingAdapter(const function_type& function) :
+            BaseChoosingOperation<FITNESS_TYPE>(),
+            _function(function)
+    {
+    }
 };
 
 } /* geneial_export_namespace */

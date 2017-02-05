@@ -39,7 +39,7 @@ public:
     }
 
     /**
-     * Chooses from an chromosomeContainer Random values. The propability that a Chromosome is choosen and therefore part of the
+     * Chooses from an chromosomeContainer Random values. The probability that a Chromosome is choosen and therefore part of the
      * resultset is defined in MutationSettings.
      */
     virtual typename Population<FITNESS_TYPE>::chromosome_container doChoose(

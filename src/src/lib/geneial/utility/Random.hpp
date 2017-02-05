@@ -129,7 +129,7 @@ bool Random::decision(const double probability)
 
 inline void Random::initialize()
 {
-    //srand(static_cast<unsigned>(time(0)));
+    srand(static_cast<unsigned>(time(0)));
     sInitialized = true;
 }
 } /* geneial_export_namespace */
