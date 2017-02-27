@@ -128,8 +128,6 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValuePe
     copyContainerPart<VALUE_TYPE,FITNESS_TYPE>(startWithMommy?mommy_container:daddy_container, child_container, copyMode, where);
     copyRemainder<VALUE_TYPE,FITNESS_TYPE>(startWithMommy?daddy_container:mommy_container, child_container, copyMode, where);
 
-    assert(std::accumulate(child_container.begin(),child_container.end(),0) == 6);
-
     //Now some parts of the container have elements of mommy/daddy.
     //Next we need to fill up the gap with
 
@@ -142,4 +140,3 @@ typename BaseCrossoverOperation<FITNESS_TYPE>::crossover_result_set MultiValuePe
 } /* private namespace crossover */
 } /* private namespace operation */
 } /* private namespace geneial */
-
