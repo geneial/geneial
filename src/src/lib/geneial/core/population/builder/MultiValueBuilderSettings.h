@@ -25,22 +25,28 @@ private:
 
 public:
 
-    static constexpr const VALUE_TYPE DEFAULT_RANDOM_MAX = 100;
-
-    static constexpr const VALUE_TYPE DEFAULT_RANDOM_MIN = 0;
+    // static constexpr const VALUE_TYPE DEFAULT_RANDOM_MAX = 100;
+		//
+    // static constexpr const VALUE_TYPE DEFAULT_RANDOM_MIN = 0;
 
     static constexpr const unsigned int DEFAULT_NUM = 2;
 
     MultiValueBuilderSettings( const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator,
-                               const unsigned int num = DEFAULT_NUM,
-                               const VALUE_TYPE random_max = DEFAULT_RANDOM_MAX,
-                               const VALUE_TYPE random_min = DEFAULT_RANDOM_MIN ) :
+                               const unsigned int num,
+                               const VALUE_TYPE random_max,
+                               const VALUE_TYPE random_min) :
             BuilderSettings<FITNESS_TYPE>(fitnessEvaluator),
             _random_max(random_max),
             _random_min(random_min),
             _numberallee(num)
     {
     }
+
+		MultiValueBuilderSettings( const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) :
+						BuilderSettings<FITNESS_TYPE>(fitnessEvaluator)
+		{
+		}
+
 
     virtual ~MultiValueBuilderSettings()
     {
@@ -81,4 +87,3 @@ public:
 } /* private namespace chromosome */
 } /* private namespace population */
 } /* private namespace geneial */
-

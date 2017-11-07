@@ -32,12 +32,17 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
     result.reserve(this->getSettings().getNumberOfParents()+this->_settings->getNumberSelectBest());
 
     //Calculate total sum of fitness
-    const FITNESS_TYPE sum = std::accumulate(population.getFitnessMap().cbegin(), population.getFitnessMap().cend(), 0,
-            [](FITNESS_TYPE total, const typename Population<FITNESS_TYPE>::fitness_map::value_type& mapdata)
-            {
-                total += (mapdata.second)->getFitness().get();
-                return total;
-            });
+    FITNESS_TYPE sum;
+		for (const auto& it : population.getFitnessMap())
+    {
+        sum+= (it.second)->getFitness().get();
+    }
+
+		if( sum ==  0)
+		{
+			std::cout << "NOT FITNESS VALUES !\n\n" << population << std::endl;
+			std::cout << *(population.getFitnessMap().cbegin()->second) << std::endl;
+		}
 
     assert(sum > 0);
 
@@ -99,4 +104,3 @@ typename BaseSelectionOperation<FITNESS_TYPE>::selection_result_set FitnessPropo
 } /* private namespace selection */
 } /* private namespace operation */
 } /* private namespace geneial */
-

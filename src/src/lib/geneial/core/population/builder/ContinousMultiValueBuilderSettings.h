@@ -31,18 +31,30 @@ public:
     const static bool DEFAULT_EPS = 1;
 
     ContinousMultiValueBuilderSettings(const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator,
-                                       const unsigned int num = MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>::DEFAULT_NUM,
-                                       const VALUE_TYPE random_max = MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>::DEFAULT_RANDOM_MAX,
-                                       const  VALUE_TYPE random_min = MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>::DEFAULT_RANDOM_MIN,
-                                       const bool hasStart = DEFAULT_HAS_START,
-                                       const VALUE_TYPE start = DEFAULT_START,
-                                       const VALUE_TYPE eps = DEFAULT_EPS) :
+                                       const unsigned int num,
+                                       const VALUE_TYPE random_max,
+                                       const VALUE_TYPE random_min,
+                                       const bool hasStart,
+                                       const VALUE_TYPE start,
+                                       const VALUE_TYPE eps) :
             MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>(fitnessEvaluator, num, random_max, random_min),
             _hasStart(hasStart),
             _start(start), //Start point for generating ContinousChromomsomes
             _eps(eps) //Eps derivation from previous point per step
     {
     }
+
+		ContinousMultiValueBuilderSettings(const typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator,
+                                       const bool hasStart = DEFAULT_HAS_START,
+                                       const VALUE_TYPE start = DEFAULT_START,
+                                       const VALUE_TYPE eps = DEFAULT_EPS) :
+            MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>(fitnessEvaluator),
+            _hasStart(hasStart),
+            _start(start), //Start point for generating ContinousChromomsomes
+            _eps(eps) //Eps derivation from previous point per step
+    {
+    }
+
 
     virtual ~ContinousMultiValueBuilderSettings()
     {
