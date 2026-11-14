@@ -2,63 +2,63 @@
 
 #include <geneial/algorithm/criteria/BaseStoppingCriterion.h>
 #include <geneial/core/population/Population.h>
-
+#include <stdexcept>
 
 geneial_private_namespace(geneial)
 {
-geneial_private_namespace(algorithm)
-{
-geneial_private_namespace(stopping_criteria)
-{
-using ::geneial::population::management::BaseManager;
-
-geneial_export_namespace
-{
-
-/**
- * Decorator that negates a criterion
- */
-template<typename FITNESS_TYPE>
-class NegationDecorator: public BaseStoppingCriterion<FITNESS_TYPE>
-{
-public:
-    typedef typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion;
-
-    NegationDecorator(typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion) :
-            _criterion(criterion)
+    geneial_private_namespace(algorithm)
     {
-    }
+        geneial_private_namespace(stopping_criteria)
+        {
+            using ::geneial::population::management::BaseManager;
 
-    virtual ~NegationDecorator()
-    {
-    }
+            geneial_export_namespace
+            {
 
-    virtual inline bool wasReached(BaseManager<FITNESS_TYPE> &manager)
-    {
-        return !(_criterion->wasReached(manager));
-    }
+                /**
+                 * Decorator that negates a criterion
+                 */
+                template <typename FITNESS_TYPE> class NegationDecorator : public BaseStoppingCriterion<FITNESS_TYPE>
+                {
+                  public:
+                    typedef typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion;
 
-    virtual void print(std::ostream& os) const
-    {
-        os << "Negated (" << _criterion << ")";
-    }
+                    NegationDecorator(typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion)
+                        : _criterion(criterion)
+                    {
+                        if (!criterion)
+                            throw std::invalid_argument("Criterion cannot be null");
+                    }
 
-    const criterion& getCriterion() const
-    {
-        return _criterion;
-    }
+                    virtual ~NegationDecorator() {}
 
-    void setCriterion(const criterion& criterion)
-    {
-        _criterion = criterion;
-    }
+                    virtual inline bool wasReached(BaseManager<FITNESS_TYPE> &manager)
+                    {
+                        return !(_criterion->wasReached(manager));
+                    }
 
-private:
-    criterion _criterion;
+                    virtual void print(std::ostream &os) const
+                    {
+                        os << "Negated (" << *_criterion << ")";
+                    }
 
-};
+                    const criterion &getCriterion() const
+                    {
+                        return _criterion;
+                    }
 
-} /* geneial_export_namespace */
-} /* private namespace stopping_criteria */
-} /* private namespace algorithm */
+                    void setCriterion(const criterion &criterion)
+                    {
+                        if (!criterion)
+                            throw std::invalid_argument("Criterion cannot be null");
+                        _criterion = criterion;
+                    }
+
+                  private:
+                    criterion _criterion;
+                };
+
+            } /* geneial_export_namespace */
+        } /* private namespace stopping_criteria */
+    } /* private namespace algorithm */
 } /* private namespace geneial */

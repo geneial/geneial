@@ -2,101 +2,84 @@
 
 #include <geneial/algorithm/criteria/StatefulStoppingCriterion.h>
 
+#include <cmath>
 #include <deque>
+#include <limits>
+#include <stdexcept>
+#include <type_traits>
 
 geneial_private_namespace(geneial)
 {
-geneial_private_namespace(algorithm)
-{
-geneial_private_namespace(stopping_criteria)
-{
-using ::geneial::population::management::BaseManager;
-
-geneial_export_namespace
-{
-
-//TODO (bewo) proper doc
-//Idea to implemented here
-//count the last best xx chromosomes, each iteration count the derivation in the best chromosome
-//abort if derivation is below certain threshold (typically 0)
-template <typename FITNESS_TYPE>
-class FixPointCriterion : public StatefulStoppingCriterion<FITNESS_TYPE>
-{
-public:
-    virtual ~FixPointCriterion() {};
-
-    FixPointCriterion(const FITNESS_TYPE threshold = 0, const FITNESS_TYPE windowSize = 10, const FITNESS_TYPE minDiff = 1):
-                     _windowSize(windowSize),
-                     _threshold(threshold),
-                     _minDiff(minDiff)
+    geneial_private_namespace(algorithm)
     {
-        assert(_minDiff <= _windowSize);
-        assert(_minDiff > 0);
-    }
-
-    virtual void print(std::ostream& os) const
-    {
-        os << "FixPoint"
-                << "(thres:"
-                << _threshold
-                << ",min:"
-                << _minDiff
-                << "winsize:"
-                << _windowSize
-                << ")";
-    }
-
-    virtual bool wasStatefullyReached(BaseManager<FITNESS_TYPE> &manager)
-    {
-        updateWindowValues(manager);
-
-        bool result = false;
-
-        if(_window.size() >= _minDiff)
+        geneial_private_namespace(stopping_criteria)
         {
-            const FITNESS_TYPE latest = _window.front();
-            const FITNESS_TYPE oldest = _window.back();
-            //Ignore if we became worse.
-            if(latest >= oldest)
+            using ::geneial::population::management::BaseManager;
+            geneial_export_namespace
             {
-                result = (latest - oldest) <= _threshold;
+                /** Stops when nonnegative improvement over a bounded observation window is within the threshold. */
+                template <typename FITNESS_TYPE>
+                class FixPointCriterion : public StatefulStoppingCriterion<FITNESS_TYPE>
+                {
+                  public:
+                    FixPointCriterion(const FITNESS_TYPE threshold = 0, const FITNESS_TYPE windowSize = 10,
+                                      const FITNESS_TYPE minDiff = 2)
+                        : _windowSize(validateCount(windowSize)), _threshold(threshold),
+                          _minDiff(validateCount(minDiff))
+                    {
+                        if (!std::isfinite(static_cast<long double>(threshold)) || threshold < 0 ||
+                            _minDiff > _windowSize)
+                            throw std::invalid_argument(
+                                "Fix-point threshold must be finite/nonnegative and observation counts valid");
+                    }
+
+                    void reset() override
+                    {
+                        StatefulStoppingCriterion<FITNESS_TYPE>::reset();
+                        _window.clear();
+                    }
+
+                    bool wasStatefullyReached(BaseManager<FITNESS_TYPE> &manager) override
+                    {
+                        _window.push_front(manager.getHighestFitness());
+                        if (_window.size() > _windowSize)
+                            _window.pop_back();
+                        if (_window.size() < _minDiff || _window.front() < _window.back())
+                            return false;
+                        if constexpr (std::is_integral_v<FITNESS_TYPE> && !std::is_same_v<FITNESS_TYPE, bool>)
+                        {
+                            using Unsigned = std::make_unsigned_t<FITNESS_TYPE>;
+                            const auto improvement = static_cast<Unsigned>(static_cast<Unsigned>(_window.front()) -
+                                                                           static_cast<Unsigned>(_window.back()));
+                            return improvement <= static_cast<Unsigned>(_threshold);
+                        }
+                        return static_cast<long double>(_window.front()) - static_cast<long double>(_window.back()) <=
+                               _threshold;
+                    }
+
+                    void print(std::ostream &stream) const override
+                    {
+                        stream << "FixPoint(threshold:" << _threshold << ",minimum:" << _minDiff
+                               << ",window:" << _windowSize << ")";
+                    }
+
+                  private:
+                    static unsigned int validateCount(FITNESS_TYPE value)
+                    {
+                        const long double count = value;
+                        if (!std::isfinite(count) || count < 2 || count > std::numeric_limits<unsigned int>::max() ||
+                            std::floor(count) != count)
+                            throw std::invalid_argument(
+                                "Fix-point observation counts must be whole numbers of at least two");
+                        return static_cast<unsigned int>(value);
+                    }
+
+                    const unsigned int _windowSize;
+                    const FITNESS_TYPE _threshold;
+                    const unsigned int _minDiff;
+                    std::deque<FITNESS_TYPE> _window;
+                };
             }
         }
-
-        return result;
     }
-
-protected:
-    void inline updateWindowValues(BaseManager<FITNESS_TYPE> &manager)
-    {
-            const FITNESS_TYPE bestFitness = manager.getHighestFitness();
-            assert(_window.size() <= _windowSize);
-
-            _window.push_front(bestFitness);
-
-            while(_window.size()>_windowSize)
-            {
-                _window.pop_back();
-            }
-
-            assert(_window.size() <= _windowSize);
-    }
-
-private:
-    //Window to "look back"
-    const unsigned int _windowSize;
-
-    //Difference threshold between first and last of window
-    FITNESS_TYPE _threshold;
-
-    std::deque<FITNESS_TYPE> _window;
-
-    //minimum window size for a compare
-    const unsigned int _minDiff;
-
-};
-
-} /* geneial_export_namespace */
-} /* private namespace stopping_criteria */
-} /* private namespace algorithm */
-} /* private namespace geneial */
+}
