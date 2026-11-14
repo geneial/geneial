@@ -140,7 +140,7 @@ int main(int argc, char **argv)
         builder.getSettings().setRandomMax(PALETTE.size() - 1);
         auto factory = std::dynamic_pointer_cast<showcase::Factory>(builder.create());
         auto algorithm = showcase::buildAlgorithm(factory, options, false, true);
-        showcase::run(algorithm, options, "Teach evolution to paint a planet",
+        showcase::run(algorithm, options, "Palette image",
                       "A tiny pixel painter starts with random noise and a sixteen-color palette. Each chromosome "
                       "encodes a complete image. "
                       "Four-point crossover exchanges patches; mutation changes a few pixels. Squared RGB error is the "

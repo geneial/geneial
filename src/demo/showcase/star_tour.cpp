@@ -92,7 +92,7 @@ int main(int argc, char **argv)
         auto evaluator = std::make_shared<showcase::VectorEvaluator>([&stars](std::span<const int> tour)
                                                                      { return -tourLength(tour, stars); });
         auto algorithm = showcase::buildAlgorithm(showcase::permutationFactory(options.size, evaluator), options, true);
-        showcase::run(algorithm, options, "The shortest way through the stars",
+        showcase::run(algorithm, options, "Travelling salesperson",
                       "A travelling-salesperson mission through a three-armed galaxy. Every star is visited once, and "
                       "the ship returns home. "
                       "Order-preserving crossover and swap mutation turn tangled flight plans into shorter routes.",

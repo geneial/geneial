@@ -8,30 +8,28 @@
       content="Build GeneiAL, run evolutionary art experiments, and integrate the C++20 library."
     />
     <title>Developer guide — GeneiAL</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=technical-1" />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <header>
-      <a class="brand" href="index.html"
-        ><span class="mark" aria-hidden="true">g/</span> geneial</a
-      >
+      <a class="brand" href="index.html">GeneiAL</a>
       <nav aria-label="Main">
-        <a href="index.html#gallery">Explore</a
-        ><a href="guide.html" aria-current="page">Get started</a
-        ><a href="https://github.com/geneial/geneial">GitHub ↗</a>
+        <a href="index.html#gallery">Examples</a
+        ><a href="guide.html" aria-current="page">Documentation</a
+        ><a href="https://github.com/geneial/geneial">GitHub</a>
       </nav>
     </header>
     <main id="main" class="guide">
-      <div class="eyebrow">THE DEVELOPER GUIDE / 0.3</div>
-      <h1>Build. Mutate. Repeat.</h1>
+      <div class="eyebrow">GeneiAL 0.3</div>
+      <h1>Developer guide</h1>
       <p>
         GeneiAL maximizes a fitness function over a population of chromosomes.
         Operators define who reproduces, how genomes recombine, which mutations
         occur, and when the search stops. For minimization, return the negative
         cost.
       </p>
-      <h2>01 / Get a working build</h2>
+      <h2>Build requirements</h2>
       <p>
         Requirements: a C++20 compiler and standard library with
         <code>std::span</code> and <code>std::jthread</code>, CMake 3.21+, and
@@ -59,18 +57,20 @@ ctest --preset release --output-on-failure</code></pre>
         <code>cmake -S src -B output/legacy</code> entry point remains
         supported.
       </p>
-      <h2>02 / Run the experiments</h2>
+      <h2>Run the examples</h2>
       <pre><code>mkdir -p output/art
 ./output/release/src/demo/voronoi_art \
-  --seed 42 --threads 4 --shapes 24 --generations 6000 \
+  --seed 42 --threads 4 --shapes 24 --max-shapes 256 --generations 6000 \
   --output output/art/cells
 ./output/release/src/demo/triangle_art \
-  --seed 42 --threads 4 --shapes 50 --generations 12000 \
+  --seed 42 --threads 4 --shapes 96 --generations 12000 \
   --output output/art/triangles
 
 # Use your own target (P3/P6 PPM, 8-bit samples)
 ./output/release/src/demo/triangle_art \
-  --input your-image.ppm --output output/art/custom</code></pre>
+  --input your-image.ppm --resolution 192 --output output/art/custom
+./output/release/src/demo/maze --seed 42 --size 18 \
+  --output output/art/maze</code></pre>
       <p>
         Open the exported <code>.html</code> directly: it contains its own
         artwork, replay controls, and fitness chart. The <code>.svg</code> is
@@ -90,7 +90,9 @@ ctest --preset release --output-on-failure</code></pre>
           <tr>
             <td>voronoi_art</td>
             <td>Colored sites / RGB mean squared error</td>
-            <td>--shapes: initial sites; grows to 128</td>
+            <td>
+              --shapes: initial sites; --max-shapes: growth limit (up to 256)
+            </td>
           </tr>
           <tr>
             <td>triangle_art</td>
@@ -112,6 +114,11 @@ ctest --preset release --output-on-failure</code></pre>
             <td>Palette indices / total RGB squared error</td>
             <td>--generations</td>
           </tr>
+          <tr>
+            <td>maze</td>
+            <td>Cardinal move sequences / corridor-distance progress</td>
+            <td>--size 4..32; --seed generates a new maze</td>
+          </tr>
         </tbody>
       </table>
       <p>
@@ -120,35 +127,48 @@ ctest --preset release --output-on-failure</code></pre>
         <code>--output</code>. Output parent directories must exist. Longer art
         runs generally help, but convergence is heuristic and not guaranteed.
       </p>
-      <h2>03 / Understand the art</h2>
-      <h3>Chromatic cells</h3>
+      <h2>Art and maze algorithms</h2>
+      <h3>Voronoi portrait</h3>
       <p>
         Each site stores x/y coordinates and RGB color. Each fitness pixel takes
-        the color of its nearest site. Local mutations move sites or adjust
-        color. Duplication adds material that can diverge; deletion lets
-        neighboring cells fill the gap. The genome varies between 4 and 128
+        the color of its nearest site. Multiscale mutations move sites; new
+        sites target high-error regions, and occasional deletion removes
+        material. Exact cell means fit the colors. The genome can grow to 256
         sites. Half-plane clipping creates the final vector cells without SciPy
         or a graphics library.
       </p>
       <h3>EvoLisa</h3>
       <p>
         Each triangle has six coordinate genes, RGB, and alpha. Fifty layers by
-        default are composited in order over a dark background. Small mutations
-        alter geometry and paint, occasional swaps alter layer order, and
-        shape-block crossover mixes parents. CPU workers evaluate independent
-        candidate rasters in parallel.
+        default are composited in order over a dark background (96 in the
+        gallery). Fine, medium, and broad mutations alter geometry and alpha;
+        error-guided restarts keep exploring and shape-block crossover mixes
+        parents. Least-squares color refinement accounts for later-layer
+        occlusion. CPU workers evaluate independent candidates and color
+        refinements in parallel.
       </p>
       <p>
-        Both initialize colors by sampling the target at site positions or
-        triangle centroids; initial geometry is random. Fitness uses a target
-        downsampled to at most 40 × 60, squared error in encoded RGB space, and
-        non-antialiased pixel-center sampling. SVG rendering is
+        Both are hybrid genetic searches with analytical color fitting and
+        random initial geometry. The reference retains 396 × 599 pixels. Fitness
+        uses a separate area-averaged raster with a 128-pixel longest edge by
+        default (<code>--resolution 32..256</code>), squared error in encoded
+        RGB space, and non-antialiased pixel-center sampling. SVG rendering is
         resolution-independent and browser-antialiased, so the PPM—not a
         screenshot—is the exact fitness image. This is an educational CPU
         implementation inspired by the linked work, not a performance or
         reproduction claim.
       </p>
-      <h2>04 / Use it in your project</h2>
+      <h3>Random mazes</h3>
+      <p>
+        <a href="maze.html">Open the live maze playground →</a> Generate
+        connected random mazes, change seeds, release a population, and pause or
+        step the evolution. A distance field guides fitness without injecting
+        routes. Legal-corridor mutation and loop-erasure repair evolve shorter
+        escape routes. The live playground runs JavaScript; the native C++
+        example exports the usual standalone replay. Both share a tested maze
+        generator, not identical search histories.
+      </p>
+      <h2>Library integration</h2>
       <pre><code>cmake --preset library
 cmake --build --preset library
 cmake --install output/library --prefix "$HOME/.local"</code></pre>
@@ -172,7 +192,7 @@ target_link_libraries(your_program PRIVATE geneial::geneial)
           >complete showcase sources</a
         >.
       </p>
-      <h2>05 / Reproducibility and safety</h2>
+      <h2>Reproducibility and safety</h2>
       <p>
         Return finite fitness scores. Populations reject null candidates and
         NaN/infinity, resolve hash collisions with full genome equality, and
@@ -223,13 +243,13 @@ target_link_libraries(your_program PRIVATE geneial::geneial)
         Diagnostics remain owner-thread APIs, and scoped timers may outlive
         their bookkeeper.
       </p>
-      <h2>06 / Build this website</h2>
+      <h2>Build this website</h2>
       <pre><code>cmake --build --preset release --target website
 python3 -m http.server 8765 --bind 127.0.0.1 \
   --directory output/release/site
 # Browse http://127.0.0.1:8765</code></pre>
       <p>
-        The target runs all five real searches and assembles a dependency-free
+        The target runs all six real searches and assembles a dependency-free
         static gallery. GitHub Pages automation builds the gallery plus Doxygen
         API documentation. The repository administrator must select GitHub
         Actions as the Pages source. No deployment happens merely by building or
@@ -263,21 +283,25 @@ python3 -m http.server 8765 --bind 127.0.0.1 \
             >asset provenance</a
           >.
         </li>
+        <li>
+          Maze playground concept:
+          <a href="http://geneticml.com/demos/maze/maze.html"
+            >GeneticML maze demo</a
+          >. The reference site was unreachable during implementation; this is
+          an independent interpretation, not a verified visual replica.
+        </li>
       </ul>
       <p>
         GeneiAL source is MIT licensed. These demonstrations are independently
         implemented; no source code from the articles is bundled.
       </p>
       <p>
-        <a class="button" href="index.html#gallery"
-          >Back to the evolution lab →</a
-        >
+        <a class="button" href="index.html#gallery">Back to examples</a>
       </p>
     </main>
     <footer>
-      <a class="brand" href="index.html">geneial</a>
-      <p>Composable evolutionary search for C++20.</p>
-      <a href="https://github.com/geneial/geneial">Source ↗</a>
+      <a href="index.html">GeneiAL · MIT license</a>
+      <a href="https://github.com/geneial/geneial">Source repository</a>
     </footer>
   </body>
 </html>

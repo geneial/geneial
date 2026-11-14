@@ -83,7 +83,7 @@ int main(int argc, char **argv)
             [](std::span<const int> board) { return -static_cast<double>(conflicts(board)); });
         auto algorithm =
             showcase::buildAlgorithm(showcase::permutationFactory(options.size, evaluator), options, true, true);
-        showcase::run(algorithm, options, "A truce between queens",
+        showcase::run(algorithm, options, "N-queens",
                       "Place twenty queens so that none can attack another. A permutation guarantees one queen per row "
                       "and column; "
                       "evolution only has to untangle the diagonals. Pink lines expose conflicts, mint crowns mark "

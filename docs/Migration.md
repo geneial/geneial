@@ -104,9 +104,10 @@ This is a development version, not a claim of a published release.
 ### Callable objectives
 
 `FunctionFitnessEvaluator<Value, Score>` wraps a callable accepting
-`std::span<const Value>`. Existing evaluators still work. Five interactive
+`std::span<const Value>`. Existing evaluators still work. Six interactive
 examples, including variable-length Voronoi genomes and parallel translucent
-triangle art, demonstrate customization without changing the library core.
+triangle art and seeded maze search, demonstrate customization without changing
+the library core. The maze also has a separately labeled JavaScript playground.
 
 See [the architecture contracts](Overview.md) for cache, ownership, threading,
 randomness, and still-open limitations.

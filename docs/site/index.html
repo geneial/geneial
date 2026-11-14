@@ -5,245 +5,299 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta
       name="description"
-      content="GeneiAL: a C++20 genetic algorithm library. Explore evolving art, routes, and puzzles through interactive replays."
+      content="GeneiAL, a C++ genetic algorithm library. Example searches, reproducible runs, and build instructions."
     />
-    <title>GeneiAL — let good ideas evolve</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>GeneiAL — genetic algorithms in C++</title>
+    <link rel="stylesheet" href="style.css?v=technical-1" />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <header>
-      <a class="brand" href="index.html"
-        ><span class="mark" aria-hidden="true">g/</span> geneial</a
-      >
+      <a class="brand" href="index.html">GeneiAL</a>
       <nav aria-label="Main">
-        <a href="#gallery">Explore</a><a href="guide.html">Get started</a
-        ><a href="https://github.com/geneial/geneial">GitHub ↗</a>
+        <a href="#gallery">Examples</a>
+        <a href="guide.html">Documentation</a>
+        <a href="https://github.com/geneial/geneial">GitHub</a>
       </nav>
     </header>
     <main id="main">
-      <section class="hero">
+      <section class="intro" aria-labelledby="title">
         <div>
-          <div class="eyebrow">
-            <span class="dot"></span> C++20 / GENETIC ALGORITHMS
-          </div>
-          <h1>Let good ideas<br /><em>evolve.</em></h1>
+          <h1 id="title">Evolutionary search in C++</h1>
           <p class="lede">
-            A population of possibilities. A little mutation.<br />Something you
-            didn’t program by hand.
+            A genetic algorithm library with interchangeable selection,
+            crossover, mutation, and stopping criteria.
           </p>
-          <p class="muted">
-            GeneiAL is a composable C++ library for evolutionary search.<br />Build
-            a fitness function. Watch better solutions emerge.
+          <p>
+            Define a fitness function, choose the operators, and inspect how the
+            population changes. The examples below include their run history,
+            output, and source.
           </p>
-          <div class="actions">
-            <a class="button" href="#gallery"
-              >See evolution in motion <span>↓</span></a
-            ><a class="text-link" href="guide.html"
-              >Build your first search →</a
-            >
-          </div>
-          <div class="tags">
-            <span>C++20</span><span>CMake packages</span
-            ><span>Parallel fitness</span><span>MIT licensed</span>
-          </div>
         </div>
-        <a
-          class="hero-art"
-          href="examples/triangle_art.html"
-          aria-label="Replay the evolution of a triangle portrait"
-          ><div class="art-label">
-            <span>EXPERIMENT 02</span><span class="live">50 TRIANGLES</span>
+        <dl class="project-notes">
+          <div>
+            <dt>Library</dt>
+            <dd>Static / shared</dd>
           </div>
-          <img
-            src="examples/triangle_art.svg"
-            alt="A reference portrait beside its evolving approximation from translucent triangles"
-            width="900"
-            height="700"
-          />
-          <div class="art-caption">
-            <span>EvoLisa / a portrait, reimagined</span
-            ><span>Replay experiment ↗</span>
-          </div></a
-        >
+          <div>
+            <dt>Execution</dt>
+            <dd>Serial or CPU worker pool</dd>
+          </div>
+          <div>
+            <dt>License</dt>
+            <dd>MIT</dd>
+          </div>
+          <div>
+            <dt>Reference</dt>
+            <dd><a href="guide.html">Developer guide</a></dd>
+          </div>
+        </dl>
       </section>
       <section id="gallery" aria-labelledby="gallery-title">
         <div class="section-head">
-          <div>
-            <div class="eyebrow">THE EVOLUTION LAB</div>
-            <h2 id="gallery-title">Five searches. Infinite possibilities.</h2>
-          </div>
+          <h2 id="gallery-title">Examples</h2>
           <p>
-            Real C++ runs, not animations of pretend progress.<br />Scrub from
-            the first generation to the last.
+            Five recorded C++ searches and an interactive maze. Replays can be
+            paused and scrubbed by generation.
           </p>
         </div>
-        <div class="grid">
-          <a class="card" href="examples/voronoi_art.html"
-            ><div class="card-image">
+        <div class="experiments">
+          <article class="experiment">
+            <a
+              class="preview"
+              href="examples/voronoi_art.html"
+              aria-label="Open Voronoi portrait"
+            >
               <img
-                src="examples/voronoi_art.svg"
-                alt="A portrait emerging from colored Voronoi cells"
+                src="examples/voronoi_art.svg?v=detail-2"
+                alt="Mona Lisa reference beside an approximation from colored Voronoi cells"
                 width="900"
                 height="700"
-                loading="lazy"
-              /><span class="pill">VARIABLE-LENGTH DNA</span>
+              />
+            </a>
+            <h3>
+              <span class="example-number">01</span>
+              <a href="examples/voronoi_art.html">Voronoi portrait</a>
+            </h3>
+            <p>
+              Variable-length geometry with residual-guided cell placement.
+              Region colors are fitted to the target; evolution searches the
+              positions and cell count.
+            </p>
+            <p class="configuration">
+              Seed 42 · 24 initial cells, up to 256 · 6,000 generations
+            </p>
+            <div class="experiment-links">
+              <a href="examples/voronoi_art.html">Replay</a
+              ><a href="examples/voronoi_art.csv">CSV</a
+              ><a
+                href="https://github.com/geneial/geneial/blob/master/src/demo/showcase/Art.h"
+                >Source</a
+              >
             </div>
-            <div class="card-body">
-              <div class="number">01 / GENETIC ART</div>
-              <h3>Chromatic cells <span>↗</span></h3>
-              <p>
-                Genes duplicate, disappear, and drift. A field of colored cells
-                becomes a minimalist portrait.
-              </p>
-              <div class="card-footer">
-                Voronoi partitions · duplication &amp; deletion
-              </div>
-            </div></a
-          >
-          <a class="card" href="examples/triangle_art.html"
-            ><div class="card-image">
+          </article>
+          <article class="experiment">
+            <a
+              class="preview"
+              href="examples/triangle_art.html"
+              aria-label="Open Triangle portrait / EvoLisa"
+            >
               <img
-                src="examples/triangle_art.svg"
-                alt="A portrait approximated by translucent triangles"
+                src="examples/triangle_art.svg?v=detail-2"
+                alt="Mona Lisa reference beside an approximation from translucent triangles"
                 width="900"
                 height="700"
-                loading="lazy"
-              /><span class="pill">PARALLEL FITNESS</span>
+              />
+            </a>
+            <h3>
+              <span class="example-number">02</span>
+              <a href="examples/triangle_art.html"
+                >Triangle portrait / EvoLisa</a
+              >
+            </h3>
+            <p>
+              Overlapping translucent triangles, multiscale geometry mutations,
+              and local color refinement. A hybrid genetic search, not a
+              pixel-perfect reconstruction.
+            </p>
+            <p class="configuration">
+              Seed 42 · 96 triangles · 12,000 generations
+            </p>
+            <div class="experiment-links">
+              <a href="examples/triangle_art.html">Replay</a
+              ><a href="examples/triangle_art.csv">CSV</a
+              ><a
+                href="https://github.com/geneial/geneial/blob/master/src/demo/showcase/ArtOperators.h"
+                >Source</a
+              >
             </div>
-            <div class="card-body">
-              <div class="number">02 / EVOLISA</div>
-              <h3>Fifty little triangles <span>↗</span></h3>
-              <p>
-                Only geometry, color, and transparency. Layer by layer, a
-                familiar face finds its way onto the canvas.
-              </p>
-              <div class="card-footer">Alpha compositing · CPU worker pool</div>
-            </div></a
-          >
-          <a class="card" href="examples/star_tour.html"
-            ><div class="card-image">
+          </article>
+          <article class="experiment">
+            <a
+              class="preview"
+              href="examples/star_tour.html"
+              aria-label="Open Travelling salesperson"
+            >
               <img
                 src="examples/star_tour.svg"
-                alt="An optimized closed route through a spiral star field"
+                alt="A closed route through a spiral arrangement of points"
                 width="900"
                 height="620"
                 loading="lazy"
-              /><span class="pill">COMBINATORIAL SEARCH</span>
+              />
+            </a>
+            <h3>
+              <span class="example-number">03</span>
+              <a href="examples/star_tour.html">Travelling salesperson</a>
+            </h3>
+            <p>
+              Minimize a closed tour through 48 points. Permutation crossover
+              and swap mutation preserve a valid route through every point.
+            </p>
+            <p class="configuration">
+              Seed 42 · 48 stops · 2,000-generation budget
+            </p>
+            <div class="experiment-links">
+              <a href="examples/star_tour.html">Replay</a
+              ><a href="examples/star_tour.csv">CSV</a
+              ><a
+                href="https://github.com/geneial/geneial/blob/master/src/demo/showcase/star_tour.cpp"
+                >Source</a
+              >
             </div>
-            <div class="card-body">
-              <div class="number">03 / THE TRAVELING SALESPERSON</div>
-              <h3>The interstellar shortcut <span>↗</span></h3>
-              <p>
-                Forty-eight stars. One closed loop. Untangle a galaxy without
-                losing a single stop along the way.
-              </p>
-              <div class="card-footer">
-                Permutation crossover · swap mutation
-              </div>
-            </div></a
-          >
-          <a class="card" href="examples/queens.html"
-            ><div class="card-image">
+          </article>
+          <article class="experiment">
+            <a
+              class="preview"
+              href="examples/queens.html"
+              aria-label="Open N-queens"
+            >
               <img
                 src="examples/queens.svg"
-                alt="An N-queens board marking diagonal conflicts"
+                alt="A chessboard with queens and highlighted diagonal conflicts"
                 width="900"
                 height="620"
                 loading="lazy"
-              /><span class="pill">CONSTRAINT SOLVING</span>
+              />
+            </a>
+            <h3>
+              <span class="example-number">04</span>
+              <a href="examples/queens.html">N-queens</a>
+            </h3>
+            <p>
+              Place one queen in each row and column, then minimize diagonal
+              conflicts. The search stops early if it finds a conflict-free
+              board.
+            </p>
+            <p class="configuration">
+              Seed 42 · 20 queens · 3,000-generation budget
+            </p>
+            <div class="experiment-links">
+              <a href="examples/queens.html">Replay</a
+              ><a href="examples/queens.csv">CSV</a
+              ><a
+                href="https://github.com/geneial/geneial/blob/master/src/demo/showcase/queens.cpp"
+                >Source</a
+              >
             </div>
-            <div class="card-body">
-              <div class="number">04 / N-QUEENS</div>
-              <h3>A peaceful kingdom <span>↗</span></h3>
-              <p>
-                Twenty queens, one board. Evolve a truce where every queen has
-                room to reign.
-              </p>
-              <div class="card-footer">
-                Conflict minimization · early stopping
-              </div>
-            </div></a
-          >
-          <a class="card" href="examples/pixel_art.html"
-            ><div class="card-image">
+          </article>
+          <article class="experiment">
+            <a
+              class="preview"
+              href="examples/pixel_art.html"
+              aria-label="Open Palette image"
+            >
               <img
                 src="examples/pixel_art.svg"
-                alt="A ringed planet evolving from a noisy pixel grid"
+                alt="A palette-index image of a ringed planet evolving from noise"
                 width="900"
                 height="620"
                 loading="lazy"
-              /><span class="pill">768 GENES</span>
+              />
+            </a>
+            <h3>
+              <span class="example-number">05</span>
+              <a href="examples/pixel_art.html">Palette image</a>
+            </h3>
+            <p>
+              Each gene selects a pixel’s palette entry. N-point crossover and
+              mutation reduce RGB squared error against a small procedural
+              target.
+            </p>
+            <p class="configuration">Seed 42 · 768 genes · 5,000 generations</p>
+            <div class="experiment-links">
+              <a href="examples/pixel_art.html">Replay</a
+              ><a href="examples/pixel_art.csv">CSV</a
+              ><a
+                href="https://github.com/geneial/geneial/blob/master/src/demo/showcase/pixel_art.cpp"
+                >Source</a
+              >
             </div>
-            <div class="card-body">
-              <div class="number">05 / PIXEL GENOME</div>
-              <h3>Noise becomes a world <span>↗</span></h3>
-              <p>
-                No brush, no gradient descent. A palette-index genome slowly
-                discovers a tiny ringed planet.
-              </p>
-              <div class="card-footer">
-                N-point crossover · RGB squared error
-              </div>
-            </div></a
-          >
-          <div class="card code-card">
-            <div class="eyebrow">YOUR EXPERIMENT NEXT</div>
-            <h3>Small function.<br />Big search space.</h3>
-            <pre><code>auto score = [](std::span&lt;const double&gt; dna) {
-    return -std::inner_product(
-        dna.begin(), dna.end(),
-        dna.begin(), 0.0);
-};</code></pre>
-            <p>
-              Bring your objective. Compose selection, crossover, mutation, and
-              stopping criteria.
-            </p>
-            <a class="text-link" href="guide.html"
-              >Open the developer guide →</a
-            >
-          </div>
-        </div>
-      </section>
-      <section class="under-hood">
-        <div>
-          <div class="eyebrow">BUILT TO BE TAKEN APART</div>
-          <h2>Not a black box.<br />A box of good parts.</h2>
-        </div>
-        <div class="features">
-          <article>
-            <h3>Compose the search</h3>
-            <p>
-              Swap operators and stopping criteria independently. Keep the
-              domain logic in your fitness function.
-            </p>
           </article>
-          <article>
-            <h3>Inspect the journey</h3>
+          <article class="experiment">
+            <a class="preview" href="maze.html" aria-label="Open Random maze">
+              <img
+                src="examples/maze.svg"
+                alt="A route through a seeded maze, from the top-left start to the bottom-right exit"
+                width="660"
+                height="660"
+                loading="lazy"
+              />
+            </a>
+            <h3>
+              <span class="example-number">06</span>
+              <a href="maze.html">Random maze</a>
+            </h3>
             <p>
-              Generation observers expose progress. Every showcase exports a
-              standalone replay, vector art, and CSV history.
+              Evolve direction sequences through a connected random maze. Change
+              the seed, step the population, and inspect the corridor-distance
+              fitness field.
             </p>
-          </article>
-          <article>
-            <h3>Keep it reproducible</h3>
-            <p>
-              Explicit seeds, bounded invalid configurations, and regression
-              tests. Seeded runs repeat within the same build and standard
-              library.
+            <p class="configuration">
+              Live JavaScript search · matching native C++ example
             </p>
+            <div class="experiment-links">
+              <a href="maze.html">Interactive demo</a
+              ><a href="examples/maze.html">C++ replay</a
+              ><a href="examples/maze.csv">CSV</a
+              ><a
+                href="https://github.com/geneial/geneial/blob/master/src/demo/showcase/maze.cpp"
+                >Source</a
+              >
+            </div>
           </article>
         </div>
-      </section>
-      <section class="start">
-        <div>
-          <div class="eyebrow">FROM SOURCE TO SEARCH</div>
-          <h2>Your next idea starts here.</h2>
+        <aside class="run-notes">
+          <h3>About these runs</h3>
           <p>
-            C++20 compiler · CMake 3.21+ · Ninja<br />Boost.Test for the test
-            suite, not the library.
+            Portraits retain a 396 × 599 reference and score an 85 × 128 image
+            to bound CPU work. Both use fitted colors in addition to genetic
+            operators. Maze fitness uses a distance field, but does not inject a
+            solved route. These are examples of search techniques, not claims of
+            optimality.
           </p>
-          <a class="button" href="guide.html">Build something unexpected →</a>
+          <p>
+            Native seeded runs repeat within the same build and standard
+            library. Results may differ across toolchains.
+            <a href="guide.html#credits"
+              >Algorithm references and image provenance</a
+            >.
+          </p>
+        </aside>
+      </section>
+      <section class="build" aria-labelledby="build-title">
+        <div>
+          <h2 id="build-title">Build and run</h2>
+          <p>
+            Requires a C++20 compiler and standard library, CMake 3.21+, and
+            Ninja. Boost.Test is used by the test suite, not the library.
+          </p>
+          <p>
+            <a href="guide.html">Build options and integration guide</a><br /><a
+              href="https://github.com/geneial/geneial/tree/master/src/src/lib"
+              >Public headers</a
+            >
+          </p>
         </div>
         <pre><code>git clone https://github.com/geneial/geneial.git
 cd geneial
@@ -251,18 +305,14 @@ cmake --preset release
 cmake --build --preset release
 ctest --preset release
 
-./output/release/src/demo/voronoi_art \
-  --seed 42 --threads 4 --output portrait</code></pre>
+./output/release/src/demo/maze \
+  --seed 42 --size 18 --output output/maze</code></pre>
       </section>
     </main>
     <footer>
-      <a class="brand" href="index.html">geneial</a>
-      <p>
-        A C++ genetic algorithm library. Open source, under the MIT license.<br />Art
-        demos credit Sebastian Proost and Károly Zsolnai-Fehér.
-        <a href="guide.html#credits">Sources &amp; image provenance ↗</a>
-      </p>
-      <a href="https://github.com/geneial/geneial">Source ↗</a>
+      <span>GeneiAL · MIT license</span>
+      <a href="guide.html#credits">Credits and provenance</a>
+      <a href="https://github.com/geneial/geneial">Source repository</a>
     </footer>
   </body>
 </html>

@@ -2,6 +2,24 @@
 
 ## 0.3.0 — unreleased
 
+### Example and website refinements
+
+- Seeded random-maze C++ example and a live, dependency-free browser GA playground
+  with animated populations, random/seed controls, stepping and a fitness overlay.
+- Sharp 396 × 599 reference portraits, area-averaged configurable scoring rasters,
+  residual-guided growth/restarts, persistent multiscale geometry mutations, and
+  parallel analytical color refinement. Gallery triangles increase from 50 to 96;
+  the CLI default remains 50. These are explicitly labeled hybrid genetic searches.
+- Replay asset deduplication prevents embedding a large reference per keyframe;
+  ceiling-based frame spacing also honors the documented keyframe bound.
+- Scalar-reference raster regressions, image/color fitting tests, cross-language
+  maze fixtures and seeded convergence checks; remove redundant hero badges.
+- A restrained technical example index, smaller typography and plain-language
+  documentation replace the promotional landing page and replay styling. Run
+  configurations, CSV/source links and automatic local-link checks are included.
+- Cache the maze distance-field maximum instead of rescanning it for every
+  cell on every visualization frame.
+
 ### Modern development
 
 - C++20, CMake 3.21, root/legacy source entry points, presets, target-based flags,
@@ -54,8 +72,8 @@
 ### Examples and docs
 
 - New callable/span fitness evaluator.
-- Five offline HTML/SVG/CSV evolution showcases: galaxy tour, N-queens, pixel art,
-  variable-length Voronoi art, and parallel translucent-triangle EvoLisa.
+- Six offline HTML/SVG/CSV evolution showcases: galaxy tour, N-queens, pixel art,
+  variable-length Voronoi art, parallel translucent-triangle EvoLisa, and random mazes.
 - Custom PPM targets, bundled credited public-domain Mona Lisa, vector export,
   exact fitness rasters, and replay/fitness history controls.
 - Rebuilt responsive website; refreshed architecture, migration, contribution,

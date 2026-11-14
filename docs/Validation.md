@@ -9,17 +9,19 @@ Validation host: macOS 26.4.1, Apple Silicon. CMake 4.3.3 and Ninja were used.
 
 | Check | Observed result |
 | --- | --- |
-| Apple Clang 21.0.0, release preset, warnings as errors | 27/27 CTest entries pass |
-| Apple Clang 21.0.0, AddressSanitizer + UBSan | 27/27 CTest entries pass |
-| Apple Clang 21.0.0, ThreadSanitizer | 17/17 CTest entries pass (examples disabled) |
-| GCC 16.2.0 with libstdc++, release, warnings as errors | 27/27 CTest entries pass |
+| Apple Clang 21.0.0, release preset, warnings as errors | 30/30 CTest entries pass |
+| Apple Clang 21.0.0, AddressSanitizer + UBSan | 30/30 CTest entries pass |
+| Apple Clang 21.0.0, ThreadSanitizer | 18/18 unit/probe CTests and both bounded four-worker portrait searches pass |
+| GCC 16.2.0 with libstdc++, release, warnings as errors | 30/30 CTest entries pass |
 | GCC 16.2.0, compiler coverage build | 27/27 CTest entries pass |
 | Independent public headers | All 80 compile with both compilers |
 | Boost-free library preset | Builds and installs |
 | Relocated installed package | Static and shared consumers pass, 2/2 |
 | Embedded `add_subdirectory` consumer without Boost | 1/1 passes |
 | Legacy `cmake -S src` library-only entry point | Builds without Boost |
-| Example artifact checker | All five HTML/SVG/CSV exports pass |
+| Example artifact checker | All six HTML/SVG/CSV exports pass; reference embedded once |
+| Browser maze model | Three Node test groups pass, including 20 seeded searches |
+| Authored website pages | 59 local links/assets resolve; landmarks, IDs, image text and button types checked |
 | Portrait repeatability | One-worker/four-worker CSV histories match exactly |
 | Doxygen 1.18.0 | API reference builds without warnings |
 | Workflow and source checks | `actionlint`, changed C++ clang-format 18, `git diff --check` pass |
@@ -29,8 +31,10 @@ GCC uses `GENEIAL_HEADER_ONLY_TESTS=ON` locally because the Homebrew Boost.Test
 binary uses libc++, while GCC uses libstdc++. This is a test-linkage option, not
 a library dependency. See [contribution guidance](../CONTRIBUTING.md).
 
-The 27 CTest entries include 16 unit/regression executables, an allocation and
-failure-injection probe, and ten showcase smoke/invalid-input checks.
+The current 30 CTest entries include 17 unit/regression executables, an allocation
+and failure-injection probe, and twelve showcase smoke/invalid-input checks.
+The compiler-coverage count in the table predates the maze additions; it is not
+a claim that those new tests ran in the coverage build.
 Additional Python checks validate standalone headers,
 SVG XML, monotonic fitness histories, exports, invalid art options, and parallel
 repeatability. The installed package was moved to a different directory before
@@ -125,26 +129,76 @@ the first hosted report still needs review. Coverage builds get a 120-second
 showcase smoke-test budget because unoptimized raster profiling exceeded the
 ordinary 30-second budget locally; release/sanitizer budgets are unchanged.
 
-## Actual evolutionary-art runs
+## Art and random-maze refinements
 
-Both gallery runs use seed 42, population 64, four fitness workers, and the bundled
-40 × 60 Mona Lisa target. Fitness is negative RGB mean squared error (MSE).
+The November 14 gallery uses seed 42, population 64 and four workers for portraits.
+The reference is now 396 × 599; scoring is area-averaged to 85 × 128. Fitness is
+negative RGB mean squared error (MSE). These scores are **not directly comparable**
+to the previous 40 × 60 gallery. The searches now fit colors analytically while
+evolving geometry, so they are labeled hybrid genetic searches.
 
 | Experiment | Configuration | Initial MSE | Final MSE |
 | --- | --- | ---: | ---: |
-| Voronoi art | 24 initial sites; duplication/deletion; 6,000 generations | 1,741.01 | 407.002 |
-| Translucent triangles | 50 layers; 12,000 generations | 2,554.50 | 200.583 |
+| Voronoi art | 24 initial sites, maximum 256; 6,000 generations | 1,016.00 | 192.030 |
+| Translucent triangles | 96 layers; 12,000 generations | 1,167.10 | 136.021 |
+
+### Controlled before/after observation
+
+Preserved binaries from `774a406` were compared with the new search on the **same
+40 × 60 P6 input**, seed 42, population 64, four workers, shape counts, and 3,000
+generations. The input was an RGB BOX resize of the verified original JPEG.
+The new executable used `--resolution 60`, so neither executable resized that
+fixture. Voronoi started with 24 sites and had the same 128-site capacity; triangles
+had 50 layers. Times are medians of three whole-process runs, including exports,
+on this host; they are observations, not portable benchmark guarantees.
+
+| Experiment | Previous MSE | New MSE | Error reduction | Previous time | New time |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Voronoi art | 375.628 | 143.554 | 61.8% | 2.20 s | 2.11 s |
+| Translucent triangles | 203.056 | 192.560 | 5.2% | 1.87 s | 1.50 s |
+
+These compare complete search strategies, including better initialization and
+24 rather than 32 offspring per generation, not equal evaluation counts or isolated
+raster-kernel timings. Voronoi now uses a row-wise lower-envelope rasterizer;
+triangle filling uses scanline spans. Both have scalar-reference regression tests.
+
+The new self-contained gallery replays are about 2.2 MB (cells) and 1.9 MB
+(triangles). Each embeds the roughly 0.95 MB reference URI once, rather than
+duplicating it across approximately 81 frames. Final SVGs still embed their own
+reference so they remain standalone.
+
+The native 18 × 18 seed-42 maze reaches the 78-move shortest-route bound in
+generation 2. Browser model tests find valid routes across seeds 0–19 and compare
+repeated runs exactly. Topology fixtures match C++ at seeds 0, 1, 42 and UINT32_MAX;
+connectedness, symmetric walls, boundaries, collision handling, loop repair and
+score ordering are covered. The distance field is explicitly documented as an
+informed fitness heuristic; no solved genome is supplied to the population.
 
 These are examples, not performance benchmarks or guaranteed convergence claims.
 Draw sequences are only repeatable within the same build/standard library.
 Run `cmake --build --preset release --target website` to recreate the complete
-five-example gallery with HTML replay controls and fitness plots.
+six-example gallery, native HTML replays and the live JavaScript maze playground.
 
 The original November 13 gallery's desktop and 390-pixel mobile layouts were
 inspected in a browser. Local navigation,
 portrait replay buttons and sliders, image loading, horizontal overflow, and
 browser errors were checked. Both art replays advanced through their recorded
 generations without console errors.
+
+The November 14 redesign replaces the promotional hero, large headings, badges
+and decorative cards with a technical example index, explicit run settings and
+CSV/source links. Documentation, browser maze controls and native replay pages
+use the same restrained visual treatment.
+
+The revised gallery, developer guide, portrait replay and maze were checked at
+desktop and 390-pixel widths. Images loaded and horizontal overflow was absent.
+Portrait playback, scrubber movement and one-time reference hydration work.
+Maze seed zero, 24 × 24 selection, stepping, restart, randomization, speed controls
+and the fitness overlay were exercised. The live seed-zero 24 × 24 search reached
+its 254-move bound in generation 7. Screenshots are under the ignored
+`output/art-upgrade/` directory. Automated page checks resolve 59 local links and
+assets, validate fragment targets and check basic landmarks and control semantics;
+these checks are not a complete accessibility audit.
 
 ## Not verified or published
 

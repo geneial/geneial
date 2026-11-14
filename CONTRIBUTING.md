@@ -12,6 +12,7 @@ cmake --preset sanitized
 cmake --build --preset sanitized --parallel
 ctest --preset sanitized --output-on-failure
 python3 tests/check_examples.py output/release/src/demo
+node --test tests/maze.test.cjs
 git diff --check
 ```
 
@@ -31,8 +32,13 @@ ctest --test-dir output/consumer --output-on-failure
 For showcase changes, format with clang-format 18, build the `website` target,
 and visually check desktop/mobile layouts, replay/slider controls, and console
 errors. Avoid checked-in generated galleries and image processing dependencies.
+Run `python3 tests/check_site.py output/release/site` after building the site to
+check local links, anchors, assets and basic page semantics; Pages CI runs it too.
 `doc` is available when Doxygen is installed. Source docs live in `docs/`; update
 the short website guide when a documented user workflow changes.
+Node.js is needed only for the browser maze model tests; no npm dependencies or
+browser JavaScript build step are required. The checker also exercises native
+maze convergence and single/multiple-worker portrait repeatability.
 
 The Dockerfile builds the local checkout and runs tests, rather than cloning a
 possibly different remote revision. It needs a running Docker daemon:
@@ -68,6 +74,12 @@ TSAN_OPTIONS=halt_on_error=1 ctest --preset tsan
 ./output/release/src/src/tests/runtime_probe --verify-memory
 ./output/release/src/src/tests/runtime_probe --benchmark
 ```
+
+For portrait concurrency changes, also configure with
+`-DGENEIAL_BUILD_EXAMPLES=ON` and run small four-worker `voronoi_art` and
+`triangle_art` searches under TSan (`--shapes 8 --population 20 --resolution 32
+--threads 4 --generations 40`). CI runs these bounded searches plus the unit
+suites, rather than expensive default-resolution showcase smoke tests under TSan.
 
 The probe asserts allocation-free ignored events and injects allocation failures
 into event recording, cache growth, and timer destruction. Its allocation hook

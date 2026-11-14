@@ -11,12 +11,17 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-24.04
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
       - run: sudo apt-get update && sudo apt-get install -y ninja-build doxygen
       - run: cmake --preset release -DBUILD_TESTING=OFF
       - run: cmake --build --preset release --target website doc --parallel 2
       - run: cp -R output/release/src/doc/html output/release/site/api
+      - run: python3 tests/check_site.py output/release/site
+      - run: node --test tests/maze.test.cjs
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9
         with:
           path: output/release/site

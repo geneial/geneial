@@ -29,9 +29,9 @@ Presets: `release`, `debug`, `sanitized` (AddressSanitizer + UBSan), `tsan`
 examples, or Boost). All generated artifacts stay in `output/`.
 The legacy `cmake -S src -B output/legacy` entry point still works.
 
-## The evolution lab
+## Example searches
 
-Five real searches export self-contained HTML replays, editable SVGs, and CSV
+Six real C++ searches export self-contained HTML replays, editable SVGs, and CSV
 fitness histories. No browser framework, network service, or plotting package.
 
 | Executable | Experiment |
@@ -41,20 +41,33 @@ fitness histories. No browser framework, network service, or plotting package.
 | `star_tour` | Untangle a closed traveling-salesperson tour through a spiral galaxy |
 | `queens` | Solve N-queens with a permutation genome and a conflict visualization |
 | `pixel_art` | Discover a ringed planet from 768 palette-index genes |
+| `maze` | Evolve valid escape routes through a seeded random labyrinth |
 
 ```sh
 mkdir -p output/art
 ./output/release/src/demo/voronoi_art --seed 42 --threads 4 \
-  --generations 6000 --output output/art/cells
+  --max-shapes 256 --generations 6000 --output output/art/cells
 ./output/release/src/demo/triangle_art --seed 42 --threads 4 \
-  --shapes 50 --generations 12000 --output output/art/triangles
+  --shapes 96 --generations 12000 --output output/art/triangles
 ./output/release/src/demo/queens --size 20 --output output/art/queens
+./output/release/src/demo/maze --seed 42 --size 18 --output output/art/maze
 # Open any generated .html directly in a browser.
 ```
 
 The portrait demos also accept `--input target.ppm` (P3/P6, 8-bit samples), and
 export the exact fitness raster as PPM. Their bundled Mona Lisa target needs no
-download. All demos accept `--help`. See [the example guide](docs/Demos.md) for
+download. A sharp 396 × 599 reference is independent of the fitness raster
+(`--resolution 32..256`, default 128-pixel longest edge). Error-guided growth,
+multiscale mutations and analytical color fitting make the portraits **hybrid
+genetic searches**, rather than blind color jitter. Replay files embed the target
+only once instead of copying it into every keyframe.
+
+The gallery also includes a **live random-maze playground** at `maze.html`:
+new-maze/seed controls, animated populations, single stepping, speed and prefix
+exploration controls, and an optional fitness-field overlay. It runs a real
+JavaScript GA with the same maze topology as the native example—not C++ compiled
+to WebAssembly or a prerecorded animation. All native demos accept `--help`.
+See [the example guide](docs/Demos.md) for
 representations, options, tradeoffs, and source credits.
 
 ### Build the website locally
@@ -65,7 +78,7 @@ python3 -m http.server 8765 --bind 127.0.0.1 --directory output/release/site
 # Open http://127.0.0.1:8765
 ```
 
-This evolves all five examples and assembles the gallery from `docs/site/`.
+This evolves all six examples and assembles the gallery from `docs/site/`.
 The Pages workflow also builds API docs with Doxygen. An administrator must set
 the repository’s GitHub Pages source to **GitHub Actions** before deployment.
 Local builds and commits do not publish the site or change domain settings.

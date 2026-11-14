@@ -16,8 +16,13 @@ acceptance criteria before turning broad ideas into changes.
 - [x] Worker-pool draining, exception propagation, and shutdown validation.
 - [x] Lambda fitness evaluator and repaired crossover lambda adapter.
 - [x] Real criteria/coupling tests instead of success-only placeholders.
-- [x] Five replayable examples, including both requested genetic-art approaches.
+- [x] Six replayable C++ examples, including both requested genetic-art approaches
+  and seeded random mazes, plus a live browser maze playground.
+- [x] Sharp art references, separate configurable fitness resolution, residual-guided
+  multiscale search, parallel color refinement, and deduplicated replay assets.
 - [x] Dependency-free website source, gallery builder, and Pages workflow.
+- [x] Replace promotional landing-page copy with a technical example index,
+  run configurations, direct CSV/source links, and automated site-link checks.
 - [x] Replace obsolete build, Docker, contribution, and API documentation.
 - [x] Preserve distinct hash-colliding genomes; repair hash lookup, exact-pointer
   removal, finite-score validation, and transactional population replacement.
@@ -79,10 +84,16 @@ acceptance criteria before turning broad ideas into changes.
 - [ ] Simplify the historical namespace/typedef/export machinery in a separate
   API-breaking change, preserving a documented migration path.
 - [ ] Decouple coupling/crossover only if concrete operator use cases justify it.
-- [ ] Benchmark art at larger fitness resolutions; consider SIMD or incremental
+- [x] Benchmark the hybrid art search against preserved pre-change binaries at
+  equal raster dimensions, seed, shape counts and generation budgets.
+- [ ] Consider SIMD or incremental
   raster updates without weakening deterministic serial/parallel behavior.
 - [ ] Add perceptual color objectives and antialiased scoring as explicit options,
   not silent changes to the current RGB-MSE objective.
+- [ ] More visual experiments: evolve soft-body walkers over terrain; synthesize
+  reaction-diffusion patterns against a target; evolve orbital slingshot routes;
+  and evolve compact logic circuits. Require real fitness histories, deterministic
+  seeds, clear domain constraints and regression tests rather than canned animations.
 
 ## Documentation and release work
 
