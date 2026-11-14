@@ -2,128 +2,88 @@
 
 #include <geneial/utility/Smoothing.h>
 
+#include <algorithm>
+#include <cmath>
+#include <limits>
+#include <stdexcept>
+#include <type_traits>
+
 geneial_private_namespace(geneial)
 {
-geneial_private_namespace(utility)
-{
-using ::geneial::population::chromosome::MultiValueChromosome;
-geneial_export_namespace
-{
-
-//TODO 
-template<typename VALUE_TYPE, typename FITNESS_TYPE>
-void Smoothing::restoreSmoothness(typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr chromosome,
-        VALUE_TYPE maxAbsElevation, VALUE_TYPE min, VALUE_TYPE max, bool hasStart, VALUE_TYPE start)
-{
-    VALUE_TYPE lastVal;
-
-    if(hasStart)
+    geneial_private_namespace(utility)
     {
-         lastVal = *(chromosome->getContainer().begin());
-    }else{
-         lastVal = start;
-    }
-
-    for (auto& it: chromosome->getContainer())
-    {
-
-        //Restore Limits if needed
-        const VALUE_TYPE currentValue = std::max(min,std::min(max,it));
-        it = currentValue;
-
-        if (std::abs(currentValue-lastVal) < maxAbsElevation)
+        using ::geneial::population::chromosome::MultiValueChromosome;
+        geneial_export_namespace
         {
-            //We are within the boundaries of the allowed elevation..
-            lastVal = currentValue;
-        }
-        else
-        {
-            //We have exceeded the boundaries of the allowed elevation
-            if (currentValue < lastVal)
+            template <typename VALUE_TYPE, typename FITNESS_TYPE>
+            void Smoothing::restoreSmoothness(typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr chromosome,
+                                              VALUE_TYPE maxAbsElevation, VALUE_TYPE min, VALUE_TYPE max, bool hasStart,
+                                              VALUE_TYPE start)
             {
-                //Case descending
-                it = std::max(lastVal - maxAbsElevation, min);
+                const auto finite = [](VALUE_TYPE value) { return std::isfinite(static_cast<long double>(value)); };
+                if (!chromosome || !finite(min) || !finite(max) || !finite(maxAbsElevation) || min > max ||
+                    maxAbsElevation < 0 || (hasStart && (!finite(start) || start < min || start > max)))
+                    throw std::invalid_argument("Invalid smoothing chromosome, limits, elevation, or starting anchor");
+                auto &values = chromosome->getContainer();
+                if (!std::all_of(values.begin(), values.end(), finite))
+                    throw std::invalid_argument("Smoothing requires finite gene values");
+                if (values.empty())
+                    return;
+                auto previous = hasStart ? start : std::clamp(values.front(), min, max);
+                for (auto &value : values)
+                {
+                    VALUE_TYPE lower, upper;
+                    if constexpr (std::is_integral_v<VALUE_TYPE>)
+                    {
+                        using Unsigned = std::make_unsigned_t<
+                            std::conditional_t<std::is_same_v<VALUE_TYPE, bool>, unsigned int, VALUE_TYPE>>;
+                        const auto lowerDistance =
+                            static_cast<Unsigned>(static_cast<Unsigned>(previous) - static_cast<Unsigned>(min));
+                        const auto upperDistance =
+                            static_cast<Unsigned>(static_cast<Unsigned>(max) - static_cast<Unsigned>(previous));
+                        lower = lowerDistance < static_cast<Unsigned>(maxAbsElevation)
+                                    ? min
+                                    : static_cast<VALUE_TYPE>(previous - maxAbsElevation);
+                        upper = upperDistance < static_cast<Unsigned>(maxAbsElevation)
+                                    ? max
+                                    : static_cast<VALUE_TYPE>(previous + maxAbsElevation);
+                    }
+                    else
+                    {
+                        lower = std::max(min, previous - maxAbsElevation);
+                        upper = std::min(max, previous + maxAbsElevation);
+                    }
+                    value = std::clamp(value, lower, upper);
+                    previous = value;
+                }
             }
-            else
+
+            template <typename VALUE_TYPE, typename FITNESS_TYPE>
+            void Smoothing::peakAt(unsigned int pos, unsigned int epsLeft, unsigned int epsRight, VALUE_TYPE elevation,
+                                   typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr chromosome)
             {
-                //Case ascending
-                it = std::min(lastVal + maxAbsElevation, max);
+                if (!chromosome || pos >= chromosome->getSize() || !std::isfinite(static_cast<long double>(elevation)))
+                    throw std::invalid_argument("A peak needs a valid chromosome position and finite elevation");
+                auto &values = chromosome->getContainer();
+                const std::size_t begin = pos - std::min(pos, epsLeft);
+                const std::size_t end = pos + std::min<std::size_t>(epsRight, values.size() - pos - 1);
+                if (!std::all_of(values.begin() + begin, values.begin() + end + 1,
+                                 [](VALUE_TYPE value) { return std::isfinite(static_cast<long double>(value)); }))
+                    throw std::invalid_argument("A peak requires finite gene values");
+                for (std::size_t index = begin; index <= end; ++index)
+                {
+                    const std::size_t distance = index > pos ? index - pos : pos - index;
+                    const auto width = index > pos ? epsRight : epsLeft;
+                    const long double fraction = distance == 0 ? 1 : 1 - static_cast<long double>(distance) / width;
+                    const long double elevated = static_cast<long double>(values[index]) + fraction * elevation;
+                    if (elevated <= static_cast<long double>(std::numeric_limits<VALUE_TYPE>::lowest()))
+                        values[index] = std::numeric_limits<VALUE_TYPE>::lowest();
+                    else if (elevated >= static_cast<long double>(std::numeric_limits<VALUE_TYPE>::max()))
+                        values[index] = std::numeric_limits<VALUE_TYPE>::max();
+                    else
+                        values[index] = static_cast<VALUE_TYPE>(elevated);
+                }
             }
-
         }
-        lastVal = it;
     }
-
 }
-
-template<typename VALUE_TYPE, typename FITNESS_TYPE>
-void Smoothing::peakAt(unsigned int pos, unsigned int epsLeft, unsigned int epsRight, VALUE_TYPE elevation,
-        typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr chromosome)
-{
-
-    const unsigned int chromSize = chromosome->getSize();
-
-    assert(pos < chromSize);
-    assert(0 <= pos);
-
-    //Look at all the value to the LEFT of pos
-    //Determine target left position (avoid underflow)
-    unsigned int leftEpsPos = pos - epsLeft;
-    if (pos < epsLeft)
-    {
-        leftEpsPos = 0;
-    }
-    assert(leftEpsPos >= 0);
-    assert(leftEpsPos <= chromSize - 1);
-
-    for (int i = pos; i >= static_cast<int>(leftEpsPos); i--)
-    {
-        assert(i >= 0);
-        assert(i <= static_cast<signed>(chromSize - 1));
-        //How many pct have we advanced to the left?
-        double pctElevated;
-        if (leftEpsPos != 0 && epsLeft != 0.0)
-        {
-            //pctElevated = 1.0 - (static_cast<double>(i - leftEpsPos)) / static_cast<double>(leftEpsPos);
-            pctElevated = 1.0 - (static_cast<double>(pos -i)) / static_cast<double>(epsLeft);
-        }
-        else
-        {
-            pctElevated = 1.0;
-        }
-        const VALUE_TYPE toModify = static_cast<VALUE_TYPE>(static_cast<double>(pctElevated) * elevation);
-        chromosome->getContainer()[i] += toModify;
-    }
-
-    //Look at all the values to the RIGHT of pos
-    //avoid overflow.
-    unsigned int rightEpsPos = std::min(pos + epsRight, chromSize - 1);
-    assert(rightEpsPos >= 0);
-    assert(rightEpsPos <= chromSize - 1);
-
-    for (unsigned int i = pos + 1; i < rightEpsPos; i++)
-    {
-        assert(i >= 0);
-        assert(i <= chromSize - 1);
-        //How many pct have we advanced to the right?
-        double pctElevated;
-        if (rightEpsPos != 0  && epsRight != 0.0)
-        {
-            //pctElevated = (static_cast<double>(i)) / static_cast<double>(rightEpsPos);
-            pctElevated = 1.0 - (static_cast<double>(i -pos)) / static_cast<double>(epsRight);
-        }
-        else
-        {
-            pctElevated = 0;
-        }
-        //const VALUE_TYPE toModify = static_cast<VALUE_TYPE>((1.0 - static_cast<double>(pctElevated)) * elevation);
-        const VALUE_TYPE toModify = static_cast<VALUE_TYPE>((static_cast<double>(pctElevated)) * elevation);
-        chromosome->getContainer()[i] += toModify;
-    }
-
-}
-
-} /* geneial_export_namespace */
-} /* private namespace utility */
-} /* private namespace geneial */
-

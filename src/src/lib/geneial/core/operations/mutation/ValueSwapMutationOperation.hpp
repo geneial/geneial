@@ -6,6 +6,7 @@
 #include <geneial/core/operations/mutation/ValueSwapMutationOperation.h>
 #include <geneial/core/population/Population.h>
 #include <geneial/core/population/builder/BuilderSettings.h>
+#include <utility>
 
 #include <geneial/utility/mixins/Hasher.h>
 
@@ -96,7 +97,7 @@ geneial_private_namespace(geneial)
                         assert(mutatedChromosome);
 
                         // getting values
-                        const auto &mutantChromosomeContainer = mvcMutant->getContainer();
+                        const auto &mutantChromosomeContainer = std::as_const(*mvcMutant).getContainer();
                         auto &result_container = mutatedChromosome->getContainer();
 
                         // copy values:

@@ -1,170 +1,161 @@
 #pragma once
 
 #include <geneial/core/operations/mutation/MultiValueChromosomeMutationOperation.h>
-#include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.h>
+#include <geneial/core/population/Population.h>
 #include <geneial/core/population/builder/ContinousMultiValueBuilderSettings.h>
+#include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.h>
 #include <geneial/utility/Smoothing.h>
 #include <geneial/utility/mixins/EnableMakeShared.h>
-#include <geneial/core/population/Population.h>
 
 #include <cassert>
+#include <cmath>
+#include <limits>
+#include <stdexcept>
+#include <type_traits>
 
 geneial_private_namespace(geneial)
 {
-geneial_private_namespace(operation)
-{
-geneial_private_namespace(mutation)
-{
-using ::geneial::population::chromosome::ContinousMultiValueBuilderSettings;
-using ::geneial::population::chromosome::ContinousMultiValueChromosomeFactory;
-using ::geneial::population::Population;
-using ::geneial::utility::EnableMakeShared;
-
-
-geneial_export_namespace
-{
-
-template<typename VALUE_TYPE, typename FITNESS_TYPE>
-class SmoothPeakMutationOperation: public MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>,
-                                   public EnableMakeShared<SmoothPeakMutationOperation<VALUE_TYPE,FITNESS_TYPE>>
-{
-
-private:
-    unsigned int _maxLeftEps;
-
-    unsigned int _maxRightEps;
-
-    FITNESS_TYPE _maxElevation;
-
-protected:
-    SmoothPeakMutationOperation(
-            const unsigned int maxLeftEps,
-            const unsigned int maxRightEps,
-            const FITNESS_TYPE maxElevation,
-            const std::shared_ptr<const MultiValueMutationSettings> &settings,
-            const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
-            const std::shared_ptr<ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
-
-                MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>(
-                    settings,
-                    choosingOperation,
-                    builderFactory
-                    ),
-
-            _maxLeftEps(maxLeftEps),
-            _maxRightEps(maxRightEps),
-            _maxElevation(maxElevation)
+    geneial_private_namespace(operation)
     {
-        //TODO (bewo): Make some assertions regarding eps and builder here
-    }
-public:
+        geneial_private_namespace(mutation)
+        {
+            using ::geneial::population::Population;
+            using ::geneial::population::chromosome::ContinousMultiValueBuilderSettings;
+            using ::geneial::population::chromosome::ContinousMultiValueChromosomeFactory;
+            using ::geneial::utility::EnableMakeShared;
 
-    virtual ~SmoothPeakMutationOperation()
-    {
-    }
+            geneial_export_namespace
+            {
 
-    /**
-     *  Returns a new chromosome which is a partially mutated version of the old one.
-     *
-     */
-    virtual typename Population<FITNESS_TYPE>::chromosome_container doMutate(
-            const typename Population<FITNESS_TYPE>::chromosome_container &mutants, BaseManager<FITNESS_TYPE> &manager) const override;
+                template <typename VALUE_TYPE, typename FITNESS_TYPE>
+                class SmoothPeakMutationOperation
+                    : public MultiValueChromosomeMutationOperation<VALUE_TYPE, FITNESS_TYPE>,
+                      public EnableMakeShared<SmoothPeakMutationOperation<VALUE_TYPE, FITNESS_TYPE>>
+                {
 
-    FITNESS_TYPE getMaxElevation() const
-    {
-        return _maxElevation;
-    }
+                  private:
+                    unsigned int _maxLeftEps;
 
-    unsigned int getMaxLeftEps() const
-    {
-        return _maxLeftEps;
-    }
+                    unsigned int _maxRightEps;
 
-    unsigned int getMaxRightEps() const
-    {
-        return _maxRightEps;
-    }
+                    FITNESS_TYPE _maxElevation;
 
+                  protected:
+                    SmoothPeakMutationOperation(
+                        const unsigned int maxLeftEps, const unsigned int maxRightEps, const FITNESS_TYPE maxElevation,
+                        const std::shared_ptr<const MultiValueMutationSettings> &settings,
+                        const std::shared_ptr<const BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
+                        const std::shared_ptr<ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>>
+                            &builderFactory)
+                        :
 
-    class Builder : public MultiValueChromosomeMutationOperation<VALUE_TYPE,FITNESS_TYPE>::Builder
-       {
-       protected:
-            unsigned int _maxLeftEps;
+                          MultiValueChromosomeMutationOperation<VALUE_TYPE, FITNESS_TYPE>(settings, choosingOperation,
+                                                                                          builderFactory),
 
-            unsigned int _maxRightEps;
+                          _maxLeftEps(maxLeftEps), _maxRightEps(maxRightEps), _maxElevation(maxElevation)
+                    {
+                        if (!settings || !choosingOperation || !builderFactory || std::is_unsigned_v<VALUE_TYPE> ||
+                            !std::isfinite(static_cast<long double>(maxElevation)) || maxElevation < 0 ||
+                            static_cast<long double>(maxElevation) > std::numeric_limits<VALUE_TYPE>::max())
+                            throw std::invalid_argument("Smooth-peak mutation needs signed/floating genes, finite "
+                                                        "nonnegative elevation, and valid dependencies");
+                    }
 
-            FITNESS_TYPE _maxElevation;
-       public:
+                  public:
+                    virtual ~SmoothPeakMutationOperation() {}
 
-            const constexpr static unsigned int DEFAULT_MAX_LEFT_EPS = 2;
+                    /**
+                     *  Returns a new chromosome which is a partially mutated version of the old one.
+                     *
+                     */
+                    virtual typename Population<FITNESS_TYPE>::chromosome_container
+                    doMutate(const typename Population<FITNESS_TYPE>::chromosome_container &mutants,
+                             BaseManager<FITNESS_TYPE> &manager) const override;
 
-            const constexpr static unsigned int DEFAULT_MAX_RIGHT_EPS = 2;
+                    FITNESS_TYPE getMaxElevation() const
+                    {
+                        return _maxElevation;
+                    }
 
-            const constexpr static FITNESS_TYPE DEFAULT_MAX_ELEVATION = 5;
+                    unsigned int getMaxLeftEps() const
+                    {
+                        return _maxLeftEps;
+                    }
 
-           Builder(const std::shared_ptr<ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
-                   MultiValueChromosomeMutationOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(builderFactory),
-                   _maxLeftEps(DEFAULT_MAX_LEFT_EPS),
-                   _maxRightEps(DEFAULT_MAX_RIGHT_EPS),
-                   _maxElevation(DEFAULT_MAX_ELEVATION)
-           {
-           }
+                    unsigned int getMaxRightEps() const
+                    {
+                        return _maxRightEps;
+                    }
 
-           Builder(const std::shared_ptr<MultiValueMutationSettings> &settings,
-                   const std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
-                   const std::shared_ptr<ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>> &builderFactory) :
-                   MultiValueChromosomeMutationOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(settings, choosingOperation,
-                           builderFactory),
-                           _maxLeftEps(DEFAULT_MAX_LEFT_EPS),
-                           _maxRightEps(DEFAULT_MAX_RIGHT_EPS),
-                           _maxElevation(DEFAULT_MAX_ELEVATION)
-           {
-           }
+                    class Builder : public MultiValueChromosomeMutationOperation<VALUE_TYPE, FITNESS_TYPE>::Builder
+                    {
+                      protected:
+                        unsigned int _maxLeftEps;
 
-           Builder& setMaxElevation(FITNESS_TYPE maxElevation)
-           {
-               _maxElevation = maxElevation;
-               return *this;
-           }
+                        unsigned int _maxRightEps;
 
-           Builder& setMaxLeftEps(unsigned int maxLeftEps)
-           {
-               _maxLeftEps = maxLeftEps;
-               return *this;
-           }
+                        FITNESS_TYPE _maxElevation;
 
-           Builder& setMaxRightEps(unsigned int maxRightEps)
-           {
-               _maxRightEps = maxRightEps;
-               return *this;
-           }
+                      public:
+                        const constexpr static unsigned int DEFAULT_MAX_LEFT_EPS = 2;
 
-           virtual typename BaseMutationOperation<FITNESS_TYPE>::ptr create() override
-           {
-               return std::move
-                   (
-                       SmoothPeakMutationOperation<VALUE_TYPE,FITNESS_TYPE>::makeShared(
-                       this->_maxLeftEps,
-                       this->_maxRightEps,
-                       this->_maxElevation,
-                       this->_settings,
-                       this->_choosingOperation,
-                       std::dynamic_pointer_cast<ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>>(this->_builderFactory)
-                   )
-               );
-           }
+                        const constexpr static unsigned int DEFAULT_MAX_RIGHT_EPS = 2;
 
-       };
+                        const constexpr static FITNESS_TYPE DEFAULT_MAX_ELEVATION = 5;
 
+                        Builder(const std::shared_ptr<ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>>
+                                    &builderFactory)
+                            : MultiValueChromosomeMutationOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(builderFactory),
+                              _maxLeftEps(DEFAULT_MAX_LEFT_EPS), _maxRightEps(DEFAULT_MAX_RIGHT_EPS),
+                              _maxElevation(DEFAULT_MAX_ELEVATION)
+                        {
+                        }
 
+                        Builder(const std::shared_ptr<MultiValueMutationSettings> &settings,
+                                const std::shared_ptr<BaseChoosingOperation<FITNESS_TYPE>> &choosingOperation,
+                                const std::shared_ptr<ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>>
+                                    &builderFactory)
+                            : MultiValueChromosomeMutationOperation<VALUE_TYPE, FITNESS_TYPE>::Builder(
+                                  settings, choosingOperation, builderFactory),
+                              _maxLeftEps(DEFAULT_MAX_LEFT_EPS), _maxRightEps(DEFAULT_MAX_RIGHT_EPS),
+                              _maxElevation(DEFAULT_MAX_ELEVATION)
+                        {
+                        }
 
-};
-//class
+                        Builder &setMaxElevation(FITNESS_TYPE maxElevation)
+                        {
+                            _maxElevation = maxElevation;
+                            return *this;
+                        }
 
-} /* geneial_export_namespace */
-} /* private namespace mutation */
-} /* private namespace operation */
+                        Builder &setMaxLeftEps(unsigned int maxLeftEps)
+                        {
+                            _maxLeftEps = maxLeftEps;
+                            return *this;
+                        }
+
+                        Builder &setMaxRightEps(unsigned int maxRightEps)
+                        {
+                            _maxRightEps = maxRightEps;
+                            return *this;
+                        }
+
+                        virtual typename BaseMutationOperation<FITNESS_TYPE>::ptr create() override
+                        {
+                            return std::move(SmoothPeakMutationOperation<VALUE_TYPE, FITNESS_TYPE>::makeShared(
+                                this->_maxLeftEps, this->_maxRightEps, this->_maxElevation, this->_settings,
+                                this->_choosingOperation,
+                                std::dynamic_pointer_cast<
+                                    ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>>(
+                                    this->_builderFactory)));
+                        }
+                    };
+                };
+                // class
+
+            } /* geneial_export_namespace */
+        } /* private namespace mutation */
+    } /* private namespace operation */
 } /* private namespace geneial */
 
 #include <geneial/core/operations/mutation/SmoothPeakMutationOperation.hpp>
-
