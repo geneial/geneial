@@ -48,37 +48,16 @@ geneial_private_namespace(geneial)
                     unsigned int numberToReplace =
                         getAmountToReplace(population, offspring); // this also takes care of elitism!
 
-                    // Insert all the offspring, parents are ignored here (since they are assumed to be already in the
-                    // population)
-
                     // We'd rather insert the chromsomes all at one, so we can use multithreading for determining the
                     // fitness. However, first we need to check whehter we will have duplicates
 
-                    typename Population<FITNESS_TYPE>::chromosome_container newChildren;
-                    newChildren.reserve(offspring.size());
-
-                    // std::cout << "Population"<< population.getSize() << " Amount To Replace: " << numberToReplace <<"
-                    // Offspring:"<< offspring.size()<<std::endl;
-
-                    unsigned int childrenCandidates = 0;
-                    for (const auto &newOffspring : offspring)
-                    {
-                        if (childrenCandidates < numberToReplace)
-                        {
-                            if (!population.hashExists(newOffspring->getHash()))
-                            {
-                                newChildren.emplace_back(newOffspring);
-                                childrenCandidates++;
-                            }
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
+                    typename Population<FITNESS_TYPE>::chromosome_container newChildren = offspring;
+                    const auto duplicates = population.removeDuplicates(newChildren);
+                    newChildren.resize(std::min<std::size_t>(newChildren.size(), numberToReplace));
+                    const auto childrenCandidates = static_cast<unsigned int>(newChildren.size());
 
                     const unsigned int failed_inserts =
-                        childrenCandidates - population.insertChromosomeContainer(newChildren);
+                        duplicates + childrenCandidates - population.insertChromosomeContainer(newChildren);
 
                     EventValueData<unsigned int>::create(*manager.getBookkeeper(), "REPLACEMENT_FAILED_INSERTS",
                                                          failed_inserts);

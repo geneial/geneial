@@ -82,6 +82,12 @@ BOOST_AUTO_TEST_CASE(batch_deduplication_checks_values_in_each_collision_bucket)
     BOOST_REQUIRE_EQUAL(candidates.size(), 2);
     BOOST_CHECK_EQUAL(candidates[0]->getFitness().get(), 4);
     BOOST_CHECK_EQUAL(candidates[1]->getFitness().get(), 5);
+    manager->getPopulationSettings().setMaxChromosomes(3);
+    auto replacement = geneial::operation::replacement::ReplaceWorstOperation<double>::Builder().create();
+    replacement->doReplace(population, {}, candidates, *manager);
+    BOOST_CHECK_EQUAL(population.getSize(), 3);
+    BOOST_CHECK(population.containsChromosome(chromosome(4)));
+    BOOST_CHECK(population.containsChromosome(chromosome(5)));
     using FloatingChromosome = geneial::population::chromosome::MultiValueChromosome<double, double>;
     const auto floatingEvaluator =
         std::make_shared<geneial::FunctionFitnessEvaluator<double>>([](std::span<const double>) { return 1.0; });
