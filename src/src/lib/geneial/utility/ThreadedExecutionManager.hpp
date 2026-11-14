@@ -11,9 +11,9 @@ geneial_private_namespace(geneial)
 
             inline void ThreadedExecutionManager::executor()
             {
+                std::vector<std::function<void()>> batch;
                 for (;;)
                 {
-                    std::vector<std::function<void()>> batch;
                     {
                         std::unique_lock lock(_mutex);
                         _condEntry.wait(lock, [this] { return _finish || !_tasks.empty(); });
@@ -43,9 +43,11 @@ geneial_private_namespace(geneial)
                             }
                         }
                     }
+                    const auto completed = batch.size();
+                    batch.clear();
                     {
                         std::lock_guard lock(_mutex);
-                        _activeTasks -= batch.size();
+                        _activeTasks -= completed;
                     }
                     _condExit.notify_all();
                 }

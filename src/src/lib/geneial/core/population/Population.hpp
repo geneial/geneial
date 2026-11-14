@@ -86,30 +86,26 @@ geneial_private_namespace(geneial)
             template <typename FITNESS_TYPE>
             inline unsigned int Population<FITNESS_TYPE>::removeDuplicates(chromosome_container & toCheck)
             {
-                unsigned int removed = 0;
+                const auto previousSize = toCheck.size();
                 hash_map candidates;
-
-                for (auto it = toCheck.begin(); it != toCheck.end();)
-                {
-                    if (!*it)
-                        throw std::invalid_argument("Chromosome cannot be null");
-                    const auto hashValue = (*it)->getHash();
-                    const auto range = candidates.equal_range(hashValue);
-                    const bool repeated = std::any_of(range.first, range.second, [&it](const auto &entry)
-                                                      { return entry.second == *it || entry.second->equals(**it); });
-                    if (repeated || containsChromosome(*it))
-                    {
-                        it = toCheck.erase(it);
-                        removed++;
-                    }
-                    else
-                    {
-                        candidates.emplace(hashValue, *it);
-                        ++it;
-                    }
-                }
-
-                return removed;
+                const auto end =
+                    std::remove_if(toCheck.begin(), toCheck.end(),
+                                   [&](const auto &chromosome)
+                                   {
+                                       if (!chromosome)
+                                           throw std::invalid_argument("Chromosome cannot be null");
+                                       const auto hashValue = chromosome->getHash();
+                                       const auto range = candidates.equal_range(hashValue);
+                                       const bool repeated = std::any_of(
+                                           range.first, range.second, [&](const auto &entry)
+                                           { return entry.second == chromosome || entry.second->equals(*chromosome); });
+                                       if (repeated || containsChromosome(chromosome))
+                                           return true;
+                                       candidates.emplace(hashValue, chromosome);
+                                       return false;
+                                   });
+                toCheck.erase(end, toCheck.end());
+                return static_cast<unsigned int>(previousSize - toCheck.size());
             }
 
             template <typename FITNESS_TYPE>

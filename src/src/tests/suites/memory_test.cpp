@@ -209,6 +209,18 @@ BOOST_AUTO_TEST_CASE(timing_diagnostics_ignore_missing_or_incompatible_payloads)
     BOOST_CHECK_THROW(geneial::algorithm::printTiming(nullptr, keeper.getEvents(), stream), std::invalid_argument);
 }
 
+BOOST_AUTO_TEST_CASE(waiting_for_workers_also_releases_completed_task_captures)
+{
+    geneial::utility::ThreadedExecutionManager workers(2);
+    workers.setAmountPerThread(8);
+    auto resource = std::make_shared<Resource>();
+    std::weak_ptr<Resource> observed = resource;
+    workers.addTask([resource] {});
+    resource.reset();
+    workers.waitForTasks();
+    BOOST_CHECK(observed.expired());
+    BOOST_CHECK_EQUAL(Resource::live, 0);
+}
 
 BOOST_AUTO_TEST_CASE(diagnostic_facade_validates_lifecycles_and_reports_retained_events)
 {
