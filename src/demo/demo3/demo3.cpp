@@ -1,56 +1,59 @@
-#include <geneial/core/population/chromosome/MultiValueChromosome.h>
 #include <geneial/algorithm/SteadyStateAlgorithm.h>
+#include <geneial/core/population/chromosome/MultiValueChromosome.h>
 
 #include <geneial/algorithm/criteria/MaxGenerationCriterion.h>
 
 #include <geneial/core/population/builder/ContinousMultiValueBuilderSettings.h>
 #include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.h>
 
-#include <geneial/core/operations/mutation/SmoothPeakMutationOperation.h>
 #include <geneial/core/operations/crossover/MultiValueChromosomeBlendingCrossover.h>
 #include <geneial/core/operations/crossover/SmoothedMultiValueChromosomeNPointCrossover.h>
+#include <geneial/core/operations/mutation/SmoothPeakMutationOperation.h>
 
 #include <geneial/algorithm/criteria/CombinedCriterion.h>
+#include <geneial/algorithm/criteria/FixPointCriterion.h>
 #include <geneial/algorithm/criteria/MaxGenerationCriterion.h>
 #include <geneial/algorithm/criteria/NegationDecorator.h>
-#include <geneial/algorithm/criteria/FixPointCriterion.h>
 
 #include <geneial/algorithm/observer/BestChromosomeObserver.h>
 
-
-#include <thread>
-#include <condition_variable>
-#include <mutex>
-#include <limits>
-#include <stdio.h>
-#include <stdexcept>
 #include <cassert>
+#include <condition_variable>
+#include <limits>
+#include <mutex>
 #include <ostream>
+#include <stdexcept>
+#include <stdio.h>
+#include <thread>
 
-//http://stackoverflow.com/a/17469726/506651
-namespace Color {
-    enum Code {
-        FG_RED      = 31,
-        FG_GREEN    = 32,
-        FG_YELLOW   = 33,
-        FG_BLUE     = 34,
-        FG_DEFAULT  = 39,
-        BG_RED      = 41,
-        BG_GREEN    = 42,
-        BG_YELLOW    = 43,
-        BG_BLUE     = 44,
-        BG_DEFAULT  = 49
-    };
-    class Modifier {
-        Code code;
-    public:
-        Modifier(Code pCode) : code(pCode) {}
-        friend std::ostream&
-        operator<<(std::ostream& os, const Modifier& mod) {
-            return os << "\033[" << mod.code << "m";
-        }
-    };
-}
+// http://stackoverflow.com/a/17469726/506651
+namespace Color
+{
+enum Code
+{
+    FG_RED = 31,
+    FG_GREEN = 32,
+    FG_YELLOW = 33,
+    FG_BLUE = 34,
+    FG_DEFAULT = 39,
+    BG_RED = 41,
+    BG_GREEN = 42,
+    BG_YELLOW = 43,
+    BG_BLUE = 44,
+    BG_DEFAULT = 49
+};
+class Modifier
+{
+    Code code;
+
+  public:
+    Modifier(Code pCode) : code(pCode) {}
+    friend std::ostream &operator<<(std::ostream &os, const Modifier &mod)
+    {
+        return os << "\033[" << mod.code << "m";
+    }
+};
+} // namespace Color
 
 using namespace geneial;
 
@@ -89,9 +92,9 @@ double myTargetFunc3(double x)
 */
 void plot(const MultiValueChromosome<double, double> &chromosomeToPrint)
 {
-    const auto & container = chromosomeToPrint.getContainer();
+    const auto &container = chromosomeToPrint.getContainer();
 
-    const int amountOfPlaces= chromosomeToPrint.getContainer().size();
+    const int amountOfPlaces = chromosomeToPrint.getContainer().size();
     const double xmax = amountOfPlaces;
     const double xmin = 0;
     const double xstep = 1;
@@ -170,9 +173,9 @@ void plot(const MultiValueChromosome<double, double> &chromosomeToPrint)
     double maxDiff = 0;
     for (int i = 0; i < amountOfPlaces; i++)
     {
-        if(i>0)
+        if (i > 0)
         {
-            maxDiff = std::max(maxDiff,std::abs(myTargetFunc1(i)-myTargetFunc1(i-1)));
+            maxDiff = std::max(maxDiff, std::abs(myTargetFunc1(i) - myTargetFunc1(i - 1)));
         }
         std::cout.width(15);
         std::cout.width(1);
@@ -195,44 +198,40 @@ void plot(const MultiValueChromosome<double, double> &chromosomeToPrint)
         std::cout << std::right << std::abs(myTargetFunc1(i) - container[i]) << "|";
         std::cout << std::endl;
     }
-    std::cout << "max_i(|y_i-y_i-1|) = "<< maxDiff <<std::endl;
+    std::cout << "max_i(|y_i-y_i-1|) = " << maxDiff << std::endl;
     std::flush(std::cout);
 }
 
-class DemoChromosomeEvaluator: public FitnessEvaluator<double>
+class DemoChromosomeEvaluator : public FitnessEvaluator<double>
 {
-public:
-    std::unique_ptr<Fitness<double>> evaluate(const BaseChromosome<double>& chromosome) const
+  public:
+    std::unique_ptr<Fitness<double>> evaluate(const BaseChromosome<double> &chromosome) const
     {
         try
         {
             double fitness = 1;
-            const auto& mvc = dynamic_cast<const MultiValueChromosome<double, double>&>(chromosome);
+            const auto &mvc = dynamic_cast<const MultiValueChromosome<double, double> &>(chromosome);
             int i = 0;
             for (auto value : mvc.getContainer())
             {
                 fitness += std::abs(value - myTargetFunc1(i));
                 i++;
             }
-            return std::unique_ptr<Fitness<double> >(new Fitness<double>(1 / fitness));
-        } catch (std::bad_cast&)
-        {
-            throw new std::runtime_error("Chromosome is not an Double MultiValueChromosome with double fitness!");
+            return std::unique_ptr<Fitness<double>>(new Fitness<double>(1 / fitness));
         }
-        std::unique_ptr<Fitness<double> > ptr(new Fitness<double>(std::numeric_limits<double>::signaling_NaN()));
+        catch (std::bad_cast &)
+        {
+            throw std::runtime_error("Chromosome is not an Double MultiValueChromosome with double fitness!");
+        }
+        std::unique_ptr<Fitness<double>> ptr(new Fitness<double>(std::numeric_limits<double>::signaling_NaN()));
         return ptr;
     }
 };
 
-
-
-
-
 void inline printClearScreen()
 {
 #ifdef WINDOWS
-    if(!
-            std::system ( "CLS" ))
+    if (!std::system("CLS"))
     {
         assert("Unable to clear Screen");
     }
@@ -266,47 +265,47 @@ void displayOnUpdate()
     std::cerr << "...finished waiting. i == 1\n";
 }
 
-class DemoObserver: public BestChromosomeObserver<double>
+class DemoObserver : public BestChromosomeObserver<double>
 {
-public:
+  public:
     virtual void updateNewBestChromosome(geneial::population::management::BaseManager<double> &manager)
     {
         try
         {
-            best = std::dynamic_pointer_cast< MultiValueChromosome<double, double> > (manager.getHighestFitnessChromosome());
+            best =
+                std::dynamic_pointer_cast<MultiValueChromosome<double, double>>(manager.getHighestFitnessChromosome());
             cv.notify_all();
-        } catch (std::bad_cast &)
+        }
+        catch (std::bad_cast &)
         {
-            throw new std::runtime_error("Chromosome is not an double MultiValueChromosome with double fitness!");
+            throw std::runtime_error("Chromosome is not an double MultiValueChromosome with double fitness!");
         }
     }
-
 };
 
 int main(int argc, char **argv)
 {
-    std::cout
-            << "Running GENEIAL demo2 - Version "
-            << GENEIAL_VERSION_STRING << " ("<<GENEIAL_BUILD_TYPE << ")"
-            << std::endl;
+    std::cout << "Running GENEIAL demo2 - Version " << GENEIAL_VERSION_STRING << " (" << GENEIAL_BUILD_TYPE << ")"
+              << std::endl;
 
     auto evaluator = std::make_shared<DemoChromosomeEvaluator>();
 
     auto algorithmBuilder = SteadyStateAlgorithm<double>::Builder();
 
-    //Factory:
-    ContinousMultiValueChromosomeFactory<double,double>::Builder factoryBuilder(evaluator);
+    // Factory:
+    ContinousMultiValueChromosomeFactory<double, double>::Builder factoryBuilder(evaluator);
     factoryBuilder.getSettings().setNum(50);
     factoryBuilder.getSettings().setRandomMin(-1000);
     factoryBuilder.getSettings().setRandomMax(1000);
     factoryBuilder.getSettings().setHasStart(false);
     factoryBuilder.getSettings().setEps(28);
 
-    auto factory  = std::dynamic_pointer_cast<ContinousMultiValueChromosomeFactory<double, double>>(factoryBuilder.create());
+    auto factory =
+        std::dynamic_pointer_cast<ContinousMultiValueChromosomeFactory<double, double>>(factoryBuilder.create());
     algorithmBuilder.setChromosomeFactory(factory);
 
-    //Mutation:
-    SmoothPeakMutationOperation<double,double>::Builder mutationBuilder(factory);
+    // Mutation:
+    SmoothPeakMutationOperation<double, double>::Builder mutationBuilder(factory);
 
     auto choosing = ChooseRandom<double>::Builder().setProbability(0.4).create();
     mutationBuilder.setMaxElevation(20);
@@ -315,44 +314,41 @@ int main(int argc, char **argv)
 
     algorithmBuilder.setMutationOperation(mutationBuilder.create());
 
-    //Selection:
+    // Selection:
     auto selectionBuilder = RouletteWheelSelection<double>::Builder();
     selectionBuilder.getSettings().setNumberOfParents(10);
 
     algorithmBuilder.setSelectionOperation(selectionBuilder.create());
 
-    //Coupling:
+    // Coupling:
     auto couplingBuilder = RandomCouplingOperation<double>::Builder();
     couplingBuilder.getSettings().setNumberOfOffspring(20);
 
     algorithmBuilder.setCouplingOperation(couplingBuilder.create());
 
-
-    //Crossover:
+    // Crossover:
     auto crossoverBuilder = SmoothedMultiValueChromosomeNPointCrossover<double, double>::Builder(factory);
     crossoverBuilder.getCrossoverSettings().setCrossOverPoints(2);
-    crossoverBuilder.getCrossoverSettings().setWidthSetting(MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH);
+    crossoverBuilder.getCrossoverSettings().setWidthSetting(
+        MultiValueChromosomeNPointCrossoverSettings::RANDOM_MIN_WIDTH);
     crossoverBuilder.getCrossoverSettings().setMinWidth(3);
 
     algorithmBuilder.setCrossoverOperation(crossoverBuilder.create());
 
-    //Replacement:
+    // Replacement:
     auto replacementBuilder = ReplaceWorstOperation<double>::Builder();
-    //auto replacementBuilder = ReplaceRandomOperation<double>::Builder();
+    // auto replacementBuilder = ReplaceRandomOperation<double>::Builder();
     replacementBuilder.getSettings().setMode(BaseReplacementSettings::REPLACE_ALL_OFFSPRING);
     replacementBuilder.getSettings().setAmountElitism(20);
-    //replacementBuilder.getSettings().setAmountToReplace(30);
+    // replacementBuilder.getSettings().setAmountToReplace(30);
 
     algorithmBuilder.setReplacementOperation(replacementBuilder.create());
 
-    //Stopping Criteria
+    // Stopping Criteria
     auto stoppingCriterion = std::make_shared<CombinedCriterion<double>>();
-    stoppingCriterion->add(CombinedCriterion<double>::INIT,
-            std::make_shared<MaxGenerationCriterion<double>>(1000000));
+    stoppingCriterion->add(CombinedCriterion<double>::INIT, std::make_shared<MaxGenerationCriterion<double>>(1000000));
 
-    stoppingCriterion->add(CombinedCriterion<double>::OR,
-          std::make_shared<FixPointCriterion<double>>(0, 50000, 50000));
-
+    stoppingCriterion->add(CombinedCriterion<double>::OR, std::make_shared<FixPointCriterion<double>>(0, 50000, 50000));
 
     algorithmBuilder.setStoppingCriterion(stoppingCriterion);
 
@@ -370,10 +366,8 @@ int main(int argc, char **argv)
     ui_update.join();
 
     printClearScreen();
-    auto mvc = std::dynamic_pointer_cast<MultiValueChromosome<double, double> >(
-            algorithm->getHighestFitnessChromosome());
-    plot (*mvc);
+    auto mvc =
+        std::dynamic_pointer_cast<MultiValueChromosome<double, double>>(algorithm->getHighestFitnessChromosome());
+    plot(*mvc);
     std::cout << "ended after " << algorithm->getPopulation().getAge() << " generations" << std::endl;
-
-
 }

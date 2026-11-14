@@ -6,6 +6,8 @@
 #include <geneial/utility/mixins/Buildable.h>
 #include <geneial/utility/mixins/EnableMakeShared.h>
 
+#include <functional>
+
 geneial_private_namespace(geneial)
 {
 geneial_private_namespace(operation)

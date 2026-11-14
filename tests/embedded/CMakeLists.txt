@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.21)
+project(geneial_embedded_consumer LANGUAGES CXX)
+enable_testing()
+add_subdirectory(../.. geneial)
+add_executable(consumer ../consumer/main.cpp)
+target_link_libraries(consumer PRIVATE geneial::geneial)
+add_test(NAME embedded_consumer COMMAND consumer)

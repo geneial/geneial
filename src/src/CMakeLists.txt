@@ -1,32 +1,22 @@
-cmake_minimum_required(VERSION 2.8)
-
-
-#Ensure we set the current git version
-find_package(Git QUIET)
-
-if(GIT_FOUND)
-    
-    # Get the current working branch
-    execute_process(
-      COMMAND git rev-parse --abbrev-ref HEAD
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-      OUTPUT_VARIABLE GIT_BRANCH
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    
-    # Get the latest abbreviated commit hash of the working branch
-    execute_process(
-      COMMAND git log -1 --format=%h
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-      OUTPUT_VARIABLE GIT_COMMIT_HASH
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    message(STATUS "GIT_BRANCH: ${BoldGreen}${GIT_BRANCH}${ColourReset}")
-else()
-    set(GIT_COMMIT_HASH "no-rev")
-    set(GIT_BRANCH "no-branch")
+set(GIT_BRANCH "unknown")
+set(GIT_COMMIT_HASH "unknown")
+if(GENEIAL_EMBED_GIT_METADATA)
+    find_package(Git QUIET)
+    if(GIT_FOUND)
+        execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+            OUTPUT_VARIABLE branch OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET RESULT_VARIABLE branch_result)
+        execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+            OUTPUT_VARIABLE revision OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET RESULT_VARIABLE revision_result)
+        if(branch_result EQUAL 0 AND revision_result EQUAL 0)
+            set(GIT_BRANCH "${branch}")
+            set(GIT_COMMIT_HASH "${revision}")
+        endif()
+    endif()
 endif()
 
-
 add_subdirectory(lib)
-add_subdirectory(tests)
+if(BUILD_TESTING AND UNITTEST)
+    add_subdirectory(tests)
+endif()

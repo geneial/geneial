@@ -1,0 +1,42 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": { "major": 3, "minor": 21, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "release",
+      "displayName": "Release with tests and examples",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/output/${presetName}",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release", "CMAKE_EXPORT_COMPILE_COMMANDS": true }
+    },
+    {
+      "name": "debug",
+      "inherits": "release",
+      "binaryDir": "${sourceDir}/output/${presetName}",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "sanitized",
+      "inherits": "debug",
+      "binaryDir": "${sourceDir}/output/${presetName}",
+      "cacheVariables": { "GENEIAL_SANITIZERS": true }
+    },
+    {
+      "name": "library",
+      "inherits": "release",
+      "binaryDir": "${sourceDir}/output/${presetName}",
+      "cacheVariables": { "BUILD_TESTING": false, "GENEIAL_BUILD_EXAMPLES": false }
+    }
+  ],
+  "buildPresets": [
+    { "name": "release", "configurePreset": "release" },
+    { "name": "debug", "configurePreset": "debug" },
+    { "name": "sanitized", "configurePreset": "sanitized" },
+    { "name": "library", "configurePreset": "library" }
+  ],
+  "testPresets": [
+    { "name": "release", "configurePreset": "release", "output": { "outputOnFailure": true } },
+    { "name": "debug", "configurePreset": "debug", "output": { "outputOnFailure": true } },
+    { "name": "sanitized", "configurePreset": "sanitized", "output": { "outputOnFailure": true } }
+  ]
+}

@@ -1,168 +1,70 @@
+#ifndef GENEIAL_HEADER_ONLY_TESTS
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE utility/random
+#endif
+#define BOOST_TEST_MODULE random
+#ifdef GENEIAL_HEADER_ONLY_TESTS
+#include <boost/test/included/unit_test.hpp>
+#else
 #include <boost/test/unit_test.hpp>
-
+#endif
+#include <array>
 #include <geneial/utility/Random.h>
-using namespace geneial::utility;
+#include <limits>
 
-BOOST_AUTO_TEST_SUITE( RandomSuite )
+using geneial::utility::Random;
 
-BOOST_AUTO_TEST_CASE( valid_values_ranges_bool )
+struct Seeded
 {
-    bool myRandBool = Random::generateBit();
-    BOOST_CHECK(myRandBool == true || myRandBool == false);
+    Seeded()
+    {
+        Random::initialize(42);
+    }
+};
+BOOST_FIXTURE_TEST_SUITE(RandomSuite, Seeded)
+
+BOOST_AUTO_TEST_CASE(integer_and_real_distributions_cover_their_intervals)
+{
+    std::array<unsigned int, 10> integers{}, reals{};
+    for (unsigned int trial = 0; trial < 100000; ++trial)
+    {
+        const int integer = Random::generate(-5, 4);
+        const double real = Random::generate(-5.0, 5.0);
+        BOOST_REQUIRE(integer >= -5 && integer <= 4);
+        BOOST_REQUIRE(real >= -5 && real < 5);
+        ++integers[integer + 5];
+        ++reals[static_cast<unsigned int>(real + 5)];
+    }
+    for (const auto &distribution : {integers, reals})
+        for (const auto count : distribution)
+            BOOST_CHECK(count > 9000 && count < 11000);
 }
 
-#define TEST_INT_VALUERANGE_RUNS 1000
-BOOST_AUTO_TEST_CASE( valid_values_ranges_int )
+BOOST_AUTO_TEST_CASE(small_integral_types_and_degenerate_ranges_are_supported)
 {
-    for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
+    unsigned int heads = 0;
+    for (unsigned int trial = 0; trial < 10000; ++trial)
     {
-        const int result = Random::generate<int>(0, 100);
-        BOOST_CHECK(result >= 0 && result <= 100);
+        heads += Random::generate<bool>();
+        const auto signedValue = Random::generate<signed char>(-4, 4);
+        const auto unsignedValue = Random::generate<unsigned char>(0, 255);
+        BOOST_CHECK(signedValue >= -4 && signedValue <= 4);
+        BOOST_CHECK(unsignedValue <= 255);
+        BOOST_CHECK_EQUAL(Random::generate(7, 7), 7);
+        BOOST_CHECK_EQUAL(Random::generate(-1.5, -1.5), -1.5);
     }
-
-    for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
-    {
-        const int result = Random::generate<int>(-100, 0);
-        BOOST_CHECK(result >= -100 && result <= 0);
-    }
-
-    for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
-    {
-        const int result = Random::generate<int>(-100, 100);
-        BOOST_CHECK(result >= -100 && result <= 100);
-    }
-
-    for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
-    {
-        const float result = Random::generate<float>(0, 100);
-        BOOST_CHECK(result >= 0 && result <= 100);
-    }
-
-    for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
-    {
-        const float result = Random::generate<float>(-100, 0);
-        BOOST_CHECK(result >= -100 && result <= 0);
-    }
-
-    for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
-    {
-        const float result = Random::generate<float>(-100, 100);
-        BOOST_CHECK(result >= -100 && result <= 100);
-    }
-
-    for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
-    {
-        const double result = Random::generate<double>(0, 100);
-        BOOST_CHECK(result >= 0 && result <= 100);
-    }
-
-    for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
-    {
-        const double result = Random::generate<double>(-100, 0);
-        BOOST_CHECK(result >= -100 && result <= 0);
-    }
-
-    for (int i = 1; i < TEST_INT_VALUERANGE_RUNS; i++)
-    {
-        const double result = Random::generate<double>(-100, 100);
-        BOOST_CHECK(result >= -100 && result <= 100);
-    }
+    BOOST_CHECK(heads > 4500 && heads < 5500);
+    BOOST_CHECK(!Random::decision(0));
+    BOOST_CHECK(Random::decision(1));
 }
 
-BOOST_AUTO_TEST_CASE( difference )
+BOOST_AUTO_TEST_CASE(default_real_draws_exclude_the_upper_endpoint)
 {
-    double myRand1D = Random::generate<double>();
-    double myRand2D = Random::generate<double>();
-    BOOST_CHECK(myRand1D != myRand2D);
-
-    float myRand1F = Random::generate<float>();
-    float myRand2F = Random::generate<float>();
-    std::cout << myRand1F << " - " << myRand2F;
-    BOOST_CHECK(myRand1F != myRand2F);
-
-    int myRand1I = Random::generate<int>();
-    int myRand2I = Random::generate<int>();
-    BOOST_CHECK(myRand1I != myRand2I);
-}
-
-//Make TEST_INT_UNIFORM_RUNS, see whether randomness divergates by TEST_INT_UNIFORM_TOLERANCE
-#define TEST_INT_UNIFORM_RUNS (1e6)
-#define TEST_INT_UNIFORM_SLOTS (10)
-#define TEST_INT_UNIFORM_TOLERANCE (0.001f)
-
-BOOST_AUTO_TEST_CASE( int_uniform )
-{
-
-    BOOST_TEST_MESSAGE("TEST_INT_UNIFORM_RUNS: " << TEST_INT_UNIFORM_RUNS);
-    BOOST_TEST_MESSAGE("TEST_INT_UNIFORM_SLOTS: " << TEST_INT_UNIFORM_SLOTS);
-    BOOST_TEST_MESSAGE("TEST_INT_UNIFORM_TOLERANCE: " << TEST_INT_UNIFORM_TOLERANCE);
-
-    int occurrences[TEST_INT_UNIFORM_SLOTS];
-
-    for (int i = 0; i < (TEST_INT_UNIFORM_SLOTS); i++)
+    for (unsigned int trial = 0; trial < 10000; ++trial)
     {
-        occurrences[i] = 0;
-    }
-
-    for (int i = 1; i < TEST_INT_UNIFORM_RUNS; i++)
-    {
-        occurrences[Random::generate(0, TEST_INT_UNIFORM_SLOTS - 1)]++;
-    }
-
-    BOOST_TEST_MESSAGE("Int Distribution: ");
-    for (int i = 0; i < (TEST_INT_UNIFORM_SLOTS); i++)
-    {
-        BOOST_TEST_MESSAGE(
-                i << " " << std::string((int)100* ((float) occurrences[i] / (float) TEST_INT_UNIFORM_RUNS), '+'));
-    }
-
-    for (int i = 0; i < (TEST_INT_UNIFORM_SLOTS); i++)
-    {
-        BOOST_CHECK_MESSAGE(
-                ((float) occurrences[i] / (float) TEST_INT_UNIFORM_RUNS) < ((float) TEST_INT_UNIFORM_RUNS / (float) TEST_INT_UNIFORM_SLOTS) / (float) TEST_INT_UNIFORM_RUNS + (float) TEST_INT_UNIFORM_TOLERANCE,
-                "uniform failed for " << i << " with " << (float) occurrences[i] / (float) TEST_INT_UNIFORM_RUNS);
+        const auto single = Random::generate<float>();
+        const auto extended = Random::generate<long double>();
+        BOOST_CHECK(single >= 0 && single < 1);
+        BOOST_CHECK(extended >= 0 && extended < 1);
     }
 }
-#define TEST_DOUBLE_UNIFORM_RUNS 1e6
-#define TEST_DOUBLE_UNIFORM_SLOTS 10
-#define TEST_DOUBLE_UNIFORM_TOLERANCE 0.001f
-#define TEST_DOUBLE_BOUND_TOLERANCE 0.00001f
-BOOST_AUTO_TEST_CASE( double_uniform )
-{
-
-    BOOST_TEST_MESSAGE("TEST_DOUBLE_UNIFORM_RUNS: " << TEST_DOUBLE_UNIFORM_RUNS);
-    BOOST_TEST_MESSAGE("TEST_DOUBLE_UNIFORM_SLOTS: " << TEST_DOUBLE_UNIFORM_SLOTS);
-    BOOST_TEST_MESSAGE("TEST_DOUBLE_UNIFORM_TOLERANCE: " << TEST_DOUBLE_UNIFORM_TOLERANCE);
-
-    int occurrences[TEST_DOUBLE_UNIFORM_SLOTS];
-
-    for (int i = 0; i < (TEST_DOUBLE_UNIFORM_SLOTS); i++)
-    {
-        occurrences[i] = 0;
-    }
-
-    for (int i = 1; i < TEST_DOUBLE_UNIFORM_RUNS; i++)
-    {
-        const int val = (int) Random::generate<int>(0,
-                TEST_DOUBLE_UNIFORM_SLOTS - TEST_DOUBLE_BOUND_TOLERANCE);
-        occurrences[val]++;
-    }
-
-    BOOST_TEST_MESSAGE("Double Distribution: ");
-    for (int i = 0; i < (TEST_DOUBLE_UNIFORM_SLOTS); i++)
-    {
-        BOOST_TEST_MESSAGE(
-                i << " " << std::string((int)100* ((float) occurrences[i] / (float) TEST_DOUBLE_UNIFORM_RUNS), '+'));
-    }
-
-    for (int i = 0; i < (TEST_DOUBLE_UNIFORM_SLOTS); i++)
-    {
-        BOOST_CHECK_MESSAGE(
-                ((float) occurrences[i] / (float) TEST_DOUBLE_UNIFORM_RUNS) < ((float) TEST_DOUBLE_UNIFORM_RUNS / (float) TEST_DOUBLE_UNIFORM_SLOTS) / (float) TEST_DOUBLE_UNIFORM_RUNS + (float) TEST_DOUBLE_UNIFORM_TOLERANCE,
-                "uniform failed for " << i << " with " << (float) occurrences[i] / (float) TEST_DOUBLE_UNIFORM_RUNS);
-    }
-}
-
 BOOST_AUTO_TEST_SUITE_END()

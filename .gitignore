@@ -21,6 +21,7 @@ install_manifest.txt
 
 #anything in the build directory
 build/
+output/
 
 #any kind of valgrind logfile or alike
 *.log

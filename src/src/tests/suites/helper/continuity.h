@@ -12,22 +12,20 @@ namespace test_helper
  * @param chromosomeToCheck ptr to the mvc chromosome to check
  * @param maxDeriv the maximal difference that two values whithin a mvc can have
  */
-template<typename VALUE_TYPE, typename FITNESS_TYPE>
+template <typename VALUE_TYPE, typename FITNESS_TYPE>
 inline void checkContinuity(typename BaseChromosome<FITNESS_TYPE>::ptr chromosomeToCheck, VALUE_TYPE maxDeriv)
 {
-    typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr mvcPtr = test_helper::convertBaseChromosome<VALUE_TYPE,
-            FITNESS_TYPE>(chromosomeToCheck);
+    typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr mvcPtr =
+        test_helper::convertBaseChromosome<VALUE_TYPE, FITNESS_TYPE>(chromosomeToCheck);
 
     VALUE_TYPE lastVal = *(mvcPtr->getContainer().begin());
 
-    int i = 0;
-    for(const auto& it : mvcPtr->getContainer())
+    for (const auto &it : mvcPtr->getContainer())
     {
 
         VALUE_TYPE val = std::abs(lastVal - it);
-        BOOST_CHECK(val <= maxDeriv); //TODO (bewo): Why this offset?s
+        BOOST_CHECK(val <= maxDeriv); // TODO (bewo): Why this offset?s
         lastVal = it;
-        i++;
     }
 }
 
@@ -37,17 +35,16 @@ inline void checkContinuity(typename BaseChromosome<FITNESS_TYPE>::ptr chromosom
  * @param start the start value
  * @param tolerance a tolerance that the first value can differ from
  */
-template<typename VALUE_TYPE, typename FITNESS_TYPE>
-inline void checkForStart(typename BaseChromosome<FITNESS_TYPE>::ptr chromosomeToCheck, VALUE_TYPE start, VALUE_TYPE tolerance = 0)
+template <typename VALUE_TYPE, typename FITNESS_TYPE>
+inline void checkForStart(typename BaseChromosome<FITNESS_TYPE>::ptr chromosomeToCheck, VALUE_TYPE start,
+                          VALUE_TYPE tolerance = 0)
 {
-    typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr mvcPtr = test_helper::convertBaseChromosome<VALUE_TYPE,
-                FITNESS_TYPE>(chromosomeToCheck);
-
+    typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr mvcPtr =
+        test_helper::convertBaseChromosome<VALUE_TYPE, FITNESS_TYPE>(chromosomeToCheck);
 
     VALUE_TYPE firstVal = *(mvcPtr->getContainer().begin());
     BOOST_CHECK(std::abs(firstVal - start) <= tolerance);
 }
-
 
 /**
  * Check whether a given chromosome still has values within the specified bounds
@@ -55,14 +52,14 @@ inline void checkForStart(typename BaseChromosome<FITNESS_TYPE>::ptr chromosomeT
  * @param lower the lower limit (min)
  * @param upper the upper limit (max)
  */
-template<typename VALUE_TYPE, typename FITNESS_TYPE>
+template <typename VALUE_TYPE, typename FITNESS_TYPE>
 inline void checkLimits(typename BaseChromosome<FITNESS_TYPE>::ptr chromosomeToCheck, VALUE_TYPE lower,
-        VALUE_TYPE upper)
+                        VALUE_TYPE upper)
 {
-    typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr mvcPtr = test_helper::convertBaseChromosome<VALUE_TYPE,
-            FITNESS_TYPE>(chromosomeToCheck);
+    typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr mvcPtr =
+        test_helper::convertBaseChromosome<VALUE_TYPE, FITNESS_TYPE>(chromosomeToCheck);
 
-    for(const auto& it : mvcPtr->getContainer())
+    for (const auto &it : mvcPtr->getContainer())
     {
         BOOST_CHECK(it >= lower);
         BOOST_CHECK(it <= upper);
@@ -70,4 +67,3 @@ inline void checkLimits(typename BaseChromosome<FITNESS_TYPE>::ptr chromosomeToC
 }
 
 } /* namespace test_helper */
-

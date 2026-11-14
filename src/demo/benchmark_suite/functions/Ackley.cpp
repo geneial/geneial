@@ -17,7 +17,7 @@ double Ackley::compute(const std::vector<double>& coordinates) const
         return a + std::pow(b,2);
     });
 
-    const double cosparts = std::accumulate(coordinates.begin(), coordinates.end(), 0.0, [c](double a, double b)
+    const double cosparts = std::accumulate(coordinates.begin(), coordinates.end(), 0.0, [](double a, double b)
     {
         return a + cos(c*b);
     });

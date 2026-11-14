@@ -2,138 +2,139 @@
 
 #include <geneial/utility/Debug.h>
 
-#include <geneial/namespaces.h>
 #include <geneial/core/population/chromosome/BaseChromosome.h>
+#include <geneial/namespaces.h>
 
-#include <cassert>
-#include <vector>
 #include <algorithm>
-#include <numeric>
+#include <cassert>
 #include <memory>
+#include <numeric>
+#include <vector>
 
 geneial_private_namespace(geneial)
 {
-geneial_private_namespace(population)
-{
-geneial_private_namespace(chromosome)
-{
-
-geneial_export_namespace
-{
-
-template<typename VALUE_TYPE, typename FITNESS_TYPE>
-class MultiValueChromosome: public BaseChromosome<FITNESS_TYPE>
-{
-public:
-
-    typedef typename BaseChromosome<FITNESS_TYPE>::chromsome_hash chromsome_hash;
-
-    typedef typename std::vector<VALUE_TYPE> value_container;
-    typedef typename value_container::const_iterator const_it;
-    typedef typename value_container::iterator it;
-
-    typedef typename std::shared_ptr<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> > ptr;
-    typedef typename std::shared_ptr<const MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> > const_ptr;
-
-    explicit MultiValueChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator) :
-            BaseChromosome<FITNESS_TYPE>(fitnessEvaluator), _container()
+    geneial_private_namespace(population)
     {
-        static_assert(std::is_arithmetic<VALUE_TYPE>::value,"VALUE_TYPE is expected to be an arithmetic data type!");
-        static_assert(std::is_arithmetic<FITNESS_TYPE>::value,"FITNESS_TYPE is expected to be an arithmetic data type!");
-    }
+        geneial_private_namespace(chromosome)
+        {
 
+            geneial_export_namespace
+            {
 
-    /**
-     * Copy Constructor
-     * @param other the other ctor to copy from
-     */
-    MultiValueChromosome(const MultiValueChromosome& other) :
-            BaseChromosome<FITNESS_TYPE>(other._fitnessEvaluator), _container(other._container),
-            _cacheValid(other._cacheValid), _hashCache(other._hashCache)
-    {
-    }
+                template <typename VALUE_TYPE, typename FITNESS_TYPE>
+                class MultiValueChromosome : public BaseChromosome<FITNESS_TYPE>
+                {
+                  public:
+                    typedef typename BaseChromosome<FITNESS_TYPE>::chromsome_hash chromsome_hash;
 
-    /**
-     * RValue Ctor
-     * @param other
-     */
-    MultiValueChromosome(MultiValueChromosome&& other) :
-            BaseChromosome<FITNESS_TYPE>(other._fitnessEvaluator), _container(),
-            _cacheValid(other._cacheValid), _hashCache(other._hashCache)
-    {
-        swap(other);
-    }
+                    typedef typename std::vector<VALUE_TYPE> value_container;
+                    typedef typename value_container::const_iterator const_it;
+                    typedef typename value_container::iterator it;
 
-    /**
-     * Swaps the contents of the other Multi Value Chromosome
-     * @param other
-     */
-    void swap(MultiValueChromosome& other)
-    {
-        using std::swap;
-        swap(other._container,_container);
-        swap(other._fitnessEvaluator,this->_fitnessEvaluator);
-        swap(other._cacheValid,_cacheValid);
-        swap(other._hashCache,_hashCache);
-    }
+                    typedef typename std::shared_ptr<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>> ptr;
+                    typedef typename std::shared_ptr<const MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>> const_ptr;
 
-    virtual ~MultiValueChromosome()
-    {
-    }
+                    explicit MultiValueChromosome(typename FitnessEvaluator<FITNESS_TYPE>::ptr fitnessEvaluator)
+                        : BaseChromosome<FITNESS_TYPE>(fitnessEvaluator), _container()
+                    {
+                        static_assert(std::is_arithmetic<VALUE_TYPE>::value,
+                                      "VALUE_TYPE is expected to be an arithmetic data type!");
+                        static_assert(std::is_arithmetic<FITNESS_TYPE>::value,
+                                      "FITNESS_TYPE is expected to be an arithmetic data type!");
+                    }
 
-    bool equals(const BaseChromosome<FITNESS_TYPE> &chromosome) const override;
+                    /**
+                     * Copy Constructor
+                     * @param other the other ctor to copy from
+                     */
+                    MultiValueChromosome(const MultiValueChromosome &other)
+                        : BaseChromosome<FITNESS_TYPE>(other.getFitnessEvaluator()), _container(other._container),
+                          _cacheValid(other._cacheValid), _hashCache(other._hashCache)
+                    {
+                    }
 
-    const_it getConstIt() const;
-    it getIt() const;
+                    /**
+                     * RValue Ctor
+                     * @param other
+                     */
+                    MultiValueChromosome(MultiValueChromosome &&other)
+                        : BaseChromosome<FITNESS_TYPE>(other.getFitnessEvaluator()), _container(),
+                          _cacheValid(other._cacheValid), _hashCache(other._hashCache)
+                    {
+                        swap(other);
+                    }
 
-    unsigned int getSize() const;
+                    /**
+                     * Swaps the contents of the other Multi Value Chromosome
+                     * @param other
+                     */
+                    void swap(MultiValueChromosome &other)
+                    {
+                        using std::swap;
+                        swap(other._container, _container);
+                        const auto evaluator = this->getFitnessEvaluator();
+                        this->setFitnessEvaluator(other.getFitnessEvaluator());
+                        other.setFitnessEvaluator(evaluator);
+                        swap(other._cacheValid, _cacheValid);
+                        swap(other._hashCache, _hashCache);
+                        this->invalidateFitness();
+                        other.invalidateFitness();
+                        invalidateHashCache();
+                        other.invalidateHashCache();
+                    }
 
-    it getMax() const;
-    it getMin() const;
+                    virtual ~MultiValueChromosome() {}
 
-    VALUE_TYPE getAverage() const;
-    VALUE_TYPE getRange() const;
-    VALUE_TYPE getSum() const;
+                    bool equals(const BaseChromosome<FITNESS_TYPE> &chromosome) const override;
 
-    //TODO (bewo) : provide further convenience methods at this point.
+                    const_it getConstIt() const;
+                    it getIt();
 
-    value_container& getContainer();
+                    unsigned int getSize() const;
 
-    const value_container& getContainer() const;
+                    const_it getMax() const;
+                    const_it getMin() const;
 
-    void setValueContainer(const value_container& container);
+                    VALUE_TYPE getAverage() const;
+                    VALUE_TYPE getRange() const;
+                    VALUE_TYPE getSum() const;
 
-    void setValueContainer(value_container&& container);
+                    // TODO (bewo) : provide further convenience methods at this point.
 
+                    value_container &getContainer();
 
+                    const value_container &getContainer() const;
 
-    void print(std::ostream& os) const override;
+                    void setValueContainer(const value_container &container);
 
-    chromsome_hash getHash() const override;
+                    void setValueContainer(value_container &&container);
 
-    bool inline hasCache() const;
+                    void print(std::ostream &os) const override;
 
-    virtual void doInvalidate() override
-    {
-        invalidateHashCache();
-        _hashCache = 0;
-        //_container.clear();
-    }
+                    chromsome_hash getHash() const override;
 
-    void inline invalidateHashCache() const;
+                    bool inline hasCache() const;
 
-private:
-    value_container _container;
+                    virtual void doInvalidate() override
+                    {
+                        invalidateHashCache();
+                        _hashCache = 0;
+                        //_container.clear();
+                    }
 
-    mutable bool _cacheValid;
+                    void inline invalidateHashCache() const;
 
-    mutable chromsome_hash _hashCache;
+                  private:
+                    value_container _container;
 
-};
+                    mutable bool _cacheValid = false;
 
-} /* geneial_export_namespace */
-} /* private namespace chromosome */
-} /* private namespace population */
+                    mutable chromsome_hash _hashCache = 0;
+                };
+
+            } /* geneial_export_namespace */
+        } /* private namespace chromosome */
+    } /* private namespace population */
 } /* private namespace geneial */
 
 #include <geneial/core/population/chromosome/MultiValueChromosome.hpp>

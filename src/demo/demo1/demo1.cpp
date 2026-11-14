@@ -9,9 +9,9 @@
 
 #include <geneial/algorithm/diagnostics/Diagnostics.h>
 
-#include <stdexcept>
 #include <cassert>
 #include <memory>
+#include <stdexcept>
 
 using namespace geneial;
 
@@ -23,52 +23,45 @@ using namespace geneial::algorithm::stopping_criteria;
 using namespace geneial::population;
 using namespace geneial::population::chromosome;
 
-using geneial::population::management::StatisticBookkeeper;
 using geneial::algorithm::Diagnostics;
+using geneial::population::management::StatisticBookkeeper;
 
-class DemoChromosomeEvaluator: public FitnessEvaluator<double>
+class DemoChromosomeEvaluator : public FitnessEvaluator<double>
 {
-public:
-    DemoChromosomeEvaluator()
-    {
-    }
+  public:
+    DemoChromosomeEvaluator() {}
 
-    std::unique_ptr<Fitness<double>> evaluate(const BaseChromosome<double>& chromosome) const
+    std::unique_ptr<Fitness<double>> evaluate(const BaseChromosome<double> &chromosome) const
     {
         try
         {
             volatile float x = 1.5f;
-            volatile int i = 1; //Increase i to simulate cpu fitness load ...
+            int i = 1; // Increase i to simulate cpu fitness load ...
             while (i--)
             {
                 x *= sin(x) / atan(x) * tanh(x) * sqrt(x);
             }
 
-
-            const auto& mvc = dynamic_cast<const MultiValueChromosome<int, double>&>(chromosome);
+            const auto &mvc = dynamic_cast<const MultiValueChromosome<int, double> &>(chromosome);
             return std::unique_ptr<Fitness<double>>(new Fitness<double>(mvc.getSum()));
         }
-        catch(std::bad_cast&)
+        catch (std::bad_cast &)
         {
-            throw new std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
+            throw std::runtime_error("Chromosome is not an Integer MultiValueChromosome with double fitness!");
         }
         std::unique_ptr<Fitness<double>> ptr(new Fitness<double>);
         return ptr;
     }
 };
 
-
 int main(int argc, char **argv)
 {
-    std::cout
-            << "Running GENEIAL demo1 - Version "
-            << GENEIAL_VERSION_STRING << " ("<<GENEIAL_BUILD_TYPE << ")"
-            << std::endl;
+    std::cout << "Running GENEIAL demo1 - Version " << GENEIAL_VERSION_STRING << " (" << GENEIAL_BUILD_TYPE << ")"
+              << std::endl;
 
     auto evaluator = std::make_shared<DemoChromosomeEvaluator>();
 
-
-    ContinousMultiValueChromosomeFactory<int,double>::Builder factoryBuilder(evaluator);
+    ContinousMultiValueChromosomeFactory<int, double>::Builder factoryBuilder(evaluator);
     factoryBuilder.getSettings().setNum(20);
     factoryBuilder.getSettings().setRandomMin(20);
     factoryBuilder.getSettings().setRandomMax(130);
@@ -80,15 +73,14 @@ int main(int argc, char **argv)
 
     algorithm->getPopulationSettings().setMaxChromosomes(100);
 
-    //algorithm->setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new ThreadedExecutionManager(3))));
-    //Diagnostics<double> diag(algorithm);
+    // algorithm->setExecutionManager(std::move(std::unique_ptr<ThreadedExecutionManager>(new
+    // ThreadedExecutionManager(3)))); Diagnostics<double> diag(algorithm);
 
     algorithm->solve();
 
-    //diag.analyseAll(std::cout);
+    // diag.analyseAll(std::cout);
 
     std::cout << *algorithm->getHighestFitnessChromosome() << std::endl;
 
     std::cout << "end." << std::endl;
-
 }

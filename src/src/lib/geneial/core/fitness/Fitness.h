@@ -2,7 +2,7 @@
 
 #include <geneial/utility/mixins/Printable.h>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 #include <memory>
 
@@ -19,39 +19,32 @@ using namespace geneial;
  * In most cases this will only encapsulate a single value,
  * However being polymorphic, it enables the user to store other values or states associated with the fitness
  *
- * This is particulary useful when using scaling or scenarios where the fitness computation is expensive and should be reused.
+ * This is particulary useful when using scaling or scenarios where the fitness computation is expensive and should be
+ * reused.
  */
-template<typename FITNESS_TYPE>
-class Fitness: public Printable
+template <typename FITNESS_TYPE> class Fitness : public Printable
 {
-private:
-    boost::optional<FITNESS_TYPE> _value;
+  private:
+    std::optional<FITNESS_TYPE> _value;
 
-public:
-    Fitness()
-    {
-    }
+  public:
+    Fitness() {}
 
-    explicit Fitness(FITNESS_TYPE value) :
-            _value(value)
-    {
-    }
+    explicit Fitness(FITNESS_TYPE value) : _value(value) {}
 
-    virtual ~Fitness()
-    {
-    }
+    virtual ~Fitness() {}
 
     inline void set(FITNESS_TYPE value);
 
     inline FITNESS_TYPE get() const;
 
-    //cast operator overload
+    // cast operator overload
     inline operator FITNESS_TYPE() const
     {
         return get();
     }
 
-    //cast operator overload
+    // cast operator overload
     inline FITNESS_TYPE operator()() const
     {
         return get();
@@ -59,17 +52,15 @@ public:
 
     virtual bool isValid() const;
 
-    void print(std::ostream&) const;
+    void print(std::ostream &) const;
 };
-
 
 } /* namespace exports */
 } /* namespace __geneial_noexport */
 
 namespace geneial
 {
-    using namespace ::__geneial_noexport::exports;
+using namespace ::__geneial_noexport::exports;
 }
 
 #include <geneial/core/fitness/Fitness.hpp>
-

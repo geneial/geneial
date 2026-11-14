@@ -1,0 +1,7 @@
+@PACKAGE_INIT@
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+include("${CMAKE_CURRENT_LIST_DIR}/geneialTargets.cmake")
+if(NOT TARGET geneial::geneial)
+    add_library(geneial::geneial ALIAS geneial::geneial_static)
+endif()

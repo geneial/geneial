@@ -1,24 +1,27 @@
-INPUT = @CMAKE_CURRENT_SOURCE_DIR@/src/lib/
-INPUT += @CMAKE_CURRENT_SOURCE_DIR@/../docs/
-
-#---------------------------------------------------------------------------
-# Project related configuration options
-#---------------------------------------------------------------------------
-
-# The PROJECT_NAME tag is a single word (or a sequence of words surrounded
-# by quotes) that should identify the project.
-
-PROJECT_NAME           = @PROJECT_NAME@
-
-
-# The PROJECT_NUMBER tag can be used to enter a project or revision number.
-# This could be handy for archiving the generated documentation or
-# if some version control system is used.
-
-PROJECT_NUMBER         = @GENEIAL_VERSION_MAJOR@.@GENEIAL_VERSION_MINOR@ = @GIT_BRANCH@/@GIT_COMMIT_HASH@
-
-OUTPUT_LANGUAGE        = English
-
-RECURSIVE              = YES
-
-JAVADOC_AUTOBRIEF 	   = YES
+PROJECT_NAME = "GeneiAL"
+PROJECT_NUMBER = "@GENEIAL_VERSION_STRING@"
+OUTPUT_DIRECTORY = "@CMAKE_CURRENT_BINARY_DIR@/doc"
+INPUT = "@CMAKE_CURRENT_SOURCE_DIR@/src/lib/geneial" "@CMAKE_CURRENT_SOURCE_DIR@/../docs"
+INPUT += "@CMAKE_CURRENT_SOURCE_DIR@/demo/showcase/assets/README.md"
+INPUT += "@CMAKE_CURRENT_SOURCE_DIR@/../CONTRIBUTING.md" \
+         "@CMAKE_CURRENT_SOURCE_DIR@/../CODING-GUIDELINES.md" \
+         "@CMAKE_CURRENT_SOURCE_DIR@/../TODO.md"
+RECURSIVE = YES
+FILE_PATTERNS = *.h *.hpp *.md
+GENERATE_HTML = YES
+GENERATE_LATEX = NO
+HTML_OUTPUT = html
+QUIET = YES
+WARN_IF_UNDOCUMENTED = NO
+EXTRACT_ALL = YES
+HAVE_DOT = NO
+JAVADOC_AUTOBRIEF = YES
+ENABLE_PREPROCESSING = YES
+MACRO_EXPANSION = YES
+EXPAND_ONLY_PREDEF = YES
+PREDEFINED = "geneial_private_namespace(NAME)=namespace NAME" \
+             "geneial_public_namespace(NAME)=namespace NAME" \
+             "geneial_export_namespace=inline namespace _" \
+             "geneial_public_namespace_name(NAME)=NAME" \
+             "geneial_namespace_noexport(NAME)=NAME" \
+             "geneial_namespace_export=_"

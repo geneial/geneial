@@ -2,136 +2,70 @@
 
 #include <geneial/utility/Random.h>
 
-#include <stdio.h>      /* printf, scanf, puts, NULL */
-#include <stdlib.h>     /* srand, rand */
-#include <time.h>       /* time */
-#include <cstdlib>         /* RAND_MAX */
-#include <limits>       /* min, max of float, double */
-#include <random>
-#include <iostream>
-#include <cassert>
-
-
-
-//TODO (bewo) benchmark and possibly use new c++11 random functions
+#include <algorithm>
+#include <cmath>
+#include <limits>
+#include <stdexcept>
 
 geneial_private_namespace(geneial)
 {
-geneial_private_namespace(utility)
-{
-
-//Assures we have positive mod every time. (because in cpp -6 % 5 = -1)
-inline int mymod(int k, const int n)
-{
-    return ((k %= n) < 0) ? k + n : k;
-}
-
-geneial_export_namespace
-{
-
-template<>
-inline int Random::generate(const int min, const int max)
-{
-    checkInitialized();
-    assert(min <= max);
-    int sign = 1;
-    if (min < 0)
+    geneial_private_namespace(utility)
     {
-        sign *= -(rand() % 2);
-    }
-    const int result = mymod(sign * rand(), (max - min + 1)) + min;
-    return result;
-}
+        geneial_export_namespace
+        {
 
+            template <typename T> T Random::generateRange(T min, T max, std::true_type)
+            {
+                using DistributionType =
+                    std::conditional_t<(sizeof(T) < sizeof(int)),
+                                       std::conditional_t<std::is_signed_v<T>, int, unsigned int>, T>;
+                return static_cast<T>(std::uniform_int_distribution<DistributionType>(min, max)(engine()));
+            }
 
+            template <typename T> T Random::generateRange(T min, T max, std::false_type)
+            {
+                static_assert(std::is_floating_point<T>::value, "Random requires a numeric type");
+                if (!std::isfinite(min) || !std::isfinite(max))
+                {
+                    throw std::invalid_argument("Random bounds must be finite");
+                }
+                if (min == max)
+                {
+                    return min;
+                }
+                const T fraction = std::uniform_real_distribution<T>(0, 1)(engine());
+                const T value =
+                    min < 0 && max > 0 ? min * (1 - fraction) + max * fraction : min + (max - min) * fraction;
+                return std::max(min, std::min(std::nextafter(max, min), value));
+            }
 
-template<>
-inline unsigned int Random::generate(const unsigned int min, const unsigned int max)
-{
-    checkInitialized();
-    assert(min <= max);
-    const unsigned int result = mymod(rand(), (max - min + 1)) + min;
-    return result;
-}
+            template <typename T> T Random::generate(const T min, const T max)
+            {
+                if (!(min <= max))
+                {
+                    throw std::invalid_argument("Random minimum must not exceed maximum");
+                }
+                return generateRange(min, max, std::is_integral<T>());
+            }
 
-template<>
-inline int Random::generate()
-{
-    checkInitialized();
-    return rand();
-}
+            template <typename T> T Random::generate()
+            {
+                return generate<T>(0, std::is_integral<T>::value ? std::numeric_limits<T>::max() : T(1));
+            }
 
-template<>
-inline double Random::generate(const double min, const double max)
-{
-    checkInitialized();
-    assert(min <= max);
-    int sign = 1;
-    if (min < 0)
-    {
-        sign *= -(rand() % 2);
-    }
-    const double range = (max - min);
-    const double div = RAND_MAX / range;
-    const double random = min + (rand() / div);
-    return random;
-}
+            inline bool Random::generateBit()
+            {
+                return std::bernoulli_distribution(0.5)(engine());
+            }
 
-
-
-template<>
-inline double Random::generate()
-{
-    checkInitialized();
-    return Random::generate<double>(std::numeric_limits<double>::min(), std::numeric_limits<double>::max());
-}
-
-template<>
-inline float Random::generate(const float min, const float max)
-{
-    checkInitialized();
-    assert(min <= max);
-    const float range = (max - min);
-    const float div = ((float) RAND_MAX) / range;
-    const float random = min + (((float) rand()) / div);
-    return random;
-}
-
-template<>
-inline float Random::generate()
-{
-    checkInitialized();
-    return Random::generate(std::numeric_limits<float>::min(), std::numeric_limits<float>::max());
-
-}
-
-bool Random::generateBit()
-{
-    checkInitialized();
-    return rand() & 1;
-}
-
-bool Random::decision(const double probability)
-{
-    checkInitialized();
-    assert(0.0 <= probability);
-    assert(1.0 >= probability);
-    const double reference = generate<double>(0.0, 1.0);
-    if (probability == 0.0)
-    {
-        return false;
-    }
-    else
-    {
-    	return reference <= probability;
+            inline bool Random::decision(const double probability)
+            {
+                if (!(probability >= 0 && probability <= 1))
+                {
+                    throw std::invalid_argument("Probability must be in [0, 1]");
+                }
+                return std::bernoulli_distribution(probability)(engine());
+            }
+        }
     }
 }
-
-inline void Random::initialize()
-{
-    srand(static_cast<unsigned>(time(0)));
-    sInitialized = true;
-}
-} /* geneial_export_namespace */
-} /* private namespace utility */
-} /* private namespace geneial */
