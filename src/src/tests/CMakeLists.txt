@@ -16,3 +16,8 @@ foreach(test_source ${TEST_SRC})
     add_test(NAME ${test_name} COMMAND ${test_name})
     set_tests_properties(${test_name} PROPERTIES TIMEOUT 120)
 endforeach()
+
+add_executable(runtime_probe "${CMAKE_CURRENT_SOURCE_DIR}/../../../tests/runtime_probe.cpp")
+target_link_libraries(runtime_probe PRIVATE geneial::geneial geneial_options)
+add_test(NAME runtime_memory_contracts COMMAND runtime_probe --verify-memory)
+set_tests_properties(runtime_memory_contracts PROPERTIES TIMEOUT 30)
