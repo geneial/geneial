@@ -91,6 +91,8 @@ geneial_private_namespace(geneial)
 
                     void setChromosomeFactory(std::shared_ptr<BaseChromosomeFactory<FITNESS_TYPE>> chromosomeFactory)
                     {
+                        if (!chromosomeFactory)
+                            throw std::invalid_argument("Chromosome factory cannot be null");
                         _chromosomeFactory = chromosomeFactory;
                     }
 
@@ -111,6 +113,8 @@ geneial_private_namespace(geneial)
 
                     void setExecutionManager(std::unique_ptr<BaseExecutionManager> &&executionManager)
                     {
+                        if (!executionManager)
+                            throw std::invalid_argument("Execution manager cannot be null");
                         _executionManager = std::move(executionManager);
                     }
 
@@ -121,6 +125,8 @@ geneial_private_namespace(geneial)
 
                     void setBookkeeper(const std::shared_ptr<BaseBookkeeper> &bookkeeper)
                     {
+                        if (!bookkeeper)
+                            throw std::invalid_argument("Bookkeeper cannot be null");
                         _bookkeeper = bookkeeper;
                     }
 
