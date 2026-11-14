@@ -1,52 +1,25 @@
-libGENEIAL - Coding Guidelines {#coding}
-==============================
+# Coding guidelines
 
+- Target C++20 with portable standard-library facilities. Keep platform flags on
+  CMake targets, never in global compiler strings.
+- Prefer RAII, value exceptions, `std::unique_ptr`, `std::shared_ptr` only for
+  actual shared ownership, `std::optional`, `std::span`, and scoped locks.
+- Validate public inputs in release builds; assertions document internal invariants,
+  not user-facing error handling. Never throw exception pointers.
+- Keep templates in headers/adjacent `.hpp` files and headers self-contained.
+  Avoid reliance on unrelated include order or transitive declarations.
+- Preserve parent genomes in genetic operators; allocate children explicitly.
+  Do not modify an object while its hash/fitness is indexed in a population.
+- Keep public names compatible unless the migration cost is documented. Do not
+  rewrite untouched legacy formatting as part of a bug fix.
+- Use the repository `.clang-format` (CI uses clang-format 18 for showcase files).
+  New code uses descriptive identifiers and braces around nontrivial control flow.
+- Public API documentation should state ownership, exceptions, thread safety,
+  determinism, and boundary behavior. Explain why non-obvious logic exists.
+- Regression tests reproduce the old failure and check the corrected contract.
+  Use fixed seeds and mathematical invariants, not assumptions that random
+  crossover must always produce a different child or that a heuristic always wins.
+- Keep generated files under `output/`, test dependencies optional, and examples
+  offline. Document and credit any bundled external assets.
 
-##1. Coding Guidelines
-
-###1.1 Google C++ Styleguide
-Any code regarding this library should follow the (Google C++ Styleguide)[http://google-styleguide.googlecode.com/svn/trunk/cppguide.html]
-
-However, there are some derivations
-
-###1.1 Derivations from Google C++ Styleguide
-
- * We fordbid the omittance of `{` and `}`, respectively. 
- * Always declare any private members before public members
- * We restrict the use of inline to functions containing less than 5 SLOC
-
-
-## 1.2 A note on comments
- * We use the following syntax to indicate TODOs: 
-
-    //TODO (abbr): Description of the TODO
-
-   Whereas abbr is a shorthand symbol for the author of the TODO.
-
-### 1.2.1 A note on notes
- Commentaries notes follow the TODO Pattern
-    
-   //NOTE (abbr): Your very important note.
-
-   Whereas abbr is a shorthand symbol for the author of the note.
-   
-### 1.2.2 A note on important notes
-
-   //IMPORTANT (abbr): Your very important note.
-
-   Whereas abbr is a shorthand symbol for the author of the very important note.
-
-## 1.3 A note on namespaces
-
- * namespaces must consist of lowercase characters only, especially namespaces and classes must not share the same name.
-   e.g., forbidden
-
-    namespace Population{ class Population {};}
-
-    better:
-
-    namespace population{ class Population {};}
-
-### 1.4 A note on tabs vs. spaces
-1 tab = 4 spaces, expand tabs, do not use the tab character, its from acient times where printers where still a thing. Every clever douchebag has a different customize tabwidth, there is no ocd sanity here...
-each time a tab is not expanded 4 happy kittens will certainly die, do not be a mass murderer, configure your ide to protect kittens
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the build/test workflow.

@@ -1,214 +1,136 @@
-libGeneiAL - A C++ Genetic Algorithm Library 
---------------------------------------------
-
-[![Build Status](https://travis-ci.org/geneial/geneial.svg?branch=master)](https://travis-ci.org/geneial/geneial)
-[![DUB](https://img.shields.io/dub/l/vibe-d.svg)]()
-[![Docker Automated buil](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)](https://hub.docker.com/r/geneial/geneial/)
-
-##1. Building the library
-
-Compability: We require a C++ 11 compiler such as clang-3.5+ or gcc-4.7+.
-Furthermore, we require the Boost Library >= 1.55 to be installed.
-
-###1.1 The easy way
-There is a script that takes care of the building and installation process.
-Simply run
-
-    ./autobuilder.sh 
-
-###1.2 The manual way [Debug Mode]
-
-To build the genetic library use the following commands
-
-    mkdir -p build/
-    cd build/
-    cmake ../src
-    make
-
-Make sure there is no `Cmakecache.txt` in the main directory, otherwise cmake does not work in out of source folder.
-
-You'll find the static Libary in the `build/src/lib` library.
-
-####1.2.1 Make parameters
-You may add `make -j8` whereas `8` denotes the number of CPU cores, to run make multithreaded, which speeds up things.
-
-You may further add `make VERBOSE=1` to see whats going on.
-
-####1.2.2 Debug vs. Release
-
-By default the Debug version is build which is build without compiler optimization. While the Debug version is convenient for debugging and testing, it is **approximately 10-14 times slower**. In order to build the Release version (Optimization level 3) execute 
-
-    cmake -D CMAKE_BUILD_TYPE=Release ../src
-
-in your `build`-directory.
-
-To compile the debug version again run
-
-    cmake -D CMAKE_BUILD_TYPE=Debug ../src
-
-You can also make different out-of-source build directories such as `debug/` or `release`.
-
-
-###1.3 A note on compilers
-
-In general it seems that the `gcc` error output is very verbose and [hard to read](http://clang.llvm.org/diagnostics.html). At the same time gcc seems to be slower/uses more memory.
-For this reasons we advocate to use the `clang` compiler.
-
-On Ubuntu you may install clang by 
-
-    sudo apt-get install clang
-
-You can switch your system compiler by running
-
-    sudo update-alternatives --config c++
-
-From now on the cmake build system will use clang and provide more comprehensible error messages.
-
-###1.4 A note on make
-Make is slow. However the build process can be made faster by using more threads by for example invoking
-
-    make -j8
-
-to run 8 threads in parallel.
-However, the console output is still messy.
-Hence, if you are one of the cool kids you may want to use ninja, on ubuntu based system you can install it by running
-
-    sudo apt-get install ninja-build
-
-You'll need to regenerate your build folder (remove it if you have generated makefiles before)
-
-    rm -r build/
-    mkdir build/ && cd build
-    cmake -GNinja ../src
-    ninja 
-
-##2. Installing the library
-To install the library simply run
-
-    make install
-
-if you want to specify the installation directory you can configure it via `CMAKE_INSTALL_PREFIX`.
-    
-    ccmake ../src
-
-Be sure to configure (c) and generate (g) 
-
-##3. Running unit-tests
-
-After running make, you may run the unit-tests
-
-    make test
-
-Instead of running all test at once, you may run individual test by 
-
-    ctest -R random_test
-
-In case a test-case fails you can see the verbose output by running
-
-    ctest -VV
-
-###3.1 Disabling Unit Test Compilation
-The compilation of Unit tests can be disabled by setting
-
-    cmake -D TEST=false ../src
-
-Analougously it may be enabled by
-
-    cmake -D TEST=true ../src
-
-You can create new unit-tests based on boost unit testing library in the tests/suites/ folder. Make sure to run `make test` again.
-
-
-##4. Setting up an Eclipse CDT 4 Project
-
-In the `build/`-directory execute
-
-    cmake -G"Eclipse CDT4 - Unix Makefiles" -DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE ../src
-
-now there are Eclipse .project and .cproject files found in your build/ directory.
-
-You can import them by `File`->`Import...`->`Existing Project in Workspace`, Select `Browse...` and choose your `build/` directory.
-You may also want to install the [Eclipse CMake Editor](http://www.cthing.com/CMakeEd.asp) for editing any of the `CMakeList.txt` 
-files more conveniently.
-
-##4.1 Eclipse CDT Developer Quirks 
-
-Note: This has been tested on Luna with CDT.
-
-###4.1.1 `std::` includes are not properly resolved, erroneous highlighting
-Solution: Right-Click onto the imported generated cmake geneial project -> C++ General / Preprocessor Include Paths -> Tab Providers -> Enable "CDT Cross GCC Built-in Compiler Settings"
-In order to get c++11 support, change the "Command to get compiler specs" below to:
-	
-	${COMMAND} ${FLAGS} -E -P -std=c++11 -v -dD "${INPUTS}"
-
-(basically add `-std=c++11` to the default params )
-
-Then rebuild your Index. 
-If that does not help search for the `__cplusplus` symbol and set it to `201103L`
-
-###4.1.2 When using the build-in compile feature, make clutters the internal console
-
-By default the imported project set `VERBOSE=1` for make, hence the cluttering.
-To remove this right click onto the project settings -> *C/C++ Make Project* -> Tab: *Environment* -> Remove `VERBOSE` variable
-(**Note:** setting it to `0` will not work.)
-
-
-##5. Adding new Source files
-
-Cmake will determine any new source files, however if it is a header file you may need to reinstall the library for other 
-projects depending on the library to receive the new headers
-
-##6. Create Doxygen Documentation
-In order to generate Doxygen documentation make sure you'll have doxygen installed
-
-    sudo apt-get install doxygen
-
-Then in the `build/` directory run
-
-    make doc
-
-You will find the documentation in `build/doc/html/index.html`
-
-
-
-##7. Running Benchmarks
-Currently, we provide two test suites for running memory leak checks and profiling the calls.
-The benchmarks are located in the `benchmark/`-folder.
-
-###7.1 Preliminaries
-You'll need valgrind on Debian-based distributions this may be installed by running
-    
-    sudo apt-get install valgrind
-
-In addition, to be able to plot the callgraph you may run
-
-    sudo apt-get install python graphviz
-
-###7.2 Executing the benchmarks
-
-For running the memcheck benchmark run 
-
-    cd benchmarks
-    ./valgrind-suite.sh
-
-Analougously, for the callgrind benchmark run
-
-    cd benchmarks
-    ./callgrind-suite.sh
-
-The callgrind suite produces a `callgrind.TIMESTAMP.log` whereas TIMESTAMP denotes the creation date. This log can be analyzed with tools such as `kcachegrind`. 
-On an Ubuntu/Debian machine you may install kcachegrind by  
-
-    sudo apt-get install kcachegrind
-
-
-You can then see  the latest run using.
-
-    kcachegrind `ls -tr callgrind.out.* | tail -1`
-
-    
-
-##8. Running the demo(s)
-Currently, libGENEIAL is mainly a template-based library. Hence, it is essential that the demos compile to ensure 
-that the library itself is compiling.
-The demos are also compiled by either running the all-encompassing `make` or the more unequivocal `make demo{X}` , respectively where `{X}` denotes the demo number to build.
+# GeneiAL
+
+**Composable genetic algorithms for C++20.** Evolve routes, solve constraints,
+and paint portraits with independently replaceable operators.
+
+![C++ CI](https://github.com/geneial/geneial/actions/workflows/ci.yml/badge.svg)
+
+## Build
+
+Requirements: a C++20 compiler/library with `std::span` and `std::jthread`, CMake 3.21+, Ninja.
+Use GCC 12+ or Clang 15+ with libstdc++ 12+, LLVM/libc++ 20+, or a current Xcode
+26 toolchain. Older libc++/Apple libraries may lack `jthread` despite accepting C++20;
+CMake checks these features at configuration time.
+Boost.Test is needed for tests only. The library depends only on the standard
+library and system threads. MSVC is not currently in the validation matrix.
+
+```sh
+# macOS: brew install cmake ninja boost
+# Ubuntu: sudo apt-get install build-essential cmake ninja-build libboost-test-dev
+git clone https://github.com/geneial/geneial.git
+cd geneial
+cmake --preset release
+cmake --build --preset release --parallel
+ctest --preset release --output-on-failure
+```
+
+Presets: `release`, `debug`, `sanitized` (AddressSanitizer + UBSan), and `library`
+(no tests, examples, or Boost). All generated artifacts stay in `output/`.
+The legacy `cmake -S src -B output/legacy` entry point still works.
+
+## The evolution lab
+
+Five real searches export self-contained HTML replays, editable SVGs, and CSV
+fitness histories. No browser framework, network service, or plotting package.
+
+| Executable | Experiment |
+| --- | --- |
+| `voronoi_art` | Minimalist portraits from colored cells; genes duplicate and disappear |
+| `triangle_art` | Parallel EvoLisa: 50 layered translucent triangles by default |
+| `star_tour` | Untangle a closed traveling-salesperson tour through a spiral galaxy |
+| `queens` | Solve N-queens with a permutation genome and a conflict visualization |
+| `pixel_art` | Discover a ringed planet from 768 palette-index genes |
+
+```sh
+mkdir -p output/art
+./output/release/src/demo/voronoi_art --seed 42 --threads 4 \
+  --generations 6000 --output output/art/cells
+./output/release/src/demo/triangle_art --seed 42 --threads 4 \
+  --shapes 50 --generations 12000 --output output/art/triangles
+./output/release/src/demo/queens --size 20 --output output/art/queens
+# Open any generated .html directly in a browser.
+```
+
+The portrait demos also accept `--input target.ppm` (P3/P6, 8-bit samples), and
+export the exact fitness raster as PPM. Their bundled Mona Lisa target needs no
+download. All demos accept `--help`. See [the example guide](docs/Demos.md) for
+representations, options, tradeoffs, and source credits.
+
+### Build the website locally
+
+```sh
+cmake --build --preset release --target website
+python3 -m http.server 8765 --bind 127.0.0.1 --directory output/release/site
+# Open http://127.0.0.1:8765
+```
+
+This evolves all five examples and assembles the gallery from `docs/site/`.
+The Pages workflow also builds API docs with Doxygen. An administrator must set
+the repository’s GitHub Pages source to **GitHub Actions** before deployment.
+Local builds and commits do not publish the site or change domain settings.
+
+## Use the library
+
+```sh
+cmake --preset library
+cmake --build --preset library
+cmake --install output/library --prefix "$HOME/.local"
+```
+
+```cmake
+find_package(geneial 0.3 CONFIG REQUIRED)
+target_link_libraries(your_program PRIVATE geneial::geneial)
+# Or geneial::geneial_shared.
+```
+
+Write objectives as C++20 callables instead of implementing a fitness subclass:
+
+```cpp
+#include <geneial/core/fitness/FunctionFitnessEvaluator.h>
+#include <geneial/core/population/builder/MultiValueChromosomeFactory.h>
+#include <numeric>
+
+auto evaluator = std::make_shared<geneial::FunctionFitnessEvaluator<double>>(
+    [](std::span<const double> genes) {
+        return -std::inner_product(genes.begin(), genes.end(), genes.begin(), 0.0);
+    });
+geneial::population::chromosome::MultiValueChromosomeFactory<double, double>::Builder builder(evaluator);
+builder.getSettings().setNum(8);
+auto factory = builder.create();
+auto candidate = factory->createChromosome();
+auto score = candidate->getFitness().get();
+```
+
+GeneiAL **maximizes** fitness: negate costs for minimization. Factories own their
+settings, so they can safely outlive a local builder. Compose a steady-state
+algorithm with selection, coupling, crossover, mutation, replacement, and a
+stopping criterion; the [showcase sources](src/demo/showcase) are complete examples.
+The [installed-package consumer](tests/consumer) verifies static and shared linking.
+
+## Quality and reproducibility
+
+```sh
+cmake --preset sanitized
+cmake --build --preset sanitized --parallel
+ctest --preset sanitized --output-on-failure
+python3 tests/check_examples.py output/release/src/demo
+```
+
+CI covers GCC, Clang with sanitizers, Apple Clang, library-only builds, installed
+consumers, and exported artifacts. Random engines are thread-local and explicitly
+seedable. Seeded results repeat within the same build and standard library;
+cross-platform draw sequences are not promised. Portrait worker threads perform
+no random draws; serial/parallel histories are checked for equality.
+
+Read [architecture and safety contracts](docs/Overview.md),
+[migration notes](docs/Migration.md), [contribution guidance](CONTRIBUTING.md),
+[local validation results](docs/Validation.md), [the changelog](CHANGELOG.md),
+and [the remaining roadmap](TODO.md).
+
+## Credits and license
+
+MIT licensed; see [LICENSE.md](LICENSE.md) and [AUTHORS.md](AUTHORS.md).
+The new art experiments independently implement ideas from
+[Sebastian Proost’s Voronoi genetic art](https://blog.4dcu.be/programming/2020/02/10/Genetic-Art-Algorithm-2.html)
+and [Károly Zsolnai-Fehér’s parallel EvoLisa](https://users.cg.tuwien.ac.at/zsolnai/gfx/mona_lisa_parallel_genetic_algorithm/).
+The public-domain portrait’s provenance is [documented separately](src/demo/showcase/assets/README.md).
