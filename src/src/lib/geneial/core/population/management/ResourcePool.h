@@ -1,7 +1,11 @@
 #pragma once
 
+#include <algorithm>
+#include <cstddef>
 #include <geneial/namespaces.h>
+#include <memory>
 #include <mutex>
+#include <utility>
 #include <vector>
 
 geneial_private_namespace(geneial)
@@ -10,79 +14,95 @@ geneial_private_namespace(geneial)
     {
         geneial_private_namespace(management)
         {
-
             geneial_export_namespace
             {
 
-                /**
-                 * @brief Resource Management Class for Chromosomes.
-                 *
-                 * This class holds a pool of allocated memory.
-                 *
-                 * Note this class should be high performant and any method is
-                 * expected to be called frequently.
-                 *
-                 */
+                /** Thread-safe, bounded ownership of idle resources. Outstanding resources remain caller-owned. */
                 template <typename RESOURCE> class ResourcePool
                 {
-                    std::mutex _poolMutex;
-
+                    mutable std::mutex _poolMutex;
                     std::vector<RESOURCE *> _freePool;
-                    // TODO (bewo): Think about pruning when having large amounts of resources.
+                    std::size_t _capacity;
 
                   public:
-                    /**
-                     * Takes a raw ptr to a resource managed by the pool.
-                     *
-                     * @return bool if the raw pointer was modified.
-                     * @arg raw_ptr the pointer to be modifed.
-                     */
-                    bool inline retrieve(RESOURCE *&raw_ptr)
+                    static constexpr std::size_t DEFAULT_CAPACITY = 256;
+                    explicit ResourcePool(std::size_t capacity = DEFAULT_CAPACITY) : _capacity(capacity) {}
+                    ResourcePool(const ResourcePool &) = delete;
+                    ResourcePool &operator=(const ResourcePool &) = delete;
+
+                    bool retrieve(RESOURCE *&pointer)
                     {
-                        std::lock_guard<std::mutex> lock(_poolMutex);
-                        if (_freePool.size() > 0)
-                        {
-                            raw_ptr = _freePool.back();
-                            _freePool.pop_back();
-                            return true;
-                        }
-                        else
-                        {
+                        std::lock_guard lock(_poolMutex);
+                        if (_freePool.empty())
                             return false;
-                        }
+                        pointer = _freePool.back();
+                        _freePool.pop_back();
+                        return true;
                     }
 
-                    /**
-                     * Free's the resource that was contained in raw_ptr.
-                     * @arg raw_ptr the raw ptr to free.
-                     */
-                    void inline free(RESOURCE *&&raw_ptr)
+                    /** Consumes the pointer; a full cache or failed cache allocation deletes the resource. */
+                    void free(RESOURCE *&&pointer) noexcept
                     {
+                        std::unique_ptr<RESOURCE> owned(std::exchange(pointer, nullptr));
 #ifndef NALLOCREUSE
-                        std::lock_guard<std::mutex> lock(_poolMutex);
-                        _freePool.emplace_back(raw_ptr);
-#else
-                        delete raw_ptr;
+                        try
+                        {
+                            std::lock_guard lock(_poolMutex);
+                            if (owned && _freePool.size() < _capacity)
+                            {
+                                _freePool.push_back(owned.get());
+                                owned.release();
+                            }
+                        }
+                        catch (...)
+                        {
+                        }
 #endif
                     }
 
-                    size_t inline size()
+                    std::size_t size() const
                     {
-                        std::lock_guard<std::mutex> lock(_poolMutex);
+                        std::lock_guard lock(_poolMutex);
                         return _freePool.size();
                     }
 
-                    virtual ~ResourcePool()
+                    std::size_t capacity() const
                     {
-                        // The used pool is out in the wild should be guarded by some sharedptr.
-                        for (auto &ptr : _freePool)
+                        std::lock_guard lock(_poolMutex);
+                        return _capacity;
+                    }
+
+                    void setCapacity(std::size_t capacity)
+                    {
+                        std::vector<RESOURCE *> discarded;
                         {
-                            delete ptr;
+                            std::lock_guard lock(_poolMutex);
+                            const auto retained = std::min(capacity, _freePool.size());
+                            discarded.assign(_freePool.begin() + retained, _freePool.end());
+                            _freePool.resize(retained);
+                            _capacity = capacity;
                         }
+                        for (auto *resource : discarded)
+                            delete resource;
+                    }
+
+                    void clear()
+                    {
+                        std::vector<RESOURCE *> discarded;
+                        {
+                            std::lock_guard lock(_poolMutex);
+                            discarded.swap(_freePool);
+                        }
+                        for (auto *resource : discarded)
+                            delete resource;
+                    }
+
+                    ~ResourcePool()
+                    {
+                        clear();
                     }
                 };
-
-            } /* geneial_export_namespace */
-        } /* private namespace management */
-    } /* private namespace population */
-} /* private namespace geneial */
+            }
+        }
+    }
+}

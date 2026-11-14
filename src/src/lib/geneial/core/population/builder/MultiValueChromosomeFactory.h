@@ -41,6 +41,8 @@ geneial_private_namespace(geneial)
 
                         inline void operator()(MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE> *p) const
                         {
+                            p->invalidate();
+                            p->setFitnessEvaluator(nullptr);
                             if (const auto resourcePool = _resourcePool.lock())
                             {
                                 resourcePool->free(std::move(p));
@@ -56,9 +58,7 @@ geneial_private_namespace(geneial)
                     std::shared_ptr<MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>> _settingsOwner;
                     MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &_settings;
 
-                    // This shared ptr is necessary if there are chromomsome references after the shutdown of the
-                    // factory that reference the resource pool for cleanup. Those deleters, then are unable to check
-                    // whether the resource pool is still valid or not.
+                    /** Cached resources belong to the factory; outstanding chromosomes hold only a weak pool link. */
                     std::shared_ptr<ResourcePool<MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>>>
                         _chromosomeResourcePool;
 
@@ -80,14 +80,14 @@ geneial_private_namespace(geneial)
                                 new MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>(_settings.getFitnessEvaluator());
                         }
 
-                        // TODO(bewo): Is there a way to use a single Deleter instance? Is it faster?
                         typename MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::ptr new_chromosome(
                             rawChromosome, ChromosomeDeleter(this->_chromosomeResourcePool));
+                        new_chromosome->setAge(0);
 
                         // Enforce alloc
                         new_chromosome->getContainer().resize(this->_settings.getNum());
 
-                        return std::move(new_chromosome);
+                        return new_chromosome;
                     }
 
                     explicit MultiValueChromosomeFactory(
@@ -123,6 +123,23 @@ geneial_private_namespace(geneial)
                     };
 
                     virtual ~MultiValueChromosomeFactory() {}
+
+                    std::size_t getCachedChromosomeCount() const
+                    {
+                        return _chromosomeResourcePool->size();
+                    }
+                    std::size_t getResourcePoolCapacity() const
+                    {
+                        return _chromosomeResourcePool->capacity();
+                    }
+                    void setResourcePoolCapacity(std::size_t capacity)
+                    {
+                        _chromosomeResourcePool->setCapacity(capacity);
+                    }
+                    void clearResourcePool()
+                    {
+                        _chromosomeResourcePool->clear();
+                    }
 
                     inline const MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE> &getSettings() const
                     {
