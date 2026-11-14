@@ -6,51 +6,41 @@
 
 geneial_private_namespace(geneial)
 {
-geneial_private_namespace(algorithm)
-{
-using ::geneial::population::management::BaseManager;
-
-geneial_export_namespace
-{
-
-
-template<typename FITNESS_TYPE>
-class BestChromosomeObserver: public AlgorithmObserver<FITNESS_TYPE>
-{
-public:
-    BestChromosomeObserver() :
-            _foundBest(false)
+    geneial_private_namespace(algorithm)
     {
-        this->addSubscribedEvent(AlgorithmObserver<FITNESS_TYPE>::AFTER_GENERATION);
-    }
-    virtual ~BestChromosomeObserver()
-    {
-    }
+        using ::geneial::population::management::BaseManager;
 
-    virtual void updateAfterGeneration(BaseManager<FITNESS_TYPE> &manager) override
-    {
-        const FITNESS_TYPE lastBest = manager.getHighestFitness();
-        if (lastBest > _best || !_foundBest)
+        geneial_export_namespace
         {
-            _best = lastBest;
-            _foundBest = true;
-            updateNewBestChromosome(manager);
 
-        }
-    }
+            template <typename FITNESS_TYPE> class BestChromosomeObserver : public AlgorithmObserver<FITNESS_TYPE>
+            {
+              public:
+                BestChromosomeObserver() : _foundBest(false)
+                {
+                    this->addSubscribedEvent(AlgorithmObserver<FITNESS_TYPE>::AFTER_GENERATION);
+                }
+                virtual ~BestChromosomeObserver() {}
 
-    virtual void updateNewBestChromosome(BaseManager<FITNESS_TYPE> &manager)
-    {
-    }
+                virtual void updateAfterGeneration(BaseManager<FITNESS_TYPE> &manager) override
+                {
+                    const FITNESS_TYPE lastBest = manager.getHighestFitness();
+                    if (!_foundBest || lastBest > _best)
+                    {
+                        _best = lastBest;
+                        _foundBest = true;
+                        updateNewBestChromosome(manager);
+                    }
+                }
 
-private:
-    FITNESS_TYPE _best;
+                virtual void updateNewBestChromosome(BaseManager<FITNESS_TYPE> &manager) {}
 
-    bool _foundBest;
-};
+              private:
+                FITNESS_TYPE _best{};
 
+                bool _foundBest;
+            };
 
-} /* geneial_export_namespace */
-} /* private namespace algorithm */
+        } /* geneial_export_namespace */
+    } /* private namespace algorithm */
 } /* private namespace geneial */
-

@@ -250,3 +250,28 @@ BOOST_AUTO_TEST_CASE(diagnostic_facade_validates_lifecycles_and_reports_retained
     diagnostics.anaylseConvergence(report);
     BOOST_CHECK_NE(report.str().find("worst"), std::string::npos);
 }
+
+BOOST_AUTO_TEST_CASE(best_observer_initializes_its_baseline_before_comparison)
+{
+    struct Observer : geneial::algorithm::BestChromosomeObserver<double>
+    {
+        std::vector<double> improvements;
+        void updateNewBestChromosome(BaseManager<double> &manager) override
+        {
+            improvements.push_back(manager.getHighestFitness());
+        }
+    } observer;
+    Factory::Builder builder(evaluator(-3));
+    auto factory = builder.create();
+    auto manager = BaseManager<double>::create(factory);
+    for (double score : {-3.0, -3.0, -2.0, -4.0})
+    {
+        builder.getSettings().setFitnessEvaluator(evaluator(score));
+        manager->getPopulation().clearChromosomes();
+        manager->getPopulation().insertChromosome(factory->createChromosome());
+        observer.updateAfterGeneration(*manager);
+    }
+    BOOST_REQUIRE_EQUAL(observer.improvements.size(), 2);
+    BOOST_CHECK_EQUAL(observer.improvements.front(), -3);
+    BOOST_CHECK_EQUAL(observer.improvements.back(), -2);
+}
