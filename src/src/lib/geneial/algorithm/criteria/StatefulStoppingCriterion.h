@@ -16,7 +16,7 @@ geneial_private_namespace(geneial)
                 class StatefulStoppingCriterion : public BaseStoppingCriterion<FITNESS_TYPE>
                 {
                   public:
-                    virtual void reset()
+                    void resetState() override
                     {
                         _lastManager.reset();
                         _wasInvoked = false;
@@ -31,7 +31,7 @@ geneial_private_namespace(geneial)
                         const auto currentAge = manager.getPopulation().getAge();
                         if (_wasInvoked &&
                             (_lastManager.lock().get() != &manager || currentAge < _lastGenerationChecked))
-                            reset();
+                            resetState();
                         if (!_wasInvoked || _lastGenerationChecked != currentAge)
                         {
                             _cachedResult = wasStatefullyReached(manager);

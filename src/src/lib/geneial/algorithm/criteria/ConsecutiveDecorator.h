@@ -31,13 +31,14 @@ geneial_private_namespace(geneial)
                     {
                         if (!criterion || windowSize == 0 || consecutiveHits == 0 || consecutiveHits > windowSize)
                             throw std::invalid_argument("A criterion and a valid hit/window count are required");
+                        this->validateChild(criterion);
                     }
 
                     virtual ~ConsecutiveDecorator() {}
 
-                    void reset() override
+                    void resetState() override
                     {
-                        StatefulStoppingCriterion<FITNESS_TYPE>::reset();
+                        StatefulStoppingCriterion<FITNESS_TYPE>::resetState();
                         _window.clear();
                     }
 
@@ -90,12 +91,16 @@ geneial_private_namespace(geneial)
                         return *_criterion;
                     }
 
+                    std::vector<typename criterion::ptr> getChildren() const override
+                    {
+                        return {_criterion};
+                    }
+
                     void setCriterion(const std::shared_ptr<criterion> &criterion)
                     {
-                        if (!criterion)
-                            throw std::invalid_argument("Criterion cannot be null");
+                        this->validateChild(criterion);
                         _criterion = criterion;
-                        reset();
+                        this->reset();
                     }
 
                   private:

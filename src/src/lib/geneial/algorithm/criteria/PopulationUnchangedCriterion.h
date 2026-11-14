@@ -17,9 +17,9 @@ geneial_private_namespace(geneial)
                 class PopulationUnchangedCriterion : public StatefulStoppingCriterion<FITNESS_TYPE>
                 {
                   public:
-                    void reset() override
+                    void resetState() override
                     {
-                        StatefulStoppingCriterion<FITNESS_TYPE>::reset();
+                        StatefulStoppingCriterion<FITNESS_TYPE>::resetState();
                         _observed = false;
                         _previous.clear();
                     }

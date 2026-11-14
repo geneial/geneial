@@ -27,9 +27,9 @@ geneial_private_namespace(geneial)
                             throw std::invalid_argument("Trailing-stop drawdown must be finite and nonnegative");
                     }
 
-                    void reset() override
+                    void resetState() override
                     {
-                        StatefulStoppingCriterion<FITNESS_TYPE>::reset();
+                        StatefulStoppingCriterion<FITNESS_TYPE>::resetState();
                         _best.reset();
                     }
 

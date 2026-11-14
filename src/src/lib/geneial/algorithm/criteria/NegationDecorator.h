@@ -26,18 +26,17 @@ geneial_private_namespace(geneial)
                     NegationDecorator(typename BaseStoppingCriterion<FITNESS_TYPE>::ptr criterion)
                         : _criterion(criterion)
                     {
-                        if (!criterion)
-                            throw std::invalid_argument("Criterion cannot be null");
+                        this->validateChild(criterion);
                     }
 
-                    virtual ~NegationDecorator() {}
+                    ~NegationDecorator() override = default;
 
-                    virtual inline bool wasReached(BaseManager<FITNESS_TYPE> &manager)
+                    bool wasReached(BaseManager<FITNESS_TYPE> &manager) override
                     {
                         return !(_criterion->wasReached(manager));
                     }
 
-                    virtual void print(std::ostream &os) const
+                    void print(std::ostream &os) const override
                     {
                         os << "Negated (" << *_criterion << ")";
                     }
@@ -47,10 +46,14 @@ geneial_private_namespace(geneial)
                         return _criterion;
                     }
 
+                    std::vector<criterion> getChildren() const override
+                    {
+                        return {_criterion};
+                    }
+
                     void setCriterion(const criterion &criterion)
                     {
-                        if (!criterion)
-                            throw std::invalid_argument("Criterion cannot be null");
+                        this->validateChild(criterion);
                         _criterion = criterion;
                     }
 

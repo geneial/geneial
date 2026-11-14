@@ -37,14 +37,27 @@ geneial_private_namespace(geneial)
 
                     typedef std::vector<glue_criterion_pair> container;
 
-                    virtual ~CombinedCriterion() {}
+                    ~CombinedCriterion() override = default;
 
-                    // TODO (bewo): Constructor and initializer list
+                    CombinedCriterion() = default;
+                    explicit CombinedCriterion(container criteria)
+                    {
+                        setCriteria(criteria);
+                    }
+
+                    std::vector<criterion> getChildren() const override
+                    {
+                        std::vector<criterion> children;
+                        children.reserve(_criteria.size());
+                        for (const auto &entry : _criteria)
+                            children.push_back(entry.second);
+                        return children;
+                    }
 
                     /**
                      * Returns true if empty.
                      */
-                    virtual bool wasReached(BaseManager<FITNESS_TYPE> &manager)
+                    bool wasReached(BaseManager<FITNESS_TYPE> &manager) override
                     {
                         bool accumulatedResult = true;
 
@@ -80,7 +93,7 @@ geneial_private_namespace(geneial)
                         return accumulatedResult;
                     }
 
-                    virtual void print(std::ostream &os) const
+                    void print(std::ostream &os) const override
                     {
                         os << "Combined (";
                         for (const auto &criterionPair : _criteria)
@@ -97,13 +110,14 @@ geneial_private_namespace(geneial)
                             {
                                 os << "(||) ";
                             }
-                            os << criterionPair.second;
+                            os << *criterionPair.second;
                         }
                         os << ")";
                     }
 
                     void add(const glue_criterion_pair newCriterion)
                     {
+                        this->validateChild(newCriterion.second);
                         _criteria.emplace_back(newCriterion);
                     }
 
@@ -119,6 +133,8 @@ geneial_private_namespace(geneial)
 
                     void setCriteria(const container &criteria)
                     {
+                        for (const auto &entry : criteria)
+                            this->validateChild(entry.second);
                         _criteria = criteria;
                     }
 

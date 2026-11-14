@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE(empty_and_invalid_combinations_have_defined_behavior)
     BOOST_CHECK(criterion.wasReached(*manager));
     criterion.add(Combined::AND, std::make_shared<Constant>(true));
     BOOST_CHECK_THROW(criterion.wasReached(*manager), std::invalid_argument);
-    criterion.setCriteria({{Combined::INIT, nullptr}});
+    BOOST_CHECK_THROW(criterion.setCriteria({{Combined::INIT, nullptr}}), std::invalid_argument);
     BOOST_CHECK_THROW(criterion.wasReached(*manager), std::invalid_argument);
 }
 BOOST_AUTO_TEST_CASE(tolerance_is_symmetric_and_bounded)
@@ -331,4 +331,73 @@ BOOST_AUTO_TEST_CASE(invalid_stopping_configuration_throws_instead_of_asserting_
         BOOST_CHECK_THROW((TrailingStopCriterion<double>(invalid)), std::invalid_argument);
     }
 }
+BOOST_AUTO_TEST_CASE(graph_reset_reaches_shared_stateful_children_once)
+{
+    class ResetCounter final : public StatefulStoppingCriterion<double>
+    {
+      public:
+        unsigned int resets = 0;
+        unsigned int observations = 0;
+        bool wasStatefullyReached(Manager &) override
+        {
+            ++observations;
+            return true;
+        }
+        void resetState() override
+        {
+            StatefulStoppingCriterion<double>::resetState();
+            ++resets;
+        }
+        void print(std::ostream &stream) const override
+        {
+            stream << "reset counter";
+        }
+    };
+    auto child = std::make_shared<ResetCounter>();
+    auto first = std::make_shared<ConsecutiveDecorator<double>>(2, 2, child);
+    auto second = std::make_shared<ConsecutiveDecorator<double>>(2, 2, child);
+    using Combined = CombinedCriterion<double>;
+    Combined root({{Combined::INIT, first}, {Combined::AND, second}});
+    BOOST_CHECK(!root.wasReached(*manager));
+    BOOST_CHECK_EQUAL(child->observations, 1);
+    manager->getPopulation().doAge();
+    BOOST_CHECK(root.wasReached(*manager));
+    root.reset();
+    BOOST_CHECK_EQUAL(child->resets, 1);
+    BOOST_CHECK(!root.wasReached(*manager));
+    BOOST_CHECK_EQUAL(child->observations, 3);
+}
+
+BOOST_AUTO_TEST_CASE(criterion_ownership_cycles_are_rejected_transactionally)
+{
+    using Combined = CombinedCriterion<double>;
+    auto root = std::make_shared<Combined>();
+    auto leaf = std::make_shared<Constant>(true);
+    root->add(Combined::INIT, leaf);
+    BOOST_CHECK_THROW(root->add(Combined::AND, root), std::invalid_argument);
+    auto negated = std::make_shared<NegationDecorator<double>>(root);
+    BOOST_CHECK_THROW(root->setCriteria({{Combined::INIT, negated}}), std::invalid_argument);
+    BOOST_CHECK_EQUAL(root->getCriteria().size(), 1);
+    BOOST_CHECK_THROW(negated->setCriterion(negated), std::invalid_argument);
+    auto hits = std::make_shared<ConsecutiveDecorator<double>>(2, 1, root);
+    BOOST_CHECK_THROW(root->add(Combined::AND, hits), std::invalid_argument);
+    BOOST_CHECK_THROW(hits->setCriterion(hits), std::invalid_argument);
+    std::weak_ptr<Combined> observed = root;
+    root.reset();
+    negated.reset();
+    hits.reset();
+    BOOST_CHECK(observed.expired());
+}
+
+BOOST_AUTO_TEST_CASE(reset_through_a_stateless_wrapper_clears_nested_windows)
+{
+    auto hits = std::make_shared<ConsecutiveDecorator<double>>(2, 2, std::make_shared<Constant>(true));
+    NegationDecorator<double> root(hits);
+    BOOST_CHECK(root.wasReached(*manager));
+    manager->getPopulation().doAge();
+    BOOST_CHECK(!root.wasReached(*manager));
+    root.reset();
+    BOOST_CHECK(root.wasReached(*manager));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

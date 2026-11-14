@@ -33,9 +33,9 @@ geneial_private_namespace(geneial)
                                 "Fix-point threshold must be finite/nonnegative and observation counts valid");
                     }
 
-                    void reset() override
+                    void resetState() override
                     {
-                        StatefulStoppingCriterion<FITNESS_TYPE>::reset();
+                        StatefulStoppingCriterion<FITNESS_TYPE>::resetState();
                         _window.clear();
                     }
 
