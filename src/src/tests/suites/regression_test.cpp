@@ -152,6 +152,50 @@ BOOST_AUTO_TEST_CASE(permutation_settings_and_crossover_preserve_the_gene_set)
     }
 }
 
+BOOST_AUTO_TEST_CASE(selection_favors_better_negative_fitness_and_handles_all_zero)
+{
+    auto evaluator = std::make_shared<FirstValueEvaluator>();
+    MultiValueChromosomeFactory<int, double>::Builder factoryBuilder(evaluator);
+    auto factory = factoryBuilder.create();
+    auto manager = BaseManager<double>::create(factory);
+    for (int score : {-10, -5, -1})
+    {
+        auto chromosome = std::dynamic_pointer_cast<MultiValueChromosome<int, double>>(factory->createChromosome());
+        chromosome->getContainer()[0] = score;
+        BOOST_REQUIRE(manager->getPopulation().insertChromosome(chromosome));
+    }
+    RouletteWheel<double> wheel(manager->getPopulation());
+    std::vector<unsigned int> counts(3, 0);
+    for (unsigned int sample = 0; sample < 1700; ++sample)
+    {
+        const double score = wheel.spin((sample + 0.5) / 1700.0)->getFitness().get();
+        ++counts[score == -10 ? 0 : score == -5 ? 1 : 2];
+    }
+    BOOST_CHECK_EQUAL(counts[0], 100);
+    BOOST_CHECK_EQUAL(counts[1], 600);
+    BOOST_CHECK_EQUAL(counts[2], 1000);
+    BOOST_CHECK_EQUAL(wheel.spin(1)->getFitness().get(), -1);
+    FitnessProportionalSelection<double>::Builder selectionBuilder;
+    selectionBuilder.getSettings().setNumberOfParents(3);
+    auto selection = selectionBuilder.create();
+    const auto selected = selection->doSelect(manager->getPopulation(), *manager);
+    BOOST_REQUIRE_EQUAL(selected.size(), 3);
+    BOOST_CHECK_EQUAL(selected.front()->getFitness().get(), -1);
+    BOOST_CHECK_EQUAL(std::set<BaseChromosome<double>::ptr>(selected.begin(), selected.end()).size(), 3);
+    auto zeroManager = BaseManager<double>::create(factory);
+    for (int index = 0; index < 3; ++index)
+    {
+        auto chromosome = std::dynamic_pointer_cast<MultiValueChromosome<int, double>>(factory->createChromosome());
+        chromosome->getContainer()[0] = 0;
+        chromosome->getContainer()[1] = index;
+        BOOST_REQUIRE(zeroManager->getPopulation().insertChromosome(chromosome));
+    }
+    BOOST_CHECK_EQUAL(selection->doSelect(zeroManager->getPopulation(), *zeroManager).size(), 3);
+    selectionBuilder.getSettings().setNumberOfParents(4);
+    BOOST_CHECK_THROW(selection->doSelect(manager->getPopulation(), *manager), std::invalid_argument);
+    auto emptyManager = BaseManager<double>::create(factory);
+    BOOST_CHECK_THROW(RouletteWheel<double>(emptyManager->getPopulation()), std::invalid_argument);
+}
 
 BOOST_AUTO_TEST_CASE(invalid_algorithm_builder_throws_a_standard_exception)
 {
@@ -168,5 +212,20 @@ BOOST_AUTO_TEST_CASE(coordinate_interpolation_uses_the_requested_curve)
     BOOST_CHECK_CLOSE(Interpolators::cosineInterpolate(20.0, 4.0, 10.0, 0.0, 1.0), expected, 0.0001);
 }
 
+BOOST_AUTO_TEST_CASE(roulette_handles_the_full_finite_fitness_range)
+{
+    auto evaluator = std::make_shared<FirstValueEvaluator>();
+    auto factory = MultiValueChromosomeFactory<int, double>::Builder(evaluator).create();
+    auto manager = BaseManager<double>::create(factory);
+    for (const double fitness : {-std::numeric_limits<double>::max(), std::numeric_limits<double>::max()})
+    {
+        auto chromosome = factory->createChromosome();
+        chromosome->setFitness(std::make_unique<Fitness<double>>(fitness));
+        BOOST_REQUIRE(manager->getPopulation().insertChromosome(chromosome));
+    }
+    RouletteWheel<double> wheel(manager->getPopulation());
+    BOOST_CHECK_EQUAL(wheel.spin(0)->getFitness().get(), -std::numeric_limits<double>::max());
+    BOOST_CHECK_EQUAL(wheel.spin(0.5)->getFitness().get(), std::numeric_limits<double>::max());
+}
 
 BOOST_AUTO_TEST_SUITE_END()

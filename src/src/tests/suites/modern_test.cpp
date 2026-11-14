@@ -107,5 +107,57 @@ BOOST_AUTO_TEST_CASE(lambda_crossover_compiles_runs_and_reports_symmetry)
     BOOST_CHECK_THROW(invalid.create(), std::runtime_error);
 }
 
+BOOST_AUTO_TEST_CASE(impossible_mutation_and_population_requests_fail_instead_of_hanging)
+{
+    auto manager = Manager::create(factory);
+    BOOST_CHECK_THROW(manager->getHighestFitness(), std::logic_error);
+    BOOST_CHECK_THROW(manager->getLowestFitnessChromosome(), std::logic_error);
+    auto chooser = geneial::operation::choosing::ChooseRandom<double>::Builder(1).create();
+    geneial::operation::mutation::UniformMutationOperation<int, double>::Builder uniform(factory);
+    uniform.setChoosingOperation(chooser);
+    uniform.getSettings().setMaximumPointsToMutate(13);
+    BOOST_CHECK_THROW(uniform.create()->doMutate({chromosome(1)}, *manager), std::invalid_argument);
+    geneial::operation::mutation::ValueSwapMutationOperation<int, double>::Builder swaps(factory);
+    swaps.setChoosingOperation(chooser);
+    swaps.getSettings().setMaximumPointsToMutate(200);
+    BOOST_CHECK_THROW(swaps.create()->doMutate({chromosome(1)}, *manager), std::invalid_argument);
+    auto settings = factory->getSettings();
+    settings.setRandomMin(0);
+    settings.setRandomMax(0);
+    factory->setSettings(settings);
+    manager->getPopulationSettings().setMaxChromosomes(2);
+    manager->getPopulationSettings().setMaxReplenishAttempts(5);
+    BOOST_CHECK_THROW(manager->replenishPopulation(), std::runtime_error);
+}
+BOOST_AUTO_TEST_CASE(settings_replacement_and_small_populations_have_defined_behavior)
+{
+    auto manager = Manager::create(factory);
+    manager->getPopulation().insertChromosome(chromosome(1));
+    manager->getPopulation().insertChromosome(chromosome(2));
+    using namespace geneial::operation::selection;
+    auto selection = FitnessProportionalSelection<double>::Builder().create();
+    selection->setSettings(std::make_shared<FitnessProportionalSelectionSettings>(2, 2));
+    BOOST_CHECK_EQUAL(selection->doSelect(manager->getPopulation(), *manager).size(), 2);
+    BOOST_CHECK_THROW(selection->setSettings(std::make_shared<BaseSelectionSettings>(1)), std::invalid_argument);
+    UniformRandomSelection<double>::Builder uniform;
+    uniform.getSettings().setNumberOfParents(2);
+    const auto chosen = uniform.create()->doSelect(manager->getPopulation(), *manager);
+    BOOST_REQUIRE_EQUAL(chosen.size(), 2);
+    BOOST_CHECK(chosen[0] != chosen[1]);
+    uniform.getSettings().setNumberOfParents(3);
+    BOOST_CHECK_THROW(uniform.create()->doSelect(manager->getPopulation(), *manager), std::invalid_argument);
+    using namespace geneial::operation::replacement;
+    const auto replacement = ReplaceWorstOperation<double>::Builder().create();
+    BaseReplacementSettings settings;
+    settings.setAmountElitism(100);
+    replacement->setSettings(settings);
+    geneial::population::Population<double>::chromosome_container children{chromosome(3)};
+    replacement->doReplace(manager->getPopulation(), {}, children, *manager);
+    BOOST_CHECK_EQUAL(manager->getPopulation().getSize(), 2);
+    settings.setAmountElitism(1);
+    replacement->setSettings(settings);
+    replacement->doReplace(manager->getPopulation(), {}, children, *manager);
+    BOOST_CHECK_EQUAL(manager->getPopulation().getSize(), 3);
+}
 
 BOOST_AUTO_TEST_SUITE_END()
