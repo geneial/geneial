@@ -70,6 +70,39 @@ This is a development version, not a claim of a published release.
 
 ## New APIs and examples
 
+### Memory and criterion follow-up
+
+- `reset()` is now a nonvirtual graph-wide facade on `BaseStoppingCriterion`.
+  Custom criteria that overrode it must override the protected `resetState()`
+  hook instead and call their stateful base hook. Custom composites must expose
+  child pointers through `getChildren()` and validate new children with
+  `validateChild()`; built-in wrappers reject nulls and ownership cycles early.
+- Factory caches now retain at most 256 idle chromosomes by default. Use
+  `setResourcePoolCapacity(n)`/`clearResourcePool()` to tune retention. Recycled
+  chromosomes restart at age zero and no longer retain old fitness/evaluators.
+- `StatisticBookkeeper` defaults to 4096 retained events, not unlimited history.
+  Choose a capacity explicitly, inspect `getDroppedEventCount()`, and clear or
+  export events between phases. `getEvents()` is read-only; use `traceEvent()`
+  rather than inserting directly. Construct timers through `scopedEventTrace()`;
+  direct construction with a raw bookkeeper pointer is no longer supported.
+  `acceptsEventData()` lets value-event helpers skip ignored allocations.
+- Custom raw-pointer bookkeepers must immediately adopt `EventData*`, including
+  if recording throws. Timing payloads must be nonnegative finite doubles;
+  invalid entries are skipped. The checked timing helper is public as
+  `geneial::algorithm::printTiming()`.
+- `Diagnostics` now rejects null algorithms, attachment after `solve()` starts,
+  and event analysis after replacing the statistical bookkeeper. The formerly
+  empty event analyzers emit retained frequencies; `analyseAll()` includes them
+  and a labeled population snapshot. No historical fitness samples are invented.
+- Continuous factories validate finite ordered bounds, nonnegative steps, and
+  reachable anchors before allocation. Integral step arithmetic no longer wraps.
+  An out-of-bounds anchor remains valid if the first step reaches the interval.
+  Permutations ignore random gene bounds and reject unrepresentable universes;
+  empty/singleton universes do not perform shuffle rounds. Smoothed crossover
+  rejects incompatible factory/settings types rather than downcasting blindly.
+
+### Callable objectives
+
 `FunctionFitnessEvaluator<Value, Score>` wraps a callable accepting
 `std::span<const Value>`. Existing evaluators still work. Five interactive
 examples, including variable-length Voronoi genomes and parallel translucent

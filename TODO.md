@@ -27,6 +27,23 @@ acceptance criteria before turning broad ideas into changes.
   equality stopping, checked thresholds, and the unimplemented trailing stop.
 - [x] Replace the ignored mutation test file with a registered suite; fix source
   cache invalidation, smoothing anchors/edge peaks, and bounded peak requests.
+- [x] Bound/prune idle resource caches, release cached evaluators and fitness,
+  reset recycled ages, and test allocation-failure cleanup and concurrent returns.
+- [x] Bound diagnostic retention, count drops, avoid ignored-event allocation,
+  and make timers safe after bookkeeper destruction and allocation failure.
+- [x] Replace silent diagnostic analyzer no-ops with explicit retained-event
+  reports and a labeled population snapshot; reject invalid facade lifecycles.
+- [x] Reject criterion ownership cycles and reset shared criterion graphs once per
+  node, including stateless wrappers; implement combined-criterion initialization.
+- [x] Replace repeated duplicate-vector erasure with one stable compaction and
+  reuse worker batches without retaining captures after a drained wait.
+- [x] Exercise continuous factory full-width integral bounds and reachable anchors;
+  saturate step arithmetic and validate finite ordered settings.
+- [x] Validate smoothed crossover factory/settings types and degenerate dimensions.
+- [x] Remove permutation `-1` sentinels; initialize explicit index universes, check
+  representability/round limits, and skip empty/singleton shuffle work.
+- [x] Add compiler-derived GCC line/branch coverage reports and a separate TSan
+  preset/job. Local TSan validation is recorded; hosted Linux execution is pending.
 
 ## Next correctness and compatibility work
 
@@ -34,32 +51,31 @@ acceptance criteria before turning broad ideas into changes.
   immutable genome API; make cache invalidation impossible to bypass. Give
   population observers immutable snapshots: reusing an observed object after
   changing it to a hash-colliding genome cannot be detected from shared pointers.
-- [ ] Add graph-wide stopping-criterion reset/clone semantics, including shared
-  stateful children. Same-age restarts currently require resetting each instance.
-- [ ] Audit extreme integral bounds in continuous factories and numeric summaries.
-  Exercise `lastValue +/- epsilon`, full-range sums/ranges, and signed/unsigned
-  boundary inputs under UBSan; use checked/saturating arithmetic where appropriate.
+- [ ] Add criterion cloning with explicit shared-child identity semantics. A clone
+  must not accidentally share mutable windows with its source; graph reset alone
+  is not an independent-search cloning API.
+- [ ] Audit extreme integral bounds in numeric summaries and remaining legacy
+  operators. Exercise full-range sums/ranges and signed/unsigned boundary inputs
+  under UBSan; use checked/saturating arithmetic where appropriate.
 - [ ] Preserve exact low-order integer gene changes during peak interpolation
   near 64-bit limits on hosts where `long double` has only double precision.
   Saturation is safe, but intermediate floating-point rounding can lose units.
-- [ ] Exercise smoothed crossover with incompatible factory/settings types and
-  degenerate dimensions; replace unchecked settings downcasts with validated APIs.
-- [ ] Replace permutation settings' `-1` sentinel convention with an explicit
-  mode; add tests for empty/duplicate gene universes and bounded shuffle rounds.
 - [ ] Validate remaining legacy operator/settings combinations beyond the covered
   uniform/swap/peak mutations and random/worst replacement policies.
-- [ ] Establish compiler-derived line/branch coverage reporting and a reviewed
-  baseline in CI; regression case counts alone are not coverage percentages.
-- [ ] Test ThreadSanitizer on a supported Linux runner; document any unsupported
-  evaluator sharing patterns with executable examples.
+- [ ] Review the first hosted GCC coverage report and Linux TSan/LSan results.
+  Local compiler/runtime results are not a substitute for that platform matrix.
 - [ ] Add a Windows/MSVC CI job before claiming Windows support.
 
 ## Design and performance
 
+- [ ] Add an opt-in, bounded generation/fitness history for convergence analysis.
+  The legacy `anaylseConvergence()` now reports a current snapshot explicitly;
+  do not describe that snapshot or first-N retained events as a historical curve.
 - [ ] Tournament/rank selection with pressure benchmarks against translated
   roulette weights; negative-fitness tests and unique-parent semantics required.
 - [ ] Optional scaling with a documented fitness/evaluation-cache contract.
-- [ ] Resource-pool pruning with memory high-water benchmarks.
+- [ ] Add optional byte-budgeted caches if real workloads need them; the current
+  object-count limit and burst benchmark do not bound arbitrarily large genomes.
 - [ ] Simplify the historical namespace/typedef/export machinery in a separate
   API-breaking change, preserving a documented migration path.
 - [ ] Decouple coupling/crossover only if concrete operator use cases justify it.

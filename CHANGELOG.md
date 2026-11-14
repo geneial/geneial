@@ -32,6 +32,25 @@
 - Three additional unit suites and 33 new active regression cases; removed the
   stale, unregistered mutation test source.
 
+### Memory and performance audit
+
+- Reject shared-ownership cycles in stopping graphs; add graph-wide reset with
+  once-only shared-child traversal and configurable initial combined criteria.
+- Bound idle chromosome caches, expose pruning, release cached evaluator/fitness
+  state, reset reused ages, and delete safely if cache growth allocation fails.
+- Bound diagnostic retention, count drops, eliminate ignored-event allocations,
+  make scoped timers safe after bookkeeper destruction, and validate timing data.
+- Replace empty diagnostic analyzers with retained event-frequency reports and
+  an explicitly labeled current-population snapshot; validate facade lifecycles.
+- Initialize the best-chromosome observer's baseline before comparing fitness.
+- Compact duplicate batches once instead of repeated vector erasure; reuse worker
+  batch buffers and release completed captures before reporting a drained queue.
+- Saturate continuous factory steps at integral limits; validate anchors, empty
+  permutations, representable universes, shuffle limits, and smoothed factories.
+- Add 20 regression cases, a deterministic allocation/failure probe, and a JSON
+  benchmark; add GCC coverage, separate Linux TSan, explicit Linux leak detection,
+  warnings-as-errors, test reports, and artifact retention limits to CI.
+
 ### Examples and docs
 
 - New callable/span fitness evaluator.

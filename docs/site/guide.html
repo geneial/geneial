@@ -52,9 +52,11 @@ cmake --build --preset release --parallel
 ctest --preset release --output-on-failure</code></pre>
       <p>
         Presets: <code>release</code>, <code>debug</code>,
-        <code>sanitized</code> (ASan + UBSan), and <code>library</code> (no
-        Boost, tests, or examples). Builds stay under <code>output/</code>. The
-        legacy <code>cmake -S src -B output/legacy</code> entry point remains
+        <code>sanitized</code> (ASan + UBSan), <code>tsan</code> (separate
+        ThreadSanitizer build), <code>coverage</code> (GCC), and
+        <code>library</code> (no Boost, tests, or examples). Builds stay under
+        <code>output/</code>. The legacy
+        <code>cmake -S src -B output/legacy</code> entry point remains
         supported.
       </p>
       <h2>02 / Run the experiments</h2>
@@ -181,8 +183,9 @@ target_link_libraries(your_program PRIVATE geneial::geneial)
       <p>
         Stateful stopping criteria sample once per observed generation. They
         reset when switching managers or rewinding population age; explicitly
-        call <code>reset()</code> on each stateful criterion for same-generation
-        restarts. Fix-point detection requires at least two observations, and
+        call <code>reset()</code> on the root for a graph-wide same-generation
+        restart, including shared children. Built-in wrappers reject ownership
+        cycles. Fix-point detection requires at least two observations, and
         trailing stop measures absolute drawdown from the best observed fitness.
         Keep genomes retained by population-unchanged stopping immutable until
         reset, even after removal from the current population.
@@ -208,6 +211,17 @@ target_link_libraries(your_program PRIVATE geneial::geneial)
         owner-thread operation. Invalid ranges, impossible crossover/mutation
         dimensions, and exhausted population replenishment throw standard
         exceptions.
+      </p>
+      <p>
+        Factories cache at most 256 idle chromosomes by default; use
+        <code>setResourcePoolCapacity()</code> or
+        <code>clearResourcePool()</code>
+        to tune retention. Default diagnostics allocate no event payloads.
+        <code>StatisticBookkeeper</code> retains the first 4096 events by
+        default; inspect <code>getDroppedEventCount()</code> and clear or export
+        between phases. These are object-count limits, not byte budgets.
+        Diagnostics remain owner-thread APIs, and scoped timers may outlive
+        their bookkeeper.
       </p>
       <h2>06 / Build this website</h2>
       <pre><code>cmake --build --preset release --target website

@@ -44,8 +44,24 @@ search; concurrent settings changes are unsupported.
 
 Factories recycle chromosome allocations. A chromosome can outlive its factory;
 its deleter falls back to ordinary deletion if the resource pool has gone away.
-Pool free-list access is synchronized, but the rest of the search manager is not
-a general-purpose concurrently mutable container.
+Pool free-list access is synchronized. Idle caches default to 256 chromosomes
+per factory, not a byte limit: large gene vectors can still consume substantial
+memory. `setResourcePoolCapacity(n)` immediately prunes excess idle objects;
+`clearResourcePool()` releases all idle objects and their free-list storage.
+Neither operation invalidates outstanding chromosomes. Returning a chromosome
+clears its fitness and evaluator reference; retrieving it resets its age to zero.
+Cache allocation failure deletes the returned object rather than escaping its
+shared-pointer deleter. Configure factory settings on the owner thread; the
+rest of the search manager is not a concurrently mutable container.
+
+Continuous generation uses saturating step intervals at integral type limits.
+An enabled starting anchor may lie outside the gene interval if its first step
+can reach that interval; disjoint intervals and nonfinite/negative steps throw,
+even when requesting unpopulated storage. Permutations initialize the explicit
+universe `0..N-1`; random gene bounds are irrelevant, not `-1` sentinels. Empty
+and singleton universes skip shuffling, and types unable to represent every
+index distinctly are rejected before allocation. Shuffle round limits must be
+ordered; excessively large counts still request correspondingly large work.
 
 The variable-length Voronoi demo uses custom shape-aware crossover and mutation.
 It explicitly resizes allocated chromosomes. Built-in fixed-width operators
@@ -82,6 +98,9 @@ equal hashes and implement a symmetric equality relation.
 Populations cannot be copied or moved independently of their managers.
 `replacePopulation()` stages and evaluates a replacement before swapping indexes;
 invalid candidates leave the original population and input container unchanged.
+Batch duplicate filtering preserves accepted order and compacts once instead of
+erasing the vector for each rejected candidate. Its hash/equality costs still
+depend on the genome size and collision distribution.
 
 Replenishment throws after a configurable number of consecutive duplicate
 attempts (`PopulationSettings::setMaxReplenishAttempts`, default 10000), rather
@@ -91,9 +110,15 @@ than looping forever when the requested population exceeds the search space.
 
 Stateful criteria cache one observation per manager/generation. Repeated queries
 do not advance their windows. Switching managers or rewinding the population age
-resets their state; restarting at the same age requires an explicit `reset()` on
-each stateful criterion. A combined criterion does not yet provide a graph-wide
-reset API. Skipped generations count as one observation, not fabricated samples.
+resets their own state; restarting at the same age requires an explicit `reset()`
+on the root. This visits every reachable criterion exactly once, even through
+shared children and stateless negation wrappers. Automatic observation resets
+remain local so one branch cannot reset a child already sampled by another.
+Skipped generations count as one observation, not fabricated samples.
+Built-in composites reject null children and direct/indirect ownership cycles
+before modifying the graph. `CombinedCriterion` also accepts an initial vector
+of glue/criterion pairs. Custom composites must expose `getChildren()` and call
+`validateChild()` before taking ownership; custom state belongs in `resetState()`.
 
 - `FixPointCriterion` compares oldest/newest best fitness in its bounded window.
   Counts must be whole numbers of at least two; its default minimum is two
@@ -116,13 +141,46 @@ include the last gene, clip safely at genome edges, and saturate the numeric val
 type. `SmoothPeakMutationOperation` requires signed or floating genes; unsigned
 genes cannot represent its negative elevations. Mutation reads preserve the input
 chromosome's fitness/hash caches and create separate result chromosomes.
+Smoothed N-point crossover requires a continuous factory and continuous settings;
+incompatible factories and infeasible dimensions throw instead of unchecked casts.
+
+## Diagnostics and retention
+
+`DefaultBookkeeper` ignores events without allocating their value payloads.
+`StatisticBookkeeper(capacity = 4096)` retains the first capacity events and
+reports subsequent drops through `getDroppedEventCount()`. This is a sample of
+the beginning of a run, not a rolling window or whole-run aggregate. Call
+`clear()` to release events/reset the drop count, or `setCapacity(n)` to change
+the limit. Shrinking discards unspecified retained entries and counts them as
+drops; zero disables collection. Capacity bounds event count, not payload bytes.
+
+`getEvents()` returns a read-only container view. A scoped timer holds a weak
+reference and may safely outlive its bookkeeper; allocation failure during timer
+destruction counts a dropped event rather than throwing. Timing reports skip
+null, incompatible, negative, or nonfinite duration payloads. Raw
+`traceEvent(name, EventData*)` transfers ownership immediately, including on
+failure; custom bookkeepers must adopt the pointer before allocating. Event
+collection, capacity changes, and views require the owner thread, not fitness
+worker threads. Use external synchronization if custom workers collect data.
+
+Attach `Diagnostics` before starting an algorithm; null algorithms, late
+attachment, or a replaced nonstatistical bookkeeper now throw instead of silently
+failing or dereferencing null. Existing statistical bookkeepers keep their
+configured capacity. The event analyzers report retained occurrence counts,
+sorted by name for their `COUPLING_`, `CROSSOVER_`, `MUTATION_`, `REPLACEMENT_`,
+and `SELECTION_` prefixes. Counts are not sums of payload values or total-run
+estimates; an absent group explicitly reports no retained events. The legacy
+`anaylseConvergence()` spelling remains, but its output is labeled as the current
+generation/population/best/worst snapshot, not an unrecorded convergence history.
 
 ## Parallel execution
 
 `SequentialExecutionManager` is the default. Set a `ThreadedExecutionManager` to
 evaluate independent offspring fitness tasks concurrently during batch insertion.
 The C++20 pool owns `std::jthread` workers, batches tasks, and drains its queue
-before returning from `waitForTasks()` or joining at destruction. The first task
+before returning from `waitForTasks()` or joining at destruction. Completed task
+captures are released before a drained wait returns; per-worker batch storage is
+reused between batches. The first task
 exception is rethrown by `waitForTasks()` after the entire batch drains; a later
 batch can still be submitted. Explicitly wait to observe errors—destructors cannot
 report unobserved exceptions.

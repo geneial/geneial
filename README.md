@@ -24,8 +24,9 @@ cmake --build --preset release --parallel
 ctest --preset release --output-on-failure
 ```
 
-Presets: `release`, `debug`, `sanitized` (AddressSanitizer + UBSan), and `library`
-(no tests, examples, or Boost). All generated artifacts stay in `output/`.
+Presets: `release`, `debug`, `sanitized` (AddressSanitizer + UBSan), `tsan`
+(ThreadSanitizer, no examples), `coverage` (GCC), and `library` (no tests,
+examples, or Boost). All generated artifacts stay in `output/`.
 The legacy `cmake -S src -B output/legacy` entry point still works.
 
 ## The evolution lab
@@ -123,10 +124,17 @@ The [installed-package consumer](tests/consumer) verifies static and shared link
   replacement keeps the best candidates up to the configured maximum. Both
   deduplicate offspring before applying their replacement budget.
 - Stateful stopping criteria sample once per observed generation. They reset
-  when the manager changes or its age rewinds. Call `reset()` on each stateful
-  criterion for an explicit same-generation restart.
+  when the manager changes or its age rewinds. Call `reset()` on the root
+  criterion for a same-generation restart of the entire reachable graph,
+  including shared children. Built-in composites reject ownership cycles.
 - Population-unchanged stopping retains observed chromosomes. Keep those genomes
   immutable until reset, even if removed from the current population.
+- Idle chromosome caches retain at most 256 objects per factory by default.
+  Set `setResourcePoolCapacity(0)` to disable reuse, or call `clearResourcePool()`
+  after a burst. Cached chromosomes release their fitness and evaluator captures.
+- Default diagnostics do not allocate event payloads. `StatisticBookkeeper`
+  retains the first 4096 events by default, exposes dropped-event counts, and can
+  be cleared or resized. Its event view and collection are owner-thread APIs.
 
 See [operator and stopping semantics](docs/Overview.md) and
 [migration notes](docs/Migration.md) before upgrading existing searches.
@@ -140,18 +148,22 @@ ctest --preset sanitized --output-on-failure
 python3 tests/check_examples.py output/sanitized/src/demo
 python3 tests/check_headers.py output/sanitized
 # Focus on the follow-up audit's regression suites:
-ctest --preset sanitized -R '(criteria|mutation|population|replacement)_test' --output-on-failure
+ctest --preset sanitized -R '(criteria|memory|factory_boundaries)_test|runtime_memory_contracts'
+./output/release/src/src/tests/runtime_probe --benchmark
 ```
 
-The suite contains 24 CTest entries: 14 unit/regression executables and ten
-showcase smoke/invalid-input checks. The follow-up audit adds 33 active regression
-cases covering deliberate hash collisions, transactional population replacement,
-replacement budgets/elitism, stopping windows/restarts, mutation cache ownership,
-and smoothing endpoints. The previously ignored mutation test source is replaced
-by an executable suite. Test counts are not a line-coverage percentage.
+The suite contains 27 CTest entries: 16 unit/regression executables, an allocation
+and failure-injection probe, and ten showcase smoke/invalid-input checks. The
+memory/performance audit adds 20 Boost.Test cases on top of the earlier 33-case
+correctness audit. Coverage includes ownership cycles, expired diagnostic timers,
+bounded caches, allocation failures, worker capture lifetimes, and 64-bit factory
+boundaries. Test counts are not a line-coverage percentage; the GCC `coverage`
+preset produces compiler-derived line/branch reports in CI.
 
-CI is configured for GCC, Clang with sanitizers, Apple Clang, library-only builds,
-installed consumers, and exported artifacts. Random engines are thread-local and explicitly
+CI is configured for GCC, Clang with address/undefined/leak sanitizers, Apple
+Clang, a separate Linux ThreadSanitizer job, coverage reports, library-only builds,
+installed consumers, and exported test/benchmark artifacts. Project warnings
+are errors in CI. Random engines are thread-local and explicitly
 seedable. Seeded results repeat within the same build and standard library;
 cross-platform draw sequences are not promised. Portrait worker threads perform
 no random draws; serial/parallel histories are checked for equality.
@@ -162,8 +174,8 @@ Read [architecture and safety contracts](docs/Overview.md),
 and [the remaining roadmap](TODO.md).
 
 Important remaining work includes an edit-guard API for mutable genomes, numeric
-extreme-value audits in legacy factories/operators, graph-wide stopping-criterion
-restart semantics, and ThreadSanitizer/Windows coverage. These limitations are
+extreme-value audits in legacy summaries/operators, criterion cloning, and Windows
+coverage. Local checks do not establish the hosted Linux sanitizer results. These limitations are
 tracked explicitly rather than described as completed work.
 
 ## Credits and license
