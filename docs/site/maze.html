@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Generate a random maze and watch a genetic algorithm evolve routes through it. A live GeneiAL browser playground with a matching C++ example."
+    />
+    <title>Random maze — GeneiAL</title>
+    <link rel="stylesheet" href="style.css?v=technical-1" />
+    <link rel="stylesheet" href="maze.css?v=technical-1" />
+    <script src="maze.js?v=2" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header>
+      <a class="brand" href="index.html">GeneiAL</a>
+      <nav aria-label="Main">
+        <a href="index.html#gallery">Examples</a
+        ><a href="guide.html">Documentation</a>
+        <a href="https://github.com/geneial/geneial">GitHub</a>
+      </nav>
+    </header>
+    <main id="main" class="maze-main">
+      <div class="maze-heading">
+        <div>
+          <h1>Random maze</h1>
+          <p class="muted">
+            A live genetic search over direction sequences. Population: 100.
+            Change the seed to generate a different connected maze.
+          </p>
+        </div>
+        <a class="text-link" href="examples/maze.html">Native C++ replay</a>
+      </div>
+      <div class="maze-layout">
+        <section class="maze-board" aria-label="Maze visualization">
+          <div class="maze-board-top">
+            <span id="state">Ready to evolve</span
+            ><span
+              ><i class="maze-key start"></i> START
+              <i class="maze-key exit"></i> EXIT</span
+            >
+          </div>
+          <canvas
+            id="maze"
+            width="720"
+            height="720"
+            role="img"
+            aria-label="Random maze: mint start at top left, amber exit at bottom right. Evolving routes appear in mint and violet."
+            >Your browser needs canvas support to display the maze.</canvas
+          >
+          <div class="maze-board-bottom">
+            <span id="route-summary"
+              >Random move sequences, not precomputed routes.</span
+            ><label
+              ><input type="checkbox" id="field" /> Show fitness field</label
+            >
+          </div>
+        </section>
+        <aside class="maze-controls" aria-label="Evolution controls">
+          <h2>Search controls</h2>
+          <div class="maze-stats">
+            <div><strong id="generation">0</strong><span>generation</span></div>
+            <div>
+              <strong id="remaining">—</strong><span>steps from exit</span>
+            </div>
+            <div>
+              <strong id="length">—</strong><span>best prefix length</span>
+            </div>
+            <div><strong id="gain">0%</strong><span>distance closed</span></div>
+          </div>
+          <button class="button" id="play" type="button">
+            Start evolution <span>▶</span>
+          </button>
+          <div class="maze-secondary">
+            <button id="step" type="button">One generation</button
+            ><button id="restart" type="button">Restart search</button>
+          </div>
+          <label class="maze-control" for="speed"
+            >Evolution speed
+            <output id="speed-value">4 generations/s</output></label
+          >
+          <input id="speed" type="range" min="1" max="30" value="4" />
+          <label class="maze-control" for="exploration"
+            >Prefix exploration
+            <output id="exploration-value">15%</output></label
+          >
+          <input id="exploration" type="range" min="0" max="60" value="15" />
+          <p class="maze-hint">
+            Usually keep the best route prefix. Sometimes revisit an earlier
+            turn to escape a dead end.
+          </p>
+          <div class="maze-divider"></div>
+          <form id="settings">
+            <div class="maze-fields">
+              <label for="seed"
+                >Maze seed<input
+                  id="seed"
+                  type="number"
+                  min="0"
+                  max="4294967295"
+                  step="1"
+                  value="42"
+                  required /></label
+              ><label for="size"
+                >Grid size<select id="size">
+                  <option value="12">12 × 12</option>
+                  <option value="18" selected>18 × 18</option>
+                  <option value="24">24 × 24</option>
+                  <option value="32">32 × 32</option>
+                </select></label
+              >
+            </div>
+            <div class="maze-secondary">
+              <button type="submit">Apply seed</button
+              ><button id="randomize" type="button">New random maze ↻</button>
+            </div>
+          </form>
+          <p
+            id="announcement"
+            class="maze-hint"
+            role="status"
+            aria-live="polite"
+          >
+            Press Start evolution to release the population.
+          </p>
+        </aside>
+      </div>
+      <section class="maze-explanation">
+        <article>
+          <h3>Representation and operators</h3>
+          <p>
+            Each gene is a compass direction. A wall blocks a move; it never
+            teleports an explorer. Selection keeps promising prefixes, crossover
+            exchanges tails, and mutations explore legal corridors. Loop-erasure
+            repair removes wasted moves; after finding an exit, evolution keeps
+            shortening the route.
+          </p>
+        </article>
+        <article>
+          <h3>Fitness</h3>
+          <p>
+            A reverse breadth-first distance field measures corridor distance to
+            the exit, not straight-line distance through walls. It guides the
+            score, but never supplies a route to an agent. This is an informed
+            search, not a claim to beat a maze solver.
+          </p>
+        </article>
+        <article>
+          <h3>Browser and native versions</h3>
+          <p>
+            This playground runs an actual JavaScript genetic algorithm locally.
+            The matching
+            <a href="examples/maze.html">native GeneiAL C++ demo</a> exports
+            SVG, CSV, and a standalone replay. Both use the same seeded maze
+            generator; their evolutionary histories differ.
+          </p>
+        </article>
+      </section>
+      <noscript
+        ><p>
+          This interactive demo needs JavaScript. You can still
+          <a href="examples/maze.html">open the native replay</a> and inspect
+          its exported SVG and CSV.
+        </p></noscript
+      >
+    </main>
+    <footer>
+      <a href="index.html#gallery">Back to examples</a>
+      <p>
+        Inspired by the GeneticML maze demo. Independently implemented; no
+        original source code is bundled.
+      </p>
+    </footer>
+  </body>
+</html>

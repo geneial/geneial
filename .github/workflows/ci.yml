@@ -60,6 +60,8 @@ jobs:
           ctest --test-dir output/embedded --output-on-failure
       - name: Validate generated examples
         run: python3 tests/check_examples.py output/${{ matrix.preset }}/src/demo
+      - name: Validate browser maze model and seeded convergence
+        run: node --test tests/maze.test.cjs
       - name: Check public header independence
         run: python3 tests/check_headers.py output/${{ matrix.preset }} "$CXX"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -118,9 +120,13 @@ jobs:
         with:
           persist-credentials: false
       - run: sudo apt-get update && sudo apt-get install -y ninja-build libboost-test-dev clang
-      - run: cmake --preset tsan -DGENEIAL_WARNINGS_AS_ERRORS=ON
+      - run: cmake --preset tsan -DGENEIAL_WARNINGS_AS_ERRORS=ON -DGENEIAL_BUILD_EXAMPLES=ON
       - run: cmake --build --preset tsan --parallel 2
-      - run: ctest --preset tsan --parallel 2 --output-junit output/tsan/ctest.xml
+      - run: ctest --preset tsan --parallel 2 -E '^example_' --output-junit output/tsan/ctest.xml
+      - name: Exercise parallel portrait refinement under TSan
+        run: |
+          output/tsan/src/demo/voronoi_art --seed 42 --population 20 --shapes 8 --max-shapes 16 --resolution 32 --threads 4 --generations 40 --output output/tsan/cells > output/tsan/cells.log
+          output/tsan/src/demo/triangle_art --seed 42 --population 20 --shapes 8 --resolution 32 --threads 4 --generations 40 --output output/tsan/triangles > output/tsan/triangles.log
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
@@ -128,6 +134,8 @@ jobs:
           path: |
             output/tsan/ctest.xml
             output/tsan/Testing/Temporary/LastTest.log
+            output/tsan/cells.log
+            output/tsan/triangles.log
           retention-days: 14
   format:
     runs-on: ubuntu-24.04
@@ -138,5 +146,6 @@ jobs:
           persist-credentials: false
       - run: sudo apt-get update && sudo apt-get install -y clang-format-18
       - run: git diff --check
+      - run: npx --yes prettier@3.4.2 --check docs/site/*.html docs/site/*.css docs/site/*.js tests/maze.test.cjs
       - run: find src/demo/showcase -type f \( -name '*.h' -o -name '*.cpp' \) -exec clang-format-18 --dry-run --Werror {} +
-      - run: clang-format-18 --dry-run --Werror tests/runtime_probe.cpp src/src/tests/suites/memory_test.cpp src/src/tests/suites/factory_boundaries_test.cpp
+      - run: clang-format-18 --dry-run --Werror tests/runtime_probe.cpp src/src/tests/suites/memory_test.cpp src/src/tests/suites/factory_boundaries_test.cpp src/src/tests/suites/art_test.cpp src/src/tests/suites/maze_test.cpp
