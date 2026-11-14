@@ -1,18 +1,16 @@
-FROM ubuntu:16.04
-MAINTAINER Benedikt Wolters <benedikt.wolters@rwth-aachen.de>
+FROM ubuntu:24.04 AS build
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential cmake ninja-build libboost-test-dev ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /geneial
+COPY . .
+RUN cmake --preset release && cmake --build --preset release --parallel 2 \
+    && ctest --preset release --output-on-failure
 
-
-RUN apt-get update -y && apt-get install -y \
-  git \
-  build-essential \
-  libboost-all-dev \ 
-  ca-certificates \ 
-  doxygen \
-  cmake \
-  --no-install-recommends --force-yes && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*  && \
-  apt-get clean autoclean && \
-  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-  
-
-RUN git clone https://github.com/geneial/geneial.git geneial
-RUN cd geneial && mkdir build && cd build && cmake -D CMAKE_BUILD_TYPE=Release ../src && make && make install
+FROM ubuntu:24.04
+RUN apt-get update && apt-get install -y --no-install-recommends libstdc++6 \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=build /geneial/output/release/src/demo/triangle_art /usr/local/bin/triangle_art
+COPY --from=build /geneial/src/demo/showcase/assets/mona_lisa.ppm /geneial/src/demo/showcase/assets/mona_lisa.ppm
+WORKDIR /work
+ENTRYPOINT ["triangle_art"]

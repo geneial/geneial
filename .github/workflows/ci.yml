@@ -1,0 +1,59 @@
+name: C++ CI
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            compiler: g++
+            preset: release
+          - os: ubuntu-24.04
+            compiler: clang++
+            preset: sanitized
+          - os: macos-26
+            compiler: clang++
+            preset: release
+    runs-on: ${{ matrix.os }}
+    env:
+      CXX: ${{ matrix.compiler }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y ninja-build libboost-test-dev clang
+      - name: Install macOS dependencies
+        if: runner.os == 'macOS'
+        run: brew install ninja boost
+      - run: cmake --preset ${{ matrix.preset }}
+      - run: cmake --build --preset ${{ matrix.preset }} --parallel 2
+      - run: ctest --preset ${{ matrix.preset }} --parallel 2
+      - name: Install and test downstream consumer
+        run: |
+          cmake --install output/${{ matrix.preset }} --prefix "$RUNNER_TEMP/geneial"
+          cmake -S tests/consumer -B output/consumer -G Ninja -DCMAKE_PREFIX_PATH="$RUNNER_TEMP/geneial"
+          cmake --build output/consumer
+          ctest --test-dir output/consumer --output-on-failure
+      - name: Library-only build without Boost
+        run: |
+          cmake --preset library -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
+          cmake --build --preset library --parallel 2
+      - name: Embedded consumer without Boost
+        run: |
+          cmake -S tests/embedded -B output/embedded -G Ninja -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
+          cmake --build output/embedded --parallel 2
+          ctest --test-dir output/embedded --output-on-failure
+      - name: Validate generated examples
+        run: python3 tests/check_examples.py output/${{ matrix.preset }}/src/demo
+      - name: Check public header independence
+        run: python3 tests/check_headers.py output/${{ matrix.preset }} "$CXX"
+  format:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - run: sudo apt-get update && sudo apt-get install -y clang-format-18
+      - run: git diff --check
+      - run: find src/demo/showcase -type f \( -name '*.h' -o -name '*.cpp' \) -exec clang-format-18 --dry-run --Werror {} +
