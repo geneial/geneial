@@ -44,7 +44,40 @@ struct Fixture
     }
 };
 
+BOOST_AUTO_TEST_CASE(thread_pool_drains_exceptions_and_recovers)
+{
+    using geneial::utility::ThreadedExecutionManager;
+    BOOST_CHECK_THROW(ThreadedExecutionManager(0), std::invalid_argument);
+    std::atomic<unsigned int> completed{0};
+    ThreadedExecutionManager executor(4);
+    BOOST_CHECK_THROW(executor.setAmountPerThread(0), std::invalid_argument);
+    BOOST_CHECK_THROW(executor.addTask({}), std::invalid_argument);
+    executor.setAmountPerThread(7);
+    for (unsigned int index = 0; index < 200; ++index)
+        executor.addTask([&] { ++completed; });
+    executor.addTask([] { throw std::runtime_error("expected task error"); });
+    for (unsigned int index = 0; index < 200; ++index)
+        executor.addTask([&] { ++completed; });
+    BOOST_CHECK_THROW(executor.waitForTasks(), std::runtime_error);
+    BOOST_CHECK_EQUAL(completed.load(), 400);
+    executor.addTask([&] { ++completed; });
+    BOOST_CHECK_NO_THROW(executor.waitForTasks());
+    executor.joinAll();
+    executor.joinAll();
+    BOOST_CHECK_EQUAL(completed.load(), 401);
+    BOOST_CHECK_THROW(executor.addTask([] {}), std::logic_error);
+}
 
+BOOST_AUTO_TEST_CASE(thread_pool_destructor_finishes_queued_work)
+{
+    std::atomic<unsigned int> completed{0};
+    {
+        geneial::utility::ThreadedExecutionManager executor(2);
+        for (unsigned int index = 0; index < 100; ++index)
+            executor.addTask([&] { ++completed; });
+    }
+    BOOST_CHECK_EQUAL(completed.load(), 100);
+}
 
 BOOST_FIXTURE_TEST_SUITE(Modern, Fixture)
 
