@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Build GeneiAL, run evolutionary art experiments, and integrate the C++20 library."
+    />
+    <title>Developer guide — GeneiAL</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header>
+      <a class="brand" href="index.html"
+        ><span class="mark" aria-hidden="true">g/</span> geneial</a
+      >
+      <nav aria-label="Main">
+        <a href="index.html#gallery">Explore</a
+        ><a href="guide.html" aria-current="page">Get started</a
+        ><a href="https://github.com/geneial/geneial">GitHub ↗</a>
+      </nav>
+    </header>
+    <main id="main" class="guide">
+      <div class="eyebrow">THE DEVELOPER GUIDE / 0.3</div>
+      <h1>Build. Mutate. Repeat.</h1>
+      <p>
+        GeneiAL maximizes a fitness function over a population of chromosomes.
+        Operators define who reproduces, how genomes recombine, which mutations
+        occur, and when the search stops. For minimization, return the negative
+        cost.
+      </p>
+      <h2>01 / Get a working build</h2>
+      <p>
+        Requirements: a C++20 compiler and standard library with
+        <code>std::span</code> and <code>std::jthread</code>, CMake 3.21+, and Ninja.
+        Use GCC/libstdc++ 12+, Clang with libstdc++ 12+, LLVM/libc++ 20+, or a
+        current Xcode 26 toolchain. CMake checks the required library features.
+        Boost.Test is only needed when building tests. Windows/MSVC is not
+        currently in the validation matrix.
+      </p>
+      <pre><code># macOS
+brew install cmake ninja boost
+# Ubuntu 24.04
+sudo apt-get install build-essential cmake ninja-build libboost-test-dev
+
+git clone https://github.com/geneial/geneial.git
+cd geneial
+cmake --preset release
+cmake --build --preset release --parallel
+ctest --preset release --output-on-failure</code></pre>
+      <p>
+        Presets: <code>release</code>, <code>debug</code>,
+        <code>sanitized</code> (ASan + UBSan), and <code>library</code> (no
+        Boost, tests, or examples). Builds stay under <code>output/</code>. The
+        legacy <code>cmake -S src -B output/legacy</code> entry point remains
+        supported.
+      </p>
+      <h2>02 / Run the experiments</h2>
+      <pre><code>mkdir -p output/art
+./output/release/src/demo/voronoi_art \
+  --seed 42 --threads 4 --shapes 24 --generations 6000 \
+  --output output/art/cells
+./output/release/src/demo/triangle_art \
+  --seed 42 --threads 4 --shapes 50 --generations 12000 \
+  --output output/art/triangles
+
+# Use your own target (P3/P6 PPM, 8-bit samples)
+./output/release/src/demo/triangle_art \
+  --input your-image.ppm --output output/art/custom</code></pre>
+      <p>
+        Open the exported <code>.html</code> directly: it contains its own
+        artwork, replay controls, and fitness chart. The <code>.svg</code> is
+        editable vector artwork; <code>.csv</code> contains generation/fitness
+        history. The two portrait demos also export the exact fitness raster as
+        <code>.ppm</code>.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Executable</th>
+            <th>Genome / objective</th>
+            <th>Special option</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>voronoi_art</td>
+            <td>Colored sites / RGB mean squared error</td>
+            <td>--shapes: initial sites; grows to 128</td>
+          </tr>
+          <tr>
+            <td>triangle_art</td>
+            <td>Layered triangles / RGB mean squared error</td>
+            <td>--shapes: fixed triangle count</td>
+          </tr>
+          <tr>
+            <td>star_tour</td>
+            <td>48-star permutation / closed route length</td>
+            <td>--seed</td>
+          </tr>
+          <tr>
+            <td>queens</td>
+            <td>Row permutation / diagonal conflicts</td>
+            <td>--size 4..48</td>
+          </tr>
+          <tr>
+            <td>pixel_art</td>
+            <td>Palette indices / total RGB squared error</td>
+            <td>--generations</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        All accept <code>--help</code>, <code>--seed</code>,
+        <code>--population</code>, <code>--generations</code>, and
+        <code>--output</code>. Output parent directories must exist. Longer art
+        runs generally help, but convergence is heuristic and not guaranteed.
+      </p>
+      <h2>03 / Understand the art</h2>
+      <h3>Chromatic cells</h3>
+      <p>
+        Each site stores x/y coordinates and RGB color. Each fitness pixel takes
+        the color of its nearest site. Local mutations move sites or adjust
+        color. Duplication adds material that can diverge; deletion lets
+        neighboring cells fill the gap. The genome varies between 4 and 128
+        sites. Half-plane clipping creates the final vector cells without SciPy
+        or a graphics library.
+      </p>
+      <h3>EvoLisa</h3>
+      <p>
+        Each triangle has six coordinate genes, RGB, and alpha. Fifty layers by
+        default are composited in order over a dark background. Small mutations
+        alter geometry and paint, occasional swaps alter layer order, and
+        shape-block crossover mixes parents. CPU workers evaluate independent
+        candidate rasters in parallel.
+      </p>
+      <p>
+        Both initialize colors by sampling the target at site positions or
+        triangle centroids; initial geometry is random. Fitness uses a target
+        downsampled to at most 40 × 60, squared error in encoded RGB space, and
+        non-antialiased pixel-center sampling. SVG rendering is
+        resolution-independent and browser-antialiased, so the PPM—not a
+        screenshot—is the exact fitness image. This is an educational CPU
+        implementation inspired by the linked work, not a performance or
+        reproduction claim.
+      </p>
+      <h2>04 / Use it in your project</h2>
+      <pre><code>cmake --preset library
+cmake --build --preset library
+cmake --install output/library --prefix "$HOME/.local"</code></pre>
+      <pre><code>find_package(geneial 0.3 CONFIG REQUIRED)
+target_link_libraries(your_program PRIVATE geneial::geneial)
+# Or geneial::geneial_shared for the shared library.</code></pre>
+      <p>
+        Use <code>FunctionFitnessEvaluator&lt;Value, Score&gt;</code> for a C++
+        callable accepting <code>std::span&lt;const Value&gt;</code>. Factory
+        settings are owned by the factory and may outlive the builder. See the
+        <a
+          href="https://github.com/geneial/geneial/blob/master/tests/consumer/main.cpp"
+          >compiled consumer example</a
+        >,
+        <a
+          href="https://github.com/geneial/geneial/blob/master/docs/Overview.md"
+          >architecture guide</a
+        >, and
+        <a
+          href="https://github.com/geneial/geneial/tree/master/src/demo/showcase"
+          >complete showcase sources</a
+        >.
+      </p>
+      <h2>05 / Reproducibility and safety</h2>
+      <p>
+        Call <code>Random::initialize(seed)</code> on the thread making
+        stochastic decisions. The engine is thread-local. Draw sequences repeat
+        within the same build and standard library, not necessarily across
+        platforms. Art workers never draw random numbers, and serial/parallel
+        runs are checked for identical fitness histories.
+      </p>
+      <p>
+        A chromosome’s cached fitness is lazy. Do not mutate a chromosome
+        already indexed in a population, retain a mutable genome reference
+        across evaluations, or evaluate the same uncached chromosome
+        concurrently. Parallel evaluators must be reentrant, avoid shared
+        mutable state, and not recursively wait on their own worker pool.
+      </p>
+      <p>
+        Worker exceptions are rethrown by <code>waitForTasks()</code> after all
+        submitted work drains. Destruction drains tasks but cannot report
+        unobserved task exceptions: explicitly wait. Pool shutdown/join is an
+        owner-thread operation. Invalid ranges, impossible crossover/mutation
+        dimensions, and exhausted population replenishment throw standard
+        exceptions.
+      </p>
+      <h2>06 / Build this website</h2>
+      <pre><code>cmake --build --preset release --target website
+python3 -m http.server 8765 --bind 127.0.0.1 \
+  --directory output/release/site
+# Browse http://127.0.0.1:8765</code></pre>
+      <p>
+        The target runs all five real searches and assembles a dependency-free
+        static gallery. GitHub Pages automation builds the gallery plus Doxygen
+        API documentation. The repository administrator must select GitHub
+        Actions as the Pages source. No deployment happens merely by building or
+        committing locally.
+      </p>
+      <h2 id="credits">Credits and provenance</h2>
+      <ul>
+        <li>
+          Voronoi representation and duplication/deletion inspiration:
+          <a
+            href="https://blog.4dcu.be/programming/2020/02/10/Genetic-Art-Algorithm-2.html"
+            >Sebastian Proost, Minimalist Art Using a Genetic Algorithm</a
+          >.
+        </li>
+        <li>
+          Fifty-triangle parallel painting inspiration:
+          <a
+            href="https://users.cg.tuwien.ac.at/zsolnai/gfx/mona_lisa_parallel_genetic_algorithm/"
+            >Károly Zsolnai-Fehér, a parallel genetic algorithm for Roger
+            Alsing’s EvoLisa problem</a
+          >.
+        </li>
+        <li>
+          Bundled target: Leonardo da Vinci’s <em>Mona Lisa</em>, downsampled
+          from
+          <a href="https://commons.wikimedia.org/wiki/File:Mona_Lisa.jpg"
+            >Wikimedia Commons, File:Mona Lisa.jpg</a
+          >, marked public domain. See the repository’s
+          <a
+            href="https://github.com/geneial/geneial/blob/master/src/demo/showcase/assets/README.md"
+            >asset provenance</a
+          >.
+        </li>
+      </ul>
+      <p>
+        GeneiAL source is MIT licensed. These demonstrations are independently
+        implemented; no source code from the articles is bundled.
+      </p>
+      <p>
+        <a class="button" href="index.html#gallery"
+          >Back to the evolution lab →</a
+        >
+      </p>
+    </main>
+    <footer>
+      <a class="brand" href="index.html">geneial</a>
+      <p>Composable evolutionary search for C++20.</p>
+      <a href="https://github.com/geneial/geneial">Source ↗</a>
+    </footer>
+  </body>
+</html>

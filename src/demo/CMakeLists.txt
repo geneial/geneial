@@ -3,6 +3,19 @@ foreach(demo_name demo1 demo2 demo3 tsp_solver)
     target_link_libraries(${demo_name} PRIVATE geneial::geneial geneial_options)
 endforeach()
 
+set(GENEIAL_SITE_DIR "${CMAKE_BINARY_DIR}/site")
+add_custom_target(website
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${GENEIAL_SITE_DIR}/examples"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/../../docs/site" "${GENEIAL_SITE_DIR}"
+    COMMAND $<TARGET_FILE:star_tour> --seed 42 --generations 2000 --output "${GENEIAL_SITE_DIR}/examples/star_tour"
+    COMMAND $<TARGET_FILE:queens> --seed 42 --generations 3000 --output "${GENEIAL_SITE_DIR}/examples/queens"
+    COMMAND $<TARGET_FILE:pixel_art> --seed 42 --generations 5000 --output "${GENEIAL_SITE_DIR}/examples/pixel_art"
+    COMMAND $<TARGET_FILE:voronoi_art> --seed 42 --threads 4 --shapes 24 --generations 6000 --output "${GENEIAL_SITE_DIR}/examples/voronoi_art"
+    COMMAND $<TARGET_FILE:triangle_art> --seed 42 --threads 4 --shapes 50 --generations 12000 --output "${GENEIAL_SITE_DIR}/examples/triangle_art"
+    DEPENDS star_tour queens pixel_art voronoi_art triangle_art
+    COMMENT "Evolving five experiments and building the static gallery"
+    VERBATIM)
+
 add_executable(benchmark_suite benchmark_suite/benchmark_suite.cpp
     benchmark_suite/functions/Sphere.cpp benchmark_suite/functions/Ackley.cpp
     benchmark_suite/functions/F10.cpp benchmark_suite/functions/F5.cpp)

@@ -1,0 +1,34 @@
+name: Example gallery
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+permissions:
+  contents: read
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - run: sudo apt-get update && sudo apt-get install -y ninja-build doxygen
+      - run: cmake --preset release -DBUILD_TESTING=OFF
+      - run: cmake --build --preset release --target website doc --parallel 2
+      - run: cp -R output/release/src/doc/html output/release/site/api
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9
+        with:
+          path: output/release/site
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346
+        id: deployment
