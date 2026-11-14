@@ -9,9 +9,9 @@ Validation host: macOS 26.4.1, Apple Silicon. CMake 4.3.3 and Ninja were used.
 
 | Check | Observed result |
 | --- | --- |
-| Apple Clang 21.0.0, release preset | 21/21 CTest entries pass |
-| Apple Clang 21.0.0, AddressSanitizer + UBSan | 21/21 CTest entries pass |
-| GCC 16.2.0 with libstdc++, release | 21/21 CTest entries pass |
+| Apple Clang 21.0.0, release preset | 24/24 CTest entries pass |
+| Apple Clang 21.0.0, AddressSanitizer + UBSan | 24/24 CTest entries pass |
+| GCC 16.2.0 with libstdc++, release | 24/24 CTest entries pass |
 | Independent public headers | All 80 compile with both compilers |
 | Boost-free library preset | Builds and installs |
 | Relocated installed package | Static and shared consumers pass, 2/2 |
@@ -20,19 +20,46 @@ Validation host: macOS 26.4.1, Apple Silicon. CMake 4.3.3 and Ninja were used.
 | Example artifact checker | All five HTML/SVG/CSV exports pass |
 | Portrait repeatability | One-worker/four-worker CSV histories match exactly |
 | Doxygen 1.18.0 | API reference builds without warnings |
-| Workflow and source checks | `actionlint`, showcase clang-format 18, `git diff --check` pass |
+| Workflow and source checks | `actionlint`, changed C++ clang-format 18, `git diff --check` pass |
+| Local Markdown links | All relative file links resolve in 13 tracked documents |
 
 GCC uses `GENEIAL_HEADER_ONLY_TESTS=ON` locally because the Homebrew Boost.Test
 binary uses libc++, while GCC uses libstdc++. This is a test-linkage option, not
 a library dependency. See [contribution guidance](../CONTRIBUTING.md).
 
-The 21 CTest entries include 11 unit/regression executables and ten showcase
+The 24 CTest entries include 14 unit/regression executables and ten showcase
 smoke/invalid-input checks. Additional Python checks validate standalone headers,
 SVG XML, monotonic fitness histories, exports, invalid art options, and parallel
 repeatability. The installed package was moved to a different directory before
 configuring its downstream consumers.
 Installed sanitizer-enabled static and shared consumers also pass (2/2);
 sanitizer compile/link requirements propagate through both exported targets.
+
+## Follow-up correctness audit
+
+The follow-up audit adds 33 active regression cases across population, replacement,
+mutation, and criteria tests. The previously ignored mutation source referenced
+retired APIs and was not built; it is replaced by a registered test executable.
+
+- Deliberately colliding hashes now coexist. A regression failed before the fix,
+  and instantiating the old hash lookup also reproduced a compilation error.
+- Collision-bucket removal, duplicate batches, failed parallel evaluation,
+  transactional whole-population replacement, and null manager dependencies are
+  exercised explicitly. Equal fitness and equal hashes do not confuse identity;
+  repeated pointers remain unique even for nonreflexive NaN-containing genomes.
+- Both replacement policies have budget/duplicate tests; random replacement also
+  covers empty children, oversized elitism, empty/singleton populations, and
+  invalid fitness without prior deletion.
+- Criteria cover once-per-generation caching, window warm-up, manager changes,
+  age rewinds, explicit reset, full-genome population comparisons, finite limits,
+  integer-overflow boundaries, and the newly implemented trailing stop. Signed
+  and unsigned 64-bit adjacent-score comparisons reproduced seven failures before
+  replacing lossy floating-point conversions with exact integer differences.
+- Mutation tests cover source/cache ownership, swap multisets, unchosen/zero-point
+  behavior, smoothing anchors and integer limits, symmetric edge peaks, impossible
+  counts/dimensions, and very large peak widths.
+
+These are regression-case counts, not compiler-measured line/branch coverage.
 
 ## Actual evolutionary-art runs
 

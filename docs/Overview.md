@@ -29,7 +29,8 @@ and evaluator changes invalidate that cache. Do not retain mutable references
 across evaluations: later writes through an old reference cannot be intercepted.
 Do not mutate a chromosome after inserting it into a population; its fitness and
 hash are already indexed externally. Remove it first or create a new chromosome.
-Return finite scores; roulette selection rejects nonfinite weights.
+Return finite scores; population insertion rejects NaN and infinity before
+indexing fitness. Failed batch fitness evaluation leaves both indexes unchanged.
 
 ## Genomes and settings
 
@@ -59,15 +60,62 @@ it is not invariant under adding an arbitrary constant to every objective.
 Fitness-proportional selection reserves a configurable number of elites first.
 Uniform selection ignores scores.
 
-Replacement keeps the highest-scoring population members after inserting
-candidates. Requested offspring counts and elites must fit the population.
-Population uniqueness is currently indexed by genome hashes; hash collisions can
-still discard distinct genomes. Equality itself compares complete values, but
-collision buckets in population indexes remain a tracked limitation.
+Worst-first replacement keeps the highest-scoring population members after
+inserting candidates, up to the configured population maximum. Random replacement
+instead exchanges old nonelite members for unique offspring and preserves the
+current population size. Both policies clamp their budget to available nonelite
+members, requested children, and unique candidates; oversized elitism is a no-op.
+Duplicate offspring do not consume unique replacement slots. Random replacement
+evaluates candidates before deleting any old members. The worst-first
+`REPLACEMENT_FAILED_INSERTS` diagnostic includes duplicate offspring filtered from
+the entire submitted batch, not only a truncated candidate prefix.
+
+Population uniqueness compares genome equality within hash-collision buckets;
+distinct genomes sharing a hash coexist. `getHashMap()` exposes a read-only
+`unordered_multimap` view, not a one-to-one identity map. `hashExists()` reports
+whether any member occupies a bucket; `containsChromosome()` checks genome
+membership. `getChromosomeByHash()` returns an arbitrary matching member or null.
+Removal identifies the exact stored pointer and throws for nonmembers rather
+than erasing another colliding genome. Custom chromosomes must give equal genomes
+equal hashes and implement a symmetric equality relation.
+
+Populations cannot be copied or moved independently of their managers.
+`replacePopulation()` stages and evaluates a replacement before swapping indexes;
+invalid candidates leave the original population and input container unchanged.
 
 Replenishment throws after a configurable number of consecutive duplicate
 attempts (`PopulationSettings::setMaxReplenishAttempts`, default 10000), rather
 than looping forever when the requested population exceeds the search space.
+
+## Stopping criteria and smoothing
+
+Stateful criteria cache one observation per manager/generation. Repeated queries
+do not advance their windows. Switching managers or rewinding the population age
+resets their state; restarting at the same age requires an explicit `reset()` on
+each stateful criterion. A combined criterion does not yet provide a graph-wide
+reset API. Skipped generations count as one observation, not fabricated samples.
+
+- `FixPointCriterion` compares oldest/newest best fitness in its bounded window.
+  Counts must be whole numbers of at least two; its default minimum is two
+  observations, avoiding an immediate stop on the first sample. A decline is not
+  a fix point. Improvement is compared without signed-integer subtraction overflow.
+- `ConsecutiveDecorator` retains its historical **hit count within a window**
+  semantics; hits need not be adjacent. Null criteria and impossible windows throw.
+- `PopulationUnchangedCriterion` compares complete genome membership, not age
+  extrema. Its first observation is false; two empty observations are unchanged.
+  It retains chromosome references, not deep snapshots: keep observed genomes
+  immutable until reset, even after removal. A changed hash is detected, but an
+  in-place edit with the same hash cannot reconstruct the old genome.
+- `TrailingStopCriterion(maximumDrawdown)` now stops on a positive absolute drop
+  from its best observed fitness that reaches the tolerance. Zero tolerance stops
+  on any decline, not a tie. Thresholds must be finite and nonnegative.
+
+Smoothing respects the optional starting anchor and step/bound constraints. With
+no anchor, the first clamped gene is preserved. Peaks taper linearly on each side,
+include the last gene, clip safely at genome edges, and saturate the numeric value
+type. `SmoothPeakMutationOperation` requires signed or floating genes; unsigned
+genes cannot represent its negative elevations. Mutation reads preserve the input
+chromosome's fitness/hash caches and create separate result chromosomes.
 
 ## Parallel execution
 

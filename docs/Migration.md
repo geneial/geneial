@@ -33,7 +33,15 @@ This is a development version, not a claim of a published release.
 - `getMin()`/`getMax()` now return const iterators, matching their const methods.
   Empty ranges return `end()`; `getRange()` returns zero for an empty genome.
 - Chromosome equality compares values rather than treating hash equality as
-  equality. Population hash-collision handling is still a roadmap item.
+  equality. Population hash buckets now preserve distinct colliding genomes;
+  `Population::hash_map` is an `unordered_multimap`, not an `unordered_map`.
+  Use `containsChromosome()` for genome membership; hash lookup returns any match.
+- Populations are noncopyable/nonmovable because their manager association and
+  indexes cannot safely be copied independently. Whole-population replacement is
+  staged, so invalid fitness does not destroy the original population.
+- Population insertion rejects null candidates and nonfinite fitness. Removing
+  nonmembers and setting null manager dependencies throw instead of dereferencing
+  invalid pointers. Both indexes remain consistent after rejection.
 - Roulette/fitness-proportional weights are translated into strictly positive
   values; negative and all-zero scores are supported. Parents are unique.
 - N-point crossover uses nonempty segments with feasible minimum widths and no
@@ -42,6 +50,21 @@ This is a development version, not a claim of a published release.
   not the previous interval bound. Blending honors the continuity limit.
 - XOR stopping criteria now implement XOR; tolerance criteria bound absolute
   distance on both sides. Empty combined criteria stop; malformed ones throw.
+- Random replacement no longer deletes members without children, violates
+  elitism, or inserts more children than its budget. Both replacement policies
+  deduplicate before taking a candidate prefix. The worst-first duplicate
+  diagnostic counts rejected duplicates across the entire submitted batch.
+- Fix-point windows require at least two observations; the default `minDiff`
+  changes from one to two. Stateful criteria reset on manager changes/age rewinds
+  and expose `reset()` for explicit restarts. Consecutive means window hit count,
+  not necessarily adjacent hits. Trailing stop now implements absolute drawdown
+  instead of silently returning false forever. Integral fitness differences use
+  exact unsigned-distance arithmetic, including adjacent scores near 64-bit limits.
+  Population-unchanged observations retain references, so previously observed
+  genomes must stay immutable until reset, even after removal from the population.
+- Smoothing uses the starting anchor only when enabled and safely handles empty
+  genomes, numeric boundaries, and tapered edge peaks. Smooth-peak mutation
+  rejects unsigned genes and invalid elevations/counts/dimensions.
 - Thread pools drain tasks, propagate exceptions at `waitForTasks()`, reject
   zero workers/batch sizes, and reject submissions after shutdown.
 

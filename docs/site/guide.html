@@ -34,11 +34,11 @@
       <h2>01 / Get a working build</h2>
       <p>
         Requirements: a C++20 compiler and standard library with
-        <code>std::span</code> and <code>std::jthread</code>, CMake 3.21+, and Ninja.
-        Use GCC/libstdc++ 12+, Clang with libstdc++ 12+, LLVM/libc++ 20+, or a
-        current Xcode 26 toolchain. CMake checks the required library features.
-        Boost.Test is only needed when building tests. Windows/MSVC is not
-        currently in the validation matrix.
+        <code>std::span</code> and <code>std::jthread</code>, CMake 3.21+, and
+        Ninja. Use GCC/libstdc++ 12+, Clang with libstdc++ 12+, LLVM/libc++ 20+,
+        or a current Xcode 26 toolchain. CMake checks the required library
+        features. Boost.Test is only needed when building tests. Windows/MSVC is
+        not currently in the validation matrix.
       </p>
       <pre><code># macOS
 brew install cmake ninja boost
@@ -171,6 +171,22 @@ target_link_libraries(your_program PRIVATE geneial::geneial)
         >.
       </p>
       <h2>05 / Reproducibility and safety</h2>
+      <p>
+        Return finite fitness scores. Populations reject null candidates and
+        NaN/infinity, resolve hash collisions with full genome equality, and
+        stage whole-population replacement before changing their indexes.
+        <code>containsChromosome()</code> checks genome membership; a hash alone
+        is not an identity. Populations are manager-bound and cannot be copied.
+      </p>
+      <p>
+        Stateful stopping criteria sample once per observed generation. They
+        reset when switching managers or rewinding population age; explicitly
+        call <code>reset()</code> on each stateful criterion for same-generation
+        restarts. Fix-point detection requires at least two observations, and
+        trailing stop measures absolute drawdown from the best observed fitness.
+        Keep genomes retained by population-unchanged stopping immutable until
+        reset, even after removal from the current population.
+      </p>
       <p>
         Call <code>Random::initialize(seed)</code> on the thread making
         stochastic decisions. The engine is thread-local. Draw sequences repeat

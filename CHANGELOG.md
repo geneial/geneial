@@ -21,6 +21,16 @@
 - C++20 worker-pool task draining, task exception propagation, batching, and
   validated worker/shutdown configurations.
 - Self-contained fitness/crossover includes and a usable crossover lambda adapter.
+- Collision-aware population indexes, usable hash lookup, exact-pointer removal,
+  finite-score validation, transactional replacement, and noncopyable populations.
+- Random replacement budget/elitism fixes and duplicate-aware candidate prefixes;
+  null manager dependencies are rejected without replacing valid ones.
+- Once-per-generation stopping windows with manager/age resets, validated
+  fix-point warm-up, full-genome population comparison, and absolute trailing stop.
+- Smoothing anchors, numeric limits and edge tapering; bounded signed/floating
+  peak mutation and cache-preserving reads in all three mutation policies.
+- Three additional unit suites and 33 new active regression cases; removed the
+  stale, unregistered mutation test source.
 
 ### Examples and docs
 

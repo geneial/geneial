@@ -88,7 +88,9 @@ Write objectives as C++20 callables instead of implementing a fitness subclass:
 ```cpp
 #include <geneial/core/fitness/FunctionFitnessEvaluator.h>
 #include <geneial/core/population/builder/MultiValueChromosomeFactory.h>
+#include <memory>
 #include <numeric>
+#include <span>
 
 auto evaluator = std::make_shared<geneial::FunctionFitnessEvaluator<double>>(
     [](std::span<const double> genes) {
@@ -107,17 +109,49 @@ algorithm with selection, coupling, crossover, mutation, replacement, and a
 stopping criterion; the [showcase sources](src/demo/showcase) are complete examples.
 The [installed-package consumer](tests/consumer) verifies static and shared linking.
 
+### Safety contracts
+
+- Return **finite** scores. Population insertion rejects NaN/infinity and null
+  candidates before indexing them; failed fitness evaluation does not delete members.
+- Population uniqueness compares complete genomes within hash-collision buckets.
+  `hashExists()` tests a bucket, not identity; use `containsChromosome()` for
+  genome membership. `getChromosomeByHash()` returns any matching member or null.
+- Treat indexed members as immutable. Remove a chromosome before editing it, and
+  do not retain mutable references across fitness/hash evaluations. Populations
+  are manager-bound, noncopyable, single-owner-thread containers.
+- Random replacement preserves population size and protects elites; worst-first
+  replacement keeps the best candidates up to the configured maximum. Both
+  deduplicate offspring before applying their replacement budget.
+- Stateful stopping criteria sample once per observed generation. They reset
+  when the manager changes or its age rewinds. Call `reset()` on each stateful
+  criterion for an explicit same-generation restart.
+- Population-unchanged stopping retains observed chromosomes. Keep those genomes
+  immutable until reset, even if removed from the current population.
+
+See [operator and stopping semantics](docs/Overview.md) and
+[migration notes](docs/Migration.md) before upgrading existing searches.
+
 ## Quality and reproducibility
 
 ```sh
 cmake --preset sanitized
 cmake --build --preset sanitized --parallel
 ctest --preset sanitized --output-on-failure
-python3 tests/check_examples.py output/release/src/demo
+python3 tests/check_examples.py output/sanitized/src/demo
+python3 tests/check_headers.py output/sanitized
+# Focus on the follow-up audit's regression suites:
+ctest --preset sanitized -R '(criteria|mutation|population|replacement)_test' --output-on-failure
 ```
 
-CI covers GCC, Clang with sanitizers, Apple Clang, library-only builds, installed
-consumers, and exported artifacts. Random engines are thread-local and explicitly
+The suite contains 24 CTest entries: 14 unit/regression executables and ten
+showcase smoke/invalid-input checks. The follow-up audit adds 33 active regression
+cases covering deliberate hash collisions, transactional population replacement,
+replacement budgets/elitism, stopping windows/restarts, mutation cache ownership,
+and smoothing endpoints. The previously ignored mutation test source is replaced
+by an executable suite. Test counts are not a line-coverage percentage.
+
+CI is configured for GCC, Clang with sanitizers, Apple Clang, library-only builds,
+installed consumers, and exported artifacts. Random engines are thread-local and explicitly
 seedable. Seeded results repeat within the same build and standard library;
 cross-platform draw sequences are not promised. Portrait worker threads perform
 no random draws; serial/parallel histories are checked for equality.
@@ -126,6 +160,11 @@ Read [architecture and safety contracts](docs/Overview.md),
 [migration notes](docs/Migration.md), [contribution guidance](CONTRIBUTING.md),
 [local validation results](docs/Validation.md), [the changelog](CHANGELOG.md),
 and [the remaining roadmap](TODO.md).
+
+Important remaining work includes an edit-guard API for mutable genomes, numeric
+extreme-value audits in legacy factories/operators, graph-wide stopping-criterion
+restart semantics, and ThreadSanitizer/Windows coverage. These limitations are
+tracked explicitly rather than described as completed work.
 
 ## Credits and license
 
