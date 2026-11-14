@@ -238,6 +238,45 @@ struct Frame
     std::string svg;
 };
 
+class ReplayAssets
+{
+    std::vector<std::string> _images;
+
+  public:
+    std::string pack(std::string svg)
+    {
+        const std::string prefix = "href='data:image/bmp;base64,";
+        std::size_t position = 0;
+        while ((position = svg.find(prefix, position)) != std::string::npos)
+        {
+            const auto end = svg.find('\'', position + prefix.size());
+            if (end == std::string::npos)
+                break;
+            const auto uri = svg.substr(position + 6, end - position - 6);
+            auto found = std::find(_images.begin(), _images.end(), uri);
+            if (found == _images.end())
+            {
+                _images.push_back(uri);
+                found = _images.end() - 1;
+            }
+            const auto replacement = "data-asset='" + std::to_string(found - _images.begin()) + "'";
+            svg.replace(position, end - position + 1, replacement);
+            position += replacement.size();
+        }
+        return svg;
+    }
+
+    std::string json() const
+    {
+        std::ostringstream output;
+        output << '[';
+        for (std::size_t index = 0; index < _images.size(); ++index)
+            output << (index ? ",\"" : "\"") << _images[index] << '"';
+        output << ']';
+        return output.str();
+    }
+};
+
 class ReplayObserver : public geneial::algorithm::AlgorithmObserver<double>
 {
   private:
@@ -245,6 +284,7 @@ class ReplayObserver : public geneial::algorithm::AlgorithmObserver<double>
     unsigned int _stride;
     std::vector<Frame> _frames;
     std::vector<std::pair<unsigned int, double>> _history;
+    ReplayAssets _assets;
 
     void capture(Manager &manager)
     {
@@ -253,13 +293,13 @@ class ReplayObserver : public geneial::algorithm::AlgorithmObserver<double>
         _history.emplace_back(generation, best->getFitness().get());
         if (generation == 0 || generation % _stride == 0)
         {
-            _frames.push_back({generation, best->getFitness().get(), _render(values(*best))});
+            _frames.push_back({generation, best->getFitness().get(), _assets.pack(_render(values(*best)))});
         }
     }
 
   public:
     ReplayObserver(Renderer renderer, unsigned int generations)
-        : _render(renderer), _stride(std::max(1u, generations / 80))
+        : _render(renderer), _stride(std::max(1u, generations / 80 + (generations % 80 != 0)))
     {
         addSubscribedEvent(BEFORE_GENERATION);
         addSubscribedEvent(AFTER_GENERATION);
@@ -285,7 +325,7 @@ class ReplayObserver : public geneial::algorithm::AlgorithmObserver<double>
         const auto best = algorithm.getHighestFitnessChromosome();
         if (_frames.empty() || _frames.back().generation != generation)
         {
-            _frames.push_back({generation, best->getFitness().get(), _render(values(*best))});
+            _frames.push_back({generation, best->getFitness().get(), _assets.pack(_render(values(*best)))});
         }
         if (_history.empty())
         {
@@ -303,19 +343,19 @@ class ReplayObserver : public geneial::algorithm::AlgorithmObserver<double>
             << R"HTML(<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>)HTML"
             << escapeXml(title) << R"HTML( · GeneiAL</title><style>
-:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#070b16;color:#eef3ff}*{box-sizing:border-box}
-body{margin:0;padding:48px 24px}main{max-width:1060px;margin:auto}.eyebrow{font-size:12px;letter-spacing:.22em;color:#7ce7d5}
-h1{font-size:clamp(36px,6vw,64px);letter-spacing:-.06em;margin:14px 0}p{color:#a4b2ce;line-height:1.7;max-width:760px}
+:root{color-scheme:light;font-family:system-ui,sans-serif;background:#f8f8f4;color:#252e2b}*{box-sizing:border-box}
+body{margin:0;padding:32px 24px}main{max-width:1060px;margin:auto}.eyebrow{font-size:12px;color:#58615b}
+h1{font-size:clamp(28px,4vw,38px);letter-spacing:-.03em;margin:14px 0}p{color:#58615b;line-height:1.7;max-width:760px}
 .stats{display:flex;gap:32px;flex-wrap:wrap;margin:26px 0}.stats strong{font-size:24px;display:block;font-variant-numeric:tabular-nums}
-.stats span{color:#8f9fbc;font-size:12px}.panel{border:1px solid #26314b;border-radius:22px;background:#0b1023;overflow:hidden}
+.stats span{color:#58615b;font-size:12px}.panel{border:1px solid #d7dbd5;border-radius:3px;background:#0b1023;overflow:hidden}
 #stage>svg{width:100%;display:block;max-height:70vh}.controls{padding:20px;display:flex;align-items:center;gap:18px;border-top:1px solid #26314b}
-button{background:#7ce7d5;color:#071a1a;border:0;border-radius:8px;padding:10px 20px;cursor:pointer;font-weight:700;min-width:100px}
-button:focus-visible,input:focus-visible{outline:3px solid #e7b5ff;outline-offset:4px}button:disabled{opacity:.5;cursor:default}
+button{background:#7ce7d5;color:#071a1a;border:0;border-radius:3px;padding:10px 20px;cursor:pointer;font-weight:600;min-width:100px}
+button:focus-visible,input:focus-visible{outline:2px solid #7ce7d5;outline-offset:4px}button:disabled{opacity:.5;cursor:default}
 input{width:100%;accent-color:#7ce7d5;min-width:0}output{font-size:12px;color:#a4b2ce;white-space:nowrap;font-variant-numeric:tabular-nums}
-.chart{margin-top:24px;padding:22px}.chart svg{width:100%;height:140px;display:block}.chart p{font-size:12px;margin:0}
-footer{color:#71819f;font-size:12px;margin:28px 0}#status{min-height:1.4em;font-size:14px;color:#7ce7d5}
+.chart{margin-top:24px;padding:22px}.chart svg{width:100%;height:140px;display:block}.chart p{font-size:12px;margin:0;color:#a4b2ce}
+footer{color:#58615b;font-size:12px;margin:28px 0}#status{min-height:1.4em;font-size:14px;color:#246555}
 @media(max-width:600px){body{padding:24px 12px}.controls{gap:10px;padding:12px}button{min-width:78px;padding:10px}.stats{gap:20px}}
-</style></head><body><main><div class="eyebrow">GENEIAL / EVOLUTION IN MOTION</div><h1>)HTML"
+</style></head><body><main><div class="eyebrow">GeneiAL / recorded C++ search</div><h1>)HTML"
             << escapeXml(title) << "</h1><p>" << escapeXml(description) << "</p><div class=\"stats\">"
             << "<div><strong>" << options.seed << "</strong><span>random seed</span></div>"
             << "<div><strong>" << generation << "</strong><span>generations evolved</span></div>"
@@ -339,8 +379,7 @@ footer{color:#71819f;font-size:12px;margin:28px 0}#status{min-height:1.4em;font-
             html << (1000.0 * point.first / std::max(1u, generation)) << ','
                  << (130 - 120 * (point.second - initial) / improvement) << ' ';
         }
-        html << "\"/></svg></div><footer>C++20 · real GeneiAL operators · no network requests or external "
-                "dependencies.<br>"
+        html << "\"/></svg></div><footer>Standalone replay; no network requests or external dependencies.<br>"
              << "A heuristic search, not a guarantee of global optimality. Seeded results are repeatable within the "
                 "same build and standard library.</footer>";
         for (const auto &frame : _frames)
@@ -348,15 +387,19 @@ footer{color:#71819f;font-size:12px;margin:28px 0}#status{min-height:1.4em;font-
             html << "<template class=\"frame\" data-generation=\"" << frame.generation << "\" data-cost=\""
                  << -frame.fitness << "\">" << frame.svg << "</template>";
         }
+        html << "<script type='application/json' id='assets'>" << _assets.json() << "</script>";
         html << R"HTML(<script>
 'use strict';
+const assets=JSON.parse(document.querySelector('#assets').textContent);
 const frames=Array.from(document.querySelectorAll('.frame'));
 const slider=document.querySelector('#scrubber');
 const stage=document.querySelector('#stage');
 const play=document.querySelector('#play');
 let timer=null;
 function pause(){clearInterval(timer);timer=null;play.textContent='Replay';}
-function show(){const frame=frames[Number(slider.value)];stage.replaceChildren(frame.content.cloneNode(true));
+function show(){const frame=frames[Number(slider.value)];const content=frame.content.cloneNode(true);
+content.querySelectorAll('image[data-asset]').forEach(image=>image.setAttribute('href',assets[Number(image.dataset.asset)]));
+stage.replaceChildren(content);
 document.querySelector('#generation').textContent='Gen '+frame.dataset.generation;
 document.querySelector('#status').textContent='Cost '+frame.dataset.cost+' · '+(Number(slider.value)+1)+' / '+frames.length+' keyframes';}
 slider.addEventListener('input',()=>{pause();show();});
@@ -366,7 +409,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden){pause();}}
 if(frames.length===1){play.disabled=true;slider.disabled=true;}
 show();
 </script></main></body></html>)HTML";
-        writeFile(options.output + ".svg", _frames.back().svg);
+        writeFile(options.output + ".svg", _render(values(*best)));
         writeFile(options.output + ".csv", csv.str());
         writeFile(options.output + ".html", html.str());
         std::cout << title << ": initial cost " << -initial << ", final cost " << -best->getFitness().get()

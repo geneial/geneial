@@ -84,21 +84,51 @@ inline Image readPpm(std::istream &stream)
     return image;
 }
 
-inline Image loadTarget(const std::string &path)
+inline Image resizeImage(const Image &original, unsigned int maximumEdge)
+{
+    if (maximumEdge == 0 || original.width == 0 || original.height == 0 ||
+        original.pixels.size() != static_cast<std::size_t>(original.width) * original.height)
+        throw std::invalid_argument("Cannot resize an empty or malformed image");
+    const double scale = std::min(1.0, static_cast<double>(maximumEdge) / std::max(original.width, original.height));
+    if (scale == 1)
+        return original;
+    Image result{std::max(1u, static_cast<unsigned int>(std::lround(original.width * scale))),
+                 std::max(1u, static_cast<unsigned int>(std::lround(original.height * scale))),
+                 {}};
+    result.pixels.reserve(static_cast<std::size_t>(result.width) * result.height);
+    for (unsigned int row = 0; row < result.height; ++row)
+        for (unsigned int column = 0; column < result.width; ++column)
+        {
+            const double left = static_cast<double>(column) * original.width / result.width;
+            const double right = static_cast<double>(column + 1) * original.width / result.width;
+            const double top = static_cast<double>(row) * original.height / result.height;
+            const double bottom = static_cast<double>(row + 1) * original.height / result.height;
+            std::array<double, 3> sum{};
+            for (unsigned int sourceRow = static_cast<unsigned int>(top);
+                 sourceRow < std::min<double>(original.height, std::ceil(bottom)); ++sourceRow)
+                for (unsigned int sourceColumn = static_cast<unsigned int>(left);
+                     sourceColumn < std::min<double>(original.width, std::ceil(right)); ++sourceColumn)
+                {
+                    const double weight =
+                        (std::min(right, sourceColumn + 1.0) - std::max(left, static_cast<double>(sourceColumn))) *
+                        (std::min(bottom, sourceRow + 1.0) - std::max(top, static_cast<double>(sourceRow)));
+                    for (unsigned int channel = 0; channel < 3; ++channel)
+                        sum[channel] += weight * original.at(sourceColumn, sourceRow)[channel];
+                }
+            Pixel pixel{};
+            for (unsigned int channel = 0; channel < 3; ++channel)
+                pixel[channel] = static_cast<int>(std::lround(sum[channel] / ((right - left) * (bottom - top))));
+            result.pixels.push_back(pixel);
+        }
+    return result;
+}
+
+inline Image loadTarget(const std::string &path, unsigned int maximumEdge = 600)
 {
     std::ifstream stream(path, std::ios::binary);
     if (!stream)
         throw std::runtime_error("Cannot open target image: " + path);
-    const auto original = readPpm(stream);
-    const double scale = std::min({1.0, 40.0 / original.width, 60.0 / original.height});
-    Image result{std::max(1u, static_cast<unsigned int>(original.width * scale)),
-                 std::max(1u, static_cast<unsigned int>(original.height * scale)),
-                 {}};
-    for (unsigned int row = 0; row < result.height; ++row)
-        for (unsigned int column = 0; column < result.width; ++column)
-            result.pixels.push_back(
-                original.at(column * original.width / result.width, row * original.height / result.height));
-    return result;
+    return resizeImage(readPpm(stream), maximumEdge);
 }
 
 inline std::string ppm(const Image &image)
