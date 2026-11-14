@@ -1,48 +1,39 @@
+#include <cmath>
 #include <geneial/algorithm/diagnostics/Diagnostics.h>
+#include <iomanip>
+#include <stdexcept>
 
 geneial_private_namespace(geneial)
 {
     geneial_private_namespace(algorithm)
     {
-
-        void printTiming(const char *string, std::unordered_multimap<std::string, std::unique_ptr<EventData>> &events,
-                         std::ostream &os)
+        geneial_export_namespace
         {
-            auto range = events.equal_range(string);
-            // Calculate cumulative moving average:
-            double cma = 0;
-            int n = 0;
-            double min = -1;
-            double max = 0;
-
-            std::for_each(range.first,  // first
-                          range.second, // last
-                          [&cma, &n, &min, &max](std::pair<const std::string, std::unique_ptr<EventData>> &event)
-                          {
-                              // static int n = 0;
-                              EventValueData<double> *derivedPointer =
-                                  dynamic_cast<EventValueData<double> *>(event.second.get());
-                              const double time = derivedPointer->getValue();
-                              max = std::max(max, time);
-                              if (min == -1)
-                              {
-                                  min = derivedPointer->getValue();
-                              }
-                              else
-                              {
-                                  min = std::min(min, time);
-                              }
-                              cma = (n * cma + derivedPointer->getValue()) / (n + 1);
-                              // cma += derivedPointer->getValue();
-                              n++;
-                          });
-            // cma = (cma ) / n;
-            os << " (" << std::setw(20) << string << ") x " << std::setw(12) << n << ",\t Average  "
-               << std::setprecision(6) << std::fixed << std::setw(12) << cma << " [ms],\t Min " << std::setprecision(6)
-               << std::fixed << std::setw(12) << min << " [ms],\t Max " << std::setprecision(6) << std::fixed
-               << std::setw(12) << max << " [ms]" << std::endl;
+            void printTiming(const char *name,
+                             const std::unordered_multimap<std::string, std::unique_ptr<EventData>> &events,
+                             std::ostream &stream)
+            {
+                if (!name)
+                    throw std::invalid_argument("Timing event name cannot be null");
+                const auto range = events.equal_range(name);
+                double average = 0;
+                double minimum = 0;
+                double maximum = 0;
+                std::size_t count = 0;
+                for (auto entry = range.first; entry != range.second; ++entry)
+                {
+                    const auto *duration = dynamic_cast<const EventValueData<double> *>(entry->second.get());
+                    if (!duration || !std::isfinite(duration->getValue()) || duration->getValue() < 0)
+                        continue;
+                    const auto value = duration->getValue();
+                    minimum = count == 0 ? value : std::min(minimum, value);
+                    maximum = std::max(maximum, value);
+                    average += (value - average) / static_cast<double>(++count);
+                }
+                stream << " (" << std::setw(20) << name << ") x " << std::setw(12) << count << ",\t Average  "
+                       << std::setprecision(6) << std::fixed << std::setw(12) << average << " [ms],\t Min "
+                       << std::setw(12) << minimum << " [ms],\t Max " << std::setw(12) << maximum << " [ms]\n";
+            }
         }
-
-        geneial_export_namespace {}
     }
 }

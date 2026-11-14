@@ -145,3 +145,96 @@ BOOST_AUTO_TEST_CASE(outstanding_chromosomes_do_not_keep_their_factory_alive)
     BOOST_CHECK_EQUAL(chromosome->getFitness().get(), 3);
     chromosome.reset();
 }
+
+BOOST_AUTO_TEST_CASE(diagnostic_events_have_explicit_bounded_retention)
+{
+    StatisticBookkeeper keeper(2);
+    for (unsigned int value = 0; value < 10; ++value)
+        EventValueData<unsigned int>::create(keeper, "event", value);
+    BOOST_CHECK_EQUAL(keeper.getEvents().size(), 2);
+    BOOST_CHECK_EQUAL(keeper.getDroppedEventCount(), 8);
+    keeper.setCapacity(1);
+    BOOST_CHECK_EQUAL(keeper.getEvents().size(), 1);
+    BOOST_CHECK_EQUAL(keeper.getDroppedEventCount(), 9);
+    keeper.clear();
+    BOOST_CHECK(keeper.getEvents().empty());
+    BOOST_CHECK_EQUAL(keeper.getDroppedEventCount(), 0);
+    keeper.setCapacity(0);
+    BOOST_CHECK(!keeper.scopedEventTrace("timer"));
+    keeper.traceEvent("event", new Payload);
+    BOOST_CHECK_EQUAL(Payload::live, 0);
+    BOOST_CHECK_EQUAL(keeper.getDroppedEventCount(), 2);
+}
+
+BOOST_AUTO_TEST_CASE(diagnostic_payloads_are_owned_before_name_validation)
+{
+    StatisticBookkeeper keeper;
+    BOOST_CHECK_THROW(keeper.traceEvent(nullptr, new Payload), std::invalid_argument);
+    BOOST_CHECK_EQUAL(Payload::live, 0);
+    BOOST_CHECK_THROW(keeper.scopedEventTrace(nullptr), std::invalid_argument);
+    DefaultBookkeeper disabled;
+    disabled.traceEvent("ignored", new Payload);
+    BOOST_CHECK_EQUAL(Payload::live, 0);
+}
+
+BOOST_AUTO_TEST_CASE(scoped_timers_may_outlive_their_bookkeeper)
+{
+    std::unique_ptr<ScopedTrace> timer;
+    {
+        StatisticBookkeeper keeper;
+        timer = keeper.scopedEventTrace("timer");
+    }
+    BOOST_CHECK_NO_THROW(timer.reset());
+    StatisticBookkeeper keeper(1);
+    {
+        auto active = keeper.scopedEventTrace("timer");
+    }
+    BOOST_REQUIRE_EQUAL(keeper.getEvents().size(), 1);
+    const auto *duration = dynamic_cast<const EventValueData<double> *>(keeper.getEvents().begin()->second.get());
+    BOOST_REQUIRE(duration);
+    BOOST_CHECK_GE(duration->getValue(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(timing_diagnostics_ignore_missing_or_incompatible_payloads)
+{
+    StatisticBookkeeper keeper;
+    keeper.traceEvent("timer");
+    keeper.traceEvent("timer", nullptr);
+    EventValueData<int>::create(keeper, "timer", 4);
+    EventValueData<double>::create(keeper, "timer", std::numeric_limits<double>::quiet_NaN());
+    EventValueData<double>::create(keeper, "timer", 2);
+    std::ostringstream stream;
+    geneial::algorithm::printTiming("timer", keeper.getEvents(), stream);
+    BOOST_CHECK_NE(stream.str().find("2.000000"), std::string::npos);
+    BOOST_CHECK_THROW(geneial::algorithm::printTiming(nullptr, keeper.getEvents(), stream), std::invalid_argument);
+}
+
+
+BOOST_AUTO_TEST_CASE(diagnostic_facade_validates_lifecycles_and_reports_retained_events)
+{
+    using Diagnostics = geneial::algorithm::Diagnostics<double>;
+    BOOST_CHECK_THROW(Diagnostics(nullptr), std::invalid_argument);
+    geneial::algorithm::SteadyStateAlgorithm<double>::Builder builder;
+    builder.setChromosomeFactory(Factory::Builder(evaluator(1)).create());
+    builder.setStoppingCriterion(
+        std::make_shared<geneial::algorithm::stopping_criteria::MaxGenerationCriterion<double>>(0));
+    auto algorithm = builder.create();
+    Diagnostics diagnostics(algorithm);
+    std::ostringstream report;
+    for (const char *event : {"COUPLING_TEST", "CROSSOVER_TEST", "MUTATION_TEST", "REPLACEMENT_TEST", "SELECTION_TEST"})
+    {
+        algorithm->getBookkeeper()->traceEvent(event);
+        algorithm->getBookkeeper()->traceEvent(event);
+    }
+    diagnostics.analyseAll(report);
+    for (const char *event : {"COUPLING_TEST", "CROSSOVER_TEST", "MUTATION_TEST", "REPLACEMENT_TEST", "SELECTION_TEST"})
+        BOOST_CHECK_NE(report.str().find(std::string(event) + " x 2"), std::string::npos);
+    BOOST_CHECK_NE(report.str().find("not a convergence history"), std::string::npos);
+    BOOST_CHECK_NE(report.str().find("size 0"), std::string::npos);
+    algorithm->setBookkeeper(std::make_shared<DefaultBookkeeper>());
+    BOOST_CHECK_THROW(diagnostics.analyseTimeSpent(report), std::logic_error);
+    algorithm->solve();
+    BOOST_CHECK_THROW((Diagnostics(algorithm)), std::logic_error);
+    diagnostics.anaylseConvergence(report);
+    BOOST_CHECK_NE(report.str().find("worst"), std::string::npos);
+}
