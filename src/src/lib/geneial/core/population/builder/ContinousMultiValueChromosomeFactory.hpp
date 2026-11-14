@@ -1,7 +1,12 @@
 #pragma once
 
+#include <cmath>
 #include <geneial/core/population/builder/ContinousMultiValueChromosomeFactory.h>
 #include <geneial/utility/Random.h>
+#include <limits>
+#include <stdexcept>
+#include <type_traits>
+#include <utility>
 
 #include <algorithm>
 #include <cassert>
@@ -24,6 +29,50 @@ geneial_private_namespace(geneial)
                     typename BaseChromosomeFactory<FITNESS_TYPE>::PopulateBehavior populateValues)
                 {
                     using namespace geneial::utility;
+
+                    const auto minimum = _settings.getRandomMin();
+                    const auto maximum = _settings.getRandomMax();
+                    const auto epsilon = _settings.getEps();
+                    const auto finite = [](VALUE_TYPE value) { return std::isfinite(static_cast<long double>(value)); };
+                    if (!finite(minimum) || !finite(maximum) || !finite(epsilon) || minimum > maximum || epsilon < 0 ||
+                        (_settings.hasStart() && !finite(_settings.getStartValue())))
+                        throw std::invalid_argument(
+                            "Continuous factory needs finite ordered limits, a nonnegative step, and a finite anchor");
+
+                    const auto bounds = [=](VALUE_TYPE previous)
+                    {
+                        VALUE_TYPE lower, upper;
+                        if constexpr (std::is_integral_v<VALUE_TYPE>)
+                        {
+                            using Unsigned = std::make_unsigned_t<
+                                std::conditional_t<std::is_same_v<VALUE_TYPE, bool>, unsigned int, VALUE_TYPE>>;
+                            constexpr auto lowest = std::numeric_limits<VALUE_TYPE>::lowest();
+                            constexpr auto highest = std::numeric_limits<VALUE_TYPE>::max();
+                            const auto below =
+                                static_cast<Unsigned>(static_cast<Unsigned>(previous) - static_cast<Unsigned>(lowest));
+                            const auto above =
+                                static_cast<Unsigned>(static_cast<Unsigned>(highest) - static_cast<Unsigned>(previous));
+                            lower = below < static_cast<Unsigned>(epsilon)
+                                        ? lowest
+                                        : static_cast<VALUE_TYPE>(previous - epsilon);
+                            upper = above < static_cast<Unsigned>(epsilon)
+                                        ? highest
+                                        : static_cast<VALUE_TYPE>(previous + epsilon);
+                        }
+                        else
+                        {
+                            lower = previous - epsilon;
+                            upper = previous + epsilon;
+                        }
+                        return std::pair{std::max(minimum, lower), std::min(maximum, upper)};
+                    };
+                    if (_settings.hasStart())
+                    {
+                        const auto [lower, upper] = bounds(_settings.getStartValue());
+                        if (lower > upper)
+                            throw std::invalid_argument(
+                                "Continuous starting anchor cannot reach the configured interval");
+                    }
 
                     auto new_chromosome = this->allocateNewChromsome();
 
@@ -51,10 +100,7 @@ geneial_private_namespace(geneial)
                                 }
                             }
 
-                            const VALUE_TYPE lower_limited =
-                                std::max(_settings.getRandomMin(), lastVal - _settings.getEps());
-                            const VALUE_TYPE upper_limited =
-                                std::min(_settings.getRandomMax(), lastVal + _settings.getEps());
+                            const auto [lower_limited, upper_limited] = bounds(lastVal);
 
                             const VALUE_TYPE val = Random::generate<VALUE_TYPE>(lower_limited, upper_limited);
 
@@ -66,7 +112,7 @@ geneial_private_namespace(geneial)
                         assert(new_chromosome->getSize() == _settings.getNum());
                     }
 
-                    return std::move(new_chromosome);
+                    return new_chromosome;
                 }
 
             } /* geneial_export_namespace */

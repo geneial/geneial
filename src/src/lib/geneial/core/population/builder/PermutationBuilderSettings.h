@@ -28,8 +28,7 @@ geneial_private_namespace(geneial)
                             MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>::DEFAULT_NUM,
                         const unsigned int permutationdsRoundsMax =
                             2 * MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>::DEFAULT_NUM)
-                        : MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>(fitnessEvaluator, num, -1,
-                                                                              -1), // TODO (bewo): Fix this -1,-1 hack
+                        : MultiValueBuilderSettings<VALUE_TYPE, FITNESS_TYPE>(fitnessEvaluator, num, 0, 0),
                           _permutationRoundsMin(permutationRoundsMin), _permutationRoundsMax(permutationdsRoundsMax)
                     {
                     }

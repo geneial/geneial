@@ -74,11 +74,13 @@ geneial_private_namespace(geneial)
                                 throw std::runtime_error("Must set a Chromosome Factory to build MultiValueCrossover");
                             }
 
+                            const auto continuousFactory = std::dynamic_pointer_cast<
+                                ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>>(this->_builderFactory);
+                            if (!continuousFactory)
+                                throw std::invalid_argument("Smoothed crossover requires a continuous factory");
+
                             return std::move(SmoothedMultiValueChromosomeNPointCrossover::makeShared(
-                                this->_crossoverSettings,
-                                std::dynamic_pointer_cast<
-                                    ContinousMultiValueChromosomeFactory<VALUE_TYPE, FITNESS_TYPE>>(
-                                    this->_builderFactory)));
+                                this->_crossoverSettings, continuousFactory));
                         }
                     };
                 };
