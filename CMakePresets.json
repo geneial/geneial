@@ -7,7 +7,10 @@
       "displayName": "Release with tests and examples",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/output/${presetName}",
-      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release", "CMAKE_EXPORT_COMPILE_COMMANDS": true }
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true
+      }
     },
     {
       "name": "debug",
@@ -22,21 +25,63 @@
       "cacheVariables": { "GENEIAL_SANITIZERS": true }
     },
     {
+      "name": "coverage",
+      "inherits": "debug",
+      "binaryDir": "${sourceDir}/output/${presetName}",
+      "cacheVariables": { "GENEIAL_COVERAGE": true }
+    },
+    {
+      "name": "tsan",
+      "inherits": "debug",
+      "binaryDir": "${sourceDir}/output/${presetName}",
+      "cacheVariables": {
+        "GENEIAL_THREAD_SANITIZER": true,
+        "GENEIAL_BUILD_EXAMPLES": false
+      }
+    },
+    {
       "name": "library",
       "inherits": "release",
       "binaryDir": "${sourceDir}/output/${presetName}",
-      "cacheVariables": { "BUILD_TESTING": false, "GENEIAL_BUILD_EXAMPLES": false }
+      "cacheVariables": {
+        "BUILD_TESTING": false,
+        "GENEIAL_BUILD_EXAMPLES": false
+      }
     }
   ],
   "buildPresets": [
     { "name": "release", "configurePreset": "release" },
     { "name": "debug", "configurePreset": "debug" },
     { "name": "sanitized", "configurePreset": "sanitized" },
+    { "name": "coverage", "configurePreset": "coverage" },
+    { "name": "tsan", "configurePreset": "tsan" },
     { "name": "library", "configurePreset": "library" }
   ],
   "testPresets": [
-    { "name": "release", "configurePreset": "release", "output": { "outputOnFailure": true } },
-    { "name": "debug", "configurePreset": "debug", "output": { "outputOnFailure": true } },
-    { "name": "sanitized", "configurePreset": "sanitized", "output": { "outputOnFailure": true } }
+    {
+      "name": "release",
+      "configurePreset": "release",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "debug",
+      "configurePreset": "debug",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "sanitized",
+      "configurePreset": "sanitized",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "coverage",
+      "configurePreset": "coverage",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "tsan",
+      "configurePreset": "tsan",
+      "output": { "outputOnFailure": true }
+    }
   ]
 }

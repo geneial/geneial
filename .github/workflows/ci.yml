@@ -2,8 +2,12 @@ name: C++ CI
 on: [push, pull_request, workflow_dispatch]
 permissions:
   contents: read
+concurrency:
+  group: cpp-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build:
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
@@ -22,15 +26,23 @@ jobs:
       CXX: ${{ matrix.compiler }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y ninja-build libboost-test-dev clang
       - name: Install macOS dependencies
         if: runner.os == 'macOS'
         run: brew install ninja boost
-      - run: cmake --preset ${{ matrix.preset }}
+      - run: cmake --preset ${{ matrix.preset }} -DGENEIAL_WARNINGS_AS_ERRORS=ON
       - run: cmake --build --preset ${{ matrix.preset }} --parallel 2
-      - run: ctest --preset ${{ matrix.preset }} --parallel 2
+      - run: ctest --preset ${{ matrix.preset }} --parallel 2 --output-junit output/${{ matrix.preset }}/ctest.xml
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+      - name: Record allocation and performance observations
+        if: matrix.preset == 'release'
+        run: output/${{ matrix.preset }}/src/src/tests/runtime_probe --benchmark > output/${{ matrix.preset }}/runtime-metrics.json
       - name: Install and test downstream consumer
         run: |
           cmake --install output/${{ matrix.preset }} --prefix "$RUNNER_TEMP/geneial"
@@ -50,10 +62,81 @@ jobs:
         run: python3 tests/check_examples.py output/${{ matrix.preset }}/src/demo
       - name: Check public header independence
         run: python3 tests/check_headers.py output/${{ matrix.preset }} "$CXX"
-  format:
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: results-${{ matrix.os }}-${{ matrix.compiler }}
+          path: |
+            output/${{ matrix.preset }}/ctest.xml
+            output/${{ matrix.preset }}/runtime-metrics.json
+            output/${{ matrix.preset }}/Testing/Temporary/LastTest.log
+          retention-days: 14
+  coverage:
     runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      CXX: g++
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: sudo apt-get update && sudo apt-get install -y ninja-build libboost-test-dev python3-venv
+      - run: cmake --preset coverage -DGENEIAL_WARNINGS_AS_ERRORS=ON
+      - run: cmake --build --preset coverage --parallel 2
+      - run: ctest --preset coverage --parallel 2 --output-junit output/coverage/ctest.xml
+      - name: Produce library line and branch reports
+        run: |
+          python3 -m venv output/coverage-tools
+          output/coverage-tools/bin/pip install gcovr==8.6
+          output/coverage-tools/bin/gcovr output/coverage --root . --filter 'src/src/lib/geneial/' \
+            --include-internal-functions --merge-lines \
+            --exclude-unreachable-branches --exclude-throw-branches \
+            --fail-under-line 75 --fail-under-branch 60 \
+            --cobertura-pretty --cobertura=output/coverage/coverage.xml \
+            --json-summary-pretty --json-summary=output/coverage/summary.json \
+            --html-details=output/coverage/index.html --print-summary
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: library-coverage
+          path: |
+            output/coverage/*.xml
+            output/coverage/*.json
+            output/coverage/*.html
+            output/coverage/*.css
+            output/coverage/*.js
+            output/coverage/Testing/Temporary/LastTest.log
+          retention-days: 14
+  thread-safety:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      CXX: clang++
+      TSAN_OPTIONS: halt_on_error=1
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: sudo apt-get update && sudo apt-get install -y ninja-build libboost-test-dev clang
+      - run: cmake --preset tsan -DGENEIAL_WARNINGS_AS_ERRORS=ON
+      - run: cmake --build --preset tsan --parallel 2
+      - run: ctest --preset tsan --parallel 2 --output-junit output/tsan/ctest.xml
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: thread-safety-results
+          path: |
+            output/tsan/ctest.xml
+            output/tsan/Testing/Temporary/LastTest.log
+          retention-days: 14
+  format:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
       - run: sudo apt-get update && sudo apt-get install -y clang-format-18
       - run: git diff --check
       - run: find src/demo/showcase -type f \( -name '*.h' -o -name '*.cpp' \) -exec clang-format-18 --dry-run --Werror {} +
+      - run: clang-format-18 --dry-run --Werror tests/runtime_probe.cpp src/src/tests/suites/memory_test.cpp src/src/tests/suites/factory_boundaries_test.cpp

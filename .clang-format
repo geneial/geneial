@@ -4,3 +4,4 @@ ColumnLimit: 120
 BreakBeforeBraces: Allman
 SortIncludes: CaseSensitive
 AllowShortFunctionsOnASingleLine: Empty
+FixNamespaceComments: false
