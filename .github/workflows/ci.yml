@@ -64,7 +64,7 @@ jobs:
         run: node --test tests/maze.test.cjs
       - name: Check public header independence
         run: python3 tests/check_headers.py output/${{ matrix.preset }} "$CXX"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
         with:
           name: results-${{ matrix.os }}-${{ matrix.compiler }}
@@ -97,7 +97,7 @@ jobs:
             --cobertura-pretty --cobertura=output/coverage/coverage.xml \
             --json-summary-pretty --json-summary=output/coverage/summary.json \
             --html-details=output/coverage/index.html --print-summary
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
         with:
           name: library-coverage
@@ -127,7 +127,7 @@ jobs:
         run: |
           output/tsan/src/demo/voronoi_art --seed 42 --population 20 --shapes 8 --max-shapes 16 --resolution 32 --threads 4 --generations 40 --output output/tsan/cells > output/tsan/cells.log
           output/tsan/src/demo/triangle_art --seed 42 --population 20 --shapes 8 --resolution 32 --threads 4 --generations 40 --output output/tsan/triangles > output/tsan/triangles.log
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
         with:
           name: thread-safety-results
