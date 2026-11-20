@@ -36,7 +36,10 @@ jobs:
         run: brew install ninja boost
       - run: cmake --preset ${{ matrix.preset }} -DGENEIAL_WARNINGS_AS_ERRORS=ON
       - run: cmake --build --preset ${{ matrix.preset }} --parallel 2
-      - run: ctest --preset ${{ matrix.preset }} --parallel 2 --output-junit output/${{ matrix.preset }}/ctest.xml
+      - name: Test and verify JUnit report location
+        run: |
+          ctest --preset ${{ matrix.preset }} --parallel 2 --output-junit ctest.xml
+          test -s output/${{ matrix.preset }}/ctest.xml
         env:
           ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
@@ -85,7 +88,10 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y ninja-build libboost-test-dev python3-venv
       - run: cmake --preset coverage -DGENEIAL_WARNINGS_AS_ERRORS=ON
       - run: cmake --build --preset coverage --parallel 2
-      - run: ctest --preset coverage --parallel 2 --output-junit output/coverage/ctest.xml
+      - name: Test and verify coverage JUnit report location
+        run: |
+          ctest --preset coverage --parallel 2 --output-junit ctest.xml
+          test -s output/coverage/ctest.xml
       - name: Produce library line and branch reports
         run: |
           python3 -m venv output/coverage-tools
@@ -122,7 +128,10 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y ninja-build libboost-test-dev clang
       - run: cmake --preset tsan -DGENEIAL_WARNINGS_AS_ERRORS=ON -DGENEIAL_BUILD_EXAMPLES=ON
       - run: cmake --build --preset tsan --parallel 2
-      - run: ctest --preset tsan --parallel 2 -E '^example_' --output-junit output/tsan/ctest.xml
+      - name: Test and verify TSan JUnit report location
+        run: |
+          ctest --preset tsan --parallel 2 -E '^example_' --output-junit ctest.xml
+          test -s output/tsan/ctest.xml
       - name: Exercise parallel portrait refinement under TSan
         run: |
           output/tsan/src/demo/voronoi_art --seed 42 --population 20 --shapes 8 --max-shapes 16 --resolution 32 --threads 4 --generations 40 --output output/tsan/cells > output/tsan/cells.log
@@ -148,4 +157,4 @@ jobs:
       - run: git diff --check
       - run: npx --yes prettier@3.4.2 --check docs/site/*.html docs/site/*.css docs/site/*.js tests/maze.test.cjs
       - run: find src/demo/showcase -type f \( -name '*.h' -o -name '*.cpp' \) -exec clang-format-18 --dry-run --Werror {} +
-      - run: clang-format-18 --dry-run --Werror tests/runtime_probe.cpp src/src/tests/suites/memory_test.cpp src/src/tests/suites/factory_boundaries_test.cpp src/src/tests/suites/art_test.cpp src/src/tests/suites/maze_test.cpp
+      - run: clang-format-18 --dry-run --Werror tests/runtime_probe.cpp src/src/tests/suites/memory_test.cpp src/src/tests/suites/factory_boundaries_test.cpp src/src/tests/suites/art_test.cpp src/src/tests/suites/maze_test.cpp src/src/tests/suites/numeric_summary_test.cpp

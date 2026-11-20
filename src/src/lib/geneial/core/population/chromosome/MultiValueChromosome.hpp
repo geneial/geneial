@@ -8,8 +8,11 @@
 #include <numeric>
 
 #include <algorithm>
+#include <cstdint>
 #include <iterator>
 #include <limits>
+#include <stdexcept>
+#include <type_traits>
 
 geneial_private_namespace(geneial)
 {
@@ -135,37 +138,138 @@ geneial_private_namespace(geneial)
                 template <typename VALUE_TYPE, typename FITNESS_TYPE>
                 VALUE_TYPE MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::getAverage() const
                 {
-                    const VALUE_TYPE sum = std::accumulate(_container.begin(), _container.end(), VALUE_TYPE{});
-                    const unsigned int size = getSize();
-
-                    if (size == 0)
+                    if (_container.empty())
                     {
-                        return 0;
+                        return VALUE_TYPE{};
+                    }
+                    if constexpr (std::is_integral_v<VALUE_TYPE>)
+                    {
+                        struct DividedSum
+                        {
+                            std::uintmax_t quotient = 0;
+                            std::uintmax_t remainder = 0;
+
+                            void add(std::uintmax_t magnitude, std::uintmax_t divisor)
+                            {
+                                quotient += magnitude / divisor;
+                                const auto residual = magnitude % divisor;
+                                if (remainder >= divisor - residual)
+                                {
+                                    ++quotient;
+                                    remainder -= divisor - residual;
+                                }
+                                else
+                                {
+                                    remainder += residual;
+                                }
+                            }
+                        };
+                        DividedSum positive, negative;
+                        const auto divisor = static_cast<std::uintmax_t>(_container.size());
+                        for (const auto value : _container)
+                        {
+                            if constexpr (std::is_signed_v<VALUE_TYPE>)
+                            {
+                                if (value < 0)
+                                {
+                                    negative.add(std::uintmax_t{} - static_cast<std::uintmax_t>(value), divisor);
+                                    continue;
+                                }
+                            }
+                            positive.add(static_cast<std::uintmax_t>(value), divisor);
+                        }
+                        const bool isNegative = negative.quotient > positive.quotient;
+                        const auto &larger = isNegative ? negative : positive;
+                        const auto &smaller = isNegative ? positive : negative;
+                        auto magnitude = larger.quotient - smaller.quotient;
+                        if (magnitude != 0 && larger.remainder < smaller.remainder)
+                        {
+                            --magnitude;
+                        }
+                        if constexpr (std::is_signed_v<VALUE_TYPE>)
+                        {
+                            if (isNegative && magnitude != 0)
+                            {
+                                return static_cast<VALUE_TYPE>(-static_cast<VALUE_TYPE>(magnitude - 1) - 1);
+                            }
+                        }
+                        return static_cast<VALUE_TYPE>(magnitude);
                     }
                     else
                     {
-                        assert(size > 0);
-                        return static_cast<VALUE_TYPE>(static_cast<long double>(sum) / size);
+                        const auto sum = std::accumulate(_container.begin(), _container.end(), VALUE_TYPE{});
+                        return static_cast<VALUE_TYPE>(static_cast<long double>(sum) / _container.size());
                     }
                 }
 
                 template <typename VALUE_TYPE, typename FITNESS_TYPE>
                 VALUE_TYPE MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::getRange() const
                 {
-                    MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_it max = getMax();
-                    MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::const_it min = getMin();
                     if (_container.empty())
                     {
                         return VALUE_TYPE{};
                     }
-                    return *max - *min;
+                    const auto [minimum, maximum] = std::minmax_element(_container.begin(), _container.end());
+                    if constexpr (std::is_integral_v<VALUE_TYPE> && std::is_signed_v<VALUE_TYPE>)
+                    {
+                        if (*minimum < 0 && *maximum > std::numeric_limits<VALUE_TYPE>::max() + *minimum)
+                        {
+                            throw std::overflow_error("Chromosome range cannot be represented by its gene type");
+                        }
+                    }
+                    return static_cast<VALUE_TYPE>(*maximum - *minimum);
                 }
 
                 template <typename VALUE_TYPE, typename FITNESS_TYPE>
                 VALUE_TYPE MultiValueChromosome<VALUE_TYPE, FITNESS_TYPE>::getSum() const
                 {
-                    VALUE_TYPE sum = std::accumulate(_container.begin(), _container.end(), VALUE_TYPE{});
-                    return sum;
+                    if constexpr (std::is_integral_v<VALUE_TYPE>)
+                    {
+                        VALUE_TYPE sum{};
+                        if constexpr (std::is_signed_v<VALUE_TYPE>)
+                        {
+                            const auto isPositive = [](VALUE_TYPE value) { return value > 0; };
+                            const auto isNegative = [](VALUE_TYPE value) { return value < 0; };
+                            auto positive = std::find_if(_container.begin(), _container.end(), isPositive);
+                            auto negative = std::find_if(_container.begin(), _container.end(), isNegative);
+                            while (positive != _container.end() || negative != _container.end())
+                            {
+                                VALUE_TYPE value;
+                                if ((sum <= 0 && positive != _container.end()) || negative == _container.end())
+                                {
+                                    value = *positive;
+                                    positive = std::find_if(std::next(positive), _container.end(), isPositive);
+                                }
+                                else
+                                {
+                                    value = *negative;
+                                    negative = std::find_if(std::next(negative), _container.end(), isNegative);
+                                }
+                                if ((value > 0 && sum > std::numeric_limits<VALUE_TYPE>::max() - value) ||
+                                    (value < 0 && sum < std::numeric_limits<VALUE_TYPE>::lowest() - value))
+                                {
+                                    throw std::overflow_error("Chromosome sum cannot be represented by its gene type");
+                                }
+                                sum = static_cast<VALUE_TYPE>(sum + value);
+                            }
+                        }
+                        else
+                        {
+                            for (const auto value : _container)
+                            {
+                                if (value > std::numeric_limits<VALUE_TYPE>::max() - sum)
+                                {
+                                    throw std::overflow_error("Chromosome sum cannot be represented by its gene type");
+                                }
+                                sum = static_cast<VALUE_TYPE>(sum + value);
+                            }
+                        }
+                        return sum;
+                    }
+                    else
+                    {
+                        return std::accumulate(_container.begin(), _container.end(), VALUE_TYPE{});
+                    }
                 }
 
                 template <typename VALUE_TYPE, typename FITNESS_TYPE>

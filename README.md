@@ -133,6 +133,9 @@ The [installed-package consumer](tests/consumer) verifies static and shared link
 - Treat indexed members as immutable. Remove a chromosome before editing it, and
   do not retain mutable references across fitness/hash evaluations. Populations
   are manager-bound, noncopyable, single-owner-thread containers.
+- Integral genome averages are exact and truncate toward zero. Integral sums
+  and ranges throw `std::overflow_error` if their final result cannot fit the
+  gene type; cancellation does not depend on gene order.
 - Random replacement preserves population size and protects elites; worst-first
   replacement keeps the best candidates up to the configured maximum. Both
   deduplicate offspring before applying their replacement budget.
@@ -165,12 +168,15 @@ ctest --preset sanitized -R '(criteria|memory|factory_boundaries)_test|runtime_m
 ./output/release/src/src/tests/runtime_probe --benchmark
 ```
 
-The suite contains 27 CTest entries: 16 unit/regression executables, an allocation
-and failure-injection probe, and ten showcase smoke/invalid-input checks. The
+The suite includes unit/regression executables, an allocation and failure-injection
+probe, and showcase smoke/invalid-input checks. Run `ctest --preset release -N`
+for the current registered test count. The
 memory/performance audit adds 20 Boost.Test cases on top of the earlier 33-case
 correctness audit. Coverage includes ownership cycles, expired diagnostic timers,
 bounded caches, allocation failures, worker capture lifetimes, and 64-bit factory
-boundaries. Test counts are not a line-coverage percentage; the GCC `coverage`
+boundaries. Integral numeric-summary regressions cover exact 64-bit means,
+order-independent cancellation and checked sum/range overflow. Test counts are
+not a line-coverage percentage; the GCC `coverage`
 preset produces compiler-derived line/branch reports in CI.
 
 CI is configured for GCC, Clang with address/undefined/leak sanitizers, Apple
@@ -187,7 +193,7 @@ Read [architecture and safety contracts](docs/Overview.md),
 and [the remaining roadmap](TODO.md).
 
 Important remaining work includes an edit-guard API for mutable genomes, numeric
-extreme-value audits in legacy summaries/operators, criterion cloning, and Windows
+extreme-value audits in remaining legacy operators, criterion cloning, and Windows
 coverage. Local checks do not establish the hosted Linux sanitizer results. These limitations are
 tracked explicitly rather than described as completed work.
 

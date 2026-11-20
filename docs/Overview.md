@@ -34,6 +34,28 @@ indexing fitness. Failed batch fitness evaluation leaves both indexes unchanged.
 
 ## Genomes and settings
 
+### Numeric summaries
+
+`getAverage()`, `getSum()` and `getRange()` return the gene type, and return zero
+for empty genomes. Integral averages are exact, truncated toward zero, even if
+the sum would overflow or the genes use the full 64-bit range. They use integer
+quotients and normalized remainders rather than a floating-point intermediate.
+This does not depend on extended `long double` precision or compiler extensions.
+
+Integral sums and ranges throw `std::overflow_error` if the mathematical result
+cannot fit the gene type. Signed sums cancel opposing terms before accumulating
+remaining terms, so the result and exception behavior do not depend on gene
+order. An overflowing intermediate sum does not reject a representable final
+result. All three summaries use linear time and constant auxiliary storage;
+range calculation uses a single min/max traversal. Summary reads do not change
+the genome or invalidate its fitness/hash cache.
+
+Floating-point summaries retain their floating-point arithmetic behavior,
+including rounding and possible nonfinite results; the checked overflow contract
+above is for integral genes only.
+
+### Factories and recycling
+
 `MultiValueChromosome<Value, Score>` owns a vector of arithmetic values. A
 `MultiValueChromosomeFactory` creates fixed-length random vectors. The continuous
 factory constrains neighboring differences; the permutation factory preserves a

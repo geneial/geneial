@@ -1,9 +1,47 @@
-# Modernization validation — 2026-11-14
+# Validation record
 
 These are observed local results, not a claim that the new remote CI matrix has
 already run. Generated build products and galleries are intentionally ignored.
 
-## Toolchains and automated checks
+## Numeric-summary and CI maintenance — 2026-11-20
+
+The initial regression run reproduced signed overflow in 32/64-bit accumulation
+and range subtraction under UBSan, plus incorrect wrapped sums and averages.
+The corrected integral summaries are covered by six new Boost.Test cases:
+signed/unsigned 8/16/32/64-bit limits, all 90 distinct cancellation orders at each
+signed width, boolean genes, empty/singleton inputs, truncation and remainder
+carry, and 2,000 seeded signed/unsigned genomes checked against wider arithmetic.
+Full-width mean checks retain low-order units without extended floating-point
+precision. Existing floating-point summary behavior remains unchanged.
+
+Observed local checks on the same host/toolchains listed below:
+
+- Apple Clang release: 31/31 CTest entries pass, with warnings as errors.
+- Apple Clang AddressSanitizer + UBSan: 31/31 pass with halt-on-error enabled.
+- GCC 16.2.0 release: 31/31 pass, with warnings as errors and header-only Boost.Test.
+- All 80 public headers compile independently with Apple Clang and GCC.
+- Installed static/shared package consumers pass, 2/2.
+- All six example exports and serial/parallel repeatability checks pass; all
+  three browser-maze test groups pass.
+- `actionlint`, clang-format 18 for the new suite, and `git diff --check` pass.
+
+The report-path audit also reproduced CTest writing a preset-relative
+`output/release/ctest.xml` argument underneath the build tree as
+`output/release/output/release/ctest.xml`, outside the artifact upload path.
+The build, coverage and TSan jobs now pass `--output-junit ctest.xml` and assert
+that the expected upload file is nonempty. Release/sanitizer runs verify the
+corrected location locally. To reproduce:
+
+```sh
+cmake --build --preset sanitized --parallel
+UBSAN_OPTIONS=halt_on_error=1 ctest --preset sanitized --output-junit ctest.xml
+test -s output/sanitized/ctest.xml
+```
+
+No new coverage percentages or hosted Linux LSan/TSan results are claimed by
+this maintenance pass; the measurements below are the earlier dated audit.
+
+## Modernization toolchains and checks — 2026-11-14
 
 Validation host: macOS 26.4.1, Apple Silicon. CMake 4.3.3 and Ninja were used.
 
@@ -31,8 +69,8 @@ GCC uses `GENEIAL_HEADER_ONLY_TESTS=ON` locally because the Homebrew Boost.Test
 binary uses libc++, while GCC uses libstdc++. This is a test-linkage option, not
 a library dependency. See [contribution guidance](../CONTRIBUTING.md).
 
-The current 30 CTest entries include 17 unit/regression executables, an allocation
-and failure-injection probe, and twelve showcase smoke/invalid-input checks.
+The November 14 suite's 30 CTest entries include 17 unit/regression executables,
+an allocation and failure-injection probe, and twelve showcase smoke/invalid-input checks.
 The compiler-coverage count in the table predates the maze additions; it is not
 a claim that those new tests ran in the coverage build.
 Additional Python checks validate standalone headers,

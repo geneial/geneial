@@ -49,6 +49,9 @@ acceptance criteria before turning broad ideas into changes.
   representability/round limits, and skip empty/singleton shuffle work.
 - [x] Add compiler-derived GCC line/branch coverage reports and a separate TSan
   preset/job. Local TSan validation is recorded; hosted Linux execution is pending.
+- [x] Make integral chromosome means exact across full-width bounds, including
+  mixed signs and truncation; check final sums/ranges without intermediate
+  overflow or order-dependent cancellation failures.
 
 ## Next correctness and compatibility work
 
@@ -59,9 +62,11 @@ acceptance criteria before turning broad ideas into changes.
 - [ ] Add criterion cloning with explicit shared-child identity semantics. A clone
   must not accidentally share mutable windows with its source; graph reset alone
   is not an independent-search cloning API.
-- [ ] Audit extreme integral bounds in numeric summaries and remaining legacy
-  operators. Exercise full-range sums/ranges and signed/unsigned boundary inputs
-  under UBSan; use checked/saturating arithmetic where appropriate.
+- [ ] Audit extreme integral bounds in remaining legacy operators beyond the
+  checked chromosome summaries. Exercise signed/unsigned boundary inputs under
+  UBSan; use checked/saturating arithmetic where appropriate.
+- [ ] Define an opt-in floating-point summary policy for nonfinite inputs,
+  overflow and cancellation; do not silently change floating-point semantics.
 - [ ] Preserve exact low-order integer gene changes during peak interpolation
   near 64-bit limits on hosts where `long double` has only double precision.
   Saturation is safe, but intermediate floating-point rounding can lose units.

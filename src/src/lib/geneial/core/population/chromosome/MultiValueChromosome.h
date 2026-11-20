@@ -95,8 +95,11 @@ geneial_private_namespace(geneial)
                     const_it getMax() const;
                     const_it getMin() const;
 
+                    /** Exact integral mean, truncated toward zero; empty genomes return zero. */
                     VALUE_TYPE getAverage() const;
+                    /** Integral ranges throw std::overflow_error if not representable; empty genomes return zero. */
                     VALUE_TYPE getRange() const;
+                    /** Exact integral sum, independent of gene order; throws std::overflow_error if unrepresentable. */
                     VALUE_TYPE getSum() const;
 
                     // TODO (bewo) : provide further convenience methods at this point.

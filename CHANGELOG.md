@@ -2,6 +2,20 @@
 
 ## 0.3.0 — unreleased
 
+### Numeric-summary maintenance
+
+- Exact integral means without overflowing or floating-point rounding at 64-bit
+  limits; preserve truncation toward zero for mixed-sign genomes.
+- Checked integral sums and ranges throw `std::overflow_error` for unrepresentable
+  final results. Signed sums allow cancellation independent of gene order.
+- One-pass min/max range calculation, constant-space arithmetic, and regression
+  coverage across integer widths, boolean genes, cancellation orders, empty
+  inputs, and seeded inputs compared with wider arithmetic.
+- Document arithmetic/migration contracts and replace stale README test counts
+  with the command that reports the current registered suite.
+- Correct preset-relative JUnit report paths in the build, coverage and TSan CI
+  jobs, and assert that reports exist where artifact uploads expect them.
+
 ### Example and website refinements
 
 - Seeded random-maze C++ example and a live, dependency-free browser GA playground

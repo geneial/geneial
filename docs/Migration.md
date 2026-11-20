@@ -32,6 +32,12 @@ This is a development version, not a claim of a published release.
   well as hashes. Treat inserted population members as immutable.
 - `getMin()`/`getMax()` now return const iterators, matching their const methods.
   Empty ranges return `end()`; `getRange()` returns zero for an empty genome.
+- Integral `getAverage()` now computes the exact mean, truncated toward zero,
+  without overflowing the sum or rounding through floating point. Integral
+  `getSum()` and `getRange()` throw `std::overflow_error` for unrepresentable
+  results instead of wrapping or invoking undefined behavior. Signed sums allow
+  cancellation irrespective of input order; callers relying on wrapped totals
+  must change. Floating-point summaries retain their existing arithmetic.
 - Chromosome equality compares values rather than treating hash equality as
   equality. Population hash buckets now preserve distinct colliding genomes;
   `Population::hash_map` is an `unordered_multimap`, not an `unordered_map`.
